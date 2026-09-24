@@ -74,13 +74,14 @@ open class TreeNode: Equatable, AeroAny {
         }
         let relation = getChildParentRelation(child: self, parent: newParent) // Side effect: verify relation
         if adaptiveWeight == WEIGHT_AUTO {
-            self.adaptiveWeight = switch relation {
+            switch relation {
                 case .tiling(let newParent):
-                    CGFloat(newParent.children.sumOfDouble { $0.getWeight(newParent.orientation) }).div(newParent.children.count) ?? 1
+                    let newParentVisibleChildren = newParent.visibleChildren
+                    self.adaptiveWeight = CGFloat(newParentVisibleChildren.sumOfDouble { $0.getWeight(newParent.orientation) }).div(newParentVisibleChildren.count) ?? 1
                 case .floatingWindow, .macosNativeFullscreenWindow,
                      .rootTilingContainer, .macosNativeMinimizedWindow,
                      .shimContainerRelation, .macosPopupWindow, .macosNativeHiddenAppWindow:
-                    WEIGHT_DOESNT_MATTER
+                    self.adaptiveWeight = WEIGHT_DOESNT_MATTER
             }
         } else {
             self.adaptiveWeight = adaptiveWeight
