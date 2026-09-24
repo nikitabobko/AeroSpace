@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-private struct MonitorInfoImpl {
+struct MonitorInfoImpl {
     let monitorAppKitNsScreenScreensId: Int
     let name: String
     let rect: Rect
@@ -86,16 +86,18 @@ extension NSScreen {
 }
 
 private let testMonitorInfoRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
-private let testMonitorInfo = MonitorInfoImpl(
+let testMonitorInfo = MonitorInfoImpl(
     monitorAppKitNsScreenScreensId: 1,
     name: "Test Monitor",
     rect: testMonitorInfoRect,
     visibleRect: testMonitorInfoRect,
     isMain: true,
 )
+/// Monitors configuration in unit tests. Tests can change it to check multi-monitor setups
+@MainActor var monitorInfosForTests: [MonitorInfoImpl] = [testMonitorInfo]
 
 var mainMonitorInfo: MonitorInfo {
-    if isUnitTest { return testMonitorInfo }
+    if isUnitTest { return MainActor.checkIsolated { monitorInfosForTests.singleOrNil(where: \.isMain) }.orDie("Exactly one test monitor must be main") }
     let screens = NSScreen.screens
     // Fallback: If main screen can't be found (e.g., during display reconfiguration),
     // return screens.first or testMonitor to avoid crash
@@ -106,7 +108,7 @@ var mainMonitorInfo: MonitorInfo {
 
 var monitorInfos: [MonitorInfo] {
     isUnitTest
-        ? [testMonitorInfo]
+        ? MainActor.checkIsolated { monitorInfosForTests }
         : NSScreen.screens.enumerated().map { $0.element.toMonitorInfo(monitorAppKitNsScreenScreensId: $0.offset + 1) }
 }
 
