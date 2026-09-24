@@ -16,7 +16,7 @@ public func bugPrompt(
     _ __message: String = "",
     isDie: Bool = false,
     file: StaticString = #myFileId,
-    line: Int = #line,
+    line: UInt = #line,
     column: Int = #column,
     function: String = #function,
 ) -> String {
@@ -51,7 +51,7 @@ public func bugPrompt(
 public func dieT<T>(
     _ __message: String = "",
     file: StaticString = #myFileId,
-    line: Int = #line,
+    line: UInt = #line,
     column: Int = #column,
     function: String = #function,
 ) -> T {
@@ -72,7 +72,7 @@ public func dieT<T>(
             }
         }
     }
-    fatalError("\n" + message)
+    fatalError("\n" + message, file: file, line: line)
 }
 
 extension MainActor {
@@ -128,7 +128,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
 @inlinable public func die(
     _ message: String = "",
     file: StaticString = #myFileId,
-    line: Int = #line,
+    line: UInt = #line,
     column: Int = #column,
     function: String = #function,
 ) -> Never {
@@ -139,7 +139,7 @@ public func check(
     _ condition: Bool,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #myFileId,
-    line: Int = #line,
+    line: UInt = #line,
     column: Int = #column,
     function: String = #function,
 ) {

@@ -2,7 +2,7 @@ extension Optional {
     public func orDie(
         _ message: String = "",
         file: StaticString = #myFileId,
-        line: Int = #line,
+        line: UInt = #line,
         column: Int = #column,
         function: String = #function,
     ) -> Wrapped {

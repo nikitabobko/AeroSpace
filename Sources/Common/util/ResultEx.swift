@@ -74,7 +74,7 @@ extension Result {
     public func getOrDie(
         _ msgPrefix: String = "",
         file: StaticString = #myFileId,
-        line: Int = #line,
+        line: UInt = #line,
         column: Int = #column,
         function: String = #function,
     ) -> Success {
