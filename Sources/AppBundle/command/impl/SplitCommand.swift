@@ -24,7 +24,7 @@ struct SplitCommand: Command {
                     case .horizontal: .h
                     case .opposite: parent.orientation.opposite
                 }
-                if parent.children.count == 1 {
+                if parent.visibleChildren.count == 1 {
                     parent.changeOrientation(orientation)
                 } else {
                     let data = window.unbindFromParent()

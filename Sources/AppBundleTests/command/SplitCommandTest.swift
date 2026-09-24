@@ -21,6 +21,16 @@ final class SplitCommandTest: XCTestCase {
         ]))
     }
 
+    func testSplit_onlyTombstoneSiblings_changesOrientationInstead() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
+        }
+
+        await parseCommand("split vertical").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription, .v_tiles([.window(1), .window(2)]))
+    }
+
     func testSplitOppositeOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
