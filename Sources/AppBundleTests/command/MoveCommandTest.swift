@@ -96,7 +96,35 @@ final class MoveCommandTest: XCTestCase {
         )
     }
 
+    func testMoveInto_deepTargetInsideMustBeFlattenedContainer_bindsOutsideOfIt() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 2, parent: $0)
+                TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                    $0.lifeStatus = .mustBeFlattened
+                    TestWindow.new(id: 3, parent: $0).lifeStatus = .dead
+                    TestWindow.new(id: 4, parent: $0)
+                }
+            }
+        }
+
+        await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([
+                .v_tiles([
+                    .window(2),
+                    .v_tiles([.window(3), .window(4)]),
+                    .window(1),
+                ]),
+            ]),
+        )
+    }
+
     func testMoveInto_skipsMustBeFlattenedContainers() async {
+        config.enableNormalizationFlattenContainers = true
+
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             // Same orientation as the root. Without tombstones it would have been flattened
@@ -108,7 +136,10 @@ final class MoveCommandTest: XCTestCase {
         }
 
         await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(root.layoutDescription, .h_tiles([.h_tiles([.window(2), .window(3), .window(1)])]))
+        assertEquals(root.layoutDescription, .h_tiles([.h_tiles([.window(2), .window(3)]), .window(1)]))
+
+        await parseCommand("move left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription, .h_tiles([.window(1), .h_tiles([.window(2), .window(3)])]))
     }
 
     func testMoveOut_skipsMustBeFlattenedContainers() async {

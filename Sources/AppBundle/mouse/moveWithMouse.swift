@@ -56,18 +56,21 @@ private func moveTilingWindow(_ window: Window) {
         .findWindowRecursively(in: targetWorkspace.rootTilingContainer, virtual: false, fullscreenCoversAll: false)?
         .takeIf { $0 != window }
     if targetWorkspace != window.nodeWorkspace { // Move window to a different monitor
-        let index: Int = if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutPhysicalRect {
-            mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
-                ? swapTarget.ownIndex(in: .all).orDie() + 1
-                : swapTarget.ownIndex(in: .all).orDie()
+        let parent: TilingContainer
+        let index: Int
+        if let swapTarget,
+           let (_parent, _index) = swapTarget.nearestAliveTilingParent(),
+           let targetRect = swapTarget.lastAppliedLayoutPhysicalRect
+        {
+            parent = _parent
+            index = mouseLocation.getProjection(_parent.orientation) >= targetRect.center.getProjection(_parent.orientation)
+                ? _index + 1
+                : _index
         } else {
-            0
+            parent = targetWorkspace.rootTilingContainer
+            index = 0
         }
-        window.bind(
-            to: swapTarget?.parent ?? targetWorkspace.rootTilingContainer,
-            adaptiveWeight: WEIGHT_AUTO,
-            index: index,
-        )
+        window.bind(to: parent, adaptiveWeight: WEIGHT_AUTO, index: index)
     } else if let swapTarget {
         swapWindows(mruDominant: window, swapTarget)
     }

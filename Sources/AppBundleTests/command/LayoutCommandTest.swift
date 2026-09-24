@@ -392,6 +392,24 @@ final class LayoutCommandTest: XCTestCase {
         assertEquals(workspace.rootTilingContainer.orientation, .v)
     }
 
+    func testTiling_mruInsideMustBeFlattenedContainer_bindsOutsideOfIt() async {
+        let workspace = Workspace.get(byName: name)
+        var mruWindow: Window!
+        let root = workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
+                $0.lifeStatus = .mustBeFlattened
+                TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
+                mruWindow = TestWindow.new(id: 3, parent: $0)
+            }
+        }
+        TestWindow.new(id: 4, parent: workspace.floatingWindowsContainer)
+        mruWindow.markAsMostRecentChild()
+
+        await parseCommand("layout tiling --window-id 4").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription, .h_tiles([.window(1), .h_tiles([.window(2), .window(3)]), .window(4)]))
+    }
+
     func testRoot_withWindowIdFlag_targetsThatWindowsWorkspaceRoot() async {
         let focusedRoot = Workspace.get(byName: "a").rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)

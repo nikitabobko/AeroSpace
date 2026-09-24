@@ -28,6 +28,17 @@ extension TreeNode {
         }
     }
 
+    func nearestAliveTilingParent() -> (parent: TilingContainer, index: Int)? {
+        var node: TreeNode = self
+        while true {
+            guard let parent = node.parent as? TilingContainer else { return nil }
+            switch parent.lifeStatus {
+                case .alive: return node.ownIndex(in: .all).map { (parent, $0) }
+                case .mustBeFlattened, .deadOrInvisible: node = parent
+            }
+        }
+    }
+
     var parents: [NonLeafTreeNodeObject] { parent.flatMap { [$0] + $0.parents } ?? [] }
     var parentsWithSelf: [TreeNode] { parent.flatMap { [self] + $0.parentsWithSelf } ?? [self] }
 
@@ -123,6 +134,26 @@ extension TilingContainer {
             ? stride(from: ownIndex + 1, to: children.count, by: 1)
             : stride(from: ownIndex - 1, to: -1, by: -1)
         return candidates.first(where: { children[$0].tilingTreeNodeCasesOrDie().isVisible })
+    }
+}
+
+extension TilingTreeNodeCases {
+    func resolvedThroughMustBeFlattenedRecursive() -> TilingTreeNodeCases {
+        switch self {
+            case .window:
+                self
+            case .tilingContainer(let container):
+                switch container.lifeStatus {
+                    case .alive:
+                        self
+                    case .mustBeFlattened:
+                        container.mostRecentVisibleChild.orDie("Visible containers must have at least one visible child")
+                            .tilingTreeNodeCasesOrDie()
+                            .resolvedThroughMustBeFlattenedRecursive()
+                    case .deadOrInvisible:
+                        die("Tombstone containers are skipped by the callers")
+                }
+        }
     }
 }
 

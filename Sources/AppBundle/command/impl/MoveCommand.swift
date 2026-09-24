@@ -23,14 +23,14 @@ struct MoveCommand: Command {
             case .tilingContainer(let parent):
                 guard let indexOfCurrent = currentWindow.ownIndex(in: .all) else { return .fail(io.err(bugPrompt())) }
                 if parent.orientation == direction.orientation,
-                   let indexOfSiblingTarget = parent.visibleSiblingIndex(of: indexOfCurrent, in: direction)
+                   let siblingIndex = parent.visibleSiblingIndex(of: indexOfCurrent, in: direction)
                 {
-                    switch parent.children[indexOfSiblingTarget].tilingTreeNodeCasesOrDie() {
+                    switch parent.children[siblingIndex].tilingTreeNodeCasesOrDie().resolvedThroughMustBeFlattenedRecursive() {
                         case .tilingContainer(let topLevelSiblingTargetContainer):
                             return deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction, io)
                         case .window: // "swap windows"
                             let prevBinding = currentWindow.unbindFromParent()
-                            currentWindow.bind(to: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfSiblingTarget)
+                            currentWindow.bind(to: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: siblingIndex)
                             return .succ
                     }
                 } else {
@@ -156,8 +156,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
         case .tilingContainer(let deepTarget):
             window.bind(to: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
         case .window(let deepTarget):
-            guard let parent = deepTarget.parent as? TilingContainer else { return .fail(io.err(bugPrompt())) }
-            guard let deepTargetIndex = deepTarget.ownIndex(in: .all) else { return .fail(io.err(bugPrompt())) }
+            guard let (parent, deepTargetIndex) = deepTarget.nearestAliveTilingParent() else { return .fail(io.err(bugPrompt())) }
             window.bind(to: parent, adaptiveWeight: WEIGHT_AUTO, index: deepTargetIndex + 1)
     }
     return .succ
