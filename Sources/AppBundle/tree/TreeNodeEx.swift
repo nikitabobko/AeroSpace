@@ -107,16 +107,22 @@ extension TreeNode {
                 case .tilingContainer(let parent):
                     if (layout == nil || parent.layout == layout) && parent.orientation == direction.orientation {
                         guard let ownIndex = node.ownIndex(in: .all) else { return nil }
-                        let candidates = direction.isPositive
-                            ? stride(from: ownIndex + 1, to: parent.children.count, by: 1)
-                            : stride(from: ownIndex - 1, to: -1, by: -1)
-                        if let neighborIndex = candidates.first(where: { parent.children[$0].tilingTreeNodeCasesOrDie().isVisible }) {
+                        if let neighborIndex = parent.visibleSiblingIndex(of: ownIndex, in: direction) {
                             return (parent, ownIndex, neighborIndex)
                         }
                     }
             }
         }
         return nil
+    }
+}
+
+extension TilingContainer {
+    func visibleSiblingIndex(of ownIndex: Int, in direction: CardinalDirection) -> Int? {
+        let candidates = direction.isPositive
+            ? stride(from: ownIndex + 1, to: children.count, by: 1)
+            : stride(from: ownIndex - 1, to: -1, by: -1)
+        return candidates.first(where: { children[$0].tilingTreeNodeCasesOrDie().isVisible })
     }
 }
 

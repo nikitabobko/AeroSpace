@@ -22,8 +22,9 @@ struct MoveCommand: Command {
             case nil: return .fail
             case .tilingContainer(let parent):
                 guard let indexOfCurrent = currentWindow.ownIndex(in: .all) else { return .fail(io.err(bugPrompt())) }
-                let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
-                if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
+                if parent.orientation == direction.orientation,
+                   let indexOfSiblingTarget = parent.visibleSiblingIndex(of: indexOfCurrent, in: direction)
+                {
                     switch parent.children[indexOfSiblingTarget].tilingTreeNodeCasesOrDie() {
                         case .tilingContainer(let topLevelSiblingTargetContainer):
                             return deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction, io)
@@ -103,9 +104,13 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
     _ args: MoveCmdArgs,
     _ env: CmdEnv,
 ) -> BinaryExitCode {
-    let innerMostTilingContainer = window.parents.first(where: {
-        return switch $0.parent?.cases {
-            case .tilingContainer(let parent): parent.orientation == direction.orientation
+    let proposedSibling = window.parents.first(where: { proposedSibling in
+        return switch proposedSibling.parent?.cases {
+            case .tilingContainer(let proposedParent):
+                switch proposedParent.lifeStatus {
+                    case .alive: proposedParent.orientation == direction.orientation
+                    case .mustBeFlattened, .deadOrInvisible: false
+                }
             // Stop searching: we have hit the workspace
             case nil, .workspace: true
             // Impossible: tilingContainer's parent can only be a workspace or tilingContainer
@@ -118,12 +123,12 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
                  .macosPopupWindowsContainer: true
         }
     }) as? TilingContainer
-    guard let innerMostTilingContainer else { return .fail(io.err(bugPrompt())) } // Impossible
-    switch innerMostTilingContainer.tilingContainerParentCases {
+    guard let proposedSibling else { return .fail(io.err(bugPrompt())) } // Impossible
+    switch proposedSibling.tilingContainerParentCases {
         case .unbound: return .fail
         case .tilingContainer(let parent):
             check(parent.orientation == direction.orientation)
-            guard let ownIndex = innerMostTilingContainer.ownIndex(in: .all) else { return .fail(io.err(bugPrompt())) }
+            guard let ownIndex = proposedSibling.ownIndex(in: .all) else { return .fail(io.err(bugPrompt())) }
             window.bind(to: parent, adaptiveWeight: WEIGHT_AUTO, index: ownIndex + direction.insertionOffset)
             return .succ
         case .workspace(let parent):
@@ -163,12 +168,17 @@ extension TilingTreeNodeCases {
         switch self {
             case .window:
                 self
-            case .tilingContainer(let container) where container.orientation == orientation:
-                .tilingContainer(container)
             case .tilingContainer(let container):
-                container.mostRecentChild.orDie("Empty containers must be detached during normalization")
-                    .tilingTreeNodeCasesOrDie()
-                    .findDeepMoveInTargetRecursive(orientation)
+                switch container.lifeStatus {
+                    case .alive where container.orientation == orientation:
+                        .tilingContainer(container)
+                    case .alive, .mustBeFlattened:
+                        container.mostRecentVisibleChild.orDie("Visible containers must have at least one visible child")
+                            .tilingTreeNodeCasesOrDie()
+                            .findDeepMoveInTargetRecursive(orientation)
+                    case .deadOrInvisible:
+                        die("Tombstone containers are skipped by the callers")
+                }
         }
     }
 }
