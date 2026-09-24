@@ -1,0 +1,38 @@
+= aerospace-focus-monitor-back-and-forth(1)
+include::util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Switch between the focused monitor and previously focused monitor back and forth
+// end::purpose[]
+:manname: aerospace-focus-monitor-back-and-forth
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace focus-monitor-back-and-forth [-h|--help]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}.
+The command focuses the workspace that is currently visible on the previously focused monitor.
+
+AeroSpace stores only one previously focused monitor in history.
+If the focus hasn't visited another monitor yet,
+or if the previously focused monitor got disconnected,
+`focus-monitor-back-and-forth` has no monitor to switch focus to.
+In that case, the command will exit with non-zero exit code.
+
+Also see: <<focus-monitor, focus-monitor>>, <<workspace-back-and-forth, workspace-back-and-forth>>
+// end::body[]
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
