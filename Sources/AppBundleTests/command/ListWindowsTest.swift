@@ -111,6 +111,22 @@ final class ListWindowsTest: XCTestCase {
         assertEquals(result.stdout, ["3"])
     }
 
+    func testRunAllSkipsTombstones() async {
+        let workspace = Workspace.get(byName: "a")
+        TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
+        TestWindow.new(id: 2, parent: workspace.rootTilingContainer).lifeStatus = .dead
+        TestWindow.new(id: 3, parent: workspace.rootTilingContainer).lifeStatus = .invisible
+        TestWindow.new(id: 4, parent: Workspace.get(byName: "b").rootTilingContainer).lifeStatus = .invisible
+
+        let list = await parseCommand("list-windows --all --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(list.exitCode.rawValue, 0)
+        assertEquals(list.stdout, ["1"])
+
+        let count = await parseCommand("list-windows --all --count").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(count.exitCode.rawValue, 0)
+        assertEquals(count.stdout, ["1"])
+    }
+
     func testRunJson() async {
         TestWindow.new(id: 7, parent: Workspace.get(byName: "a").rootTilingContainer)
         let result = await parseCommand("list-windows --all --format '%{window-id}' --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
