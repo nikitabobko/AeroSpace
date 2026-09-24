@@ -40,6 +40,13 @@ if /bin/test -z "${NUKE_PATH:-}"; then
 fi
 
 swift() {
+    # SwiftPM passes -color-diagnostics to swift-frontend even when the output is not a TTY.
+    # Without the explicit opt-out, piped output (e.g. `./build-debug.sh | tee`) contains escape sequences
+    # This is a Swift 6.4 bug. I am just too lazy to report it.
+    # I expect that this bug will be fixed in some time without my report anyway
+    if ! /bin/test -t 1; then
+        local -x NO_COLOR=1
+    fi
     if /usr/bin/which swiftly &> /dev/null; then
         swiftly run swift "$@"
     else
