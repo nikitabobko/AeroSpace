@@ -151,7 +151,7 @@ extension TilingContainer {
     fileprivate func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
         let visibleChildren = visibleChildren
 
-        guard let mruIndex: Int = mostRecentChild?.ownIndex(in: .all) else { return }
+        guard let mruIndex: Int = mostRecentVisibleChild?.ownIndex(in: .visibleOnly) else { return }
         for (index, child) in visibleChildren.enumerated() {
             let padding = CGFloat(config.accordionPadding)
             let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {
