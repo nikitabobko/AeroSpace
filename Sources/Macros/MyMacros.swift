@@ -7,7 +7,7 @@ public struct FileIdMacro: ExpressionMacro {
         of node: some FreestandingMacroExpansionSyntax,
         in context: some MacroExpansionContext,
     ) -> ExprSyntax {
-        "#fileID"
+        "MyFileId.init(file: #fileID, line: #line, column: #column, function: #function)"
     }
 }
 
@@ -16,7 +16,7 @@ public struct FilePathMacro: ExpressionMacro {
         of node: some FreestandingMacroExpansionSyntax,
         in context: some MacroExpansionContext,
     ) -> ExprSyntax {
-        "#filePath"
+        "MyFileId.init(file: #filePath, line: #line, column: #column, function: #function)"
     }
 }
 

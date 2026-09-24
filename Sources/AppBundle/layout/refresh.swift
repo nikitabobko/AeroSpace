@@ -98,13 +98,8 @@ enum RunSessionGuard: Sendable {
         command is EnableCommand ? .forceRun : .isServerEnabled
     }
     @MainActor
-    static func checkServerIsEnabledOrDie(
-        file: StaticString = #myFileId,
-        line: UInt = #line,
-        column: Int = #column,
-        function: String = #function,
-    ) -> Self {
-        .isServerEnabled ?? dieT("server is disabled", file: file, line: line, column: column, function: function)
+    static func checkServerIsEnabledOrDie(fileId: MyFileId = #myFileId) -> Self {
+        .isServerEnabled ?? dieT("server is disabled", fileId: fileId)
     }
 }
 

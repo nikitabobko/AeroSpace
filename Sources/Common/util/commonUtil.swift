@@ -12,14 +12,7 @@ public var refreshSessionEvent: RefreshSessionEvent? = nil
 @TaskLocal
 private var recursionDetectorDuringTermination = false
 
-public func bugPrompt(
-    _ __message: String = "",
-    isDie: Bool = false,
-    file: StaticString = #myFileId,
-    line: UInt = #line,
-    column: Int = #column,
-    function: String = #function,
-) -> String {
+public func bugPrompt(_ __message: String = "", isDie: Bool = false, fileId: MyFileId = #myFileId) -> String {
     let _message = __message.contains("\n") ? "\n" + __message.prefixLines(with: "    ") : __message
     let thread = Thread.current
     return """
@@ -36,7 +29,7 @@ public func bugPrompt(
         Is main thread: \(thread.isMainThread)
         axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken.prettyDescription)
         macOS version: \(ProcessInfo().operatingSystemVersionString)
-        Coordinate: \(file):\(line):\(column) \(function)
+        Coordinate: \(fileId.file):\(fileId.line):\(fileId.column) \(fileId.function)
         recursionDetectorDuringTermination: \(recursionDetectorDuringTermination)
         cli: \(isCli)
         die: \(isDie)
@@ -48,14 +41,8 @@ public func bugPrompt(
         """
 }
 
-public func dieT<T>(
-    _ __message: String = "",
-    file: StaticString = #myFileId,
-    line: UInt = #line,
-    column: Int = #column,
-    function: String = #function,
-) -> T {
-    let message = bugPrompt(__message, isDie: true, file: file, line: line, column: column, function: function)
+public func dieT<T>(_ __message: String = "", fileId: MyFileId = #myFileId) -> T {
+    let message = bugPrompt(__message, isDie: true, fileId: fileId)
     if !isUnitTest && isServer {
         showMessageInGui(
             filenameIfConsoleApp: recursionDetectorDuringTermination
@@ -72,7 +59,7 @@ public func dieT<T>(
             }
         }
     }
-    fatalError("\n" + message, file: file, line: line)
+    fatalError("\n" + message, file: fileId.file, line: fileId.line)
 }
 
 extension MainActor {
@@ -125,26 +112,13 @@ public func throwT<T, E: Error>(_ error: E) throws(E) -> T { throw error }
 
 public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
 
-@inlinable public func die(
-    _ message: String = "",
-    file: StaticString = #myFileId,
-    line: UInt = #line,
-    column: Int = #column,
-    function: String = #function,
-) -> Never {
-    dieT(message, file: file, line: line, column: column, function: function)
+@inlinable public func die(_ message: String = "", fileId: MyFileId = #myFileId) -> Never {
+    dieT(message, fileId: fileId)
 }
 
-public func check(
-    _ condition: Bool,
-    _ message: @autoclosure () -> String = "",
-    file: StaticString = #myFileId,
-    line: UInt = #line,
-    column: Int = #column,
-    function: String = #function,
-) {
+public func check(_ condition: Bool, _ message: @autoclosure () -> String = "", fileId: MyFileId = #myFileId) {
     if !condition {
-        die(message(), file: file, line: line, column: column, function: function)
+        die(message(), fileId: fileId)
     }
 }
 
