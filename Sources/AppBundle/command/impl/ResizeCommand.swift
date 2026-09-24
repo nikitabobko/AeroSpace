@@ -10,6 +10,13 @@ struct ResizeCommand: Command {
 
         let candidates = target.windowOrNil?.parentsWithSelf
             .filter { ($0.parent as? TilingContainer)?.layout == .tiles }
+            .filter {
+                guard let parent = $0.parent as? TilingContainer else { return false }
+                return switch parent.lifeStatus {
+                    case .alive: true
+                    case .mustBeFlattened, .deadOrInvisible: false
+                }
+            }
             ?? []
 
         let orientation: Orientation?
