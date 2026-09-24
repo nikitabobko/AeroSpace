@@ -25,7 +25,7 @@ struct SwapCommand: Command {
                     case nil:
                         return .fail
                 }
-            case .dfsRelative(let nextPrev):
+            case .dfsNextPrev(let nextPrev):
                 let windows = target.workspace.rootTilingContainer.allVisibleLeafWindowsRecursive
                 guard let currentIndex = windows.firstIndex(where: { $0 == target.windowOrNil }) else {
                     return .fail

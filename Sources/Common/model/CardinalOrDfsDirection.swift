@@ -1,11 +1,11 @@
 public enum CardinalOrDfsDirection: Equatable, Sendable {
     case direction(CardinalDirection)
-    case dfsRelative(DfsNextPrev)
+    case dfsNextPrev(DfsNextPrev)
 }
 
 extension CardinalOrDfsDirection: CaseIterable {
     public static var allCases: [CardinalOrDfsDirection] {
-        CardinalDirection.allCases.map { .direction($0) } + DfsNextPrev.allCases.map { .dfsRelative($0) }
+        CardinalDirection.allCases.map { .direction($0) } + DfsNextPrev.allCases.map { .dfsNextPrev($0) }
     }
 }
 
@@ -16,7 +16,7 @@ extension CardinalOrDfsDirection: RawRepresentable {
         if let d = CardinalDirection(rawValue: rawValue) {
             self = .direction(d)
         } else if let np = DfsNextPrev(rawValue: rawValue) {
-            self = .dfsRelative(np)
+            self = .dfsNextPrev(np)
         } else {
             return nil
         }
@@ -25,7 +25,7 @@ extension CardinalOrDfsDirection: RawRepresentable {
     public var rawValue: RawValue {
         return switch self {
             case .direction(let d): d.rawValue
-            case .dfsRelative(let np): np.rawValue
+            case .dfsNextPrev(let np): np.rawValue
         }
     }
 }

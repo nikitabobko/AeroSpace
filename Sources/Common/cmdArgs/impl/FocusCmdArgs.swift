@@ -77,7 +77,7 @@ extension FocusCmdArgs {
         if let cardinalOrDfsDirection {
             return switch cardinalOrDfsDirection {
                 case .direction(let dir): .direction(dir)
-                case .dfsRelative(let nextPrev): .dfsRelative(nextPrev)
+                case .dfsNextPrev(let nextPrev): .dfsRelative(nextPrev)
             }
         }
         if let windowId {
