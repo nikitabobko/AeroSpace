@@ -65,8 +65,8 @@ aerospace -h;
     | move-node-to-monitor [<move_node_to_monitor1_flag>]... (left|down|up|right|next|prev) [<move_node_to_monitor1_flag>]...
     | move-node-to-monitor [<move_node_to_monitor2_flag>]... <monitor_pattern>... [<move_node_to_monitor2_flag>]...
 
-    | move-node-to-workspace [--wrap-around|--focus-follows-window|--stdin|--no-stdin]... (next|prev) [--wrap-around|--focus-follows-window|--stdin|--no-stdin]...
-    | move-node-to-workspace [--fail-if-noop|--window-id <window_id>|--focus-follows-window]... <workspace> [--fail-if-noop|--window-id <window_id>|--focus-follows-window]...
+    | move-node-to-workspace [--wrap-around|--focus-follows-window|--stdin|--no-stdin|--parent]... (next|prev) [--wrap-around|--focus-follows-window|--stdin|--no-stdin|--parent]...
+    | move-node-to-workspace [--fail-if-noop|--window-id <window_id>|--focus-follows-window|--parent]... <workspace> [--fail-if-noop|--window-id <window_id>|--focus-follows-window|--parent]...
 
     | move-workspace-to-monitor [--wrap-around] (left|down|up|right|next|prev) [--wrap-around]
     | move-workspace-to-monitor [--wrap-around] <monitor_pattern>... [--wrap-around]
@@ -128,12 +128,12 @@ aerospace -h;
 
 <list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format> | --format <output_format> | --count | --json;
 
-<move_command_flag> ::= --window-id <window_id> | --boundaries <boundary> | --boundaries-action <move_boundaries_action>
+<move_command_flag> ::= --window-id <window_id> | --parent | --boundaries <boundary> | --boundaries-action <move_boundaries_action>
     | --fail-if-fullscreen | --fail-if-macos-native-fullscreen;
 <move_boundaries_action> ::= stop|fail|create-implicit-container;
 
-<move_node_to_monitor1_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop|--wrap-around;
-<move_node_to_monitor2_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop;
+<move_node_to_monitor1_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop|--wrap-around|--parent;
+<move_node_to_monitor2_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop|--parent;
 
 <focus_direction_flag> ::= --boundaries <boundary>|--boundaries-action <boundaries_action>|--ignore-floating|--wrap-around
     | --fail-if-fullscreen | --fail-if-macos-native-fullscreen;
