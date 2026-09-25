@@ -33,6 +33,13 @@ final class ListWindowsTest: XCTestCase {
         assertNil(parseCommand("list-windows --all --format '%{window-title}' --json").errorOrNil)
     }
 
+    func testParseGnuStyleEquals() {
+        assertNil(parseCommand("list-windows --workspace=focused visible").errorOrNil)
+        assertNil(parseCommand("list-windows --monitor=mouse --pid=1 '--format=%{window-title} |'").errorOrNil)
+        assertEquals(parseCommand("list-windows --monitor=all --pid=foo").errorOrNil, "ERROR: Failed to parse 'foo' CLI argument: Can't convert to Int32")
+        assertEquals(parseCommand("list-windows --focused=no").errorOrNil, "ERROR: Option '--focused' doesn't accept value 'no'")
+    }
+
     func testInterpolationVariablesConsistency() {
         for kind in AeroObjKind.allCases {
             switch kind {
@@ -180,6 +187,24 @@ final class ListWindowsTest: XCTestCase {
         assertEquals(matching.stdout, ["1"])
 
         let mismatching = await parseCommand("list-windows --monitor all --app-bundle-id com.unknown.app --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(mismatching.exitCode.rawValue, 0)
+        assertEquals(mismatching.stdout, [])
+    }
+
+    func testRun_gnuStyleEquals() async {
+        TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
+        TestWindow.new(id: 2, parent: Workspace.get(byName: "b").rootTilingContainer)
+        TestWindow.new(id: 3, parent: Workspace.get(byName: "c").rootTilingContainer)
+        let result = await parseCommand("list-windows --workspace=a b --app-bundle-id=bobko.AeroSpace.test-app '--format=%{window-id} | %{workspace}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout.sorted(), ["1 | a", "2 | b"])
+
+        // Deprecated --app-id flag name
+        let matching = await parseCommand("list-windows --monitor=all --app-id=bobko.AeroSpace.test-app --format=%{window-id}").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(matching.exitCode.rawValue, 0)
+        assertEquals(matching.stdout.sorted(), ["1", "2", "3"])
+
+        let mismatching = await parseCommand("list-windows --monitor=all --app-id=com.unknown.app --format=%{window-id}").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(mismatching.exitCode.rawValue, 0)
         assertEquals(mismatching.stdout, [])
     }

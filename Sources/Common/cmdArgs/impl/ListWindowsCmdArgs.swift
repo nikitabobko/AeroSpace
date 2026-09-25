@@ -61,7 +61,7 @@ extension ListWindowsCmdArgs {
 }
 
 func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindowsCmdArgs> {
-    let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 }.slice // Compatibility
+    let args = args.map { $0 == "--app-id" || $0.starts(with: "--app-id=") ? "--app-bundle-id" + $0.dropFirst("--app-id".count) : $0 }.slice // Compatibility
     return parseSpecificCmdArgs(ListWindowsCmdArgs(commonState: .init(args)), args)
         .filter("Mandatory option is not specified (--focused|--all|--monitor|--workspace)") { raw in
             raw.filteringOptions.focused || raw.allAlias || !raw.filteringOptions.monitors.isEmpty || !raw.filteringOptions.workspaces.isEmpty

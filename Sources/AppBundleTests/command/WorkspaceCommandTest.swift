@@ -35,6 +35,15 @@ final class WorkspaceCommandTest: XCTestCase {
         assertEquals(parseCommand("workspace -- --help").errorOrNil, "ERROR: Workspace names starting with dash are disallowed")
     }
 
+    func testParseGnuStyleEquals() {
+        // Unlike 'workspace --fail-if-noop foo', the value is bound to the flag
+        testParseCommandFail("workspace --fail-if-noop=foo", msg: """
+            ERROR: Option '--fail-if-noop' doesn't accept value 'foo'
+            ERROR: Argument '(<workspace-name>|next|prev)' is mandatory
+            """, exitCode: 2)
+        assertEquals(parseCommand("workspace -- --fail-if-noop=foo").errorOrNil, "ERROR: Workspace names starting with dash are disallowed")
+    }
+
     func testDirect_focusDifferentWorkspace() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
