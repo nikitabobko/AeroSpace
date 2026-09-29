@@ -39,7 +39,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
-    public struct FilteringFlags: ConvenienceMutable, Equatable, Sendable {
+    public struct FilteringFlags: Withable, Equatable, Sendable {
         public var monitors: [MonitorId] = []
         public var focused: Bool = false
         public var workspaces: [WorkspaceFilter] = []
@@ -70,10 +70,10 @@ func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindowsCmdArg
             raw.allAlias.implies(raw.filteringFlags == ListWindowsCmdArgs.FilteringFlags())
         }
         .filter("--focused conflicts with other \"filtering\" flags") { raw in
-            raw.filteringFlags.focused.implies(raw.filteringFlags.copy(\.focused, false) == ListWindowsCmdArgs.FilteringFlags())
+            raw.filteringFlags.focused.implies(raw.filteringFlags.with(\.focused, false) == ListWindowsCmdArgs.FilteringFlags())
         }
         .map { raw in
-            raw.allAlias ? raw.copy(\.filteringFlags.monitors, [.all]).copy(\.allAlias, false) : raw // Normalize alias
+            raw.allAlias ? raw.with(\.filteringFlags.monitors, [.all]).with(\.allAlias, false) : raw // Normalize alias
         }
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }

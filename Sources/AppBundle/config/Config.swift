@@ -32,7 +32,7 @@ var defaultConfigUrl: URL {
 @MainActor var config: Config = defaultConfig // todo move to Ctx?
 @MainActor var configUrl: URL = defaultConfigUrl
 
-struct Config: ConvenienceMutable {
+struct Config: Withable {
     var configVersion: ConfigVersion = ._1
     var _afterLoginCommand: [any Command] = []
     var afterStartupCommand: Shell<any Command> = .empty
@@ -63,7 +63,7 @@ struct Config: ConvenienceMutable {
     var onModeChanged: Shell<any Command> = .empty
 }
 
-struct FocusFollowsMouse: ConvenienceMutable {
+struct FocusFollowsMouse: Withable {
     var enabled: Bool = false
 }
 

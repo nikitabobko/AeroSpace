@@ -9,33 +9,33 @@ final class EchoCommandTest: XCTestCase {
     func testParse() {
         testParseSingleCommandSucc(
             "echo -- foo",
-            EchoCmdArgs(rawArgs: []).copy(\.args, .initialized([[.literal("foo")]])),
+            EchoCmdArgs(rawArgs: []).with(\.args, .initialized([[.literal("foo")]])),
         )
         testParseSingleCommandSucc(
             "echo -- foo bar",
-            EchoCmdArgs(rawArgs: []).copy(\.args, .initialized([[.literal("foo")], [.literal("bar")]])),
+            EchoCmdArgs(rawArgs: []).with(\.args, .initialized([[.literal("foo")], [.literal("bar")]])),
         )
         testParseSingleCommandSucc(
             "echo --stderr -- foo",
             EchoCmdArgs(rawArgs: [])
-                .copy(\.args, .initialized([[.literal("foo")]]))
-                .copy(\.isStderr, true),
+                .with(\.args, .initialized([[.literal("foo")]]))
+                .with(\.isStderr, true),
         )
         testParseSingleCommandSucc(
             "echo -- '%{window-id}'",
-            EchoCmdArgs(rawArgs: []).copy(\.args, .initialized([[.interVar(.formatVar(.window(.windowId)))]])),
+            EchoCmdArgs(rawArgs: []).with(\.args, .initialized([[.interVar(.formatVar(.window(.windowId)))]])),
         )
         testParseSingleCommandSucc(
             "echo -- 'id: %{window-id}'",
-            EchoCmdArgs(rawArgs: []).copy(\.args, .initialized([[.literal("id: "), .interVar(.formatVar(.window(.windowId)))]])),
+            EchoCmdArgs(rawArgs: []).with(\.args, .initialized([[.literal("id: "), .interVar(.formatVar(.window(.windowId)))]])),
         )
         testParseSingleCommandSucc(
             "echo -- --stderr",
-            EchoCmdArgs(rawArgs: []).copy(\.args, .initialized([[.literal("--stderr")]])),
+            EchoCmdArgs(rawArgs: []).with(\.args, .initialized([[.literal("--stderr")]])),
         )
         testParseSingleCommandSucc(
             "echo -- -h",
-            EchoCmdArgs(rawArgs: []).copy(\.args, .initialized([[.literal("-h")]])),
+            EchoCmdArgs(rawArgs: []).with(\.args, .initialized([[.literal("-h")]])),
         )
 
         testParseCommandFail("echo", msg: "ERROR: Argument '--' is mandatory\nERROR: Argument '<string>' is mandatory", exitCode: 2)

@@ -39,7 +39,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
-    public struct FilteringFlags: ConvenienceMutable, Equatable, Sendable {
+    public struct FilteringFlags: Withable, Equatable, Sendable {
         public var onMonitors: [MonitorId] = []
         public var visible: Bool?
         public var empty: Bool?
@@ -62,13 +62,13 @@ func parseListWorkspacesCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWorkspaces
             raw.focused.implies(raw.filteringFlags == ListWorkspacesCmdArgs.FilteringFlags())
         }
         .map { raw in
-            raw.all ? raw.copy(\.filteringFlags.onMonitors, [.all]).copy(\.all, false) : raw
+            raw.all ? raw.with(\.filteringFlags.onMonitors, [.all]).with(\.all, false) : raw
         }
         .map { raw in // Expand alias
             raw.focused
-                ? raw.copy(\.filteringFlags.onMonitors, [.focused])
-                    .copy(\.filteringFlags.visible, true)
-                    .copy(\.focused, false)
+                ? raw.with(\.filteringFlags.onMonitors, [.focused])
+                    .with(\.filteringFlags.visible, true)
+                    .with(\.focused, false)
                 : raw
         }
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }

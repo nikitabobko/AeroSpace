@@ -70,8 +70,8 @@ struct MoveCommand: Command {
 
             if monitors.indices.contains(index) {
                 let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(target: .direction(direction))
-                    .copy(\.windowId, window.windowId)
-                    .copy(\.focusFollowsWindow, globalFocus.windowOrNil == window)
+                    .with(\.windowId, window.windowId)
+                    .with(\.focusFollowsWindow, globalFocus.windowOrNil == window)
 
                 return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
             } else {

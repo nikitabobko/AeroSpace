@@ -1,7 +1,7 @@
 import Common
 import HotKey
 
-struct Mode: ConvenienceMutable, Equatable, Sendable {
+struct Mode: Withable, Equatable, Sendable {
     var bindings: [String: HotkeyBinding]
 
     static let zero = Mode(bindings: [:])

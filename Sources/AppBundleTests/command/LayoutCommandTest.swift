@@ -19,7 +19,7 @@ final class LayoutCommandTest: XCTestCase {
         )
         testParseSingleCommandSucc(
             "layout --root accordion tiles",
-            LayoutCmdArgs(rawArgs: [], toggleBetween: [.accordion, .tiles]).copy(\.root, true),
+            LayoutCmdArgs(rawArgs: [], toggleBetween: [.accordion, .tiles]).with(\.root, true),
         )
         testParseCommandFail(
             "layout --workspace 2 tiles",
@@ -39,7 +39,7 @@ final class LayoutCommandTest: XCTestCase {
 
         testParseSingleCommandSucc(
             "layout --for-next-detected-window floating",
-            LayoutCmdArgs(rawArgs: [], toggleBetween: [.floating]).copy(\.forNextDetectedWindow, true),
+            LayoutCmdArgs(rawArgs: [], toggleBetween: [.floating]).with(\.forNextDetectedWindow, true),
         )
         testParseCommandFail(
             "layout --for-next-detected-window floating tiling",

@@ -4,7 +4,7 @@ extension CGRect {
     var withYAxisFlipped: Rect {
         let mainMonitorHeight: CGFloat = mainMonitorInfo.height
         let rect = toRect()
-        return rect.copy(\.topLeftY, mainMonitorHeight - rect.topLeftY)
+        return rect.with(\.topLeftY, mainMonitorHeight - rect.topLeftY)
     }
 }
 

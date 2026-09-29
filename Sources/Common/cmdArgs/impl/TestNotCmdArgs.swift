@@ -14,6 +14,6 @@ public struct TestNotCmdArgs: CmdArgs {
 
 func parseTestNotCmdArgs(_ args: StrArrSlice) -> ParsedCmd<TestNotCmdArgs> {
     parseSpecificCmdArgs(TestCmdArgs(rawArgs: args), args).map {
-        TestNotCmdArgs(rawArgs: args).copy(\.testArgs, $0)
+        TestNotCmdArgs(rawArgs: args).with(\.testArgs, $0)
     }
 }

@@ -1,12 +1,12 @@
 import Common
 
-struct Gaps: ConvenienceMutable, Equatable, Sendable {
+struct Gaps: Withable, Equatable, Sendable {
     var inner: Inner
     var outer: Outer
 
     static let zero = Gaps(inner: .zero, outer: .zero)
 
-    struct Inner: ConvenienceMutable, Equatable, Sendable {
+    struct Inner: Withable, Equatable, Sendable {
         var vertical: DynamicConfigValue<Int>
         var horizontal: DynamicConfigValue<Int>
 
@@ -23,7 +23,7 @@ struct Gaps: ConvenienceMutable, Equatable, Sendable {
         }
     }
 
-    struct Outer: ConvenienceMutable, Equatable, Sendable {
+    struct Outer: Withable, Equatable, Sendable {
         var left: DynamicConfigValue<Int>
         var bottom: DynamicConfigValue<Int>
         var top: DynamicConfigValue<Int>

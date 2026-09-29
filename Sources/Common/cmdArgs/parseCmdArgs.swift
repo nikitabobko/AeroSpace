@@ -11,7 +11,7 @@ public func parseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<any CmdArgs> {
 }
 
 public protocol CmdArgs:
-    ConvenienceMutable,
+    Withable,
     Equatable,
     CustomStringConvertible,
     AeroAny,
@@ -22,7 +22,7 @@ public protocol CmdArgs:
     var commonState: CmdArgsCommonState { get set }
 }
 
-public struct CmdArgsCommonState: ConvenienceMutable, Equatable, Sendable {
+public struct CmdArgsCommonState: Withable, Equatable, Sendable {
     let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
     var windowId: UInt32? = nil
     var workspaceName: WorkspaceName? = nil

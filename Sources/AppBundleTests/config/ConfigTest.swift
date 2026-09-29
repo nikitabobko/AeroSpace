@@ -354,9 +354,9 @@ final class ConfigTest: XCTestCase {
             """,
         )
         let matcher6Args = TestCmdArgs(rawArgs: [])
-            .copy(\.lhs, .initialized(.app(.appBundleId)))
-            .copy(\.infixOperator, .initialized(.equals))
-            .copy(\.rhs, .initialized("org.alacritty"))
+            .with(\.lhs, .initialized(.app(.appBundleId)))
+            .with(\.infixOperator, .initialized(.equals))
+            .with(\.rhs, .initialized("org.alacritty"))
         assertEquals(result.config.onWindowDetected, [
             WindowDetectedCallback( // 0
                 matcher: .command(.cmd(TrueCommand.instance)),

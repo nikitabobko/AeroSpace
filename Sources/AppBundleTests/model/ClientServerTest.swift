@@ -8,8 +8,8 @@ final class ClientServerTest: XCTestCase {
             { "command": "deprecated", "args": ["foo", "bar"], "stdin": "stdin" }
             """.data(using: .utf8)!
         let expected = ClientRequest(args: ["foo", "bar"], stdin: "stdin", windowId: nil, workspace: nil)
-            .copy(\.windowId, nil)
-            .copy(\.workspace, nil)
+            .with(\.windowId, nil)
+            .with(\.workspace, nil)
         assertSucc(ClientRequest.decodeJson(data), expected)
     }
 
@@ -18,8 +18,8 @@ final class ClientServerTest: XCTestCase {
             { "args": ["foo", "bar"], "stdin": "stdin" }
             """.data(using: .utf8)!
         let expected = ClientRequest(args: ["foo", "bar"], stdin: "stdin", windowId: nil, workspace: nil)
-            .copy(\.windowId, nil)
-            .copy(\.workspace, nil)
+            .with(\.windowId, nil)
+            .with(\.workspace, nil)
         assertSucc(ClientRequest.decodeJson(data), expected)
     }
 

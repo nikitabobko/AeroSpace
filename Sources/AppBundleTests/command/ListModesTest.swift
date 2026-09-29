@@ -5,10 +5,10 @@ import XCTest
 final class ListModesTest: XCTestCase {
     func testParseListModesCommand() {
         testParseSingleCommandSucc("list-modes", ListModesCmdArgs(rawArgs: []))
-        testParseSingleCommandSucc("list-modes --current", ListModesCmdArgs(rawArgs: []).copy(\.current, true))
-        testParseSingleCommandSucc("list-modes --json", ListModesCmdArgs(rawArgs: []).copy(\.json, true))
-        testParseSingleCommandSucc("list-modes --count", ListModesCmdArgs(rawArgs: []).copy(\.outputOnlyCount, true))
-        testParseSingleCommandSucc("list-modes --current --json", ListModesCmdArgs(rawArgs: []).copy(\.current, true).copy(\.json, true))
+        testParseSingleCommandSucc("list-modes --current", ListModesCmdArgs(rawArgs: []).with(\.current, true))
+        testParseSingleCommandSucc("list-modes --json", ListModesCmdArgs(rawArgs: []).with(\.json, true))
+        testParseSingleCommandSucc("list-modes --count", ListModesCmdArgs(rawArgs: []).with(\.outputOnlyCount, true))
+        testParseSingleCommandSucc("list-modes --current --json", ListModesCmdArgs(rawArgs: []).with(\.current, true).with(\.json, true))
     }
 
     func testParseListModesCommandConflicts() {

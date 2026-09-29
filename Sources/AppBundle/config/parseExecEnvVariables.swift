@@ -17,7 +17,7 @@ struct ExecConfig: Equatable {
     var envVariables: [String: String] = env + defaultOverriddenEnvVars
 }
 
-struct RawExecConfig: ConvenienceMutable, Equatable {
+struct RawExecConfig: Withable, Equatable {
     var inheritEnvVariables = true
     // Already interpolated value of overridden vars
     var overriddenVars: [String: String] = [:]

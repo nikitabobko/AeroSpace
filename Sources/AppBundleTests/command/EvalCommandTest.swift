@@ -7,14 +7,14 @@ final class EvalCommandTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testParse() {
-        testParseSingleCommandSucc("eval 'workspace foo'", EvalCmdArgs(rawArgs: []).copy(\.shellExpr, .initialized("workspace foo")))
+        testParseSingleCommandSucc("eval 'workspace foo'", EvalCmdArgs(rawArgs: []).with(\.shellExpr, .initialized("workspace foo")))
         assertEquals(parseCommand("eval").errorOrNil, "ERROR: Argument '<aerospace-shell-expr>' is mandatory")
     }
 
     func testParseDoubleDash() {
         testParseSingleCommandSucc(
             "eval -- '--anything'",
-            EvalCmdArgs(rawArgs: []).copy(\.shellExpr, .initialized("--anything")),
+            EvalCmdArgs(rawArgs: []).with(\.shellExpr, .initialized("--anything")),
         )
         assertEquals(parseCommand("eval --").errorOrNil, "ERROR: Argument '<aerospace-shell-expr>' is mandatory")
     }
