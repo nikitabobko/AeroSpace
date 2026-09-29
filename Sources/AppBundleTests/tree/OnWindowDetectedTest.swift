@@ -36,7 +36,7 @@ final class OnWindowDetectedTest: XCTestCase {
             ),
         ]
 
-        await tryOnWindowDetected(detected) // todo: tryOnWindowDetected must not be called manually in tests
+        await runOnWindowDetected(ifConventional: detected) // todo: tryOnWindowDetected must not be called manually in tests
 
         assertEquals((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 2)
         assertEquals((workspaceA.rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)

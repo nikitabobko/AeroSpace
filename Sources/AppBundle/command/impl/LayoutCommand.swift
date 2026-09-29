@@ -6,6 +6,14 @@ struct LayoutCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
+        if args.forNextDetectedWindow {
+            if let it = args.toggleBetween.val.singleOrNil() {
+                global_layoutForNextDetectedWindow = it
+                return .succ
+            } else {
+                return .fail(io.err(bugPrompt()))
+            }
+        }
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
 
         let node: ConventionalWindowParentCases
@@ -81,6 +89,8 @@ struct LayoutCommand: Command {
         }
     }
 }
+
+@MainActor var global_layoutForNextDetectedWindow: LayoutCmdArgs.LayoutDescription? = nil
 
 @MainActor private func changeTilingLayout(
     _ io: CmdIo,

@@ -9,10 +9,17 @@ public struct LayoutCmdArgs: CmdArgs {
             "--workspace": workspaceSubArgParser(),
             "--root": trueBoolFlag(\.root),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
+            "--for-next-detected-window": trueBoolFlag(\.forNextDetectedWindow),
         ],
         posArgs: [newMandatoryPosArgParser(\.toggleBetween, parseToggleBetween, placeholder: LayoutDescription.unionLiteral)],
         conflictingOptions: [
             ["--window-id", "--workspace"],
+
+            // todo introduce a flagsAllowlist primitive
+            ["--for-next-detected-window", "--window-id"],
+            ["--for-next-detected-window", "--workspace"],
+            ["--for-next-detected-window", "--root"],
+            ["--for-next-detected-window", "--fail-if-noop"],
         ],
     )
 
@@ -23,7 +30,7 @@ public struct LayoutCmdArgs: CmdArgs {
         self.toggleBetween = .initialized(toggleBetween)
     }
 
-    public enum LayoutDescription: String, CaseIterable, Equatable, Sendable {
+    public enum LayoutDescription: String, CaseIterable, Equatable, Sendable, AeroAny {
         case accordion, tiles
         case horizontal, vertical
         case h_accordion, v_accordion, h_tiles, v_tiles
@@ -32,9 +39,12 @@ public struct LayoutCmdArgs: CmdArgs {
 
     public var root: Bool = false
     public var failIfNoop: Bool = false
+    public var forNextDetectedWindow: Bool = false
 }
 
 public let layoutCommandRootFlagIncompatibilityMsg = "layout command: --root and tiling|floating are incompatible"
+public let layoutCommandForNextDetectedWindowFlagIncompatibilityMsg =
+    "layout command: --for-next-detected-window allows only one tiling|floating <target-layout> argument"
 
 private func parseToggleBetween(input: PosArgParserInput) -> ParsedCliArgs<[LayoutCmdArgs.LayoutDescription]> {
     let args = input.nonFlagArgs()
@@ -69,6 +79,16 @@ func parseLayoutCmdArgs(_ args: StrArrSlice) -> ParsedCmd<LayoutCmdArgs> {
                     case .accordion, .h_accordion, .h_tiles,
                          .horizontal, .tiles, .v_accordion, .v_tiles,
                          .vertical: true
+                }
+            }
+        }
+        .filter(layoutCommandForNextDetectedWindowFlagIncompatibilityMsg) { cmdArgs in
+            !cmdArgs.forNextDetectedWindow || true == cmdArgs.toggleBetween.val.singleOrNil()?.then {
+                switch $0 {
+                    case .floating, .tiling: true
+                    case .accordion, .h_accordion, .h_tiles,
+                         .horizontal, .tiles, .v_accordion, .v_tiles,
+                         .vertical: false
                 }
             }
         }
