@@ -28,7 +28,7 @@ final class LayoutCommandTest: XCTestCase {
         )
         testParseCommandFail(
             "layout --workspace 2 --window-id 2 tiles",
-            msg: "ERROR: Conflicting options: --window-id, --workspace",
+            msg: "ERROR: Conflicting flags: --window-id, --workspace",
             exitCode: 2,
         )
         testParseCommandFail(
@@ -53,22 +53,22 @@ final class LayoutCommandTest: XCTestCase {
         )
         testParseCommandFail(
             "layout --for-next-detected-window --window-id 1 floating",
-            msg: "ERROR: Conflicting options: --for-next-detected-window, --window-id",
+            msg: "ERROR: Conflicting flags: --for-next-detected-window, --window-id",
             exitCode: 2,
         )
         testParseCommandFail(
             "layout --for-next-detected-window --workspace 2 floating",
-            msg: "ERROR: Conflicting options: --for-next-detected-window, --workspace",
+            msg: "ERROR: Conflicting flags: --for-next-detected-window, --workspace",
             exitCode: 2,
         )
         testParseCommandFail(
             "layout --for-next-detected-window --root floating",
-            msg: "ERROR: Conflicting options: --for-next-detected-window, --root",
+            msg: "ERROR: Conflicting flags: --for-next-detected-window, --root",
             exitCode: 2,
         )
         testParseCommandFail(
             "layout --for-next-detected-window --fail-if-noop floating",
-            msg: "ERROR: Conflicting options: --fail-if-noop, --for-next-detected-window",
+            msg: "ERROR: Conflicting flags: --fail-if-noop, --for-next-detected-window",
             exitCode: 2,
         )
     }

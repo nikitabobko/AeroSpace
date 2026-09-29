@@ -64,19 +64,19 @@ public struct CmdParser<Root>: Sendable {
     let info: CmdStaticInfo
     let flags: [String: any ArgParserProtocol<SubArgParserInput, Root, ()>]
     let positionalArgs: [any ArgParserProtocol<PosArgParserInput, Root, PosArgParserContext>]
-    let conflictingOptions: [Set<String>]
+    let conflictingFlags: [Set<String>]
 
     init(
         kind: CmdKind,
         help: String,
         flags: [String: any ArgParserProtocol<SubArgParserInput, Root, ()>],
         posArgs: [any ArgParserProtocol<PosArgParserInput, Root, PosArgParserContext>],
-        conflictingOptions: [Set<String>] = [],
+        conflictingFlags: [Set<String>] = [],
     ) {
         self.info = CmdStaticInfo(help: help, kind: kind)
         self.flags = flags
         self.positionalArgs = posArgs
-        self.conflictingOptions = conflictingOptions
+        self.conflictingFlags = conflictingFlags
     }
 }
 

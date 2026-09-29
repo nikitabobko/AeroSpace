@@ -12,7 +12,7 @@ public struct ListModesCmdArgs: CmdArgs {
             "--json": trueBoolFlag(\.json),
         ],
         posArgs: [],
-        conflictingOptions: [
+        conflictingFlags: [
             ["--count", "--current"],
             ["--count", "--json"],
         ],

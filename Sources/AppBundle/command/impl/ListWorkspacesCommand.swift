@@ -7,15 +7,15 @@ struct ListWorkspacesCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         var result: [Workspace] = Workspace.all
-        if let visible = args.filteringOptions.visible {
+        if let visible = args.filteringFlags.visible {
             result = result.filter { $0.isVisible == visible }
         }
-        if !args.filteringOptions.onMonitors.isEmpty {
-            let monitors: Set<CGPoint> = args.filteringOptions.onMonitors.resolveMonitors(io)
+        if !args.filteringFlags.onMonitors.isEmpty {
+            let monitors: Set<CGPoint> = args.filteringFlags.onMonitors.resolveMonitors(io)
             if monitors.isEmpty { return .fail }
             result = result.filter { monitors.contains($0.workspaceMonitorInfo.rect.topLeftCorner) }
         }
-        if let empty = args.filteringOptions.empty {
+        if let empty = args.filteringFlags.empty {
             result = result.filter { $0.isEffectivelyEmpty == empty }
         }
 

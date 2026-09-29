@@ -16,7 +16,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
             dashDashArg(mandatory: false),
             newMandatoryPosArgParser(\.target, parseWorkspaceTarget, placeholder: workspaceTargetPlaceholder),
         ],
-        conflictingOptions: [
+        conflictingFlags: [
             ["--stdin", "--no-stdin"],
         ],
     )

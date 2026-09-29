@@ -42,7 +42,7 @@ final class RunCallbackCommandTest: XCTestCase {
         )
         testParseCommandFail(
             "run-callback --for-every-window --window-id 1 on-window-detected",
-            msg: "ERROR: Conflicting options: --for-every-window, --window-id",
+            msg: "ERROR: Conflicting flags: --for-every-window, --window-id",
             exitCode: 2,
         )
         testParseCommandFail(

@@ -3,7 +3,7 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
     var errors: [String] = []
 
     var posArgumentParserIndex = 0
-    var options: Set<String> = Set()
+    var flags: Set<String> = Set()
     var index = 0
     var positionalOnly = false
 
@@ -16,7 +16,7 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
             case (false, _) where arg.isCliDashFlag && !isResizeNegativeUnitsArg(raw, arg: arg):
                 if let optionParser = T.parser.flags[arg] {
                     index += 1
-                    if !options.insert(arg).inserted {
+                    if !flags.insert(arg).inserted {
                         errors.append("Duplicated option \(arg.singleQuoted)")
                     }
                     raw = optionParser.transformRaw(raw, &index, SubArgParserInput(superArg: arg, index: index, args: args), &errors)
@@ -45,10 +45,10 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
         }
     }
 
-    for conflictSet in T.parser.conflictingOptions {
-        let mutualOptions = conflictSet.intersection(options)
-        if mutualOptions.count > 1 {
-            errors.append("Conflicting options: \(mutualOptions.sorted().joined(separator: ", "))")
+    for conflictSet in T.parser.conflictingFlags {
+        let mutualFlags = conflictSet.intersection(flags)
+        if mutualFlags.count > 1 {
+            errors.append("Conflicting flags: \(mutualFlags.sorted().joined(separator: ", "))")
             break
         }
     }

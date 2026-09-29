@@ -11,7 +11,7 @@ public struct RunCallbackCmdArgs: CmdArgs {
         posArgs: [
             newMandatoryPosArgParser(\.callback, parseCallbackKind, placeholder: "<callback>"),
         ],
-        conflictingOptions: [
+        conflictingFlags: [
             ["--for-every-window", "--window-id"],
         ],
     )

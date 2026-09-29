@@ -11,7 +11,7 @@ public struct EvalCmdArgs: CmdArgs {
             dashDashArg(mandatory: false),
             newMandatoryPosArgParser(\.shellExpr, consumeStrCliArg, placeholder: "<aerospace-shell-expr>"),
         ],
-        conflictingOptions: [],
+        conflictingFlags: [],
     )
 
     public var shellExpr: Lateinit<String> = .uninitialized

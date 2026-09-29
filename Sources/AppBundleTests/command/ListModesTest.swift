@@ -12,8 +12,8 @@ final class ListModesTest: XCTestCase {
     }
 
     func testParseListModesCommandConflicts() {
-        assertEquals(parseCommand("list-modes --json --count").errorOrNil, "ERROR: Conflicting options: --count, --json")
-        assertEquals(parseCommand("list-modes --current --count").errorOrNil, "ERROR: Conflicting options: --count, --current")
+        assertEquals(parseCommand("list-modes --json --count").errorOrNil, "ERROR: Conflicting flags: --count, --json")
+        assertEquals(parseCommand("list-modes --current --count").errorOrNil, "ERROR: Conflicting flags: --count, --current")
     }
 
     @MainActor

@@ -12,7 +12,7 @@ public struct EchoCmdArgs: CmdArgs {
             dashDashArg(mandatory: true),
             newMandatoryPosArgParser(\.args, consumeWholeArrayOfInterpolatedPosArgs, placeholder: "<string>"),
         ],
-        conflictingOptions: [],
+        conflictingFlags: [],
     )
 
     public var args: Lateinit<[[InterToken<InterVar>]]> = .uninitialized

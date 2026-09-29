@@ -12,22 +12,22 @@ final class ListWindowsTest: XCTestCase {
         assertEquals(parseCommand("list-windows --pid 1 --focused").errorOrNil, "--focused conflicts with other \"filtering\" flags")
         assertEquals(parseCommand("list-windows --pid 1 --all").errorOrNil, "--all conflicts with \"filtering\" flags. Please use '--monitor all' instead of '--all' alias")
         assertNil(parseCommand("list-windows --all").errorOrNil)
-        assertEquals(parseCommand("list-windows --all --workspace M").errorOrNil, "ERROR: Conflicting options: --all, --workspace")
-        assertEquals(parseCommand("list-windows --all --focused").errorOrNil, "ERROR: Conflicting options: --all, --focused")
-        assertEquals(parseCommand("list-windows --all --count --format %{window-title}").errorOrNil, "ERROR: Conflicting options: --count, --format")
+        assertEquals(parseCommand("list-windows --all --workspace M").errorOrNil, "ERROR: Conflicting flags: --all, --workspace")
+        assertEquals(parseCommand("list-windows --all --focused").errorOrNil, "ERROR: Conflicting flags: --all, --focused")
+        assertEquals(parseCommand("list-windows --all --count --format %{window-title}").errorOrNil, "ERROR: Conflicting flags: --count, --format")
         assertEquals(
             parseCommand("list-windows --all --focused --monitor mouse").errorOrNil,
-            "ERROR: Conflicting options: --all, --focused")
+            "ERROR: Conflicting flags: --all, --focused")
         assertEquals(
             parseCommand("list-windows --all --focused --monitor mouse --workspace focused").errorOrNil,
-            "ERROR: Conflicting options: --all, --focused, --workspace")
+            "ERROR: Conflicting flags: --all, --focused, --workspace")
         assertEquals(
             parseCommand("list-windows --all --workspace focused").errorOrNil,
-            "ERROR: Conflicting options: --all, --workspace")
+            "ERROR: Conflicting flags: --all, --workspace")
         assertNil(parseCommand("list-windows --monitor mouse").errorOrNil)
 
         // --json
-        assertEquals(parseCommand("list-windows --all --count --json").errorOrNil, "ERROR: Conflicting options: --count, --json")
+        assertEquals(parseCommand("list-windows --all --count --json").errorOrNil, "ERROR: Conflicting flags: --count, --json")
         assertEquals(parseCommand("list-windows --all --format '%{right-padding}' --json").errorOrNil, "%{right-padding} interpolation variable is not allowed when --json is used")
         assertEquals(parseCommand("list-windows --all --format '%{window-title} |' --json").errorOrNil, "Only interpolation variables and spaces are allowed in \'--format\' when \'--json\' is used")
         assertNil(parseCommand("list-windows --all --format '%{window-title}' --json").errorOrNil)

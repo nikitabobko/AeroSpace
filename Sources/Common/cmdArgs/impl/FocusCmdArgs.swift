@@ -16,7 +16,7 @@ public struct FocusCmdArgs: CmdArgs {
             "--wrap-around": trueBoolFlag(\.wrapAroundAlias),
         ],
         posArgs: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
-        conflictingOptions: [
+        conflictingFlags: [
             ["--wrap-around", "--boundaries-action"],
             ["--wrap-around", "--boundaries"],
         ],

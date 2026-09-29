@@ -12,7 +12,7 @@ public struct LayoutCmdArgs: CmdArgs {
             "--for-next-detected-window": trueBoolFlag(\.forNextDetectedWindow),
         ],
         posArgs: [newMandatoryPosArgParser(\.toggleBetween, parseToggleBetween, placeholder: LayoutDescription.unionLiteral)],
-        conflictingOptions: [
+        conflictingFlags: [
             ["--window-id", "--workspace"],
 
             // todo introduce a flagsAllowlist primitive

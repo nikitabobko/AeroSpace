@@ -48,7 +48,7 @@ final class FocusCommandTest: XCTestCase {
         )
         assertEquals(
             parseCommand("focus left --boundaries-action wrap-around-the-workspace --wrap-around").errorOrNil,
-            "ERROR: Conflicting options: --boundaries-action, --wrap-around",
+            "ERROR: Conflicting flags: --boundaries-action, --wrap-around",
         )
         assertEquals(
             parseCommand("focus dfs-next --fail-if-fullscreen").errorOrNil,

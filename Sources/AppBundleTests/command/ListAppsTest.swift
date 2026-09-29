@@ -8,6 +8,6 @@ final class ListAppsTest: XCTestCase {
         assertNotNil(parseCommand("list-apps --macos-native-hidden no").cmdOrDie)
         assertNotNil(parseCommand("list-apps --format %{app-bundle-id}").cmdOrDie)
         assertNotNil(parseCommand("list-apps --count").cmdOrDie)
-        assertEquals(parseCommand("list-apps --format %{app-bundle-id} --count").errorOrNil, "ERROR: Conflicting options: --count, --format")
+        assertEquals(parseCommand("list-apps --format %{app-bundle-id} --count").errorOrNil, "ERROR: Conflicting flags: --count, --format")
     }
 }
