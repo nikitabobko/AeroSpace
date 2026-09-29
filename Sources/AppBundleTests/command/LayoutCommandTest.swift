@@ -53,22 +53,22 @@ final class LayoutCommandTest: XCTestCase {
         )
         testParseCommandFail(
             "layout --for-next-detected-window --window-id 1 floating",
-            msg: "ERROR: Conflicting flags: --for-next-detected-window, --window-id",
+            msg: "ERROR: Conflicting flags. This flag: '--for-next-detected-window' conflicts with these flags: --window-id",
             exitCode: 2,
         )
         testParseCommandFail(
             "layout --for-next-detected-window --workspace 2 floating",
-            msg: "ERROR: Conflicting flags: --for-next-detected-window, --workspace",
+            msg: "ERROR: Conflicting flags. This flag: '--for-next-detected-window' conflicts with these flags: --workspace",
             exitCode: 2,
         )
         testParseCommandFail(
             "layout --for-next-detected-window --root floating",
-            msg: "ERROR: Conflicting flags: --for-next-detected-window, --root",
+            msg: "ERROR: Conflicting flags. This flag: '--for-next-detected-window' conflicts with these flags: --root",
             exitCode: 2,
         )
         testParseCommandFail(
             "layout --for-next-detected-window --fail-if-noop floating",
-            msg: "ERROR: Conflicting flags: --fail-if-noop, --for-next-detected-window",
+            msg: "ERROR: Conflicting flags. This flag: '--for-next-detected-window' conflicts with these flags: --fail-if-noop",
             exitCode: 2,
         )
     }

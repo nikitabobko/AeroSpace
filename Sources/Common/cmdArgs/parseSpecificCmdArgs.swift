@@ -53,6 +53,18 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
         }
     }
 
+    for flag in encounteredFlags {
+        if let allowlist = T.parser.flagAllowlist[flag] {
+            let badFlags = encounteredFlags.subtracting(allowlist).subtracting([flag])
+            if !badFlags.isEmpty {
+                let msg = "Conflicting flags. This flag: '\(flag)' conflicts with these flags: " +
+                    badFlags.sorted().joined(separator: ", ")
+                errors.append(msg)
+                break
+            }
+        }
+    }
+
     return errors.isEmpty ? .cmd(raw) : .failure(errors.joinErrors())
 }
 

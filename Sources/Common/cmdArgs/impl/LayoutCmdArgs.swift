@@ -14,12 +14,9 @@ public struct LayoutCmdArgs: CmdArgs {
         posArgs: [newMandatoryPosArgParser(\.toggleBetween, parseToggleBetween, placeholder: LayoutDescription.unionLiteral)],
         conflictingFlags: [
             ["--window-id", "--workspace"],
-
-            // todo introduce a flagsAllowlist primitive
-            ["--for-next-detected-window", "--window-id"],
-            ["--for-next-detected-window", "--workspace"],
-            ["--for-next-detected-window", "--root"],
-            ["--for-next-detected-window", "--fail-if-noop"],
+        ],
+        flagAllowlist: [
+            "--for-next-detected-window": [], // Allow nothing else
         ],
     )
 

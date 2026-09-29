@@ -65,6 +65,7 @@ public struct CmdParser<Root>: Sendable {
     let flags: [String: any ArgParserProtocol<SubArgParserInput, Root, ()>]
     let positionalArgs: [any ArgParserProtocol<PosArgParserInput, Root, PosArgParserContext>]
     let conflictingFlags: [Set<String>]
+    let flagAllowlist: [String: Set<String>]
 
     init(
         kind: CmdKind,
@@ -72,11 +73,13 @@ public struct CmdParser<Root>: Sendable {
         flags: [String: any ArgParserProtocol<SubArgParserInput, Root, ()>],
         posArgs: [any ArgParserProtocol<PosArgParserInput, Root, PosArgParserContext>],
         conflictingFlags: [Set<String>] = [],
+        flagAllowlist: [String: Set<String>] = [:],
     ) {
         self.info = CmdStaticInfo(help: help, kind: kind)
         self.flags = flags
         self.positionalArgs = posArgs
         self.conflictingFlags = conflictingFlags
+        self.flagAllowlist = flagAllowlist
     }
 }
 
