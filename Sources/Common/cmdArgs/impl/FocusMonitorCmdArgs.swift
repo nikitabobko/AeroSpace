@@ -8,7 +8,7 @@ public struct FocusMonitorCmdArgs: CmdArgs {
             "--wrap-around": trueBoolFlag(\.wrapAround),
         ],
         posArgs: [
-            dashDashArg(mandatory: false),
+            doubleDashArg(mandatory: false),
             newMandatoryPosArgParser(\.target, parseMonitorTarget, placeholder: MonitorTarget.cases.joinedCliArgs),
         ],
     )
@@ -23,7 +23,7 @@ func parseFocusMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusMonitorCmdA
 }
 
 func parseMonitorTarget(i: PosArgParserInput) -> ParsedCliArgs<MonitorTarget> {
-    switch (i.arg, i.sawDashDash) {
+    switch (i.arg, i.sawDoubleDash) {
         case ("next", false):
             return .succ(.relative(.next), advanceBy: 1)
         case ("prev", false):

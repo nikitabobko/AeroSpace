@@ -13,7 +13,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
         posArgs: [
-            dashDashArg(mandatory: false),
+            doubleDashArg(mandatory: false),
             newMandatoryPosArgParser(\.target, parseMonitorTarget, placeholder: MonitorTarget.cases.joinedCliArgs),
         ],
     )

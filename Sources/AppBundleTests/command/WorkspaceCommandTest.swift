@@ -23,7 +23,7 @@ final class WorkspaceCommandTest: XCTestCase {
         testParseSingleCommandSucc("workspace --no-stdin next", WorkspaceCmdArgs(target: .relative(.next)).copy(\.commonState.explicitStdinFlag, false))
     }
 
-    func testParseDashDash() {
+    func testParseDoubleDash() {
         testParseSingleCommandSucc("workspace -- foo", WorkspaceCmdArgs(target: .direct(.parse("foo").getOrDie())))
         assertEquals(parseCommand("workspace -- next").errorOrNil, "ERROR: 'next' is a reserved workspace name")
         assertEquals(parseCommand("workspace --").errorOrNil, "ERROR: Argument \'(<workspace-name>|next|prev)\' is mandatory")

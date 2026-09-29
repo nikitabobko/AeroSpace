@@ -8,7 +8,7 @@ public struct EvalCmdArgs: CmdArgs {
             "--stdin": ArgParser(\.commonState.explicitStdinFlag, constSubArgParserFun(true)),
         ],
         posArgs: [
-            dashDashArg(mandatory: false),
+            doubleDashArg(mandatory: false),
             newMandatoryPosArgParser(\.shellExpr, consumeStrCliArg, placeholder: "<aerospace-shell-expr>"),
         ],
         conflictingFlags: [],

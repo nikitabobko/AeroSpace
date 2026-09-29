@@ -13,7 +13,7 @@ final class MoveNodeToMonitorCommandTest: XCTestCase {
         assertEquals(parseCommand("move-node-to-monitor --fail-if-noop left").errorOrNil, "--fail-if-noop is incompatible with (left|down|up|right|next|prev)")
     }
 
-    func testParseDashDash() {
+    func testParseDoubleDash() {
         testParseSingleCommandSucc("move-node-to-monitor -- next", MoveNodeToMonitorCmdArgs(target: .patterns([.pattern("next")!])))
         testParseSingleCommandSucc(
             "move-node-to-monitor -- main 2",

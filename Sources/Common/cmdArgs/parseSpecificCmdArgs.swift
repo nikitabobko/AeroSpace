@@ -3,7 +3,7 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
     var errors: [String] = []
 
     var posArgumentParserIndex = 0
-    var flags: Set<String> = Set()
+    var encounteredFlags: Set<String> = Set()
     var index = 0
     var positionalOnly = false
 
@@ -16,8 +16,8 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
             case (false, _) where arg.isCliDashFlag && !isResizeNegativeUnitsArg(raw, arg: arg):
                 if let optionParser = T.parser.flags[arg] {
                     index += 1
-                    if !flags.insert(arg).inserted {
-                        errors.append("Duplicated option \(arg.singleQuoted)")
+                    if !encounteredFlags.insert(arg).inserted {
+                        errors.append("Duplicated flag \(arg.singleQuoted)")
                     }
                     raw = optionParser.transformRaw(raw, &index, SubArgParserInput(superArg: arg, index: index, args: args), &errors)
                 } else {
@@ -29,7 +29,7 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
                     positionalOnly = true
                 }
                 if let parser = T.parser.positionalArgs.getOrNil(atIndex: posArgumentParserIndex) {
-                    let input = PosArgParserInput(index: index, args: args, sawDashDash: positionalOnly)
+                    let input = PosArgParserInput(index: index, args: args, sawDoubleDash: positionalOnly)
                     raw = parser.transformRaw(raw, &index, input, &errors)
                     posArgumentParserIndex += 1
                 } else {
@@ -46,7 +46,7 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
     }
 
     for conflictSet in T.parser.conflictingFlags {
-        let mutualFlags = conflictSet.intersection(flags)
+        let mutualFlags = conflictSet.intersection(encounteredFlags)
         if mutualFlags.count > 1 {
             errors.append("Conflicting flags: \(mutualFlags.sorted().joined(separator: ", "))")
             break

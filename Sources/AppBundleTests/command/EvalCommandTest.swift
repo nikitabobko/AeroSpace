@@ -11,7 +11,7 @@ final class EvalCommandTest: XCTestCase {
         assertEquals(parseCommand("eval").errorOrNil, "ERROR: Argument '<aerospace-shell-expr>' is mandatory")
     }
 
-    func testParseDashDash() {
+    func testParseDoubleDash() {
         testParseSingleCommandSucc(
             "eval -- '--anything'",
             EvalCmdArgs(rawArgs: []).copy(\.shellExpr, .initialized("--anything")),

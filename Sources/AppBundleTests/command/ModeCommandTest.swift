@@ -11,7 +11,7 @@ final class ModeCommandTest: XCTestCase {
         assertEquals(parseCommand("mode").errorOrNil, "ERROR: Argument '<binding-mode>' is mandatory")
     }
 
-    func testParseDashDash() {
+    func testParseDoubleDash() {
         testParseSingleCommandSucc(
             "mode -- main",
             ModeCmdArgs(rawArgs: []).copy(\.targetMode, .initialized("main")),
