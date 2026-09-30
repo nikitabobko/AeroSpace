@@ -10,7 +10,7 @@ include::util/header.adoc[]
 ++++
 
 This is an interactive companion to the xref:guide.adoc#tree[Tree] section of the guide.
-After it, you should be able to predict where a new window lands, and how `move` and `join-with` reshape the tree, _before_ you press the key.
+After it, you should be able to predict where a new window lands, and how `move`, `join-with` and `layout` reshape the tree, _before_ you press the key.
 
 Every section has a simulator, a quiz, and exercises to repeat on your real desktop.
 The simulator is a small JavaScript port of AeroSpace's own tree code (`docs/assets/tree-tutorial/tree.js`).
@@ -303,3 +303,190 @@ Predict first.
 Then focus window 1 and `move right` twice.
 Say each result out loud first.
 . Reset, then build `h[v[1 2] v[3 4]]` from `h[1 2 3 4]`.
+
+[#layouts]
+== Layouts: tiles, accordion, orientation
+
+Windows don't have a layout.
+Every _container_ has two independent properties, a layout and an orientation (see xref:guide.adoc#layouts[Layouts]):
+
+[cols="1,2,2"]
+|===
+| |`horizontal` |`vertical`
+
+|`tiles`
+|`h[...]` side by side
+|`v[...]` stacked
+
+|`accordion`
+|`H[...]` one window visible, the others peek out left and right
+|`V[...]` one window visible, the others peek out at the top and bottom
+|===
+
+xref:commands.adoc#layout[`layout`] changes the _parent container of the focused window_.
+Just like for new windows, focus picks the target.
+
+In an accordion, the most recently focused window fills the container.
+The other windows are stacked behind it, their edges visible as `accordion-padding`.
+`focus` in the direction of the accordion cycles through them.
+
+[#layout-keys]
+=== `alt-slash` and `alt-comma`
+
+The xref:guide.adoc#default-config[default config] binds:
+
+[source,toml]
+----
+alt-slash = 'layout tiles horizontal vertical'
+alt-comma = 'layout accordion horizontal vertical'
+----
+
+[IMPORTANT]
+====
+Walk the arguments left to right, and apply the _first one that doesn't already describe_ the container.
+`tiles` and `accordion` keep the orientation.
+`horizontal` and `vertical` keep the layout.
+====
+
+So each key toggles in two steps:
+
+[cols="1,2,2"]
+|===
+|Container is |`alt-slash` |`alt-comma`
+
+|`h` tiles |→ `v` (flip) |→ `H` (to accordion)
+|`v` tiles |→ `h` (flip) |→ `V` (to accordion)
+|`H` accordion |→ `h` (to tiles) |→ `V` (flip)
+|`V` accordion |→ `v` (to tiles) |→ `H` (flip)
+|===
+
+In short: if the layout is wrong, switch the layout; if the layout is right, flip the orientation.
+
+[#layout-flip]
+=== Flipping the orientation rotates the ancestors
+
+[IMPORTANT]
+====
+With `enable-normalization-opposite-orientation-for-nested-containers` (the default), flipping the orientation of a nested container also flips _every ancestor_, alternating up to the root container.
+Nested containers must stay opposite to their parent.
+====
+
+In `h[1 v[2 3]]` with window 2 focused, `alt-slash` doesn't put 2 and 3 side by side on the right.
+It gives `v[1 h[2 3]]`: 1 on top, 2 and 3 below.
+The whole workspace rotates by 90°.
+(`changeOrientation` in `Sources/AppBundle/tree/TilingContainer.swift`)
+
+++++
+<div id="tt-flip-ex" class="tt-before-after"></div>
+<script>
+  (() => {
+    const el = document.getElementById("tt-flip-ex");
+    const before = Aero.parse("h[1 v[2 3]]", {focus: 2}), after = before.clone();
+    after.layout("tiles", "horizontal", "vertical");
+    const box = (ws, label) => {
+      const d = document.createElement("div"), s = document.createElement("div");
+      d.appendChild(s); Aero.renderScreen(s, ws, {width: 220, height: 120});
+      d.insertAdjacentHTML("beforeend", `<div class="tt-caption">${label}</div>`); return d;
+    };
+    el.appendChild(box(before, "h[1 v[2 3]], window 2 focused"));
+    el.insertAdjacentHTML("beforeend", `<code>alt-slash</code> →`);
+    el.appendChild(box(after, after.compact()));
+  })();
+</script>
+++++
+
+* Switching between `tiles` and `accordion` never touches the ancestors.
+Only orientation flips propagate.
+* To get 2 and 3 side by side on the right, un-nest them: that's `h[1 2 3]`.
+Use `move`, not `layout`.
+
+A typical use of an accordion is one slot for several windows that you look at one at a time.
+For example, `h[1 V[2 3 4]]`: an editor on the left, and a browser, a terminal and docs on the right that you cycle with `alt-j` / `alt-k`.
+Build the nesting first (<<reshaping>>), focus a window inside it, then press `alt-comma`.
+
+[#layouts-play]
+=== Play
+
+Click inside the box.
+`/` and `,` are `alt-slash` and `alt-comma`.
+`h` `j` `k` `l` focus, `H` `J` `K` `L` move, `n` new window, `x` close.
+
+++++
+<div id="tt-sim-layout"></div>
+<script>
+  Aero.mount(document.getElementById("tt-sim-layout"), Aero.parse("h[1 v[2 3]]", {focus: 2}),
+    {controls: ["focus", "move", "join", "layout", "new", "close", "flatten"], width: 420, height: 240});
+</script>
+++++
+
+[#layouts-predict]
+=== Predict
+
+++++
+<div id="tt-quiz-layout"></div>
+<script>
+  Quiz.mount(document.getElementById("tt-quiz-layout"), [
+    { prompt: "Window 1 is focused.", setup: "h[1 2 3]", focus: 1, cmd: "alt-slash (layout tiles horizontal vertical)",
+      options: ["v[1 2 3]", "h[1 2 3]", "H[1 2 3]"], answer: 0,
+      why: "'tiles' and 'horizontal' already match, so 'vertical' is the first one that doesn't. The orientation flips." },
+    { prompt: "Window 1 is focused.", setup: "h[1 2 3]", focus: 1, cmd: "alt-comma (layout accordion horizontal vertical)",
+      options: ["H[1 2 3]", "V[1 2 3]", "v[1 2 3]"], answer: 0,
+      why: "'accordion' doesn't match, so it's applied. The orientation is kept." },
+    { prompt: "Window 1 is focused.", setup: "H[1 2 3]", focus: 1, cmd: "alt-comma",
+      options: ["V[1 2 3]", "h[1 2 3]", "H[1 2 3]"], answer: 0,
+      why: "Already accordion and horizontal, so 'vertical' wins: flip to V." },
+    { prompt: "Window 1 is focused.", setup: "V[1 2 3]", focus: 1, cmd: "alt-slash",
+      options: ["v[1 2 3]", "h[1 2 3]", "H[1 2 3]"], answer: 0,
+      why: "'tiles' doesn't match, so the layout switches and the orientation stays vertical." },
+    { prompt: "Window 2 is focused.", setup: "h[1 v[2 3]]", focus: 2, cmd: "alt-slash",
+      options: ["v[1 h[2 3]]", "h[1 h[2 3]]", "h[1 2 3]"], answer: 0,
+      why: "The v_tiles container flips to horizontal, so its parent (the root) must flip to vertical. The whole workspace rotates." },
+    { prompt: "Window 1 is focused.", setup: "h[1 v[2 3]]", focus: 1, cmd: "alt-slash",
+      options: ["v[1 h[2 3]]", "v[1 v[2 3]]", "h[1 v[2 3]]"], answer: 0,
+      why: "1's parent is the root. The root flips to vertical, and normalization flips the nested container to horizontal. Same result as with 2 focused." },
+    { prompt: "Window 2 is focused.", setup: "h[1 v[2 3]]", focus: 2, cmd: "alt-comma",
+      options: ["h[1 V[2 3]]", "H[1 v[2 3]]", "v[1 H[2 3]]"], answer: 0,
+      why: "Layout switches don't propagate. Only 2's parent becomes an accordion." },
+    { prompt: "Window 2 is focused.", setup: "h[1 V[2 3]]", focus: 2, cmd: "alt-comma",
+      options: ["v[1 H[2 3]]", "h[1 H[2 3]]", "h[1 v[2 3]]"], answer: 0,
+      why: "Already accordion, so the orientation flips to H, and the root rotates to vertical with it." },
+    { prompt: "Window 3 is focused.", setup: "h[1 V[2 3]]", focus: 3, cmd: "open new window",
+      options: ["h[1 V[2 3 4]]", "h[1 4 V[2 3]]", "h[1 V[2 3] 4]"], answer: 0,
+      why: "The new-window rule: it joins 3's container, the accordion, and becomes the visible window." },
+    { prompt: "You want 2 and 3 side by side on the right of <code>h[1 v[2 3]]</code>. Which command does it?",
+      options: ["Focus 2, move left", "Focus 2, alt-slash", "Focus 2, alt-comma twice"], answer: 0,
+      why: "move left un-nests 2 and gives h[1 2 3]. Any orientation flip of the nested container rotates the root too." },
+  ]);
+</script>
+++++
+
+[#layouts-build]
+=== Build it
+
+++++
+<div id="tt-challenge-layout"></div>
+<script>
+  Challenge.mount(document.getElementById("tt-challenge-layout"), [
+    { start: "h[1 2 3]", focus: 1, goal: "v[1 2 3]", par: 1 },
+    { start: "h[1 2 3]", focus: 1, goal: "V[1 2 3]", par: 2 },
+    { start: "h[1 V[2 3]]", focus: 2, goal: "h[1 v[2 3]]", par: 1 },
+    { start: "h[1 2 3]", focus: 3, goal: "h[1 V[2 3]]", par: 2 },
+    { start: "v[1 h[2 3]]", focus: 1, goal: "h[1 v[2 3]]", par: 1 },
+    { start: "h[1 2 3 4]", focus: 1, goal: "h[1 V[2 3 4]]", par: 2 },
+  ], { controls: ["focus", "move", "join", "layout", "flatten"] });
+</script>
+++++
+
+[#layouts-try]
+=== Try it for real
+
+. Open three windows: `h[1 2 3]`.
+Press `alt-slash`, `alt-slash`, `alt-comma`, `alt-comma`, `alt-slash`.
+Name the layout after each press _before_ you look.
+. In `H[1 2 3]`, cycle through the windows with `alt-h` / `alt-l`.
+Then press `alt-comma` to get `V[1 2 3]`: which keys cycle now?
+. Reset (`alt-shift-;` `r`), build `h[1 v[2 3]]`, focus window 2, and press `alt-slash`.
+Predict first.
+Then press `alt-slash` again.
+. From `h[1 2 3 4]`, build `h[1 V[2 3 4]]`.
+Then open a new window from inside the accordion: where does it land?
