@@ -1,0 +1,47 @@
+/* Styles for the interactive widgets in tutorial.adoc (tree.js, quiz.js).
+ * Everything is scoped to widget classes so the asciidoctor theme stays untouched. */
+.aero-sim, .quiz {
+  --tt-rule: #dddddf; --tt-muted: #6f6f6f; --tt-good: #2e7d4f; --tt-bad: #b3261e; --tt-code-bg: #f7f7f8;
+  --tt-mono: "Droid Sans Mono", "DejaVu Sans Mono", ui-monospace, Menlo, monospace;
+  border: 1px solid var(--tt-rule); border-radius: 6px; padding: 1rem 1.2rem; margin: 1.2rem 0; background: #fff;
+  outline: none; line-height: 1.5;
+}
+.aero-sim:focus-within, .aero-sim:focus { box-shadow: 0 0 0 2px #e0e8f5; }
+.quiz .aero-sim { margin: .8rem 0 0; padding: .8rem; }
+.aero-row { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+.aero-screen { position: relative; background: #2b2a28; border-radius: 4px; flex: none; }
+.aero-win { position: absolute; box-sizing: border-box; border: 2px solid #2b2a28; color: #fff; font: 700 1.4rem var(--tt-mono, monospace);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 3px; transition: all .15s; }
+.aero-win.focused { box-shadow: inset 0 0 0 4px #fff; }
+.aero-win.ghost { opacity: .45; border-radius: 0; }
+pre.aero-tree { margin: 0; flex: 1; min-width: 12rem; font: .8rem/1.35 var(--tt-mono); background: var(--tt-code-bg);
+  padding: .6rem .8rem; border-radius: 4px; color: #222; white-space: pre; overflow-x: auto; }
+.aero-controls { display: flex; flex-wrap: wrap; gap: .5rem .9rem; margin-top: .8rem; }
+.aero-group { display: flex; flex-wrap: wrap; gap: .3rem; }
+.aero-controls button, .quiz button { font: .78rem var(--tt-mono); padding: .3rem .55rem; border: 1px solid var(--tt-rule);
+  background: #fafafa; border-radius: 4px; cursor: pointer; color: #222; }
+.aero-controls button:hover, .quiz button:hover { background: #eef0f3; }
+.aero-controls button:disabled, .quiz button:disabled { opacity: .5; cursor: default; }
+.aero-controls kbd { font-size: .7rem; }
+.aero-reset { margin-left: auto; }
+.aero-log { font: .78rem var(--tt-mono); color: var(--tt-muted); margin-top: .5rem; min-height: 1.2em; }
+
+.quiz .q-head { display: flex; justify-content: space-between; color: var(--tt-muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; }
+.quiz .q-prompt { margin: .4rem 0 .8rem; }
+.quiz .q-setup { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+.quiz .q-cmd { font: .9rem var(--tt-mono); background: #222; color: #fff; padding: .25rem .6rem; border-radius: 4px; display: inline-block; margin: .6rem 0; }
+.quiz .q-options { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: .4rem; }
+.quiz .q-opt { border: 2px solid var(--tt-rule); border-radius: 6px; padding: .4rem; cursor: pointer; background: #fff; }
+.quiz .q-opt:hover { border-color: var(--tt-muted); }
+.quiz .q-opt .lbl { font: 600 .8rem var(--tt-mono); color: var(--tt-muted); display: block; margin-bottom: .25rem; }
+.quiz .q-opt.right { border-color: var(--tt-good); }
+.quiz .q-opt.wrong { border-color: var(--tt-bad); opacity: .7; }
+.quiz .q-opt .aero-win { cursor: default; font-size: .95rem; }
+.quiz .q-feedback { margin-top: .8rem; min-height: 1.4em; }
+.quiz .q-feedback.good { color: var(--tt-good); }
+.quiz .q-feedback.bad { color: var(--tt-bad); }
+.quiz .q-nav { display: flex; justify-content: space-between; align-items: center; margin-top: .8rem; }
+.quiz .q-score { font-size: .9rem; color: var(--tt-muted); }
+
+.tt-before-after { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; margin: 1rem 0; }
+.tt-before-after .tt-caption { font: .8rem var(--tt-mono, monospace); color: #6f6f6f; margin-top: .3rem; }

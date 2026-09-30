@@ -320,6 +320,8 @@ The tree structure can be changed with three commands:
 . xref:commands.adoc#join-with[join-with]
 . xref:commands.adoc#split[split] (it's for compatibility with i3. Please prefer `join-with` over `split`)
 
+TIP: The xref:tutorial.adoc[AeroSpace Tree Tutorial] lets you try out the tree model interactively: where new windows land, and how `move` and `join-with` reshape the tree.
+
 [#layouts]
 === Layouts
 
