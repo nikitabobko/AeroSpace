@@ -21,7 +21,7 @@ struct LiveFocus: AeroAny, Equatable {
         return FrozenFocus(
             windowId: windowOrNil?.windowId,
             workspaceName: workspace.name,
-            monitorId_oneBased: workspace.workspaceMonitor.monitorId_oneBased ?? 0,
+            monitorTopLeftCorner: workspace.workspaceMonitor.rect.topLeftCorner,
         )
     }
 }
@@ -33,10 +33,12 @@ struct LiveFocus: AeroAny, Equatable {
 private struct FrozenFocus: AeroAny, Equatable, Sendable {
     let windowId: UInt32?
     let workspaceName: String
-    // monitorId is not part of the focus. We keep it here only for 'on-focused-monitor-changed' to work
-    let monitorId_oneBased: Int
+    // The monitor is not part of the focus. We keep it here only for 'on-focused-monitor-changed' and
+    // focus-monitor-back-and-forth to work. Just like everywhere else in AeroSpace, the monitor is
+    // addressed by its top left corner, rather than by monitorId_oneBased
+    let monitorTopLeftCorner: CGPoint
 
-    @MainActor var live: LiveFocus { // Important: don't access focus.monitorId here. monitorId is not part of the focus. Always prefer workspace
+    @MainActor var live: LiveFocus { // Important: don't access focus.monitorTopLeftCorner here. The monitor is not part of the focus. Always prefer workspace
         let window: Window? = windowId.flatMap { Window.get(byId: $0) }
         let workspace = Workspace.get(byName: workspaceName)
 
@@ -51,7 +53,7 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
 
 @MainActor private var _focus: FrozenFocus = {
     let monitor = mainMonitorInfo
-    return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId_oneBased: monitor.monitorId_oneBased ?? 0)
+    return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorTopLeftCorner: monitor.rect.topLeftCorner)
 }()
 
 /// Global focus.
@@ -116,6 +118,12 @@ extension Workspace {
 @MainActor private var _prevFocus: FrozenFocus? = nil
 @MainActor var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
 
+// Used by focus-monitor-back-and-forth
+@MainActor var _prevFocusedMonitorPoint: CGPoint? = nil
+@MainActor var prevFocusedMonitor: MonitorInfo? {
+    _prevFocusedMonitorPoint.flatMap { point in monitorInfos.first { $0.rect.topLeftCorner == point } }
+}
+
 @MainActor private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
 @MainActor func checkOnFocusChangedCallbacks_nonCancellable() async {
@@ -135,7 +143,8 @@ extension Workspace {
         _prevFocusedWorkspaceName = _lastKnownFocus.workspaceName
         hasFocusedWorkspaceChanged = true
     }
-    if frozenFocus.monitorId_oneBased != _lastKnownFocus.monitorId_oneBased {
+    if frozenFocus.monitorTopLeftCorner != _lastKnownFocus.monitorTopLeftCorner {
+        _prevFocusedMonitorPoint = _lastKnownFocus.monitorTopLeftCorner
         hasFocusedMonitorChanged = true
     }
     _lastKnownFocus = frozenFocus

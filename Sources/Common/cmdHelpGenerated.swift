@@ -42,6 +42,9 @@ let flatten_workspace_tree_help_generated = """
 let focus_back_and_forth_help_generated = """
     USAGE: focus-back-and-forth [-h|--help]
     """
+let focus_monitor_back_and_forth_help_generated = """
+    USAGE: focus-monitor-back-and-forth [-h|--help]
+    """
 let focus_monitor_help_generated = """
     USAGE: focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
        OR: focus-monitor [-h|--help] [--wrap-around] (next|prev)
