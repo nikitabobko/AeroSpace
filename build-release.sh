@@ -30,20 +30,13 @@ cli_bin_path="$(swift "${swift_build_cli[@]}" --show-bin-path)"
 rm -rf .release && mkdir .release
 
 cd ./xcode
-    # Use the same swiftc in xcodebuild
-    xcodebuild_swift_exec=()
-    if which swiftly &> /dev/null; then
-        xcodebuild_swift_exec=(SWIFT_EXEC="$(swiftly use --print-location)/usr/bin/swiftc")
-    fi
-
     xcode_configuration="Release"
     xcodebuild -version
     xcodebuild-pretty ../.release/xcodebuild.log clean build \
         -scheme AeroSpace \
         -destination "generic/platform=macOS" \
         -configuration "$xcode_configuration" \
-        -derivedDataPath .xcode-build \
-        "${xcodebuild_swift_exec[@]}"
+        -derivedDataPath .xcode-build
 cd -
 
 git checkout .

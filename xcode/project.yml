@@ -11,6 +11,11 @@ configs:
   Debug: debug
   Release: release
 
+# Project level, so that the AeroSpacePackage targets are built by the same toolchain
+settings:
+  base:
+    TOOLCHAINS: ${XCODEGEN_TOOLCHAINS}
+
 targets:
   AeroSpace:
     type: application

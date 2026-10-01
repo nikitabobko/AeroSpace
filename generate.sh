@@ -58,5 +58,13 @@ if test $generate_xcodeproj = 1; then
     export XCODEGEN_AEROSPACE_VERSION=$build_version
     ./script/install-dep.sh --xcodegen
     cd xcode
+
+    # Use the same Swift toolchain in xcodebuild
+    if which swiftly &> /dev/null; then
+        XCODEGEN_TOOLCHAINS="$(plutil -extract CFBundleIdentifier raw "$(swiftly use --print-location)/Info.plist")"
+    else
+        XCODEGEN_TOOLCHAINS=com.apple.dt.toolchain.XcodeDefault
+    fi
+    export XCODEGEN_TOOLCHAINS
     ../.deps/xcodegen/xcodegen # https://github.com/yonaskolb/XcodeGen
 fi
