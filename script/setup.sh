@@ -31,8 +31,8 @@ add-swift-to-bin() {
         >> "$file" /bin/echo "if ! /bin/test -t 1; then export NO_COLOR=1; fi"
         >> "$file" /bin/echo "exec '$(/usr/bin/which swiftly)' run swift \"\$@\""
     else
-        echo "warning: swiftly is not installed. Fallback to plain swift. Swift compilation might not be reproducible" > /dev/stderr
-        add-optional-dep-to-bin swift
+        echo "ERROR: swiftly is not installed." > /dev/stderr
+        exit 1
     fi
 }
 
