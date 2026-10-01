@@ -11,10 +11,17 @@ configs:
   Debug: debug
   Release: release
 
-# Project level, so that the AeroSpacePackage targets are built by the same toolchain
 settings:
   base:
     TOOLCHAINS: ${XCODEGEN_TOOLCHAINS}
+    SWIFT_VERSION: 6.2 # Swift Language Version
+    GENERATE_INFOPLIST_FILE: YES
+    MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
+    # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
+    # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
+    # Agent apps do not appear in the Dock or in the Force Quit window (cmd-opt-esc)
+    INFOPLIST_KEY_LSUIElement: YES
+    CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
 
 targets:
   AeroSpace:
@@ -30,15 +37,6 @@ targets:
         product: AppBundle
     # https://developer.apple.com/documentation/xcode/build-settings-reference
     settings:
-      base:
-        SWIFT_VERSION: 6.2 # Swift Language Version
-        GENERATE_INFOPLIST_FILE: YES
-        MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
-        # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
-        # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
-        # Agent apps do not appear in the Dock or in the Force Quit window (cmd-opt-esc)
-        INFOPLIST_KEY_LSUIElement: YES
-        CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
       configs:
         Debug:
           PRODUCT_NAME: AeroSpace-Debug
