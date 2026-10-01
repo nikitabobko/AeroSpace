@@ -29,7 +29,8 @@ private func moveWithMouse(_ window: Window) async throws { // todo cover with t
     switch window.windowParentCases {
         case .floatingWindowsContainer:
             try await moveFloatingWindow(window)
-        case .macosFullscreenWindowsContainer, .macosMinimizedWindowsContainer, .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
+        case .macosFullscreenWindowsContainer, .macosMinimizedWindowsContainer, .macosPopupWindowsContainer,
+             .ignoredMonitorWindowsContainer, .macosHiddenAppsWindowsContainer:
             return // Unconventional windows can't be moved with mouse
         case .tilingContainer:
             moveTilingWindow(window)

@@ -27,7 +27,10 @@ private struct AppServerTerminationHandler: TerminationHandler {
     @MainActor
     func beforeTermination() {
         // Make all windows fullscreen before Quit
+        let ignoredMonitorWindowIds = Set(ignoredMonitorWindowsContainer.children.compactMap { ($0 as? Window)?.windowId })
         for window in MacWindow.allWindowsMap.values {
+            // AeroSpace never touched windows on ignored monitors. Leave them where they are
+            if ignoredMonitorWindowIds.contains(window.windowId) { continue }
             // makeAllWindowsVisibleAndRestoreSize may be invoked when something went wrong (e.g. some windows are unbound)
             // that's why it's not allowed to use `.parent` call in here
             let monitor = window.macApp.getAxRectForTermination(window.windowId)?.center.monitorApproximation ?? mainMonitorInfo
@@ -99,6 +102,7 @@ extension CGPoint {
 
     var vectorLength: CGFloat { sqrt(x * x + y * y) }
 
+    @MainActor
     var monitorApproximation: MonitorInfo { monitorInfos.minByOrDie { distance(toOuterFrame: $0.rect) } }
 
     var withYAxisFlipped: CGPoint {

@@ -42,7 +42,7 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
     switch window.windowParentCases {
         case .unbound: return
         case .floatingWindowsContainer, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
-             .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
+             .macosPopupWindowsContainer, .ignoredMonitorWindowsContainer, .macosHiddenAppsWindowsContainer:
             return // Nothing to do for floating, or unconventional windows
         case .tilingContainer:
             guard let rect = try await window.getAxRect(.cancellable) else { return }

@@ -34,3 +34,31 @@ func parseMonitorDescription(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -
 
     return parseMonitorDescription(rawString).toParsedConfig(backtrace)
 }
+
+/// Only name patterns make sense here: sequence numbers, `main` and `secondary` are resolved against the monitors
+/// that remain after the ignored ones are filtered out.
+func parseIgnoredMonitors(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> [CaseInsensitiveRegex] {
+    guard let array = raw.asArrayOrNil else {
+        c.errors += [expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace)]
+        return []
+    }
+    return array.enumerated()
+        .map { (index, rawDesc) in
+            let backtrace = backtrace + .index(index)
+            return parseMonitorDescription(rawDesc, backtrace)
+                .flatMap { description -> ResOrConfigParseDiagnostic<CaseInsensitiveRegex> in
+                    switch description {
+                        case .pattern(let regex): .success(regex)
+                        case .main: .failure(notAPattern(backtrace, "main"))
+                        case .secondary: .failure(notAPattern(backtrace, "secondary"))
+                        case .sequenceNumber(let number): .failure(notAPattern(backtrace, String(number)))
+                    }
+                }
+                .getOrNil(appendErrorTo: &c.errors)
+        }
+        .filterNotNil()
+}
+
+private func notAPattern(_ backtrace: ConfigBacktrace, _ raw: String) -> ConfigParseDiagnostic {
+    ConfigParseDiagnostic(backtrace, "Only monitor name patterns can be ignored. \(raw.singleQuoted) is not a pattern")
+}

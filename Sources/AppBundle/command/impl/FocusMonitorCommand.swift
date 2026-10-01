@@ -54,7 +54,7 @@ extension MonitorInfo {
         return myYRange.overlaps(otherYRange) ? .h : .v
     }
 
-    func findRelativeMonitor(inDirection direction: CardinalDirection) -> (monitorsInDirection: [MonitorInfo], index: Int)? {
+    @MainActor func findRelativeMonitor(inDirection direction: CardinalDirection) -> (monitorsInDirection: [MonitorInfo], index: Int)? {
         let currentMonitor = self
         let monitors = sortedMonitorInfos.filter {
             currentMonitor.rect.topLeftCorner == $0.rect.topLeftCorner ||

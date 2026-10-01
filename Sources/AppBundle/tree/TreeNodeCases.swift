@@ -8,6 +8,7 @@ enum TreeNodeCases {
     case macosHiddenAppsWindowsContainer(MacosHiddenAppsWindowsContainer)
     case macosFullscreenWindowsContainer(MacosFullscreenWindowsContainer)
     case macosPopupWindowsContainer(MacosPopupWindowsContainer)
+    case ignoredMonitorWindowsContainer(IgnoredMonitorWindowsContainer)
     case floatingWindowsContainer(FloatingWindowsContainer)
 }
 
@@ -18,6 +19,7 @@ enum NonLeafTreeNodeCases {
     case macosHiddenAppsWindowsContainer(MacosHiddenAppsWindowsContainer)
     case macosFullscreenWindowsContainer(MacosFullscreenWindowsContainer)
     case macosPopupWindowsContainer(MacosPopupWindowsContainer)
+    case ignoredMonitorWindowsContainer(IgnoredMonitorWindowsContainer)
     case floatingWindowsContainer(FloatingWindowsContainer)
 }
 
@@ -33,6 +35,7 @@ enum NonLeafTreeNodeKind: Equatable {
     case macosHiddenAppsWindowsContainer
     case macosFullscreenWindowsContainer
     case macosPopupWindowsContainer
+    case ignoredMonitorWindowsContainer
     case floatingWindowsContainer
 }
 
@@ -43,6 +46,7 @@ enum WindowParentCases {
     case macosHiddenAppsWindowsContainer(MacosHiddenAppsWindowsContainer)
     case macosFullscreenWindowsContainer(MacosFullscreenWindowsContainer)
     case macosPopupWindowsContainer(MacosPopupWindowsContainer)
+    case ignoredMonitorWindowsContainer(IgnoredMonitorWindowsContainer)
     case floatingWindowsContainer(FloatingWindowsContainer)
 }
 
@@ -82,6 +86,7 @@ extension Window {
             case .macosHiddenAppsWindowsContainer(let it): .macosHiddenAppsWindowsContainer(it)
             case .macosMinimizedWindowsContainer(let it): .macosMinimizedWindowsContainer(it)
             case .macosPopupWindowsContainer(let it): .macosPopupWindowsContainer(it)
+            case .ignoredMonitorWindowsContainer(let it): .ignoredMonitorWindowsContainer(it)
             case .tilingContainer(let it): .tilingContainer(it)
             case .workspace: dieT("Workspace can't have direct Window children")
         }
@@ -99,6 +104,7 @@ extension TilingContainer {
             case .macosHiddenAppsWindowsContainer: dieT("macosHiddenAppsWindowsContainer can't be TilingContainer's parent")
             case .macosMinimizedWindowsContainer: dieT("macosMinimizedWindowsContainer can't be TilingContainer's parent")
             case .macosPopupWindowsContainer: dieT("macosPopupWindowsContainer can't be TilingContainer's parent")
+            case .ignoredMonitorWindowsContainer: dieT("ignoredMonitorWindowsContainer can't be TilingContainer's parent")
         }
     }
 }
@@ -113,6 +119,7 @@ extension TreeNode {
             case let container as MacosMinimizedWindowsContainer: .macosMinimizedWindowsContainer(container)
             case let container as MacosFullscreenWindowsContainer: .macosFullscreenWindowsContainer(container)
             case let container as MacosPopupWindowsContainer: .macosPopupWindowsContainer(container)
+            case let container as IgnoredMonitorWindowsContainer: .ignoredMonitorWindowsContainer(container)
             case let container as FloatingWindowsContainer: .floatingWindowsContainer(container)
             default: die("Unknown tree")
         }
@@ -137,6 +144,7 @@ extension NonLeafTreeNodeObject {
             case let container as MacosHiddenAppsWindowsContainer: .macosHiddenAppsWindowsContainer(container)
             case let container as MacosFullscreenWindowsContainer: .macosFullscreenWindowsContainer(container)
             case let container as MacosPopupWindowsContainer: .macosPopupWindowsContainer(container)
+            case let container as IgnoredMonitorWindowsContainer: .ignoredMonitorWindowsContainer(container)
             case let container as FloatingWindowsContainer: .floatingWindowsContainer(container)
             default: die("Unknown tree \(self)")
         }
@@ -151,6 +159,7 @@ extension NonLeafTreeNodeObject {
             case .macosFullscreenWindowsContainer: .macosFullscreenWindowsContainer
             case .macosHiddenAppsWindowsContainer: .macosHiddenAppsWindowsContainer
             case .macosPopupWindowsContainer: .macosPopupWindowsContainer
+            case .ignoredMonitorWindowsContainer: .ignoredMonitorWindowsContainer
         }
     }
 }
@@ -161,6 +170,7 @@ enum ChildParentRelation: Equatable {
     case macosNativeHiddenAppWindow
     case macosNativeMinimizedWindow
     case macosPopupWindow
+    case ignoredMonitorWindow
     case tiling(parent: TilingContainer) // todo consider splitting it on 'tiles' and 'accordion'
     case rootTilingContainer
 
@@ -194,6 +204,10 @@ func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject)
         case (.window, .macosPopupWindowsContainer): .macosPopupWindow
         case (_, .macosPopupWindowsContainer): nil
         case (.macosPopupWindowsContainer, _): nil
+
+        case (.window, .ignoredMonitorWindowsContainer): .ignoredMonitorWindow
+        case (_, .ignoredMonitorWindowsContainer): nil
+        case (.ignoredMonitorWindowsContainer, _): nil
 
         case (.window, .macosMinimizedWindowsContainer): .macosNativeMinimizedWindow
         case (_, .macosMinimizedWindowsContainer): nil
