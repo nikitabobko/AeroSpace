@@ -122,6 +122,30 @@ final class FocusCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 3)
     }
 
+    func testFocusSkipsFloatingWindowUnboundWhileReadingItsRect() async {
+        let workspace = Workspace.get(byName: name)
+        let tiledWindow = TestWindow.new(
+            id: 1,
+            parent: workspace.rootTilingContainer,
+            rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100),
+        )
+        let floatingWindow = TestWindow.new(
+            id: 2,
+            parent: workspace.floatingWindowsContainer,
+            rect: Rect(topLeftX: 10, topLeftY: 10, width: 100, height: 100),
+        )
+        floatingWindow.onGetAxRect = {
+            floatingWindow.unbindFromParent()
+        }
+        assertEquals(tiledWindow.focusWindow(), true)
+
+        let result = await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.windowOrNil?.windowId, 1)
+        XCTAssertNil(floatingWindow.parent)
+    }
+
     func testFocusAlongTheContainerOrientation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
