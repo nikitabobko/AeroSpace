@@ -9,6 +9,7 @@ enum KnownBundleId: String, Equatable {
     case codex = "com.openai.codex"
     case emacs = "org.gnu.Emacs"
     case finder = "com.apple.finder"
+    case fork = "com.DanPristupov.Fork"
     case ghostty = "com.mitchellh.ghostty"
     case gimp = "org.gimp.gimp-2.10"
     case iphonesimulator = "com.apple.iphonesimulator"
@@ -42,5 +43,9 @@ enum KnownBundleId: String, Equatable {
 
     var isVscode: Bool {
         self == .vscode || self == .vscodium
+    }
+
+    var exposesInactiveNativeTabsAsWindows: Bool {
+        self == .fork || self == .ghostty
     }
 }

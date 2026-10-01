@@ -118,13 +118,44 @@ final class MacApp: AbstractApp {
 
     // todo merge together with detectNewWindows
     func getFocusedWindow(_ cm: CancellationMode) async throws -> Window? {
-        let windowId = try await thread?.runInLoop(cm) { [nsApp, axApp, windows] job in
-            try axApp.threadGuarded.get(Ax.focusedWindowAttr)
-                .flatMap { try windows.threadGuarded.getOrRegisterAxWindow(windowId: $0.windowId, $0.ax.cast, nsApp, job) }?
-                .windowId
+        let previousFocusedWindowId = lastNativeFocusedWindowId
+        let focused = try await thread?.runInLoop(cm) { [nsApp, appId, axApp, windows] job -> (UInt32, [UInt32])? in
+            guard let axFocusedWindow = axApp.threadGuarded.get(Ax.focusedWindowAttr),
+                  let focusedWindow = try windows.threadGuarded.getOrRegisterAxWindow(
+                      windowId: axFocusedWindow.windowId,
+                      axFocusedWindow.ax.cast,
+                      nsApp,
+                      job,
+                  )
+            else {
+                return nil
+            }
+            guard appId?.exposesInactiveNativeTabsAsWindows == true,
+                  !isLeftMouseButtonDown,
+                  let axWindows = axApp.threadGuarded.get(Ax.windowsAttr)
+            else {
+                return (focusedWindow.windowId, [])
+            }
+
+            // Inactive native tabs keep valid window IDs, so AXWindows is the source of truth for these apps.
+            var activeWindowIds = Set(axWindows.map { $0.0 })
+            activeWindowIds.insert(focusedWindow.windowId)
+            let staleWindowIds = windows.threadGuarded.keys.filter { !activeWindowIds.contains($0) }
+            for staleWindowId in staleWindowIds {
+                windows.threadGuarded.removeValue(forKey: staleWindowId)
+            }
+            return (focusedWindow.windowId, staleWindowIds)
         }
-        guard let windowId else { return nil }
-        return try await MacWindow.getOrRegister(windowId: windowId, macApp: self)
+        guard let (windowId, staleWindowIds) = focused else { return nil }
+        for staleWindowId in staleWindowIds {
+            setFrameJobs.removeValue(forKey: staleWindowId)?.cancel()
+        }
+        return try await MacWindow.getOrRegister(
+            windowId: windowId,
+            macApp: self,
+            replacingNativeTabWindowIds: staleWindowIds,
+            lastFocusedWindowId: previousFocusedWindowId,
+        )
     }
 
     @MainActor func nativeFocus(_ windowId: UInt32) {
@@ -303,19 +334,27 @@ final class MacApp: AbstractApp {
             return []
         }
         guard let thread else { return [] }
-        let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
+        let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, appId, windows, axApp] (job) -> ([UInt32], [UInt32]) in
             var alive: [UInt32: AxWindow] = windows.threadGuarded
             var dead = [UInt32: AxWindow]()
+            let axWindows = axApp.threadGuarded.get(Ax.windowsAttr)
+            let activeNativeTabWindowIds: Set<UInt32>? =
+                appId?.exposesInactiveNativeTabsAsWindows == true && !isLeftMouseButtonDown
+                    ? axWindows.map { Set($0.map { $0.0 }) }
+                    : nil
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
                 (alive, dead) = try alive.partition {
                     try job.checkCancellation()
-                    return $0.value.ax.containingWindowId() != nil
+                    if $0.value.ax.containingWindowId() == nil {
+                        return false
+                    }
+                    return activeNativeTabWindowIds?.contains($0.key) != false
                 }
             }
 
-            for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
+            for (id, window) in axWindows ?? [] {
                 try job.checkCancellation()
                 try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
             }
