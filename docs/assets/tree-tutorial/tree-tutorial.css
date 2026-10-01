@@ -45,3 +45,13 @@ pre.aero-tree { margin: 0; flex: 1; min-width: 12rem; font: .8rem/1.35 var(--tt-
 
 .tt-before-after { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; margin: 1rem 0; }
 .tt-before-after .tt-caption { font: .8rem var(--tt-mono, monospace); color: #6f6f6f; margin-top: .3rem; }
+
+/* Two-monitor simulator (monitors.js) */
+.mon-row { display: flex; gap: .8rem; flex-wrap: wrap; }
+.mon { border: 2px solid var(--tt-rule); border-radius: 6px; padding: .4rem; }
+.mon.focused { border-color: #2156a5; }
+.mon-label { font: .78rem var(--tt-mono); color: var(--tt-muted); margin-bottom: .3rem; }
+.mon.focused .mon-label { color: #2156a5; }
+.mon-tree { display: inline-block; margin-top: .3rem; font-size: .75rem; }
+.mon-list { margin-top: .6rem; font-size: .85rem; color: var(--tt-muted); }
+.mon-list code { margin-right: .2rem; }

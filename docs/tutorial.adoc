@@ -7,10 +7,12 @@ include::util/header.adoc[]
 <link rel="stylesheet" href="assets/tree-tutorial/tree-tutorial.css">
 <script src="assets/tree-tutorial/tree.js"></script>
 <script src="assets/tree-tutorial/quiz.js"></script>
+<script src="assets/tree-tutorial/monitors.js"></script>
 ++++
 
 This is an interactive companion to the xref:guide.adoc#tree[Tree] section of the guide.
 After it, you should be able to predict where a new window lands, and how `move`, `join-with` and `layout` reshape the tree, _before_ you press the key.
+The last section covers setups with two monitors.
 
 Every section has a simulator, a quiz, and exercises to repeat on your real desktop.
 The simulator is a small JavaScript port of AeroSpace's own tree code (`docs/assets/tree-tutorial/tree.js`).
@@ -490,3 +492,168 @@ Predict first.
 Then press `alt-slash` again.
 . From `h[1 2 3 4]`, build `h[1 V[2 3 4]]`.
 Then open a new window from inside the accordion: where does it land?
+
+[#monitors]
+== Two monitors
+
+See also xref:guide.adoc#multiple-monitors[Multiple monitors] in the guide.
+
+* All monitors share *one pool* of workspaces.
+Each monitor shows exactly one of them, its _visible_ workspace.
+Two monitors can't show the same workspace.
+* Every workspace, even an invisible or an empty one, *belongs to a monitor*.
+* Monitors are numbered from left to right, starting at 1.
+`main` is the monitor set as the main display in `System Settings -> Displays`.
+
+[IMPORTANT]
+.Which monitor does a workspace belong to?
+====
+The first of:
+
+. its xref:guide.adoc#assign-workspaces-to-monitors[forced assignment] from the config
+. the monitor it's _visible_ on
+. the monitor it was _last shown_ on
+. the `main` monitor
+====
+
+(`workspaceMonitor` in `Sources/AppBundle/tree/Workspace.swift`)
+Step 3 is easy to forget: a workspace remembers where it was last shown.
+
+[#monitors-workspace]
+=== `workspace X`
+
+* *X is visible:* nothing moves, only the focus jumps to the monitor that shows X.
+* *X is invisible:* X replaces the workspace that its monitor shows, and the focus jumps there.
+This happens even if you were working on the other monitor.
+* *X doesn't exist yet:* it belongs to the `main` monitor.
+Unlike i3, AeroSpace doesn't open it on the monitor you're looking at.
+
+[NOTE]
+====
+An empty, invisible workspace is destroyed, unless it's listed in `persistent-workspaces`.
+It forgets the monitor it was shown on.
+When you switch to it again, it's a new workspace, and it appears on the `main` monitor.
+====
+
+[#monitors-move]
+=== Moving windows and workspaces
+
+[cols="1,1,2"]
+|===
+|To |Command |What happens
+
+|move the focused *window* to the other monitor
+|xref:commands.adoc#move-node-to-monitor[`move-node-to-monitor next`]
+|The window joins the root container of the workspace visible there.
+With `right` or `down` into a root of the same orientation, it lands *first*, on the side it came from.
+Otherwise, it lands *last*.
+The focus stays behind unless you add `--focus-follows-window`.
+
+|move the focused *workspace* to the other monitor
+|xref:commands.adoc#move-workspace-to-monitor[`move-workspace-to-monitor --wrap-around next`] (`alt-shift-tab` in the default config)
+|The workspace moves and stays focused.
+The monitor it left shows another workspace instead.
+Fails for workspaces with a forced assignment.
+
+|bring *workspace X* to the focused monitor
+|xref:commands.adoc#summon-workspace[`summon-workspace X`]
+|X appears on the focused monitor, wherever it was before.
+From now on, X belongs to this monitor (step 3).
+|===
+
+"Another workspace instead" means: the workspace that the monitor showed before, or any invisible workspace that belongs to the monitor, or the first empty workspace with a numeric name (`1`, `2`, ...).
+(`getStubWorkspace` in `Sources/AppBundle/tree/Workspace.swift`)
+
+[#monitors-focus]
+=== Focus across monitors
+
+`alt-h` / `alt-l` in the default config are `focus left` / `focus right`.
+The default is `--boundaries workspace`, so the focus *stops* at the edge of the monitor.
+
+* `focus --boundaries all-monitors-outer-frame right` continues onto the next monitor.
+It focuses the _most recently focused_ window of that monitor's workspace, not the geometrically closest one.
+* `move` has the same flag.
+At the edge, the window goes to the other monitor, like `move-node-to-monitor` with the focus following it.
+But then the inner monitor edge no longer creates an implicit container (see <<move,the workspace edge>>).
+
+[#monitors-play]
+=== Play
+
+The main monitor is on the left, the secondary one on the right.
+The blue frame marks the focused monitor.
+The list below shows every workspace and the monitor it belongs to (`→M` or `→S`).
+Workspace `B` has a forced assignment to the secondary monitor.
+Click a window to focus it.
+
+++++
+<div id="tt-sim-monitors"></div>
+<script>
+  Monitors.mount(document.getElementById("tt-sim-monitors"), {
+    workspaces: { "1": "h[1 2]", "2": "h[3 4]", "3": "h[5]", "B": "h[6]" },
+    visible: ["1", "2"], focus: 0, forced: { "B": "secondary" }, extra: ["5"],
+  });
+</script>
+++++
+
+[#monitors-predict]
+=== Predict
+
+The main monitor shows workspace 1 and the secondary monitor shows workspace 2, unless the question says otherwise.
+
+++++
+<div id="tt-quiz-monitors"></div>
+<script>
+  Quiz.mount(document.getElementById("tt-quiz-monitors"), [
+    { prompt: "The focus is on the <b>main</b> monitor. Workspace 3 is invisible and was last shown on the main monitor. You run <code>workspace 3</code>.",
+      options: ["3 replaces 1 on the main monitor", "3 replaces 2 on the secondary monitor", "Nothing, 3 is invisible"], answer: 0,
+      why: "3 belongs to the main monitor (it was last shown there), so it appears there." },
+    { prompt: "The focus is on the <b>secondary</b> monitor. Workspace 3 is invisible and belongs to the main monitor. You run <code>workspace 3</code>.",
+      options: ["3 replaces 1 on the main monitor, the focus jumps there", "3 replaces 2 on the secondary monitor", "3 and 2 swap"], answer: 0,
+      why: "A workspace appears on the monitor it belongs to, not on the monitor you're looking at." },
+    { prompt: "The focus is on the main monitor. You run <code>workspace 2</code> (visible on the secondary monitor).",
+      options: ["The focus moves to the secondary monitor, nothing else changes", "2 moves to the main monitor", "1 and 2 swap monitors"], answer: 0,
+      why: "A visible workspace isn't moved. Only the focus jumps." },
+    { prompt: "The focus is on the secondary monitor. Workspace 7 doesn't exist yet. You run <code>workspace 7</code>.",
+      options: ["7 appears on the main monitor", "7 appears on the secondary monitor", "Error: no such workspace"], answer: 0,
+      why: "A new workspace has never been shown, so it belongs to the main monitor. (i3 would use the focused monitor.)" },
+    { prompt: "The focus is on the main monitor. You run <code>summon-workspace 2</code>.",
+      options: ["2 moves to the main monitor, the secondary monitor shows another workspace", "1 and 2 swap", "The focus just moves to the secondary monitor"], answer: 0,
+      why: "summon-workspace pulls 2 to the focused monitor. The secondary monitor takes a workspace that belongs to it, or the first empty numbered one." },
+    { prompt: "The main monitor shows <code>h[1 2]</code> with 2 focused (rightmost). You run <code>focus right</code>.",
+      options: ["Nothing happens", "The focus moves to the secondary monitor", "The focus wraps to window 1"], answer: 0,
+      why: "The defaults are --boundaries workspace and --boundaries-action stop." },
+    { prompt: "Same, but <code>focus --boundaries all-monitors-outer-frame right</code>. The secondary monitor shows <code>h[3 4]</code>, and 4 was focused more recently than 3.",
+      options: ["Window 4", "Window 3 (closest to the edge)", "The workspace, but no window"], answer: 0,
+      why: "Crossing to another monitor focuses the most recently focused window of its workspace." },
+    { prompt: "Window 2 is focused on the main monitor. The secondary monitor shows <code>h[3 4]</code>. You run <code>move-node-to-monitor right</code>.",
+      options: ["h[2 3 4]", "h[3 4 2]", "h[3 v[4 2]]"], answer: 0,
+      why: "Moving right into a horizontal root, the window enters on the near side: index 0." },
+    { prompt: "Same, but <code>move-node-to-monitor next</code>.",
+      options: ["h[3 4 2]", "h[2 3 4]", "h[3 2 4]"], answer: 0,
+      why: "next, prev and monitor patterns always append to the end of the root container." },
+    { prompt: "Workspace B has a forced assignment to <code>secondary</code> and is focused there. You run <code>move-workspace-to-monitor --wrap-around next</code>.",
+      options: ["It fails, B stays", "B moves to the main monitor", "B moves, and the assignment is updated"], answer: 0,
+      why: "move-workspace-to-monitor and summon-workspace don't break a forced assignment." },
+  ]);
+</script>
+++++
+
+[#monitors-try]
+=== Try it for real
+
+----
+aerospace list-monitors
+aerospace list-workspaces --all --format '%{workspace} %{monitor-name} %{workspace-is-visible}'
+----
+
+. Run the `list-workspaces` command.
+Predict the monitor column before you read it.
+. Focus the secondary monitor, then switch to workspace 1 (`alt-1`).
+Where does 1 appear, and where is the focus?
+. On workspace 1, press `alt-shift-tab`.
+Predict what the main monitor shows now.
+Run `list-workspaces` again: which monitor does 1 belong to now?
+. Open two windows on the main monitor and run `aerospace move-node-to-monitor --focus-follows-window next`.
+Predict whether the window lands on the left or the right.
+. Focus the rightmost window on the main monitor and press `alt-l`.
+Then try `aerospace focus --boundaries all-monitors-outer-frame right`.
