@@ -2,7 +2,10 @@
 set -e # Exit if one of commands exit with non-zero exit code
 set -u # Treat unset variables and parameters other than the special parameters ‘@’ or ‘*’ as an error
 set -o pipefail # Any command failed in the pipe fails the whole pipe
-# set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
+
+if ! /bin/test -z "${AEROSPACE_VERBOSE_BUILD:-}"; then
+    set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
+fi
 
 if ! grep -q '^5\.' <<< "$BASH_VERSION"; then
     echo "Your bash version is too old. Version 5 is the minimum required version" > /dev/stderr

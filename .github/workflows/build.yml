@@ -10,6 +10,9 @@ on:
   schedule:
     - cron: '0 0 * * *' # every day at 00:00
 
+env:
+  AEROSPACE_VERBOSE_BUILD: 1
+
 jobs:
 
   build-debug:
