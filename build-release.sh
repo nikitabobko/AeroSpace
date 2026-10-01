@@ -27,25 +27,23 @@ swift_build_cli=(build -c release --arch arm64 --arch x86_64 --product aerospace
 swift "${swift_build_cli[@]}" -Xswiftc -warnings-as-errors # CLI
 cli_bin_path="$(swift "${swift_build_cli[@]}" --show-bin-path)"
 
-# todo: make xcodebuild use the same toolchain as swift
-# toolchain="$(plutil -extract CFBundleIdentifier raw ~/Library/Developer/Toolchains/swift-6.1-RELEASE.xctoolchain/Info.plist)"
-# xcodebuild -toolchain "$toolchain" \
-# Unfortunately, Xcode 16 fails with:
-#     2025-05-05 15:51:15.618 xcodebuild[4633:13690815] Writing error result bundle to /var/folders/s1/17k6s3xd7nb5mv42nx0sd0800000gn/T/ResultBundle_2025-05-05_15-51-0015.xcresult
-#     xcodebuild: error: Could not resolve package dependencies:
-#       <unknown>:0: warning: legacy driver is now deprecated; consider avoiding specifying '-disallow-use-new-driver'
-#     <unknown>:0: error: unable to execute command: <unknown>
-
 rm -rf .release && mkdir .release
 
 cd ./xcode
+    # Use the same swiftc in xcodebuild
+    xcodebuild_swift_exec=()
+    if which swiftly &> /dev/null; then
+        xcodebuild_swift_exec=(SWIFT_EXEC="$(swiftly use --print-location)/usr/bin/swiftc")
+    fi
+
     xcode_configuration="Release"
     xcodebuild -version
     xcodebuild-pretty ../.release/xcodebuild.log clean build \
         -scheme AeroSpace \
         -destination "generic/platform=macOS" \
         -configuration "$xcode_configuration" \
-        -derivedDataPath .xcode-build
+        -derivedDataPath .xcode-build \
+        "${xcodebuild_swift_exec[@]}"
 cd -
 
 git checkout .
