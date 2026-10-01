@@ -14,7 +14,7 @@ configs:
 settings:
   base:
     TOOLCHAINS: ${XCODEGEN_TOOLCHAINS}
-    SWIFT_VERSION: 6.2 # Swift Language Version
+    SWIFT_VERSION: ${XCODEGEN_SWIFT_LANGUAGE_VERSION}
     GENERATE_INFOPLIST_FILE: YES
     MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
     # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
