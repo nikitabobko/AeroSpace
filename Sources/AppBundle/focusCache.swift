@@ -11,5 +11,10 @@
         _ = nativeFocused?.focusWindow()
         lastKnownNativeFocusedWindowId = nativeFocused?.windowId
     }
-    nativeFocused?.macAppUnsafe.lastNativeFocusedWindowId = nativeFocused?.windowId
+    // Dialogs/sheets (e.g. Finder's "Connect to Server") aren't native-tab group members. Letting
+    // one become the replacement candidate poisons the comparison: it closes normally later, so
+    // whichever tiled window is actually mid-tab-swap when it closes never gets matched.
+    if !(nativeFocused?.parent is FloatingWindowsContainer) {
+        nativeFocused?.macAppUnsafe.lastNativeFocusedWindowId = nativeFocused?.windowId
+    }
 }
