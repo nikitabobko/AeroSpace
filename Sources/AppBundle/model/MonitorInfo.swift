@@ -73,6 +73,12 @@ extension NSScreen {
         frame.minX == 0 && frame.minY == 0
     }
 
+    /// The main screen is never ignored: AeroSpace needs at least one monitor
+    @MainActor
+    fileprivate var isIgnored: Bool {
+        !isMainScreen && config.ignoredMonitors.contains { localizedName.contains(caseInsensitiveRegex: $0) }
+    }
+
     /// The property is a replacement for Apple's crazy ``frame``
     ///
     /// - For ``MacWindow.topLeftCorner``, (0, 0) is main screen top left corner, and positive y-axis goes down.
@@ -104,12 +110,23 @@ var mainMonitorInfo: MonitorInfo {
     return LazyMonitorInfo(monitorAppKitNsScreenScreensId: screen.index + 1, isMain: true, screen.value)
 }
 
+@MainActor
 var monitorInfos: [MonitorInfo] {
     isUnitTest
         ? [testMonitorInfo]
-        : NSScreen.screens.enumerated().map { $0.element.toMonitorInfo(monitorAppKitNsScreenScreensId: $0.offset + 1) }
+        : NSScreen.screens.enumerated()
+            .filter { !$0.element.isIgnored }
+            .map { $0.element.toMonitorInfo(monitorAppKitNsScreenScreensId: $0.offset + 1) }
 }
 
+/// Rects of the monitors matched by `ignored-monitors`. AeroSpace doesn't assign workspaces to them and releases
+/// windows that are moved onto them.
+@MainActor
+var ignoredMonitorRects: [Rect] {
+    isUnitTest ? [] : NSScreen.screens.filter(\.isIgnored).map(\.rect)
+}
+
+@MainActor
 var sortedMonitorInfos: [MonitorInfo] {
     monitorInfos.sortedBy([\.rect.minX, \.rect.minY])
 }

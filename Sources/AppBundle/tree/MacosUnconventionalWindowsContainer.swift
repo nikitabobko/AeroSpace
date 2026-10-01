@@ -32,3 +32,13 @@ final class MacosPopupWindowsContainer: TreeNode, NonLeafTreeNodeObject {
         super.init(parent: NilTreeNode.instance, adaptiveWeight: 1, index: INDEX_BIND_LAST)
     }
 }
+
+@MainActor let ignoredMonitorWindowsContainer = IgnoredMonitorWindowsContainer()
+/// The container for windows that sit on a monitor matched by `ignored-monitors`. AeroSpace doesn't lay them out,
+/// hide them or assign them to workspaces until they are moved back onto a managed monitor.
+final class IgnoredMonitorWindowsContainer: TreeNode, NonLeafTreeNodeObject {
+    @MainActor
+    fileprivate init() {
+        super.init(parent: NilTreeNode.instance, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+    }
+}

@@ -42,7 +42,7 @@ extension TreeNode {
                  .macosFullscreenWindowsContainer,
                  .macosHiddenAppsWindowsContainer,
                  .floatingWindowsContainer: parent?.nodeMonitor
-            case .macosMinimizedWindowsContainer, .macosPopupWindowsContainer: nil
+            case .macosMinimizedWindowsContainer, .macosPopupWindowsContainer, .ignoredMonitorWindowsContainer: nil
         }
     }
 
@@ -91,7 +91,8 @@ extension TreeNode {
                      .floatingWindowsContainer,
                      .macosFullscreenWindowsContainer,
                      .macosHiddenAppsWindowsContainer,
-                     .macosPopupWindowsContainer:
+                     .macosPopupWindowsContainer,
+                     .ignoredMonitorWindowsContainer:
                     true
                 case .tilingContainer(let parent):
                     (layout == nil || parent.layout == layout) &&
@@ -105,7 +106,8 @@ extension TreeNode {
                 check(parent.orientation == direction.orientation)
                 return innermostChild.ownIndex.map { (parent, $0) }
             case .workspace, .floatingWindowsContainer, nil, .macosMinimizedWindowsContainer,
-                 .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer:
+                 .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer,
+                 .ignoredMonitorWindowsContainer:
                 return nil
         }
     }

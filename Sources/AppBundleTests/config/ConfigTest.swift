@@ -322,6 +322,22 @@ final class ConfigTest: XCTestCase {
         assertEquals([:], defaultConfig.workspaceToMonitorForceAssignment)
     }
 
+    func testParseIgnoredMonitors() {
+        let result = parseConfig(
+            """
+            ignored-monitors = ['^Sidescreen', 'dummy', 'main', 'secondary', 2, '']
+            """,
+        )
+        assertEquals(result.config.ignoredMonitors, [CaseInsensitiveRegex.new("^Sidescreen").getOrDie(), CaseInsensitiveRegex.new("dummy").getOrDie()])
+        assertEquals([
+            "[ERROR] ignored-monitors[2]: Only monitor name patterns can be ignored. 'main' is not a pattern",
+            "[ERROR] ignored-monitors[3]: Only monitor name patterns can be ignored. 'secondary' is not a pattern",
+            "[ERROR] ignored-monitors[4]: Only monitor name patterns can be ignored. '2' is not a pattern",
+            "[ERROR] ignored-monitors[5]: Empty string is an illegal monitor description",
+        ], result.strErrors)
+        assertEquals([], defaultConfig.ignoredMonitors)
+    }
+
     func testParseOnWindowDetected() {
         let result = parseConfig(
             """

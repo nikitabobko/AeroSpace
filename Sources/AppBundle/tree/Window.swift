@@ -56,6 +56,7 @@ extension Window {
             case .macosHiddenAppsWindowsContainer: false
             case .macosMinimizedWindowsContainer: false
             case .macosPopupWindowsContainer: false
+            case .ignoredMonitorWindowsContainer: false
             case .tilingContainer: false
             case .unbound: false
         }

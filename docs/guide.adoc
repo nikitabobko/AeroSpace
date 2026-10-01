@@ -777,6 +777,26 @@ The first matching pattern will be used
 
 xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command has no effect for workspaces that have monitor assignment
 
+[#ignored-monitors]
+=== Ignore monitors
+
+Some apps create virtual displays that are not meant to be looked at directly
+(e.g. screen sharing tools, dummy displays for headless capture, or sandboxes for computer-use agents).
+You can tell AeroSpace to leave such monitors unmanaged:
+
+[source,toml]
+----
+ignored-monitors = ['^Sidescreen', 'dummy']  # Case insensitive regex substrings of monitor names
+----
+
+* Ignored monitors don't show workspaces.
+They are excluded from monitor sequence numbers, `main`/`secondary` resolution, xref:commands.adoc#list-monitors[list-monitors] and xref:commands.adoc#focus-monitor[focus-monitor]
+* AeroSpace doesn't lay out, hide or move windows whose center is on an ignored monitor.
+Such windows don't belong to any workspace and aren't listed by xref:commands.adoc#list-windows[list-windows]
+* When such a window is moved back to a managed monitor, AeroSpace lays it out on the visible workspace of that monitor
+* Only regex patterns are supported. `main`, `secondary` and sequence numbers are not
+* The main monitor is never ignored
+
 == Dialog heuristics
 
 * Apple provides accessibility API for apps to let others know which of their windows are dialogs

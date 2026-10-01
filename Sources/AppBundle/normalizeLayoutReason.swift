@@ -6,6 +6,32 @@ func normalizeLayoutReason() async throws {
     }
     try await _normalizeLayoutReason(workspace: focus.workspace, windows: macosMinimizedWindowsContainer.children.filterIsInstance(of: Window.self))
     try await validateStillPopups()
+    try await normalizeIgnoredMonitorWindows()
+}
+
+/// Windows that were moved onto a monitor from `ignored-monitors` are released, and windows that were moved back
+/// are laid out on the workspace of the monitor they landed on.
+@MainActor
+private func normalizeIgnoredMonitorWindows() async throws {
+    let ignoredRects = ignoredMonitorRects
+    for node in ignoredMonitorWindowsContainer.children {
+        let window = node as! Window
+        guard let center = try await window.getCenter(.cancellable) else { continue }
+        if !ignoredRects.contains(where: { $0.contains(center) }) {
+            try await window.relayoutWindow(on: center.monitorApproximation.activeWorkspace, .cancellable)
+        }
+    }
+    if ignoredRects.isEmpty { return }
+    // Windows of invisible workspaces are parked in monitor corners and may overlap an ignored monitor.
+    // Only windows of visible workspaces can be where they appear to be.
+    for workspace in Workspace.all where workspace.isVisible {
+        for window in workspace.allLeafWindowsRecursive where window.layoutReason == .standard {
+            guard let center = try await window.getCenter(.cancellable) else { continue }
+            if ignoredRects.contains(where: { $0.contains(center) }) {
+                window.bind(to: ignoredMonitorWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+            }
+        }
+    }
 }
 
 @MainActor
@@ -67,7 +93,8 @@ func exitMacOsNativeUnconventionalState(
             try await window.relayoutWindow(on: workspace, cm, forceTile: true)
         case .macosPopupWindowsContainer: // Since the window was minimized/fullscreened it was mistakenly detected as popup. Relayout the window
             try await window.relayoutWindow(on: workspace, cm)
-        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer: // wtf case, should never be possible. But If encounter it, let's just re-layout window
+        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer,
+             .ignoredMonitorWindowsContainer: // wtf case, should never be possible. But If encounter it, let's just re-layout window
             try await window.relayoutWindow(on: workspace, cm)
     }
 }

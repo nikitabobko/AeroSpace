@@ -59,6 +59,7 @@ open class TreeNode: Equatable, AeroAny {
             case .floatingWindow, .macosNativeFullscreenWindow: dieT("Weight doesn't make sense for floating windows")
             case .macosNativeMinimizedWindow: dieT("Weight doesn't make sense for minimized windows")
             case .macosPopupWindow: dieT("Weight doesn't make sense for popup windows")
+            case .ignoredMonitorWindow: dieT("Weight doesn't make sense for windows on ignored monitors")
             case .macosNativeHiddenAppWindow: dieT("Weight doesn't make sense for windows of hidden apps")
             case .shimContainerRelation: dieT("Weight doesn't make sense for stub containers")
         }
@@ -79,7 +80,7 @@ open class TreeNode: Equatable, AeroAny {
                     CGFloat(newParent.children.sumOfDouble { $0.getWeight(newParent.orientation) }).div(newParent.children.count) ?? 1
                 case .floatingWindow, .macosNativeFullscreenWindow,
                      .rootTilingContainer, .macosNativeMinimizedWindow,
-                     .shimContainerRelation, .macosPopupWindow, .macosNativeHiddenAppWindow:
+                     .shimContainerRelation, .macosPopupWindow, .ignoredMonitorWindow, .macosNativeHiddenAppWindow:
                     WEIGHT_DOESNT_MATTER
             }
         } else {

@@ -98,6 +98,7 @@ final class MacWindow: Window {
                         deadWindowFocus.windowOrNil?.nativeFocus()
                     }
                 case .macosPopupWindowsContainer, // Don't switch back on popup destruction
+                     .ignoredMonitorWindowsContainer, // The window wasn't on any workspace
                      .workspace, // Workspace is invalid parent for windows
                      .macosMinimizedWindowsContainer: // Don't switch back on minimized windows destruction
                     break
@@ -176,7 +177,7 @@ final class MacWindow: Window {
 
                 setAxFrame(CGPoint(x: newX, y: newY), nil)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
-                 .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
+                 .macosPopupWindow, .ignoredMonitorWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
         }
 
         self.prevUnhiddenProportionalPositionInsideWorkspaceRect = nil
@@ -258,7 +259,7 @@ func runOnWindowDetected(ifConventional window: Window) async {
                     .run(.defaultEnv.withWindowId(window.windowId), .emptyStdin)
             }
             _ = await onWindowDetected(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, window)
-        case .macosPopupWindowsContainer, .unbound:
+        case .macosPopupWindowsContainer, .ignoredMonitorWindowsContainer, .unbound:
             break
     }
 }
