@@ -231,7 +231,7 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 6.2;
+				SWIFT_VERSION = 6.4;
 				TOOLCHAINS = org.swift.640202609131a;
 			};
 			name = Debug;
@@ -308,7 +308,7 @@
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 6.2;
+				SWIFT_VERSION = 6.4;
 				TOOLCHAINS = org.swift.640202609131a;
 			};
 			name = Release;

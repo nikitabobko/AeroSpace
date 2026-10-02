@@ -2,6 +2,9 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
+export XCODEGEN_SWIFT_LANGUAGE_VERSION=6.4
+sed -i '' "1s|.*|// swift-tools-version: ${XCODEGEN_SWIFT_LANGUAGE_VERSION}|" Package.swift
+
 export XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY="aerospace-codesign-certificate"
 build_version="0.0.0-SNAPSHOT"
 generate_xcodeproj=1
@@ -17,9 +20,6 @@ while test $# -gt 0; do
         *) echo "Unknown option $1"; exit 1 ;;
     esac
 done
-
-export XCODEGEN_SWIFT_LANGUAGE_VERSION=6.2
-sed -i '' "1s|.*|// swift-tools-version: ${XCODEGEN_SWIFT_LANGUAGE_VERSION}|" Package.swift
 
 if test $generate_cmd_help = 1; then
     # It takes 300ms for the script to complete
