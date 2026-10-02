@@ -341,14 +341,71 @@ private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElementMock? {
     }
 }
 
+struct AxAppCircuitBreakerState {
+    static let cooldownDuration: Duration = .seconds(1)
+
+    private var unresponsiveUntil: [pid_t: ContinuousClock.Instant] = [:]
+
+    mutating func recordTimeout(
+        for pid: pid_t,
+        now: ContinuousClock.Instant,
+    ) {
+        unresponsiveUntil[pid] = now.advanced(by: Self.cooldownDuration)
+    }
+
+    mutating func shouldSkipRequests(
+        for pid: pid_t,
+        now: ContinuousClock.Instant,
+    ) -> Bool {
+        guard let deadline = unresponsiveUntil[pid] else { return false }
+        if now < deadline { return true }
+        unresponsiveUntil[pid] = nil
+        return false
+    }
+}
+
+private final class AxAppCircuitBreaker: @unchecked Sendable {
+    private let clock = ContinuousClock()
+    private let lock = NSLock()
+    private var state = AxAppCircuitBreakerState()
+
+    func recordTimeout(for pid: pid_t) {
+        lock.lock()
+        defer { lock.unlock() }
+        state.recordTimeout(for: pid, now: clock.now)
+    }
+
+    func shouldSkipRequests(for pid: pid_t) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return state.shouldSkipRequests(for: pid, now: clock.now)
+    }
+}
+
+private let axAppCircuitBreaker = AxAppCircuitBreaker()
+
+func shouldSkipAxRequests(for pid: pid_t) -> Bool {
+    axAppCircuitBreaker.shouldSkipRequests(for: pid)
+}
+
+func recordAxError(_ error: AXError) {
+    if error == .cannotComplete, let pid = axTaskLocalAppThreadToken?.pid {
+        axAppCircuitBreaker.recordTimeout(for: pid)
+    }
+}
+
 extension AXUIElement: AxUiElementMock {
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
+        getWithError(attr).value
+    }
+
+    func getWithError<Attr: ReadableAttr>(_ attr: Attr) -> (value: Attr.T?, error: AXError) {
         let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }
         var raw: AnyObject?
-        return unsafe AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success
-            ? raw.flatMap(attr.getter)
-            : nil
+        let error = unsafe AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw)
+        recordAxError(error)
+        return (error == .success ? raw.flatMap(attr.getter) : nil, error)
     }
 
     @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
@@ -356,16 +413,31 @@ extension AXUIElement: AxUiElementMock {
         let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }
         guard let value = attr.setter(value) else { return false }
-        return AXUIElementSetAttributeValue(self, attr.key as CFString, value) == .success
+        let error = AXUIElementSetAttributeValue(self, attr.key as CFString, value)
+        recordAxError(error)
+        return error == .success
+    }
+
+    @discardableResult func perform(_ action: String) -> Bool {
+        if serverArgs.isReadOnly { return false }
+        let state = signposter.beginInterval(#function, "action: \(action) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer { signposter.endInterval(#function, state) }
+        let error = AXUIElementPerformAction(self, action as CFString)
+        recordAxError(error)
+        return error == .success
     }
 
     func containingWindowId() -> CGWindowID? {
+        containingWindowIdWithError().windowId
+    }
+
+    func containingWindowIdWithError() -> (windowId: CGWindowID?, error: AXError) {
         let state = signposter.beginInterval(#function, "axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }
         var cgWindowId = CGWindowID()
-        return unsafe _AXUIElementGetWindow(self, &cgWindowId) == .success && cgWindowId != kCGNullWindowID
-            ? cgWindowId
-            : nil
+        let error = unsafe _AXUIElementGetWindow(self, &cgWindowId)
+        recordAxError(error)
+        return (error == .success && cgWindowId != kCGNullWindowID ? cgWindowId : nil, error)
     }
 }
 
