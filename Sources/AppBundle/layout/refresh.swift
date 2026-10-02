@@ -99,7 +99,7 @@ enum RunSessionGuard: Sendable {
     }
     @MainActor
     static func checkServerIsEnabledOrDie(
-        file: StaticString = #fileID,
+        file: StaticString = #myFileId,
         line: Int = #line,
         column: Int = #column,
         function: String = #function,

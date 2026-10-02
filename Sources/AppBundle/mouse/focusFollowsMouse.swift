@@ -1,4 +1,5 @@
 import AppKit
+import Common
 
 @MainActor private var focusFollowsMouseMonitor: Any? = nil
 @MainActor private var focusFollowsTask: Task<(), any Error>? = nil

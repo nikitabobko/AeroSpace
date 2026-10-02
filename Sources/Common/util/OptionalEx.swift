@@ -1,7 +1,7 @@
 extension Optional {
     public func orDie(
         _ message: String = "",
-        file: StaticString = #fileID,
+        file: StaticString = #myFileId,
         line: Int = #line,
         column: Int = #column,
         function: String = #function,

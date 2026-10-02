@@ -15,7 +15,7 @@ private var recursionDetectorDuringTermination = false
 public func bugPrompt(
     _ __message: String = "",
     isDie: Bool = false,
-    file: StaticString = #fileID,
+    file: StaticString = #myFileId,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
@@ -50,7 +50,7 @@ public func bugPrompt(
 
 public func dieT<T>(
     _ __message: String = "",
-    file: StaticString = #fileID,
+    file: StaticString = #myFileId,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
@@ -127,7 +127,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
 
 @inlinable public func die(
     _ message: String = "",
-    file: StaticString = #fileID,
+    file: StaticString = #myFileId,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
@@ -138,7 +138,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
 public func check(
     _ condition: Bool,
     _ message: @autoclosure () -> String = "",
-    file: StaticString = #fileID,
+    file: StaticString = #myFileId,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,

@@ -73,7 +73,7 @@ extension Result {
     @discardableResult
     public func getOrDie(
         _ msgPrefix: String = "",
-        file: StaticString = #fileID,
+        file: StaticString = #myFileId,
         line: Int = #line,
         column: Int = #column,
         function: String = #function,

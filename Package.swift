@@ -1,6 +1,7 @@
 // swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
+import CompilerPluginSupport
 import PackageDescription
 
 let swiftSettings: [SwiftSetting] = [
@@ -26,6 +27,7 @@ let package = Package(
         .package(url: "https://github.com/dduan/TOMLDecoder", exact: "0.4.5"),
         .package(url: "https://github.com/apple/swift-collections.git", exact: "1.3.0"),
         .package(url: "https://github.com/soffes/HotKey.git", exact: "0.2.1"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", exact: "604.0.0"),
     ],
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
@@ -36,10 +38,18 @@ let package = Package(
             path: "Sources/PrivateApi",
             publicHeadersPath: "include",
         ),
+        .macro(
+            name: "Macros",
+            dependencies: [
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+            ],
+        ),
         .target(
             name: "Common",
             dependencies: [
                 .product(name: "Collections", package: "swift-collections"),
+                .target(name: "Macros"),
             ],
             swiftSettings: swiftSettings,
         ),
@@ -51,6 +61,7 @@ let package = Package(
                 .product(name: "ISSoundAdditions", package: "ISSoundAdditions"),
                 .product(name: "TOMLDecoder", package: "TOMLDecoder"),
                 .target(name: "Common"),
+                .target(name: "Macros"),
                 .target(name: "PrivateApi"),
             ],
             swiftSettings: swiftSettings,
@@ -59,6 +70,7 @@ let package = Package(
             name: "AeroSpaceApp",
             dependencies: [
                 .target(name: "AppBundle"),
+                .target(name: "Macros"),
             ],
             swiftSettings: swiftSettings,
         ),
@@ -66,6 +78,7 @@ let package = Package(
             name: "Cli",
             dependencies: [
                 .target(name: "Common"),
+                .target(name: "Macros"),
             ],
             swiftSettings: swiftSettings,
         ),
@@ -73,6 +86,7 @@ let package = Package(
             name: "AppBundleTests",
             dependencies: [
                 .target(name: "AppBundle"),
+                .target(name: "Macros"),
             ],
             swiftSettings: swiftSettings,
         ),

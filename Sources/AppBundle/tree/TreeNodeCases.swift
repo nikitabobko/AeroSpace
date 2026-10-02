@@ -193,7 +193,7 @@ func getChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject) -> C
 func illegalChildParentRelation(
     child: TreeNode,
     parent: NonLeafTreeNodeObject?,
-    file: StaticString = #fileID,
+    file: StaticString = #myFileId,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
