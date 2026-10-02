@@ -33,6 +33,13 @@ include::aerospace-config.adoc[tags=synopsis]
 include::aerospace-config.adoc[tags=purpose]
 include::aerospace-config.adoc[tags=body]
 
+== cycle-size
+----
+include::aerospace-cycle-size.adoc[tags=synopsis]
+----
+include::aerospace-cycle-size.adoc[tags=purpose]
+include::aerospace-cycle-size.adoc[tags=body]
+
 == debug-windows
 ----
 include::aerospace-debug-windows.adoc[tags=synopsis]

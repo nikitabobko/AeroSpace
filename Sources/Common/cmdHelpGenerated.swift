@@ -16,6 +16,9 @@ let config_help_generated = """
        OR: config [-h|--help] --all-keys
        OR: config [-h|--help] --config-path
     """
+let cycle_size_help_generated = """
+    USAGE: cycle-size [-h|--help] [--axis (smart|smart-opposite|height|width)] (<size>%)...
+    """
 let debug_windows_help_generated = """
     USAGE: debug-windows [-h|--help] [--window-id <window-id>]
     """

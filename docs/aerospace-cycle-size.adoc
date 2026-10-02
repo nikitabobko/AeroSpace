@@ -1,0 +1,62 @@
+= aerospace-cycle-size(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-cycle-size
+// tag::purpose[]
+:manpurpose: Cycle the size of the focused window between the specified sizes
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace cycle-size [-h|--help] [--axis (smart|smart-opposite|height|width)] (<size>%)...
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The command takes the share of the parent container that the focused window occupies along the axis,
+rounds it to the nearest whole percent, and looks it up among the `<size>` arguments
+
+* If the share is found, the window is resized to the `<size>` that follows the found one.
+The first `<size>` follows the last one
+* Otherwise, the window is resized to the first `<size>`
+
+Just like `aerospace resize`, the command compensates the size change on the sibling nodes,
+so the parent container preserves its size.
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--axis (smart|smart-opposite|height|width)::
+The axis to resize along. The default is: `smart`
++
+* `width` changes width
+* `height` changes height
+* `smart` changes width if the parent has horizontal orientation, and
+it changes height if the parent has vertical orientation
+* `smart-opposite` resizes the opposite axis of smart
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+<size>%::
+The share of the parent container that the focused window must occupy along the axis.
+Must be an integer in range 1-99
+
+// =========================================================== Examples
+include::util/conditional-examples-header.adoc[]
+
+* Cycle the focused window between one third, one half, and two thirds of its parent: +
+`aerospace cycle-size 33% 50% 66%`
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
