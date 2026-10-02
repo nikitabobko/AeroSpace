@@ -35,7 +35,7 @@ final class MacApp: AbstractApp {
     ) {
         self.nsApp = nsApp
         self.axApp = .init(axApp)
-        self.pid = nsApp.processIdentifier
+        self.pid = nsApp.resolvedProcessIdentifier
         self.rawAppBundleId = nsApp.bundleIdentifier
         self.appId = nsApp.bundleIdentifier.flatMap { KnownBundleId.init(rawValue: $0) }
         assert(!axSubscriptions.isEmpty)
@@ -49,7 +49,7 @@ final class MacApp: AbstractApp {
         // Don't perceive any of the lock screen windows as real windows
         // Otherwise, false positive ax notifications might trigger that lead to gcWindows
         if nsApp.bundleIdentifier == lockScreenAppBundleId { return nil }
-        let pid = nsApp.processIdentifier
+        let pid = nsApp.resolvedProcessIdentifier
         // AX requests crash if you send them to yourself
         if pid == myPid { return nil }
 
@@ -64,12 +64,12 @@ final class MacApp: AbstractApp {
 
         let thread = Thread {
             $axTaskLocalAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
-                let axApp = AXUIElementCreateApplication(nsApp.processIdentifier)
+                let axApp = AXUIElementCreateApplication(pid)
                 let handlers: HandlerToNotifKeyMapping = unsafe [
                     (refreshObs, [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification]),
                 ]
                 let job = RunLoopJob(.cancellable)
-                let subscriptions = (try? unsafe AxSubscription.bulkSubscribe(nsApp, axApp, job, handlers)) ?? []
+                let subscriptions = (try? unsafe AxSubscription.bulkSubscribe(pid, axApp, job, handlers)) ?? []
                 let isGood = !subscriptions.isEmpty
                 let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
 
@@ -267,8 +267,9 @@ final class MacApp: AbstractApp {
         return try await withThrowingTaskGroup(of: (pid_t, [UInt32]).self, returning: [MacApp: [UInt32]].self) { group in
             func refreshTheApp(_ nsApp: NSRunningApplication) {
                 group.addTask { @Sendable @MainActor in
-                    guard let app = try await MacApp.getOrRegister(nsApp) else { return (nsApp.processIdentifier, []) }
-                    return (nsApp.processIdentifier, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
+                    let pid = nsApp.resolvedProcessIdentifier
+                    guard let app = try await MacApp.getOrRegister(nsApp) else { return (pid, []) }
+                    return (pid, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
                 }
             }
             // Register new apps
@@ -378,7 +379,7 @@ private final class AxWindow {
             (movedObs, [kAXMovedNotification]),
             (resizedObs, [kAXResizedNotification]),
         ]
-        let subscriptions = try unsafe AxSubscription.bulkSubscribe(nsApp, ax, job, handlers)
+        let subscriptions = try unsafe AxSubscription.bulkSubscribe(nsApp.resolvedProcessIdentifier, ax, job, handlers)
         return !subscriptions.isEmpty ? AxWindow(windowId: windowId, ax, subscriptions) : nil
     }
 }
