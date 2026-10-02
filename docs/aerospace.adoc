@@ -17,6 +17,9 @@ See https://nikitabobko.github.io/AeroSpace/commands for available <subcommand> 
 
 See each <subcommand> individual man page for <subcommand-options> and <subcommand-arguments>
 
+<subcommand-options> that take a value can be specified either as `--option value` or as `--option=value`.
+For example, `aerospace list-workspaces --monitor focused --empty=no` is the same as `aerospace list-workspaces --monitor focused --empty no`.
+
 == Options
 
 -h, --help:: Print help

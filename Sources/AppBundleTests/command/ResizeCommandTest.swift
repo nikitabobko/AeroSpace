@@ -17,6 +17,7 @@ final class ResizeCommandTest: XCTestCase {
 
         testParseSingleCommandSucc("resize height 10", ResizeCmdArgs(rawArgs: [], dimension: .height, units: .set(10)))
         testParseSingleCommandSucc("resize width 10", ResizeCmdArgs(rawArgs: [], dimension: .width, units: .set(10)))
+        testParseSingleCommandSucc("resize --window-id=1 smart -10", ResizeCmdArgs(rawArgs: [], dimension: .smart, units: .subtract(10)).copy(\.windowId, 1))
 
         testParseCommandFail("resize s 10", msg: """
             ERROR: Can't parse 's'.

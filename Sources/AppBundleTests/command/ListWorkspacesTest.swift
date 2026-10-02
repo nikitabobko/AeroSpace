@@ -21,6 +21,18 @@ final class ListWorkspacesTest: XCTestCase {
         assertEquals(parseCommand("list-workspaces --all --focused --monitor mouse").errorOrNil, "ERROR: Conflicting options: --all, --focused, --monitor")
     }
 
+    func testParseGnuStyleEquals() {
+        assertNotNil(parseCommand("list-workspaces --monitor=focused --empty=no").cmdOrNil)
+        assertNotNil(parseCommand("list-workspaces --monitor=1 2 --visible=no").cmdOrNil)
+        assertNotNil(parseCommand("list-workspaces --all --format=%{workspace}").cmdOrNil)
+        assertEquals(parseCommand("list-workspaces --all --empty=yes").errorOrNil, "ERROR: Option '--empty' doesn't accept value 'yes'")
+        assertEquals(parseCommand("list-workspaces --focused=yes").errorOrNil, "ERROR: Option '--focused' doesn't accept value 'yes'")
+        assertEquals(parseCommand("list-workspaces --all= --count").errorOrNil, "ERROR: Option '--all' doesn't accept value ''")
+        assertEquals(parseCommand("list-workspaces --all --empty=no --empty").errorOrNil, "ERROR: Duplicated option '--empty'")
+        assertEquals(parseCommand("list-workspaces --all --format=%{workspace} --count").errorOrNil, "ERROR: Conflicting options: --count, --format")
+        assertEquals(parseCommand("list-workspaces --all --foo=bar").errorOrNil, "ERROR: Unknown flag '--foo=bar'")
+    }
+
     func testRunAll() async {
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
         TestWindow.new(id: 2, parent: Workspace.get(byName: "b").rootTilingContainer)
@@ -61,6 +73,21 @@ final class ListWorkspacesTest: XCTestCase {
         let result = await parseCommand("list-workspaces --monitor all --empty no").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, ["a"])
+    }
+
+    func testRunNonEmpty_gnuStyleEquals() async {
+        TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
+        _ = Workspace.get(byName: "b") // empty
+        let result = await parseCommand("list-workspaces --monitor=all --empty=no").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout, ["a"])
+    }
+
+    func testRunFormat_gnuStyleEquals() async {
+        // Only the first '=' separates the flag from its value
+        let result = await parseCommand("list-workspaces --focused --format=%{workspace}=%{workspace-is-focused}").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout, ["setUpWorkspacesForTests=true"])
     }
 
     func testRunFocusedAlias() async {

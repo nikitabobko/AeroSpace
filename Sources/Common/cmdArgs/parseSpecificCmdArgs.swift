@@ -1,5 +1,6 @@
 func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCmd<T> {
     var raw = raw
+    var args = args
     var errors: [String] = []
 
     var posArgumentParserIndex = 0
@@ -14,12 +15,21 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
             case (false, "-h"), (false, "--help"):
                 return .help(T.info.help)
             case (false, _) where arg.isCliDashFlag && !isResizeNegativeUnitsArg(raw, arg: arg):
-                if let optionParser = T.parser.flags[arg] {
-                    index += 1
-                    if !options.insert(arg).inserted {
-                        errors.append("Duplicated option \(arg.singleQuoted)")
+                let (flag, inlineValue) = splitGnuStyleInlineValue(arg)
+                if let optionParser = T.parser.flags[flag] {
+                    if let inlineValue { // GNU style. '--flag=value' is equivalent to '--flag value'
+                        args = (args.slice(..<index).orDie() + [flag, inlineValue] + args.slice((index + 1)...).orDie()).slice
                     }
-                    raw = optionParser.transformRaw(raw, &index, SubArgParserInput(superArg: arg, index: index, args: args), &errors)
+                    index += 1
+                    if !options.insert(flag).inserted {
+                        errors.append("Duplicated option \(flag.singleQuoted)")
+                    }
+                    let inlineValueIndex = index
+                    raw = optionParser.transformRaw(raw, &index, SubArgParserInput(superArg: flag, index: index, args: args), &errors)
+                    if let inlineValue, index == inlineValueIndex {
+                        errors.append("Option \(flag.singleQuoted) doesn't accept value \(inlineValue.singleQuoted)")
+                        break loop
+                    }
                 } else {
                     errors.append("Unknown flag \(arg.singleQuoted)")
                     break loop
@@ -74,6 +84,15 @@ extension ArgParserProtocol where Root: ConvenienceMutable {
             case let value?: raw.copy(keyPath, value)
             case nil: raw
         }
+    }
+}
+
+/// '--flag=value' -> ('--flag', 'value')
+private func splitGnuStyleInlineValue(_ arg: String) -> (flag: String, inlineValue: String?) {
+    if arg.starts(with: "--"), let equalsIndex = arg.firstIndex(of: "=") {
+        (String(arg[..<equalsIndex]), String(arg[arg.index(after: equalsIndex)...]))
+    } else {
+        (arg, nil)
     }
 }
 
