@@ -280,6 +280,15 @@ That's why unless you override `exec` section in your config, AeroSpace falls ba
 [exec.env-vars]
     PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
 ----
++
+On Intel Macs, Homebrew’s prefix is `/usr/local` (https://docs.brew.sh/Installation[docs.brew.sh]).
+That's why on Intel Macs, AeroSpace additionally prepends `/usr/local/bin:/usr/local/sbin` to the `PATH`:
++
+[source,toml]
+----
+[exec.env-vars]
+    PATH = '/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
+----
 
 [#tree]
 == Tree
