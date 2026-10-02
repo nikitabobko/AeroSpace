@@ -25,4 +25,10 @@
 // func _AXUIElementGetWindow(_ axUiElement: AXUIElement, _ id: inout CGWindowID) -> AXError
 AXError _AXUIElementGetWindow(AXUIElementRef element, uint32_t *identifier);
 
+// Reliably makes window `wid` of process `pid` the key window, bypassing the public accessibility API
+// which focuses the wrong window of the same app across monitors when "Displays have separate Spaces"
+// is enabled. Implemented with private SkyLight (WindowServer) APIs, the same technique used by yabai
+// and Amethyst. See https://github.com/nikitabobko/AeroSpace/issues/101
+void aeroMakeKeyWindow(pid_t pid, uint32_t wid);
+
 #endif
