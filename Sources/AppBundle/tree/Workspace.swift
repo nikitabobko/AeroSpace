@@ -163,7 +163,7 @@ extension CGPoint {
 }
 
 @MainActor
-private func rearrangeWorkspacesOnMonitors() {
+func rearrangeWorkspacesOnMonitors() {
     let newScreens = monitorInfos.map(\.rect.topLeftCorner)
     var newScreenToOldScreenMapping: [CGPoint: CGPoint] = [:]
     for (oldScreen, _) in screenPointToVisibleWorkspace {

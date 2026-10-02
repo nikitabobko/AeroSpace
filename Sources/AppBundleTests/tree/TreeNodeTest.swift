@@ -86,4 +86,19 @@ final class TreeNodeTest: XCTestCase {
         workspace.normalizeContainers()
         XCTAssertTrue(workspace.rootTilingContainer.children.singleOrNil() is TestWindow)
     }
+
+    func testDefaultRootContainerOrientationAuto() {
+        config.defaultRootContainerOrientation = .auto
+        let monitors = setUpMonitorsForTests([
+            Rect(topLeftX: 0, topLeftY: 0, width: 2560, height: 1440),
+            Rect(topLeftX: 2560, topLeftY: 0, width: 1440, height: 2560),
+        ])
+        let wideMonitorWorkspace = Workspace.get(byName: "a")
+        assertTrue(wideMonitorWorkspace.focusWorkspace())
+        let tallMonitorWorkspace = Workspace.get(byName: "b")
+        assertTrue(monitors[1].setActiveWorkspace(tallMonitorWorkspace))
+
+        assertEquals(wideMonitorWorkspace.rootTilingContainer.orientation, .h)
+        assertEquals(tallMonitorWorkspace.rootTilingContainer.orientation, .v)
+    }
 }
