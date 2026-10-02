@@ -48,8 +48,8 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 -   `build-docs.sh` - Build the site and man pages to `.site` and `.man` dirs respectively.
 -   `build-shell-completion.sh` - Build shell completion to `.shell-completion`.
     You can test that the completion works properly by sourcing the file `source ./.shell-completion/zsh/_aerospace`
--   `generate.sh` - Regenerate generated project files. `xcode/AeroSpace.xcodeproj` is generated, and some of the source files
-    (the source files have `Generated` suffix in their names).
+-   `generate.sh` - Regenerate generated project files. `xcode/AeroSpace.xcodeproj`, `docs/commands.adoc`, and some of the source files
+    are generated (the source files have `Generated` suffix in their names).
 
 **Release build**
 -   `build-release.sh` - Build release build to `.release` dir by using Xcode.

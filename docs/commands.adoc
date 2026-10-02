@@ -1,3 +1,5 @@
+// FILE IS GENERATED FROM docs/aerospace-*.adoc files
+// TO REGENERATE THE FILE RUN generate.sh
 = AeroSpace Commands
 include::util/site-attributes.adoc[]
 
@@ -91,11 +93,10 @@ include::aerospace-focus.adoc[tags=body]
 
 == focus-back-and-forth
 ----
-
-include::./aerospace-focus-back-and-forth.adoc[tags=synopsis]
+include::aerospace-focus-back-and-forth.adoc[tags=synopsis]
 ----
-include::./aerospace-focus-back-and-forth.adoc[tags=purpose]
-include::./aerospace-focus-back-and-forth.adoc[tags=body]
+include::aerospace-focus-back-and-forth.adoc[tags=purpose]
+include::aerospace-focus-back-and-forth.adoc[tags=body]
 
 == focus-monitor
 ----
@@ -188,7 +189,6 @@ include::aerospace-mode.adoc[tags=synopsis]
 include::aerospace-mode.adoc[tags=purpose]
 include::aerospace-mode.adoc[tags=body]
 
-[#move]
 == move
 ----
 include::aerospace-move.adoc[tags=synopsis]
@@ -198,10 +198,10 @@ include::aerospace-move.adoc[tags=body]
 
 == move-mouse
 ----
-include::./aerospace-move-mouse.adoc[tags=synopsis]
+include::aerospace-move-mouse.adoc[tags=synopsis]
 ----
-include::./aerospace-move-mouse.adoc[tags=purpose]
-include::./aerospace-move-mouse.adoc[tags=body]
+include::aerospace-move-mouse.adoc[tags=purpose]
+include::aerospace-move-mouse.adoc[tags=body]
 
 == move-node-to-monitor
 ----
@@ -259,6 +259,13 @@ include::aerospace-subscribe.adoc[tags=synopsis]
 include::aerospace-subscribe.adoc[tags=purpose]
 include::aerospace-subscribe.adoc[tags=body]
 
+== summon-workspace
+----
+include::aerospace-summon-workspace.adoc[tags=synopsis]
+----
+include::aerospace-summon-workspace.adoc[tags=purpose]
+include::aerospace-summon-workspace.adoc[tags=body]
+
 == swap
 ----
 include::aerospace-swap.adoc[tags=synopsis]
@@ -280,14 +287,6 @@ include::aerospace-test-not.adoc[tags=synopsis]
 include::aerospace-test-not.adoc[tags=purpose]
 include::aerospace-test-not.adoc[tags=body]
 
-
-== summon-workspace
-----
-include::./aerospace-summon-workspace.adoc[tags=synopsis]
-----
-include::./aerospace-summon-workspace.adoc[tags=purpose]
-include::./aerospace-summon-workspace.adoc[tags=body]
-
 == trigger-binding
 ----
 include::aerospace-trigger-binding.adoc[tags=synopsis]
@@ -304,10 +303,10 @@ include::aerospace-true.adoc[tags=body]
 
 == volume
 ----
-include::./aerospace-volume.adoc[tags=synopsis]
+include::aerospace-volume.adoc[tags=synopsis]
 ----
-include::./aerospace-volume.adoc[tags=purpose]
-include::./aerospace-volume.adoc[tags=body]
+include::aerospace-volume.adoc[tags=purpose]
+include::aerospace-volume.adoc[tags=body]
 
 == workspace
 ----
