@@ -15,9 +15,16 @@ struct FocusCommand: Command {
             return .fail
         }
         // todo bug: floating windows break mru
-        let floatingWindows = args.floatingAsTiling ? await makeFloatingWindowsSeenAsTiling(workspace: target.workspace) : []
+        // Only targets whose semantics depend on the tree need floating windows
+        // temporarily bound into it: `.direction` navigates spatially, and the
+        // dfs targets walk rootTilingContainer. `.windowId` resolves through
+        // MacWindow.allWindowsMap and ignores the tree, so the preamble is pure
+        // overhead there -- one synchronous ax call per floating window.
+        var floatingAsTiling = args.floatingAsTiling
+        if case .windowId = args.target { floatingAsTiling = false }
+        let floatingWindows = floatingAsTiling ? await makeFloatingWindowsSeenAsTiling(workspace: target.workspace) : []
         defer {
-            if args.floatingAsTiling {
+            if floatingAsTiling {
                 restoreFloatingWindows(floatingWindows: floatingWindows, workspace: target.workspace)
             }
         }
