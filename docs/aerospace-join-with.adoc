@@ -19,26 +19,56 @@ aerospace join-with [-h|--help] [--window-id <window-id>] (left|down|up|right)
 // tag::body[]
 {manpurpose}
 
+If the nearest node in the specified direction is a window,
+a new container with the opposite orientation is created, and both windows are put into it.
+
+If the nearest node in the specified direction is a container, no new container is created.
+Instead, the focused window is moved into that container the same way as xref:./commands.adoc#move[move] does it.
+
+See the "Examples" section for more details.
+
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
 
-Given this layout
-
+. Given this layout
++
 ----
 h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── window 3
 ----
-
++
 `join-with right` will result in the following layout
-
++
 ----
 h_tiles
 ├── window 1
 └── v_tiles
     ├── window 2 (focused)
     └── window 3
+----
+
+. Given this layout
++
+----
+h_tiles
+├── window 1
+├── window 2 (focused)
+└── v_tiles
+    ├── window 3
+    └── window 4
+----
++
+`join-with right` will result in the following layout
++
+----
+h_tiles
+├── window 1
+└── v_tiles
+    ├── window 3
+    ├── window 2 (focused)
+    └── window 4
 ----
 
 NOTE: `join-with` is a high-level replacement for i3's https://i3wm.org/docs/userguide.html#_splitting_containers[split command].
