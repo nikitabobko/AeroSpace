@@ -232,7 +232,7 @@ If `config-version` is lower than the highest possible, xref:./commands.adoc#rel
 
 By specifying `config-version = 2`, you opt-in to the following behavior:
 
-* You unlock the possibility to specify `persistent-workspaces` config option in your config explicitly.
+* You unlock the possibility to specify <<workspace-lifecycle,`persistent-workspaces`>> config option in your config explicitly.
 * The fallback value of `persistent-workspaces` becomes an empty array
 (In `config-version = 1`, the fallback value of `persistent-workspaces` was inferred from the right hand side of your keyboard bindings. It's proved to be error-prone)
 
@@ -452,6 +452,66 @@ You will still be able to see a 1 pixel vertical line of "hidden" windows in the
 That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
 
 If you want to minimize the visibility of hidden windows, it's recommended to place Dock in the bottom (and additionally turn automatic hiding on)
+====
+
+[#workspace-lifecycle]
+=== Workspace lifecycle
+
+You don't need to create workspaces explicitly.
+Workspaces are identified by their names, and AeroSpace creates them on demand.
+E.g. `workspace XXX` creates the `XXX` workspace (if it doesn't exist yet) and switches to it,
+`move-node-to-workspace XXX` creates the `XXX` workspace (if it doesn't exist yet) and moves the window to it.
+
+Workspaces are destroyed automatically.
+A workspace stays alive as long as at least one of the following is true:
+
+* The workspace contains windows
+* The workspace is visible on one of the monitors, or it's focused
+* The workspace is listed in the `persistent-workspaces` config option
+
+All other workspaces are destroyed.
+Alive workspaces are the workspaces that you see in the menu of the AeroSpace tray icon, and in `list-workspaces --all` output.
+xref:commands.adoc#workspace[`workspace (next|prev)`] iterates over alive workspaces as well.
+
+[source,toml]
+----
+config-version = 2
+persistent-workspaces = ['1', '2', '3', 'A', 'B', 'C']
+----
+
+Persistent workspaces are never destroyed, and they exist even if you have never switched to them.
+
+`persistent-workspaces` config option is only available since <<config-version-2,`config-version = 2`>>.
+Its fallback value is an empty array.
+In `config-version = 1`, the list of persistent workspaces is inferred from your config:
+
+* Workspace names in `workspace` and `move-node-to-workspace` commands in your keyboard bindings.
+`alt-1 = 'workspace 1'` makes the `1` workspace persistent, but `alt-1 = 'exec-and-forget aerospace workspace 1'` doesn't
+* Workspace names in <<assign-workspaces-to-monitors,`workspace-to-monitor-force-assignment`>>
+
+The difference between alive and destroyed workspaces is that alive workspaces preserve their state:
+
+* *Monitor assignment.*
+An alive workspace stays assigned to the monitor it was last shown on (see <<multiple-monitors>>),
+e.g. after xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor].
+Once a destroyed workspace is created again, it's assigned to the main monitor.
+(The workspaces that are mentioned in <<assign-workspaces-to-monitors,`workspace-to-monitor-force-assignment`>> always appear on their assigned monitors)
+* *Layout of the root container.*
+An alive workspace preserves the layout and orientation of its <<tree,root container>>
+(e.g. the layout that you set with `layout --root` in <<after-startup-command>>).
+Once a destroyed workspace is created again, its root container gets `default-root-container-layout` and `default-root-container-orientation`.
+
+Every monitor always shows some workspace.
+When a monitor needs a new workspace to show
+(e.g. you connect a new monitor, or you move the visible workspace of the monitor to another monitor),
+AeroSpace shows one of the invisible workspaces that are assigned to the monitor.
+If there is no such workspace, AeroSpace creates a new empty workspace named after the smallest number that isn't taken by other workspaces (`1`, `2`, `3`, ...).
+
+[NOTE]
+====
+In i3, workspaces are alive only when they are either non-empty, or visible.
+AeroSpace makes it possible to keep empty workspaces alive with `persistent-workspaces`.
+That way, you can reliably move an empty workspace to another monitor and be sure that it stays there.
 ====
 
 === Proper monitor arrangement
