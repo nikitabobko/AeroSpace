@@ -10,9 +10,9 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
-                               [--wrap-around] (left|down|up|right|next|prev)
+                               [--wrap-around] [--parent] (left|down|up|right|next|prev)
 aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
-                               [--fail-if-noop] [--] <monitor-pattern>...
+                               [--fail-if-noop] [--parent] [--] <monitor-pattern>...
 
 // end::synopsis[]
 
@@ -37,6 +37,10 @@ Exit with non-zero code if moving window to monitor it already belongs to
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
+
+--parent::
+Move the parent container of the window instead of the window itself.
+The command fails if the window isn't a tiling window, or if its parent container is the root container of the workspace.
 
 // =========================================================== Arguments
 include::util/conditional-arguments-header.adoc[]

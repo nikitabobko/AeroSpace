@@ -24,6 +24,7 @@ struct MoveNodeToMonitorCommand: Command {
                     window,
                     targetWs,
                     io,
+                    parent: args.parent,
                     focusFollowsWindow: args.focusFollowsWindow,
                     failIfNoop: args.failIfNoop,
                     index: index,

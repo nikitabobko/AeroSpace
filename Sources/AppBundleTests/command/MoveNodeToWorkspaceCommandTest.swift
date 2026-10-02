@@ -12,6 +12,8 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         assertEquals(parseCommand("move-node-to-workspace --stdin foo").errorOrNil, "--stdin and --no-stdin require using (next|prev) argument")
         testParseSingleCommandSucc("move-node-to-workspace --stdin next", MoveNodeToWorkspaceCmdArgs(target: .relative(.next)).copy(\.commonState.explicitStdinFlag, true))
         testParseSingleCommandSucc("move-node-to-workspace --no-stdin next", MoveNodeToWorkspaceCmdArgs(target: .relative(.next)).copy(\.commonState.explicitStdinFlag, false))
+        testParseSingleCommandSucc("move-node-to-workspace --parent next", MoveNodeToWorkspaceCmdArgs(target: .relative(.next)).copy(\.parent, true))
+        testParseSingleCommandSucc("move-node-to-workspace --parent foo", MoveNodeToWorkspaceCmdArgs(workspace: "foo").copy(\.parent, true))
     }
 
     func testParseDashDash() {
@@ -130,6 +132,100 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         assertEquals(focus.workspace.name, "b")
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertTrue(workspaceA.isEffectivelyEmpty)
+    }
+
+    func testMoveParent() async {
+        let workspaceA = Workspace.get(byName: "a")
+        workspaceA.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                _ = TestWindow.new(id: 2, parent: $0).focusWindow()
+                TestWindow.new(id: 3, parent: $0)
+            }
+        }
+
+        let result = await parseCommand("move-node-to-workspace --parent b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(workspaceA.rootTilingContainer.layoutDescription, .h_tiles([.window(1)]))
+        assertEquals(
+            Workspace.get(byName: "b").rootTilingContainer.layoutDescription,
+            .h_tiles([
+                .v_tiles([.window(2), .window(3)]),
+            ]),
+        )
+        assertEquals(focus.workspace.name, "a")
+        assertEquals(focus.windowOrNil?.windowId, 1)
+    }
+
+    func testMoveParent_focusFollowsWindow() async {
+        let workspaceA = Workspace.get(byName: "a")
+        workspaceA.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                _ = TestWindow.new(id: 2, parent: $0).focusWindow()
+                TestWindow.new(id: 3, parent: $0)
+            }
+        }
+
+        await parseCommand("move-node-to-workspace --parent --focus-follows-window b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(workspaceA.rootTilingContainer.layoutDescription, .h_tiles([.window(1)]))
+        assertEquals(
+            Workspace.get(byName: "b").rootTilingContainer.layoutDescription,
+            .h_tiles([
+                .v_tiles([.window(2), .window(3)]),
+            ]),
+        )
+        assertEquals(focus.workspace.name, "b")
+        assertEquals(focus.windowOrNil?.windowId, 2)
+    }
+
+    func testMoveParent_failsIfParentIsRootContainer() async {
+        let workspaceA = Workspace.get(byName: "a")
+        workspaceA.rootTilingContainer.apply {
+            _ = TestWindow.new(id: 1, parent: $0).focusWindow()
+            TestWindow.new(id: 2, parent: $0)
+        }
+
+        let result = await parseCommand("move-node-to-workspace --parent b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stderr, ["Can't move the parent container of window 1: it's the root container of the workspace"])
+        assertEquals(workspaceA.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2)]))
+    }
+
+    func testMoveParent_failsForFloatingWindow() async {
+        let workspaceA = Workspace.get(byName: "a").apply {
+            assertTrue(TestWindow.new(id: 1, parent: $0.floatingWindowsContainer).focusWindow())
+        }
+
+        let result = await parseCommand("move-node-to-workspace --parent b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stderr, ["Can't move the parent container of window 1: the window isn't a tiling window"])
+        assertEquals((workspaceA.floatingWindowsContainer.children.singleOrNil() as? Window)?.windowId, 1)
+    }
+
+    func testMoveParent_failIfNoop_succWithMessage() async {
+        let workspaceA = Workspace.get(byName: "a")
+        workspaceA.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                _ = TestWindow.new(id: 2, parent: $0).focusWindow()
+                TestWindow.new(id: 3, parent: $0)
+            }
+        }
+
+        let result = await parseCommand("move-node-to-workspace --parent a").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(
+            result.stderr,
+            ["The parent container of window '2' already belongs to workspace 'a'. Tip: use --fail-if-noop to exit with non-zero code"],
+        )
+        assertEquals(
+            workspaceA.rootTilingContainer.layoutDescription,
+            .h_tiles([
+                .window(1),
+                .v_tiles([.window(2), .window(3)]),
+            ]),
+        )
     }
 
     func testRelativeNext() async {

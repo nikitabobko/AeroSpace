@@ -26,9 +26,9 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     alt-l =         'focus --boundaries-action wrap-around-the-workspace up'
     alt-semicolon = 'focus --boundaries-action wrap-around-the-workspace right'
 
-    alt-shift-j = 'move left'
-    alt-shift-k = 'move down'
-    alt-shift-l = 'move up'
+    alt-shift-j =         'move left'
+    alt-shift-k =         'move down'
+    alt-shift-l =         'move up'
     alt-shift-semicolon = 'move right'
 
     # Consider using 'join-with' command as a 'split' replacement if you want to enable
@@ -48,9 +48,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     # See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
     #alt-space = 'focus toggle_tiling_floating'
 
-    # `focus parent`/`focus child` are not yet supported, and it's not clear whether they
-    # should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
-    # alt-a = 'focus parent'
+    alt-a = 'mode parent' # 'focus parent' in i3
 
     alt-1 = 'workspace 1'
     alt-2 = 'workspace 2'
@@ -77,6 +75,14 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     alt-shift-c = 'reload-config'
 
     alt-r = 'mode resize'
+
+[mode.parent.binding] # A separate mode to move parent container around
+    alt-shift-j =         'move --parent left'
+    alt-shift-k =         'move --parent down'
+    alt-shift-l =         'move --parent up'
+    alt-shift-semicolon = 'move --parent right'
+    enter = 'mode main'
+    esc = 'mode main'
 
 [mode.resize.binding]
     h = 'resize width -50'

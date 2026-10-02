@@ -11,6 +11,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
             "--window-id": windowIdSubArgParser(),
             "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
+            "--parent": trueBoolFlag(\.parent),
         ],
         posArgs: [
             dashDashArg(mandatory: false),
@@ -25,6 +26,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
 
     public var failIfNoop: Bool = false
     public var focusFollowsWindow: Bool = false
+    public var parent: Bool = false
     public var wrapAround: Bool = false
     public var target: Lateinit<MonitorTarget> = .uninitialized
 }
