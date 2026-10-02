@@ -24,6 +24,7 @@ enum TilingContainerLifeStatus {
     case deadOrInvisible
     /// must be flattened by normalization, but cannot since it contains half-dead children
     /// These types of containers must be transparent for ascensions and descensions
+    /// These containers contain only a single alive child
     case mustBeFlattened
     case alive
 

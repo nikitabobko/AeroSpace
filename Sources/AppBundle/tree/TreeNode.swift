@@ -67,6 +67,10 @@ open class TreeNode: Equatable, AeroAny {
     @MainActor
     @discardableResult
     func bind(to newParent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) -> BindingData? {
+        if isDebug, let newParent = newParent as? TilingContainer, newParent.lifeStatus != .alive {
+            die("Binding is possible only to alive TilingContainers")
+        }
+
         let result = unbindIfBound()
 
         if newParent === NilTreeNode.instance {

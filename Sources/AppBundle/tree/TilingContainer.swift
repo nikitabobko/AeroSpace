@@ -4,13 +4,20 @@ import Common
 final class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider renaming to GenericContainer
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }
-    var layout: Layout
+    private var _layout: Layout
+    var layout: Layout {
+        get { _layout }
+        set(value) {
+            if isDebug && lifeStatus != .alive { die("Can't change layout of not alive TilingContainer") }
+            _layout =  value
+        }
+    }
     var lifeStatus: TilingContainerLifeStatus = .alive // todo tighten its visibility
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
         self._orientation = orientation
-        self.layout = layout
+        self._layout = layout
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 

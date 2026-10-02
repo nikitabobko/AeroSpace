@@ -398,9 +398,9 @@ final class LayoutCommandTest: XCTestCase {
         let root = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                $0.lifeStatus = .mustBeFlattened
                 TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
                 mruWindow = TestWindow.new(id: 3, parent: $0)
+                $0.lifeStatus = .mustBeFlattened
             }
         }
         TestWindow.new(id: 4, parent: workspace.floatingWindowsContainer)
@@ -417,9 +417,9 @@ final class LayoutCommandTest: XCTestCase {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             mustBeFlattened = TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                $0.lifeStatus = .mustBeFlattened
                 TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
                 assertEquals(TestWindow.new(id: 3, parent: $0).focusWindow(), true)
+                $0.lifeStatus = .mustBeFlattened
             }
         }
 

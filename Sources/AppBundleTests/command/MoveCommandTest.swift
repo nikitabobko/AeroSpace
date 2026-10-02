@@ -76,9 +76,9 @@ final class MoveCommandTest: XCTestCase {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                $0.lifeStatus = .deadOrInvisible
                 TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
                 TestWindow.new(id: 3, parent: $0).lifeStatus = .invisible
+                $0.lifeStatus = .deadOrInvisible
             }
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow.new(id: 4, parent: $0)
@@ -102,9 +102,9 @@ final class MoveCommandTest: XCTestCase {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow.new(id: 2, parent: $0)
                 TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                    $0.lifeStatus = .mustBeFlattened
                     TestWindow.new(id: 3, parent: $0).lifeStatus = .dead
                     TestWindow.new(id: 4, parent: $0)
+                    $0.lifeStatus = .mustBeFlattened
                 }
             }
         }
@@ -129,9 +129,9 @@ final class MoveCommandTest: XCTestCase {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             // Same orientation as the root. Without tombstones it would have been flattened
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                $0.lifeStatus = .mustBeFlattened
                 TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
                 TestWindow.new(id: 3, parent: $0)
+                $0.lifeStatus = .mustBeFlattened
             }
         }
 
@@ -147,12 +147,12 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 1, parent: $0)
             // Same orientation as the root. Without tombstones it would have been flattened
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                $0.lifeStatus = .mustBeFlattened
                 TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
                 TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                     assertEquals(TestWindow.new(id: 3, parent: $0).focusWindow(), true)
                     TestWindow.new(id: 4, parent: $0)
                 }
+                $0.lifeStatus = .mustBeFlattened
             }
         }
 

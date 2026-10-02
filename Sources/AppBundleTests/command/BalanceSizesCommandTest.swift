@@ -61,11 +61,11 @@ final class BalanceSizesCommandTest: XCTestCase {
                 }
                 TestWindow.new(id: 3, parent: $0).setWeight(orientation, 3)
                 invisibleContainer = TilingContainer.newVTiles(parent: $0, adaptiveWeight: 20).apply {
-                    $0.lifeStatus = .deadOrInvisible
                     invisibleNestedWindow = TestWindow.new(id: 4, parent: $0).apply {
                         $0.setWeight(.v, 40)
                         $0.lifeStatus = .dead
                     }
+                    $0.lifeStatus = .deadOrInvisible
                 }
                 TilingContainer.newVTiles(parent: $0, adaptiveWeight: 5).apply {
                     nestedWindows.append(TestWindow.new(id: 5, parent: $0).apply { $0.setWeight(.v, 1) })

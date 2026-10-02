@@ -90,8 +90,8 @@ final class ResizeCommandTest: XCTestCase {
             invisibleWindow = TestWindow.new(id: 2, parent: $0, adaptiveWeight: 4).apply { $0.lifeStatus = .invisible }
             window2 = TestWindow.new(id: 3, parent: $0, adaptiveWeight: 4)
             deadContainer = TilingContainer.newVTiles(parent: $0, adaptiveWeight: 4).apply {
-                $0.lifeStatus = .deadOrInvisible
                 TestWindow.new(id: 4, parent: $0).lifeStatus = .dead
+                $0.lifeStatus = .deadOrInvisible
             }
             window3 = TestWindow.new(id: 5, parent: $0, adaptiveWeight: 4)
         }
@@ -114,9 +114,9 @@ final class ResizeCommandTest: XCTestCase {
         Workspace.get(byName: name).rootTilingContainer.apply {
             window1 = TestWindow.new(id: 1, parent: $0, adaptiveWeight: 4)
             mustBeFlattened = TilingContainer.newHTiles(parent: $0, adaptiveWeight: 4).apply {
-                $0.lifeStatus = .mustBeFlattened
                 TestWindow.new(id: 2, parent: $0, adaptiveWeight: 4).lifeStatus = .dead
                 window2 = TestWindow.new(id: 3, parent: $0, adaptiveWeight: 4)
+                $0.lifeStatus = .mustBeFlattened
             }
             window3 = TestWindow.new(id: 4, parent: $0, adaptiveWeight: 4)
         }

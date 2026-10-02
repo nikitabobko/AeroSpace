@@ -261,8 +261,8 @@ final class FocusCommandTest: XCTestCase {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                $0.lifeStatus = .deadOrInvisible
                 TestWindow.new(id: 3, parent: $0).lifeStatus = .invisible
+                $0.lifeStatus = .deadOrInvisible
             }
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow.new(id: 4, parent: $0).lifeStatus = .invisible
