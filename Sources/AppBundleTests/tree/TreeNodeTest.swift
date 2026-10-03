@@ -72,6 +72,46 @@ final class TreeNodeTest: XCTestCase {
         assertEquals(workspace.rootTilingContainer.children.count, 0)
     }
 
+    func testNormalizeContainers_bsp_forceBinary() {
+        config.enableNormalizationBinaryTree = true
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TestWindow.new(id: 2, parent: $0)
+            TestWindow.new(id: 3, parent: $0)
+            TestWindow.new(id: 4, parent: $0)
+        }
+        workspace.normalizeContainers()
+        // 1920x1080 → root .h; split → first child rect is half-width 960x1080 → .v; next .h; etc.
+        assertEquals(
+            .h_tiles([
+                .window(1),
+                .v_tiles([
+                    .window(2),
+                    .h_tiles([.window(3), .window(4)]),
+                ]),
+            ]),
+            workspace.rootTilingContainer.layoutDescription,
+        )
+    }
+
+    func testNormalizeContainers_bsp_orientsByRect() {
+        config.enableNormalizationBinaryTree = true
+        let workspace = Workspace.get(byName: name)
+        // Start with the "wrong" orientation; BSP should flip it.
+        workspace.rootTilingContainer.apply {
+            $0.setOrientation(.v)
+            TestWindow.new(id: 1, parent: $0)
+            TestWindow.new(id: 2, parent: $0)
+        }
+        workspace.normalizeContainers()
+        // 1920x1080 wide → .h
+        assertEquals(
+            .h_tiles([.window(1), .window(2)]),
+            workspace.rootTilingContainer.layoutDescription,
+        )
+    }
+
     func testNormalizeContainers_flattenContainers() {
         let workspace = Workspace.get(byName: name) // Don't cache root node
         workspace.rootTilingContainer.apply {
