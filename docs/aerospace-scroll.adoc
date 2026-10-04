@@ -1,0 +1,43 @@
+= aerospace-scroll(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-scroll
+// tag::purpose[]
+:manpurpose: Scroll the viewport of a workspace whose root container uses the scrolling layout
+// end::purpose[]
+
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace scroll [-h|--help] (left|right)
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The command moves the viewport by one page and focuses the newly revealed window.
+
+This command only works when the focused workspace root container uses the `scrolling` layout.
+
+In the scrolling layout, `focus left|right` keeps its normal directional meaning, while `scroll left|right`
+is the explicit way to move the viewport itself.
+
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/conditional-examples-header.adoc[]
+
+* Scroll one page to the left: +
+`aerospace scroll left`
+
+* Scroll one page to the right: +
+`aerospace scroll right`
+
+* Example bindings for the scrolling layout: +
+`alt-left = 'scroll left'` +
+`alt-right = 'scroll right'`
+// end::body[]
+
+include::util/man-footer.adoc[]
