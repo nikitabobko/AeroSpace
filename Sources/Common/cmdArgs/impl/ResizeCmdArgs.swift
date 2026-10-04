@@ -8,7 +8,7 @@ public struct ResizeCmdArgs: CmdArgs {
             "--window-id": windowIdSubArgParser(),
         ],
         posArgs: [
-            newMandatoryPosArgParser(\.dimension, parseDimension, placeholder: "(smart|smart-opposite|width|height)"),
+            newMandatoryPosArgParser(\.dimension, parseDimension, placeholder: "(smart|smart-opposite|width|height|split-left|split-right|split-up|split-down)"),
             newMandatoryPosArgParser(\.units, parseUnits, placeholder: "[+|-]<number>"),
         ],
     )
@@ -29,6 +29,21 @@ public struct ResizeCmdArgs: CmdArgs {
     public enum Dimension: String, CaseIterable, Equatable, Sendable {
         case width, height, smart
         case smartOpposite = "smart-opposite"
+        case splitLeft = "split-left"
+        case splitRight = "split-right"
+        case splitUp = "split-up"
+        case splitDown = "split-down"
+
+        /// The direction to move the split to. `nil` for the dimensions that resize the window itself
+        public var splitDirection: CardinalDirection? {
+            switch self {
+                case .splitLeft: .left
+                case .splitRight: .right
+                case .splitUp: .up
+                case .splitDown: .down
+                case .width, .height, .smart, .smartOpposite: nil
+            }
+        }
     }
 
     public enum Units: Equatable, Sendable {

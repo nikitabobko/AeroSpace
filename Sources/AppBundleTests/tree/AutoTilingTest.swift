@@ -1,0 +1,262 @@
+@testable import AppBundle
+import Common
+import XCTest
+
+@MainActor
+final class AutoTilingTest: XCTestCase {
+    override func setUp() async throws {
+        setUpWorkspacesForTests()
+        config.enableAutoTiling = true
+        config.enableNormalizationFlattenContainers = true
+        config.enableNormalizationOppositeOrientationForNestedContainers = true
+    }
+
+    @discardableResult
+    private func openWindow(_ id: UInt32, on workspace: Workspace) -> TestWindow {
+        let data = workspace.prepareTilingWindowInsertion(autoTile: true)
+        let window = TestWindow.new(id: id, parent: data.parent, adaptiveWeight: data.adaptiveWeight)
+        window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+        workspace.normalizeContainers()
+        return window
+    }
+
+    func testFirstTwoWindowsUseRootOrientation() {
+        let workspace = Workspace.get(byName: name)
+        openWindow(1, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(1)]))
+        openWindow(2, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2)]))
+    }
+
+    func testThirdWindowStacksAndFurtherSplitsAlternate() {
+        let workspace = Workspace.get(byName: name)
+        for id: UInt32 in 1 ... 3 { openWindow(id, on: workspace) }
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .v_tiles([.window(2), .window(3)]),
+        ]))
+        openWindow(4, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .v_tiles([.window(2), .h_tiles([.window(3), .window(4)])]),
+        ]))
+    }
+
+    func testSplitsMostRecentlyFocusedTileAndPreservesWeights() {
+        let workspace = Workspace.get(byName: name)
+        let first = openWindow(1, on: workspace)
+        let second = openWindow(2, on: workspace)
+        first.setWeight(.h, 700)
+        second.setWeight(.h, 300)
+        assertTrue(first.focusWindow())
+        let third = openWindow(3, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .v_tiles([.window(1), .window(3)]), .window(2),
+        ]))
+        assertEquals(first.parent?.getWeight(.h), 700)
+        assertEquals(second.getWeight(.h), 300)
+        assertEquals(first.getWeight(.v), third.getWeight(.v))
+    }
+
+    func testVerticalRootSplitsHorizontally() {
+        config.defaultRootContainerOrientation = .vertical
+        let workspace = Workspace.get(byName: name)
+        for id: UInt32 in 1 ... 3 { openWindow(id, on: workspace) }
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .v_tiles([
+            .window(1), .h_tiles([.window(2), .window(3)]),
+        ]))
+    }
+
+    func testDisabledPreservesSiblingInsertion() {
+        config.enableAutoTiling = false
+        let workspace = Workspace.get(byName: name)
+        for id: UInt32 in 1 ... 3 { openWindow(id, on: workspace) }
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .window(2), .window(3),
+        ]))
+    }
+
+    func testAccordionKeepsSiblingInsertion() {
+        config.defaultRootContainerLayout = .accordion
+        let workspace = Workspace.get(byName: name)
+        for id: UInt32 in 1 ... 3 { openWindow(id, on: workspace) }
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_accordion([
+            .window(1), .window(2), .window(3),
+        ]))
+    }
+
+    func testFloatingFocusSplitsMostRecentTile() {
+        let workspace = Workspace.get(byName: name)
+        openWindow(1, on: workspace)
+        openWindow(2, on: workspace)
+        let floating = TestWindow.new(id: 3, parent: workspace.floatingWindowsContainer)
+        assertTrue(floating.focusWindow())
+        openWindow(4, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .v_tiles([.window(2), .window(4)]),
+        ]))
+        assertTrue(floating.isFloating)
+    }
+
+    func testSecondWindowOpensNextToTheLastWindowOfCollapsedStack() {
+        let workspace = Workspace.get(byName: name)
+        let first = openWindow(1, on: workspace)
+        let second = openWindow(2, on: workspace)
+        let third = openWindow(3, on: workspace)
+        // [1 | 2/3] -> close 1 -> the vertical stack becomes the root -> close 3 -> single window in the vertical root
+        first.closeAxWindow()
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .v_tiles([.window(2), .window(3)]))
+        third.closeAxWindow()
+        workspace.normalizeContainers()
+        assertTrue(second.focusWindow())
+        openWindow(4, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(2), .window(4)]))
+    }
+
+    func testWideTileIsSplitSideBySideAndTallTileIsStacked() {
+        let workspace = Workspace.get(byName: name)
+        openWindow(1, on: workspace)
+        let second = openWindow(2, on: workspace)
+        second.setWeight(.h, 600)
+        // Ultrawide monitor: the columns are still wider than tall => one more column that takes half of the tile
+        second.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 1720, topLeftY: 0, width: 1720, height: 1440)
+        let third = openWindow(3, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2), .window(3)]))
+        assertEquals(second.getWeight(.h), 300)
+        assertEquals(third.getWeight(.h), 300)
+        // The column is taller than wide now => stack
+        third.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 2580, topLeftY: 0, width: 860, height: 1440)
+        openWindow(4, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .window(2), .v_tiles([.window(3), .window(4)]),
+        ]))
+    }
+
+    func testFloatingToTilingSplitsMostRecentTile() async {
+        let workspace = Workspace.get(byName: name)
+        openWindow(1, on: workspace)
+        let second = openWindow(2, on: workspace)
+        assertTrue(second.focusWindow())
+        let floating = TestWindow.new(id: 3, parent: workspace.floatingWindowsContainer)
+        assertTrue(floating.focusWindow())
+
+        await parseCommand("layout tiling").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .v_tiles([.window(2), .window(3)]),
+        ]))
+    }
+
+    func testDropOntoTheCenterSwapsAndDropOntoTheSideSplits() {
+        let workspace = Workspace.get(byName: name)
+        let first = openWindow(1, on: workspace)
+        let second = openWindow(2, on: workspace)
+        let third = openWindow(3, on: workspace)
+        // [1 | 2/3]
+        first.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 0, topLeftY: 0, width: 1000, height: 1000)
+        second.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 1000, topLeftY: 0, width: 1000, height: 500)
+
+        dropTilingWindow(third, onto: first, at: CGPoint(x: 500, y: 500)) // The center
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(3), .v_tiles([.window(2), .window(1)]),
+        ]))
+
+        // The bottom side of 2 => 3 goes below 2. 2 and 1 are already stacked => 3 takes the half of 2
+        second.setWeight(.v, 400)
+        dropTilingWindow(third, onto: second, at: CGPoint(x: 1500, y: 480))
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .v_tiles([.window(2), .window(3), .window(1)]))
+        assertEquals(second.getWeight(.v), 200)
+        assertEquals(third.getWeight(.v), 200)
+
+        // The left side of 1 => a container is created, 3 goes to the left of 1
+        first.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 0, topLeftY: 500, width: 2000, height: 500)
+        dropTilingWindow(third, onto: first, at: CGPoint(x: 100, y: 750))
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .v_tiles([
+            .window(2), .h_tiles([.window(3), .window(1)]),
+        ]))
+    }
+
+    func testMovingWindowToWorkspaceSplitsMostRecentTile() async {
+        let target = Workspace.get(byName: "b")
+        let first = openWindow(1, on: target)
+        openWindow(2, on: target)
+        assertTrue(first.focusWindow())
+        let source = Workspace.get(byName: "a")
+        let moved = openWindow(3, on: source)
+        assertTrue(moved.focusWindow())
+
+        await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        target.normalizeContainers()
+        assertEquals(target.rootTilingContainer.layoutDescription, .h_tiles([
+            .v_tiles([.window(1), .window(3)]), .window(2),
+        ]))
+        XCTAssertTrue(source.isEffectivelyEmpty)
+    }
+
+    func testMovingWindowToWorkspaceWithSingleTileKeepsSiblingInsertion() async {
+        let target = Workspace.get(byName: "b")
+        openWindow(1, on: target)
+        let moved = openWindow(2, on: Workspace.get(byName: "a"))
+        assertTrue(moved.focusWindow())
+
+        await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        target.normalizeContainers()
+        assertEquals(target.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2)]))
+    }
+
+    func testMovingWindowToWorkspaceDoesNotSplitWhenDisabled() async {
+        config.enableAutoTiling = false
+        let target = Workspace.get(byName: "b")
+        openWindow(1, on: target)
+        openWindow(2, on: target)
+        let moved = openWindow(3, on: Workspace.get(byName: "a"))
+        assertTrue(moved.focusWindow())
+
+        await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        target.normalizeContainers()
+        assertEquals(target.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2), .window(3)]))
+    }
+
+    func testRetilingExistingWindowDoesNotSplit() async throws {
+        let workspace = Workspace.get(byName: name)
+        openWindow(1, on: workspace)
+        openWindow(2, on: workspace)
+        let floating = TestWindow.new(id: 3, parent: workspace.floatingWindowsContainer)
+        try await floating.relayoutWindow(on: workspace, .nonCancellable, forceTile: true)
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .window(2), .window(3),
+        ]))
+    }
+
+    func testClosingSplitWindowRestoresOriginalTile() {
+        let workspace = Workspace.get(byName: name)
+        openWindow(1, on: workspace)
+        openWindow(2, on: workspace)
+        let third = openWindow(3, on: workspace)
+        third.closeAxWindow()
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2)]))
+        openWindow(4, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .v_tiles([.window(2), .window(4)]),
+        ]))
+    }
+
+    func testFloatingRuleRemovesTemporarySplit() async {
+        let workspace = Workspace.get(byName: name)
+        openWindow(1, on: workspace)
+        openWindow(2, on: workspace)
+        config.onWindowDetected = [WindowDetectedCallback(
+            matcher: .command(.empty),
+            rawRun: parseCommand("layout floating").cmdOrDie,
+        )]
+        let third = openWindow(3, on: workspace)
+        await tryOnWindowDetected(third)
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2)]))
+        assertTrue(third.isFloating)
+    }
+}

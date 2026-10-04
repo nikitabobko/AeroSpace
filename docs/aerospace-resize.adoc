@@ -10,6 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace resize [-h|--help] [--window-id <window-id>] (smart|smart-opposite|width|height) [+|-]<number>
+aerospace resize [-h|--help] [--window-id <window-id>] (split-left|split-right|split-up|split-down) (+|-)<number>
 
 // end::synopsis[]
 
@@ -26,6 +27,12 @@ The dimension to resize is chosen by the first argument
 * `smart` changes width if the parent has horizontal orientation, and
 it changes height if the parent has vertical orientation
 * `smart-opposite` resizes the opposite axis of smart
+* `split-left`, `split-right`, `split-up`, `split-down` move the split (the border between the window and its neighbour)
+in the given direction. Unlike `width` and `height`, the effect on the focused window depends on its position:
+`split-right` grows the window if it's on the left of the split, and shrinks the window if it's on the right of the split.
+The split is the right/bottom border of the window. If the window is the last one in its container, it's the
+left/top border. Only the two neighbours that share the split are resized.
+The `<number>` must be prefixed with `+` or `-` (`-` moves the split in the opposite direction)
 
 Second argument controls how much the size changes
 

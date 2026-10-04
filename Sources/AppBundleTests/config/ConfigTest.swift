@@ -4,6 +4,20 @@ import XCTest
 
 @MainActor
 final class ConfigTest: XCTestCase {
+    func testAutoTilingSetting() {
+        assertEquals(parseConfig("").config.enableAutoTiling, false)
+        assertEquals(defaultConfig.enableAutoTiling, false)
+        let enabled = parseConfig("enable-auto-tiling = true")
+        assertEquals(enabled.errors, [])
+        assertEquals(enabled.config.enableAutoTiling, true)
+        let disabled = parseConfig("enable-auto-tiling = false")
+        assertEquals(disabled.errors, [])
+        assertEquals(disabled.config.enableAutoTiling, false)
+        assertEquals(parseConfig("enable-auto-tiling = 'true'").strErrors, [
+            "[ERROR] enable-auto-tiling: Expected type is 'Bool'. But actual type is 'String'",
+        ])
+    }
+
     func testParseI3Config() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"), encoding: .utf8)
         let result = parseConfig(toml)

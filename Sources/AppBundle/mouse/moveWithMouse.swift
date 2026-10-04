@@ -46,10 +46,67 @@ private func moveFloatingWindow(_ window: Window) async throws {
     }
 }
 
+/// enable-auto-tiling. The tiling window that is being dragged with mouse. The tree is changed once the window is dropped
+@MainActor private var draggedTilingWindowId: UInt32? = nil
+/// Dragging the left/top border of the window also moves the window. It's a resize, not a move
+@MainActor var isMouseManipulationResize: Bool = false
+
+/// The part of the tile (on each side) that splits the tile when a window is dropped onto it.
+/// The center of the tile swaps the windows
+private let dropSplitZone: CGFloat = 0.3
+
+@MainActor
+func dropDraggedTilingWindowIfNeeded() {
+    defer {
+        draggedTilingWindowId = nil
+        isMouseManipulationResize = false
+    }
+    guard config.enableAutoTiling, !isMouseManipulationResize,
+          let windowId = draggedTilingWindowId, let window = Window.get(byId: windowId), window.parent is TilingContainer
+    else { return }
+    let mouseLocation = mouseLocation
+    let targetWorkspace = mouseLocation.monitorApproximation.activeWorkspace
+    let target = mouseLocation
+        .findWindowRecursively(in: targetWorkspace.rootTilingContainer, virtual: false, fullscreenCoversAll: false)?
+        .takeIf { $0 != window }
+    if let target {
+        dropTilingWindow(window, onto: target, at: mouseLocation)
+    } else if targetWorkspace != window.nodeWorkspace { // Dropped onto an empty space of a different monitor
+        window.unbindFromParent()
+        let data = targetWorkspace.prepareTilingWindowInsertion(autoTile: true)
+        window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+    }
+}
+
+/// - The center of the target swaps the windows
+/// - The sides of the target split the target. The dropped window takes the half where it was dropped
+@MainActor
+func dropTilingWindow(_ window: Window, onto target: Window, at point: CGPoint) {
+    guard window != target, let rect = target.lastAppliedLayoutPhysicalRect, rect.width > 0 && rect.height > 0 else { return }
+    let x = (point.x - rect.minX) / rect.width
+    let y = (point.y - rect.minY) / rect.height
+    let sides: [(distance: CGFloat, orientation: Orientation, insertBefore: Bool)] = [
+        (x, .h, true), (1 - x, .h, false), (y, .v, true), (1 - y, .v, false),
+    ]
+    guard let side = sides.min(by: { $0.distance < $1.distance }), side.distance < dropSplitZone,
+          (target.parent as? TilingContainer)?.layout == .tiles
+    else {
+        swapWindows(mruDominant: window, target)
+        return
+    }
+    window.unbindFromParent() // Unbind first. The window and the target might be siblings
+    guard let data = target.prepareSplit(side.orientation, insertBefore: side.insertBefore) else { return }
+    window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+}
+
 @MainActor
 private func moveTilingWindow(_ window: Window) {
     currentlyManipulatedWithMouseWindowId = window.windowId
     window.lastAppliedLayoutPhysicalRect = nil
+    if config.enableAutoTiling { // The tree is changed once the window is dropped
+        draggedTilingWindowId = window.windowId
+        return
+    }
     let mouseLocation = mouseLocation
     let targetWorkspace = mouseLocation.monitorApproximation.activeWorkspace
     let swapTarget = mouseLocation
