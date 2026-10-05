@@ -4,7 +4,7 @@ import Foundation
 
 struct BalanceSizesCommand: Command {
     let args: BalanceSizesCmdArgs
-    /*conforms*/ let shouldResetClosedWindowsCache = false
+    /*conforms*/ let shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
