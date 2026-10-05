@@ -24,6 +24,12 @@ struct DebugWindowsCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
+        if args.windowId != nil && args.appBundleId != nil {
+            return .fail(io.err("--window-id is incompatible with --app-bundle-id"))
+        }
+        if let appBundleId = args.appBundleId {
+            return await dumpAppWindowsDebugInfo(appBundleId, io)
+        }
         if let windowId = args.windowId {
             guard let window = Window.get(byId: windowId) else {
                 return .fail(io.err("Can't find window with the specified window-id: \(windowId)"))
@@ -78,39 +84,94 @@ struct DebugWindowsCommand: Command {
 @MainActor
 private func dumpWindowDebugInfo(_ window: Window, _ cm: CancellationMode) async throws -> String {
     let window = window as! MacWindow
-    let appInfoDic = window.macApp.nsApp.bundleURL.flatMap { Bundle.init(url: $0) }?.infoDictionary ?? [:]
-
     var result: [String: Json] = try await window.dumpAxInfo(cm)
 
     let windowLevel = getWindowLevel(for: window.windowId)
-    let windowLevelJson = windowLevel?.toJson() ?? .null
-    result["Aero.windowLevel"] = windowLevelJson
+    result["Aero.windowLevel"] = windowLevel?.toJson() ?? .null
     result["Aero.axWindowId"] = .int(window.windowId)
-    result["Aero.workspace"] = .stringOrNull(window.nodeWorkspace?.name)
-    result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
-    result["Aero.macOS.version"] = .string(ProcessInfo().operatingSystemVersionString) // because built-in apps might behave differently depending on the OS version
-    result["Aero.App.appBundleId"] = .stringOrNull(window.app.rawAppBundleId)
-    result["Aero.App.pid"] = .int(Int(window.app.pid))
-    result["Aero.App.versionShort"] = .stringOrNull(appInfoDic["CFBundleShortVersionString"] as? String)
-    result["Aero.App.version"] = .stringOrNull(appInfoDic["CFBundleVersion"] as? String)
-    result["Aero.App.nsApp.activationPolicy"] = .string(window.macApp.nsApp.activationPolicy.prettyDescription)
-    result["Aero.App.nsApp.execPath"] = .stringOrNull(window.macApp.nsApp.executableURL?.description)
-    result["Aero.App.nsApp.appBundlePath"] = .stringOrNull(window.macApp.nsApp.bundleURL?.description)
-    result["Aero.AXApp"] = .dict(try await window.macApp.dumpAppAxInfo(cm))
+    result = result + (try await dumpAppDebugInfo(window.macApp, cm))
+    result = result + (await dumpTreeNodeDebugInfo(window))
 
     let isDialog = try await window.isDialogHeuristic(windowLevel, cm)
     let isWindow = try await window.isWindowHeuristic(windowLevel, cm)
     result["Aero.AxUiElementWindowType"] = .string(AxUiElementWindowType.new(isWindow: isWindow, isDialog: { isDialog }).rawValue)
     result["Aero.AxUiElementWindowType_isDialogHeuristic"] = .bool(isDialog)
 
+    return JSONEncoder.aeroSpaceDefault.encodeToString(result).prettyDescription
+        .prefixLines(with: "\(window.app.rawAppBundleId ?? "nil-bundle-id").\(window.windowId) ||| ")
+}
+
+@MainActor
+private func dumpAppDebugInfo(_ macApp: MacApp, _ cm: CancellationMode) async throws -> [String: Json] {
+    let appInfoDic = macApp.nsApp.bundleURL.flatMap { Bundle.init(url: $0) }?.infoDictionary ?? [:]
+    var result: [String: Json] = [:]
+    result["Aero.macOS.version"] = .string(ProcessInfo().operatingSystemVersionString) // because built-in apps might behave differently depending on the OS version
+    result["Aero.App.appBundleId"] = .stringOrNull(macApp.rawAppBundleId)
+    result["Aero.App.pid"] = .int(Int(macApp.pid))
+    result["Aero.App.versionShort"] = .stringOrNull(appInfoDic["CFBundleShortVersionString"] as? String)
+    result["Aero.App.version"] = .stringOrNull(appInfoDic["CFBundleVersion"] as? String)
+    result["Aero.App.nsApp.activationPolicy"] = .string(macApp.nsApp.activationPolicy.prettyDescription)
+    result["Aero.App.nsApp.execPath"] = .stringOrNull(macApp.nsApp.executableURL?.description)
+    result["Aero.App.nsApp.appBundlePath"] = .stringOrNull(macApp.nsApp.bundleURL?.description)
+    result["Aero.AXApp"] = .dict(try await macApp.dumpAppAxInfo(cm))
+    return result
+}
+
+@MainActor
+private func dumpTreeNodeDebugInfo(_ window: MacWindow) async -> [String: Json] {
+    var result: [String: Json] = [:]
+    result["Aero.workspace"] = .stringOrNull(window.nodeWorkspace?.name)
+    result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
     var matchingCallbacks: [Json] = []
     for callback in config.onWindowDetected where await callback.matches(window) {
         matchingCallbacks.append(callback.debugJson)
     }
     result["Aero.on-window-detected"] = .array(matchingCallbacks)
+    return result
+}
 
-    return JSONEncoder.aeroSpaceDefault.encodeToString(result).prettyDescription
-        .prefixLines(with: "\(window.app.rawAppBundleId ?? "nil-bundle-id").\(window.windowId) ||| ")
+@MainActor
+private func dumpAppWindowsDebugInfo(_ appBundleId: String, _ io: CmdIo) async -> BinaryExitCode {
+    let apps = MacApp.allAppsMap.values.filter { $0.rawAppBundleId == appBundleId }
+    if apps.isEmpty {
+        let running = NSWorkspace.shared.runningApplications.filter { $0.bundleIdentifier == appBundleId }
+        return if running.isEmpty {
+            .fail(io.err("No running application with app-bundle-id '\(appBundleId)'"))
+        } else {
+            .fail(io.err(running.map {
+                "Application '\(appBundleId)' (pid=\($0.processIdentifier), activationPolicy=\($0.activationPolicy.prettyDescription)) is running, but it's not registered in AeroSpace"
+            }.joined(separator: "\n")))
+        }
+    }
+    var entries: [String] = []
+    for app in apps {
+        let windowLevels = getAllWindowLevels()
+        guard let appDump = try? await dumpAppDebugInfo(app, .nonCancellable),
+              let dumps = try? await app.dumpAllWindowsAxInfo(windowLevels, .nonCancellable)
+        else { return .fail(io.err(bugPrompt())) }
+        for (index, idAndDump) in dumps.enumerated() {
+            let (windowId, dump) = idAndDump
+            var result = dump + appDump
+            if let windowId {
+                result["Aero.axWindowId"] = .int(windowId)
+                result["Aero.windowLevel"] = windowLevels[windowId]?.toJson() ?? .null
+            } else {
+                result["Aero.axWindowId"] = .null
+                result["Aero.windowLevel"] = .null
+            }
+            if let windowId, let macWindow = MacWindow.allWindowsMap[windowId] {
+                result["Aero.debug.registered"] = .bool(true)
+                result = result + (await dumpTreeNodeDebugInfo(macWindow))
+            } else {
+                result["Aero.debug.registered"] = .bool(false)
+            }
+            let prefix = "\(appBundleId).\(windowId?.description ?? "nil-window-id-\(index)") ||| "
+            entries.append(JSONEncoder.aeroSpaceDefault.encodeToString(result).prettyDescription.prefixLines(with: prefix))
+        }
+    }
+    io.out(entries.joined(separator: "\n\n") + "\n")
+    io.out(disclaimer)
+    return .succ
 }
 
 @MainActor

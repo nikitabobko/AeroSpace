@@ -19,7 +19,7 @@ aerospace -h;
     | config --all-keys
     | config --config-path
 
-    | debug-windows [--window-id <window_id>]
+    | debug-windows [--window-id <window_id>|--app-bundle-id <app_bundle_id>]
 
     | echo [--stderr|--window <window_id>]... --
 
