@@ -95,7 +95,7 @@ func formatParser<Root>(
     }
 }
 
-private func parseWorkspaces(input: SubArgParserInput) -> ParsedCliArgs<[WorkspaceFilter]> {
+func parseWorkspaces(input: SubArgParserInput) -> ParsedCliArgs<[WorkspaceFilter]> {
     let args = input.nonFlagArgs()
     let possibleValues = "\(workspace) possible values: (<workspace-name>|focused|visible)"
     if args.isEmpty {
