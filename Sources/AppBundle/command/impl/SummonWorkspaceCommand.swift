@@ -16,13 +16,18 @@ struct SummonWorkspaceCommand: Command {
             }
         }
         let prevMonitor = workspace.isVisible ? workspace.workspaceMonitor : nil
+        let displacedWorkspace = monitor.activeWorkspace // before setActiveWorkspace displaces it
         if monitor.setActiveWorkspace(workspace) {
             if let prevMonitor {
-                let stubWorkspace = getStubWorkspace(for: prevMonitor)
-                check(
-                    prevMonitor.setActiveWorkspace(stubWorkspace),
-                    "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",
-                )
+                // Fails when workspace-to-monitor-force-assignment pins the
+                // displaced workspace to the focused monitor. No legal swap then.
+                if !prevMonitor.setActiveWorkspace(displacedWorkspace) {
+                    let stubWorkspace = getStubWorkspace(for: prevMonitor)
+                    check(
+                        prevMonitor.setActiveWorkspace(stubWorkspace),
+                        "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",
+                    )
+                }
             }
             return .from(bool: workspace.focusWorkspace())
         } else {
