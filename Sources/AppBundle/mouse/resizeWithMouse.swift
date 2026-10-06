@@ -47,10 +47,10 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
         case .tilingContainer:
             guard let rect = try await window.getAxRect(.cancellable) else { return }
             guard let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect else { return }
-            let (lParent, lOwnIndex, _) = window.closestParent(hasVisibleChildrenInDirection: .left, withLayout: .tiles) ?? (nil, nil, nil)
-            let (dParent, dOwnIndex, _) = window.closestParent(hasVisibleChildrenInDirection: .down, withLayout: .tiles) ?? (nil, nil, nil)
-            let (uParent, uOwnIndex, _) = window.closestParent(hasVisibleChildrenInDirection: .up, withLayout: .tiles) ?? (nil, nil, nil)
-            let (rParent, rOwnIndex, _) = window.closestParent(hasVisibleChildrenInDirection: .right, withLayout: .tiles) ?? (nil, nil, nil)
+            let (lParent, lOwnIndex, _) = window.closestParent(hasInhabitedChildrenInDirection: .left, withLayout: .tiles) ?? (nil, nil, nil)
+            let (dParent, dOwnIndex, _) = window.closestParent(hasInhabitedChildrenInDirection: .down, withLayout: .tiles) ?? (nil, nil, nil)
+            let (uParent, uOwnIndex, _) = window.closestParent(hasInhabitedChildrenInDirection: .up, withLayout: .tiles) ?? (nil, nil, nil)
+            let (rParent, rOwnIndex, _) = window.closestParent(hasInhabitedChildrenInDirection: .right, withLayout: .tiles) ?? (nil, nil, nil)
             let table: [(CGFloat, TilingContainer?, Int?, Int?)] = [
                 (lastAppliedLayoutRect.minX - rect.minX, lParent, 0,                        lOwnIndex),               // Horizontal, to the left of the window
                 (rect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex.map { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window
@@ -68,10 +68,10 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
                             return parent?.orientation == orientation && parent?.layout == .tiles
                         }
                         .forEach { $0.setWeight(orientation, $0.getWeightBeforeResize(orientation) + diff) }
-                    let visibleSiblings = (parent.children.slice(startIndex ..< untilIndex) ?? [])
-                        .filter { $0.tilingTreeNodeCasesOrDie().isVisible }
-                    guard let siblingDiff = diff.div(visibleSiblings.count) else { return }
-                    for sibling in visibleSiblings {
+                    let inhabitedSiblings = (parent.children.slice(startIndex ..< untilIndex) ?? [])
+                        .filter { $0.tilingTreeNodeCasesOrDie().isInhabited }
+                    guard let siblingDiff = diff.div(inhabitedSiblings.count) else { return }
+                    for sibling in inhabitedSiblings {
                         sibling.setWeight(orientation, sibling.getWeightBeforeResize(orientation) - siblingDiff)
                     }
                 }

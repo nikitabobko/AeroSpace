@@ -29,10 +29,10 @@ enum TilingTreeNodeCases {
     case window(Window)
     case tilingContainer(TilingContainer)
 
-    var isVisible: Bool {
+    var isInhabited: Bool {
         switch self {
-            case .window(let it): it.lifeStatus.isVisible
-            case .tilingContainer(let it): it.lifeStatus.isVisible
+            case .window(let it): it.lifeStatus.isInhabited
+            case .tilingContainer(let it): it.lifeStatus.isInhabited
         }
     }
 }

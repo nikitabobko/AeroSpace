@@ -16,15 +16,15 @@ extension TreeNode {
         return result
     }
 
-    var allVisibleLeafWindowsRecursive: [Window] {
-        allLeafWindowsRecursive.filter { $0.lifeStatus.isVisible }
+    var allInhabitedLeafWindowsRecursive: [Window] {
+        allLeafWindowsRecursive.filter { $0.lifeStatus.isInhabited }
     }
 
-    func ownIndex(in scope: VisibilityScope) -> Int? {
+    func ownIndex(in scope: HabitationScope) -> Int? {
         guard let parent else { return nil }
         return switch scope {
             case .all: parent.children.firstIndex(of: self)
-            case .visibleOnly: parent.visibleChildren.firstIndex(of: self)
+            case .inhabitedOnly: parent.inhabitedChildren.firstIndex(of: self)
         }
     }
 
@@ -101,7 +101,7 @@ extension TreeNode {
     ///
     /// `neighborIndex` is the index of the closest visible child of `parent` in the specified direction
     func closestParent(
-        hasVisibleChildrenInDirection direction: CardinalDirection,
+        hasInhabitedChildrenInDirection direction: CardinalDirection,
         withLayout layout: Layout?,
     ) -> (parent: TilingContainer, ownIndex: Int, neighborIndex: Int)? {
         for node in parentsWithSelf {
@@ -118,7 +118,7 @@ extension TreeNode {
                 case .tilingContainer(let parent):
                     if (layout == nil || parent.layout == layout) && parent.orientation == direction.orientation {
                         guard let ownIndex = node.ownIndex(in: .all) else { return nil }
-                        if let neighborIndex = parent.visibleSiblingIndex(of: ownIndex, in: direction) {
+                        if let neighborIndex = parent.inhabitedSiblingIndex(of: ownIndex, in: direction) {
                             return (parent, ownIndex, neighborIndex)
                         }
                     }
@@ -129,11 +129,11 @@ extension TreeNode {
 }
 
 extension TilingContainer {
-    func visibleSiblingIndex(of ownIndex: Int, in direction: CardinalDirection) -> Int? {
+    func inhabitedSiblingIndex(of ownIndex: Int, in direction: CardinalDirection) -> Int? {
         let candidates = direction.isPositive
             ? stride(from: ownIndex + 1, to: children.count, by: 1)
             : stride(from: ownIndex - 1, to: -1, by: -1)
-        return candidates.first(where: { children[$0].tilingTreeNodeCasesOrDie().isVisible })
+        return candidates.first(where: { children[$0].tilingTreeNodeCasesOrDie().isInhabited })
     }
 }
 
@@ -147,7 +147,7 @@ extension TilingTreeNodeCases {
                     case .alive:
                         self
                     case .mustBeFlattened:
-                        container.mostRecentVisibleChild.orDie("Visible containers must have at least one visible child")
+                        container.mostRecentInhabitedChild.orDie("Inhabited containers must have at least one inhabited child")
                             .tilingTreeNodeCasesOrDie()
                             .resolvedThroughMustBeFlattenedRecursive()
                     case .deadOrInvisible:
@@ -157,7 +157,7 @@ extension TilingTreeNodeCases {
     }
 }
 
-enum VisibilityScope {
+enum HabitationScope {
     case all
-    case visibleOnly
+    case inhabitedOnly
 }

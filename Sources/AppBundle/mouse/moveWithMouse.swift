@@ -107,11 +107,11 @@ extension CGPoint {
         let point = self
         let target: TreeNode? = switch tree.layout {
             case .tiles:
-                tree.visibleChildren.first(where: {
+                tree.inhabitedChildren.first(where: {
                     (virtual ? $0.lastAppliedLayoutVirtualRect : $0.lastAppliedLayoutPhysicalRect)?.contains(point) == true
                 })
             case .accordion:
-                tree.mostRecentVisibleChild
+                tree.mostRecentInhabitedChild
         }
         guard let target else { return nil }
         return switch target.tilingTreeNodeCasesOrDie() {

@@ -8,7 +8,7 @@ enum WindowLifeStatus {
     case invisible // Invisible macOS Spaces AND Background tabs
     case alive
 
-    var isVisible: Bool {
+    var isInhabited: Bool {
         switch self {
             case .alive: true
 
@@ -28,7 +28,8 @@ enum TilingContainerLifeStatus {
     case mustBeFlattened
     case alive
 
-    var isVisible: Bool {
+    /// isInhabited is a building metaphore - mustBeFlattened contains a *single* stubborn tenant (child) that refuses to leave
+    var isInhabited: Bool {
         switch self {
             case .mustBeFlattened: true
             case .alive: true

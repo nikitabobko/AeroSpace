@@ -42,18 +42,18 @@ extension TilingContainer {
                 child.markAsMostRecentChild()
             }
         } else {
-            var visibleChildrenCount = 0
+            var inhabitedChildrenCount = 0
             for child in children {
                 (child as? TilingContainer)?.unbindEmptyAndFlattenContainersRecursive()
-                visibleChildrenCount += child.tilingTreeNodeCasesOrDie().isVisible ? 1 : 0
+                inhabitedChildrenCount += child.tilingTreeNodeCasesOrDie().isInhabited ? 1 : 0
             }
             if children.isEmpty {
                 unbindFromParent()
             }
-            if visibleChildrenCount == 1 && config.enableNormalizationFlattenContainers {
+            if inhabitedChildrenCount == 1 && config.enableNormalizationFlattenContainers {
                 lifeStatus = .mustBeFlattened
             } else {
-                lifeStatus = visibleChildrenCount > 0 ? .alive : .deadOrInvisible
+                lifeStatus = inhabitedChildrenCount > 0 ? .alive : .deadOrInvisible
             }
         }
     }

@@ -23,7 +23,7 @@ struct MoveCommand: Command {
             case .tilingContainer(let parent):
                 guard let indexOfCurrent = currentWindow.ownIndex(in: .all) else { return .fail(io.err(bugPrompt())) }
                 if parent.orientation == direction.orientation,
-                   let siblingIndex = parent.visibleSiblingIndex(of: indexOfCurrent, in: direction)
+                   let siblingIndex = parent.inhabitedSiblingIndex(of: indexOfCurrent, in: direction)
                 {
                     switch parent.children[siblingIndex].tilingTreeNodeCasesOrDie().resolvedThroughMustBeFlattenedRecursive() {
                         case .tilingContainer(let topLevelSiblingTargetContainer):
@@ -172,7 +172,7 @@ extension TilingTreeNodeCases {
                     case .alive where container.orientation == orientation:
                         .tilingContainer(container)
                     case .alive, .mustBeFlattened:
-                        container.mostRecentVisibleChild.orDie("Visible containers must have at least one visible child")
+                        container.mostRecentInhabitedChild.orDie("Inhabited containers must have at least one inhabited child")
                             .tilingTreeNodeCasesOrDie()
                             .findDeepMoveInTargetRecursive(orientation)
                     case .deadOrInvisible:

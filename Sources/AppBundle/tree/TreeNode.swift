@@ -80,8 +80,8 @@ open class TreeNode: Equatable, AeroAny {
         if adaptiveWeight == WEIGHT_AUTO {
             switch relation {
                 case .tiling(let newParent):
-                    let newParentVisibleChildren = newParent.visibleChildren
-                    self.adaptiveWeight = CGFloat(newParentVisibleChildren.sumOfDouble { $0.getWeight(newParent.orientation) }).div(newParentVisibleChildren.count) ?? 1
+                    let newParentInhabitedChildren = newParent.inhabitedChildren
+                    self.adaptiveWeight = CGFloat(newParentInhabitedChildren.sumOfDouble { $0.getWeight(newParent.orientation) }).div(newParentInhabitedChildren.count) ?? 1
                 case .floatingWindow, .macosNativeFullscreenWindow,
                      .rootTilingContainer, .macosNativeMinimizedWindow,
                      .shimContainerRelation, .macosPopupWindow, .macosNativeHiddenAppWindow:
@@ -120,12 +120,12 @@ open class TreeNode: Equatable, AeroAny {
 
     var mostRecentChild: TreeNode? { _mruChildren.mostRecent ?? children.last }
 
-    var mostRecentVisibleChild: TreeNode? {
-        _mruChildren.first { $0.tilingTreeNodeCasesOrDie().isVisible } ?? visibleChildren.last
+    var mostRecentInhabitedChild: TreeNode? {
+        _mruChildren.first { $0.tilingTreeNodeCasesOrDie().isInhabited } ?? inhabitedChildren.last
     }
 
-    var visibleChildren: [TreeNode] {
-        children.filter { $0.tilingTreeNodeCasesOrDie().isVisible }
+    var inhabitedChildren: [TreeNode] {
+        children.filter { $0.tilingTreeNodeCasesOrDie().isInhabited }
     }
 
     @discardableResult

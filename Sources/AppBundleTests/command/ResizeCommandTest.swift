@@ -131,7 +131,7 @@ final class ResizeCommandTest: XCTestCase {
         assertEquals(window2.hWeight, 4)
     }
 
-    func testSingleVisibleChildParent_failsCleanly() async {
+    func testSingleInhabitedChildParent_failsCleanly() async {
         var window1: Window!
         var invisibleWindow: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {

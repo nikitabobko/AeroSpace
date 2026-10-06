@@ -79,7 +79,7 @@ final class BalanceSizesCommandTest: XCTestCase {
             .run(.defaultEnv.withWorkspaceName(name), .emptyStdin)
 
         // (1 + 3 + 5) / 3
-        for child in workspace.rootTilingContainer.visibleChildren {
+        for child in workspace.rootTilingContainer.inhabitedChildren {
             assertEquals(child.getWeight(orientation), 3)
         }
         for window in nestedWindows {
