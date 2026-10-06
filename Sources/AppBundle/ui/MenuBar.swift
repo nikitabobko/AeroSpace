@@ -72,17 +72,27 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             }
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
-        switch (viewModel.axPermissionStatus, viewModel.isEnabled) {
-            case (.granted, true):
-                MenuBarLabel().environmentObject(viewModel)
-            case (.granted, false):
-                Image(systemName: "pause.circle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            case (_, _):
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+        // `menu-bar-item = false` collapses AeroSpace's menu bar item to a single compact
+        // icon (instead of the workspace readout). The MenuBarExtra scene must stay
+        // present — it's the app's only scene, and removing it terminates the app — so
+        // a full removal isn't possible; the compact icon is the minimal footprint.
+        if !viewModel.menuBarItemIsShown {
+            Image(systemName: "square.split.2x2")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        } else {
+            switch (viewModel.axPermissionStatus, viewModel.isEnabled) {
+                case (.granted, true):
+                    MenuBarLabel().environmentObject(viewModel)
+                case (.granted, false):
+                    Image(systemName: "pause.circle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                case (_, _):
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+            }
         }
     }
 }
