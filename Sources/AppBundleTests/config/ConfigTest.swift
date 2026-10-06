@@ -29,6 +29,22 @@ final class ConfigTest: XCTestCase {
         assertEquals(result.warnings, [])
     }
 
+    func testParseDefaultWorkspaceMonitor() {
+        // default is 'main' (historical behavior)
+        assertEquals(defaultConfig.defaultWorkspaceMonitor, .main)
+
+        let focused = parseConfig("default-workspace-monitor = 'focused'")
+        assertEquals(focused.errors, [])
+        assertEquals(focused.config.defaultWorkspaceMonitor, .focused)
+
+        let explicitMain = parseConfig("default-workspace-monitor = 'main'")
+        assertEquals(explicitMain.errors, [])
+        assertEquals(explicitMain.config.defaultWorkspaceMonitor, .main)
+
+        let invalid = parseConfig("default-workspace-monitor = 'nonsense'")
+        assertTrue(!invalid.errors.isEmpty)
+    }
+
     func testConfigVersionOutOfBounds() {
         let result = parseConfig(
             """
