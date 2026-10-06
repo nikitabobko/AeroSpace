@@ -122,12 +122,10 @@ struct FocusCommand: Command {
     return .from(bool: windowToFocus.focusWindow())
 }
 
-@MainActor private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) async -> [FloatingWindowData] {
-    let mruBefore = workspace.mostRecentWindowRecursive
-    defer {
-        mruBefore?.markAsMostRecentChild()
-    }
-    var _floatingWindows: [FloatingWindowData] = []
+typealias FloatingWindowPlacement = (window: Window, tilingParent: TilingContainer, index: Int)
+
+@MainActor func floatingWindowPlacements(workspace: Workspace) async -> [FloatingWindowPlacement] {
+    var placements: [(placement: FloatingWindowPlacement, projection: CGFloat)] = []
     for window in workspace.floatingWindows {
         // todo bug: we shouldn't access ax api here. What if the window was moved but it wasn't committed to ax yet?
         guard let center = try? await window.getCenter(.nonCancellable) else { continue }
@@ -155,17 +153,29 @@ struct FocusCommand: Command {
             tilingParent = workspace.rootTilingContainer
         }
 
-        let data = window.unbindFromParent()
-        let floatingWindowData = FloatingWindowData(
-            window: window,
-            center: center,
-            tilingParent: tilingParent,
-            adaptiveWeight: data.adaptiveWeight,
-            index: index,
-        )
-        _floatingWindows.append(floatingWindowData)
+        placements.append((
+            placement: (window: window, tilingParent: tilingParent, index: index),
+            projection: center.getProjection(tilingParent.orientation),
+        ))
     }
-    let floatingWindows: [FloatingWindowData] = _floatingWindows.sortedBy { $0.center.getProjection($0.tilingParent.orientation) }.reversed()
+    return placements.sortedBy(\.projection).reversed().map(\.placement)
+}
+
+@MainActor private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) async -> [FloatingWindowData] {
+    let mruBefore = workspace.mostRecentWindowRecursive
+    defer {
+        mruBefore?.markAsMostRecentChild()
+    }
+    var floatingWindows: [FloatingWindowData] = []
+    for placement in await floatingWindowPlacements(workspace: workspace) {
+        let data = placement.window.unbindFromParent()
+        floatingWindows.append(FloatingWindowData(
+            window: placement.window,
+            tilingParent: placement.tilingParent,
+            adaptiveWeight: data.adaptiveWeight,
+            index: placement.index,
+        ))
+    }
 
     for floating in floatingWindows { // Make floating windows be seen as tiling
         floating.window.bind(to: floating.tilingParent, adaptiveWeight: 1, index: floating.index)
@@ -185,8 +195,6 @@ struct FocusCommand: Command {
 
 private struct FloatingWindowData {
     let window: Window
-    let center: CGPoint
-
     let tilingParent: TilingContainer
     let adaptiveWeight: CGFloat
     let index: Int

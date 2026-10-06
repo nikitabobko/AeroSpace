@@ -14,8 +14,8 @@ struct WindowWithPrefetchedTitle {
         try await resolveWindow(window, needsTitle: formatVar == .window(.windowTitle), cm)
     }
 
-    static func resolveWindow(_ window: Window, for format: [InterToken<InterVar>], _ cm: CancellationMode) async throws -> Self {
-        let needsTitle = format.contains { $0 == .interVar(.formatVar(.window(.windowTitle))) }
+    static func resolveWindow(_ window: Window, for format: [InterToken<InterVar>], alsoNeedsTitle: Bool = false, _ cm: CancellationMode) async throws -> Self {
+        let needsTitle = alsoNeedsTitle || format.contains { $0 == .interVar(.formatVar(.window(.windowTitle))) }
         return try await resolveWindow(window, needsTitle: needsTitle, cm)
     }
 

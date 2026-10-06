@@ -98,7 +98,7 @@ final class ListWindowsTest: XCTestCase {
         let result = await parseCommand("list-windows --all --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
-        assertEquals(result.stdout.sorted(), ["1", "2"])
+        assertEquals(result.stdout, ["1", "2"])
     }
 
     func testRunCount() async {
@@ -182,5 +182,218 @@ final class ListWindowsTest: XCTestCase {
         let mismatching = await parseCommand("list-windows --monitor all --app-bundle-id com.unknown.app --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(mismatching.exitCode.rawValue, 0)
         assertEquals(mismatching.stdout, [])
+    }
+
+    func testParseSortBy() {
+        func sortByOf(_ args: [String]) -> [SortBy]? { (parseCommand(args).cmdOrNil as? ListWindowsCommand)?.args.sortBy }
+        assertEquals(sortByOf(["list-windows", "--all"]), [])
+
+        assertEquals(sortByOf(["list-windows", "--all", "--sort-by", "dfs"]), [.dfs])
+        assertEquals(sortByOf(["list-windows", "--all", "--sort-by", "app-name", "window-title"]), [.appName, .windowTitle])
+        assertEquals(sortByOf(["list-windows", "--all", "--sort-by", "window-id"]), [.windowId])
+        assertEquals(sortByOf(["list-windows", "--all", "--sort-by", "window-title", "dfs", "app-name"]), [.windowTitle, .dfs, .appName])
+        assertEquals(sortByOf(["list-windows", "--all", "--sort-by", "dfs", "--format", "%{window-id}"]), [.dfs])
+
+        assertEquals(
+            parseCommand("list-windows --all --sort-by bogus").errorOrNil,
+            "ERROR: Can't parse 'bogus'.\n       Possible values: (dfs|app-name|window-title|window-id)")
+        assertEquals(
+            parseCommand("list-windows --all --sort-by dfs bogus").errorOrNil,
+            "ERROR: Can't parse 'bogus'.\n       Possible values: (dfs|app-name|window-title|window-id)")
+        assertEquals(
+            parseCommand("list-windows --all --sort-by").errorOrNil,
+            "ERROR: <sort-by>... is mandatory. Possible values: (dfs|app-name|window-title|window-id)")
+        assertEquals(
+            parseCommand("list-windows --all --count --sort-by dfs").errorOrNil,
+            "ERROR: Conflicting options: --count, --sort-by")
+    }
+
+    func testRunSortByDfs() async {
+        Workspace.get(byName: "a").rootTilingContainer.apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 3, parent: $0)
+                TestWindow.new(id: 1, parent: $0)
+            }
+            TestWindow.new(id: 2, parent: $0)
+        }
+        Workspace.get(byName: "b").rootTilingContainer.apply {
+            TestWindow.new(id: 10, parent: $0)
+            TestWindow.new(id: 4, parent: $0)
+        }
+        let result = await parseCommand("list-windows --all --sort-by dfs --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stderr, [])
+        assertEquals(result.stdout, ["3", "1", "2", "10", "4"])
+    }
+
+    func testRunSortByAppNameAndWindowTitleIsTheDefault() async {
+        Workspace.get(byName: "a").rootTilingContainer.apply {
+            TestWindow.new(id: 3, parent: $0)
+            TestWindow.new(id: 1, parent: $0)
+            TestWindow.new(id: 10, parent: $0)
+            TestWindow.new(id: 2, parent: $0)
+        }
+        let expected = ["TestWindow(1)", "TestWindow(10)", "TestWindow(2)", "TestWindow(3)"]
+        let explicit = await parseCommand("list-windows --all --sort-by app-name window-title --format '%{window-title}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(explicit.exitCode.rawValue, 0)
+        assertEquals(explicit.stdout, expected)
+
+        let implicit = await parseCommand("list-windows --all --format '%{window-title}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(implicit.exitCode.rawValue, 0)
+        assertEquals(implicit.stdout, expected)
+    }
+
+    func testRunSortByAppName() async {
+        Workspace.get(byName: "a").rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0, app: TestApp(name: "Zulu"))
+            TestWindow.new(id: 2, parent: $0, app: TestApp(name: "Mike"))
+            TestWindow.new(id: 3, parent: $0, app: TestApp(name: "Alpha"))
+        }
+        let result = await parseCommand("list-windows --all --sort-by app-name --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stderr, [])
+        assertEquals(result.stdout, ["3", "2", "1"])
+    }
+
+    func testRunSortByAppNameTieBreaksByWindowId() async {
+        Workspace.get(byName: "a").rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0, app: TestApp(name: "Zulu"))
+            TestWindow.new(id: 20, parent: $0, app: TestApp(name: "Alpha"))
+            TestWindow.new(id: 3, parent: $0, app: TestApp(name: "Alpha"))
+            TestWindow.new(id: 10, parent: $0, app: TestApp(name: "Zulu"))
+        }
+        let result = await parseCommand("list-windows --all --sort-by app-name --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout, ["3", "20", "1", "10"])
+    }
+
+    func testRunSortByDfsDoesNotMutateTheTree() async {
+        let workspace = Workspace.get(byName: "a")
+        workspace.rootTilingContainer.apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 3, parent: $0, rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100))
+                TestWindow.new(id: 1, parent: $0, rect: Rect(topLeftX: 0, topLeftY: 100, width: 100, height: 100))
+            }
+            TestWindow.new(id: 2, parent: $0, rect: Rect(topLeftX: 100, topLeftY: 0, width: 100, height: 200))
+        }
+        workspace.floatingWindowsContainer.apply {
+            TestWindow.new(id: 5, parent: $0, rect: Rect(topLeftX: 290, topLeftY: 10, width: 20, height: 20))
+            TestWindow.new(id: 6, parent: $0, rect: Rect(topLeftX: 90, topLeftY: 10, width: 20, height: 20))
+            TestWindow.new(id: 7, parent: $0, rect: Rect(topLeftX: 190, topLeftY: 10, width: 20, height: 20))
+        }
+
+        let treeBefore = workspace.layoutDescription
+        let floatingBefore = workspace.floatingWindows.map(\.windowId)
+        let allBefore = workspace.allLeafWindowsRecursive
+        let idsBefore = allBefore.map(\.windowId)
+        let parentsBefore = allBefore.map { ObjectIdentifier($0.parent.orDie()) }
+        assertEquals(floatingBefore, [5, 6, 7])
+
+        let result = await parseCommand("list-windows --all --sort-by dfs --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stderr, [])
+        assertEquals(result.stdout, ["6", "7", "5", "3", "1", "2"])
+
+        assertEquals(workspace.layoutDescription, treeBefore)
+        assertEquals(workspace.floatingWindows.map(\.windowId), floatingBefore)
+        let allAfter = workspace.allLeafWindowsRecursive
+        assertEquals(allAfter.map(\.windowId), idsBefore)
+        assertEquals(allAfter.map { ObjectIdentifier($0.parent.orDie()) }, parentsBefore)
+    }
+
+    func testSortByDfsMatchesFocusDfsIndexInteractingIndices() async {
+        let workspace = Workspace.get(byName: "a")
+        workspace.rootTilingContainer.apply {
+            TestWindow.newTiled(id: 1, parent: $0, rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 200))
+            TestWindow.newTiled(id: 2, parent: $0, rect: Rect(topLeftX: 100, topLeftY: 0, width: 100, height: 200))
+            TestWindow.newTiled(id: 3, parent: $0, rect: Rect(topLeftX: 200, topLeftY: 0, width: 100, height: 200))
+        }
+        TestWindow.new(id: 5, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 105, topLeftY: 50, width: 20, height: 20))
+        TestWindow.new(id: 6, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 170, topLeftY: 50, width: 20, height: 20))
+        assertEquals(workspace.focusWorkspace(), true)
+
+        let listed = await parseCommand("list-windows --workspace a --sort-by dfs --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(listed.exitCode.rawValue, 0)
+        assertEquals(listed.stderr, [])
+        assertEquals(listed.stdout, ["1", "5", "2", "6", "3"])
+
+        for (index, windowId) in listed.stdout.enumerated() {
+            let msg = "dfs-index \(index)"
+            let result = await parseCommand("focus --dfs-index \(index)").cmdOrDie.run(.defaultEnv, .emptyStdin)
+            assertEquals(result.exitCode.rawValue, 0, additionalMsg: msg)
+            assertEquals(result.stderr, [], additionalMsg: msg)
+            assertEquals(focus.windowOrNil?.windowId.description, windowId, additionalMsg: msg)
+        }
+    }
+
+    func testSortByDfsMatchesFocusDfsIndexAccordionParent() async {
+        let workspace = Workspace.get(byName: "a")
+        TilingContainer(parent: workspace.rootTilingContainer, adaptiveWeight: 1, .v, .accordion, index: INDEX_BIND_LAST).apply { accordion in
+            accordion.lastAppliedLayoutVirtualRect = Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 200)
+            TestWindow.newTiled(id: 1, parent: accordion, rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100))
+            TestWindow.newTiled(id: 2, parent: accordion, rect: Rect(topLeftX: 0, topLeftY: 100, width: 100, height: 100)).markAsMostRecentChild()
+        }
+        TestWindow.new(id: 5, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 10, topLeftY: 10, width: 20, height: 20))
+        TestWindow.new(id: 6, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 10, topLeftY: 160, width: 20, height: 20))
+        assertEquals(workspace.focusWorkspace(), true)
+
+        let listed = await parseCommand("list-windows --workspace a --sort-by dfs --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(listed.exitCode.rawValue, 0)
+        assertEquals(listed.stderr, [])
+        assertEquals(listed.stdout, ["5", "1", "2", "6"])
+
+        for (index, windowId) in listed.stdout.enumerated() {
+            let msg = "dfs-index \(index)"
+            let result = await parseCommand("focus --dfs-index \(index)").cmdOrDie.run(.defaultEnv, .emptyStdin)
+            assertEquals(result.exitCode.rawValue, 0, additionalMsg: msg)
+            assertEquals(result.stderr, [], additionalMsg: msg)
+            assertEquals(focus.windowOrNil?.windowId.description, windowId, additionalMsg: msg)
+        }
+    }
+
+    func testRunSortByDfsPutsNonTraversedWindowsLast() async {
+        let workspace = Workspace.get(byName: "a")
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 3, parent: $0)
+            TestWindow.new(id: 1, parent: $0)
+        }
+        TestWindow.new(id: 9, parent: workspace.macOsNativeFullscreenWindowsContainer)
+        TestWindow.new(id: 8, parent: workspace.macOsNativeHiddenAppsWindowsContainer)
+
+        let result = await parseCommand("list-windows --all --sort-by dfs --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stderr, [])
+        assertEquals(result.stdout, ["3", "1", "8", "9"])
+    }
+
+    func testRunSortByDfsThenSecondaryKey() async {
+        let workspace = Workspace.get(byName: "a")
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 3, parent: $0)
+            TestWindow.new(id: 1, parent: $0)
+        }
+        TestWindow.new(id: 8, parent: workspace.macOsNativeFullscreenWindowsContainer)
+        TestWindow.new(id: 20, parent: workspace.macOsNativeHiddenAppsWindowsContainer)
+
+        let byTitle = await parseCommand("list-windows --all --sort-by dfs window-title --format '%{window-title}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(byTitle.exitCode.rawValue, 0)
+        assertEquals(byTitle.stdout, ["TestWindow(3)", "TestWindow(1)", "TestWindow(20)", "TestWindow(8)"])
+
+        let byAppName = await parseCommand("list-windows --all --sort-by dfs app-name --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(byAppName.exitCode.rawValue, 0)
+        assertEquals(byAppName.stdout, ["3", "1", "8", "20"])
+    }
+
+    func testRunSortByWindowTitleWithTitlelessFormat() async {
+        Workspace.get(byName: "a").rootTilingContainer.apply {
+            TestWindow.new(id: 3, parent: $0)
+            TestWindow.new(id: 1, parent: $0)
+            TestWindow.new(id: 10, parent: $0)
+            TestWindow.new(id: 2, parent: $0)
+        }
+        let result = await parseCommand("list-windows --all --sort-by window-title --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stderr, [])
+        assertEquals(result.stdout, ["1", "10", "2", "3"])
     }
 }
