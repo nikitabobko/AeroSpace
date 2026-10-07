@@ -94,8 +94,32 @@ private let testMonitorInfo = MonitorInfoImpl(
     isMain: true,
 )
 
+private final class MonitorInfosForTestsStorage: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value: [MonitorInfo]?
+
+    func get() -> [MonitorInfo]? {
+        lock.lock()
+        defer { lock.unlock() }
+        return value
+    }
+
+    func set(_ newValue: [MonitorInfo]?) {
+        lock.lock()
+        defer { lock.unlock() }
+        value = newValue
+    }
+}
+
+private let monitorInfosForTestsStorage = MonitorInfosForTestsStorage()
+
+var monitorInfosForTests: [MonitorInfo]? {
+    get { monitorInfosForTestsStorage.get() }
+    set { monitorInfosForTestsStorage.set(newValue) }
+}
+
 var mainMonitorInfo: MonitorInfo {
-    if isUnitTest { return testMonitorInfo }
+    if isUnitTest { return monitorInfosForTests?.first(where: \.isMain) ?? monitorInfosForTests?.first ?? testMonitorInfo }
     let screens = NSScreen.screens
     // Fallback: If main screen can't be found (e.g., during display reconfiguration),
     // return screens.first or testMonitor to avoid crash
@@ -106,7 +130,7 @@ var mainMonitorInfo: MonitorInfo {
 
 var monitorInfos: [MonitorInfo] {
     isUnitTest
-        ? [testMonitorInfo]
+        ? monitorInfosForTests ?? [testMonitorInfo]
         : NSScreen.screens.enumerated().map { $0.element.toMonitorInfo(monitorAppKitNsScreenScreensId: $0.offset + 1) }
 }
 

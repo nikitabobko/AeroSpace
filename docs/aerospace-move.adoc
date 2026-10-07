@@ -38,8 +38,13 @@ The default is: `workspace`
 
 --boundaries-action <boundary-action>::
 Defines the behavior when requested to move across the `<boundary>`. +
-`<boundary-action>` possible values: `(stop|fail|create-implicit-container)`. +
+`<boundary-action>` possible values: `(stop|fail|create-implicit-container|wrap-around-all-monitors)`. +
 The default is: `create-implicit-container`
++
+`wrap-around-all-monitors` is only valid with `--boundaries all-monitors-outer-frame`.
+It moves the window to the active workspace on the monitor at the opposite
+outer edge, preserving focus when the moved window was focused. With a single
+monitor, it moves the window to the opposite edge of the current workspace.
 
 --fail-if-fullscreen::
 Exit with non-zero code if the target window is fullscreen by the `fullscreen` command.
@@ -139,6 +144,11 @@ v_tiles
 the implicit container isn't created.
 +
 Instead, `window 2` would be moved to the monitor above the current.
+
+. With `--boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors`,
+a move beyond the outer edge of the monitor set moves the window to the active
+workspace on the monitor at the opposite outer edge. On a single-monitor setup,
+the window instead wraps to the opposite edge of its current workspace.
 
 // end::body[]
 

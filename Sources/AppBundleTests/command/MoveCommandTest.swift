@@ -9,6 +9,156 @@ final class MoveCommandTest: XCTestCase {
     func testParse() {
         assertNil(parseCommand("move --fail-if-fullscreen left").errorOrNil)
         assertNil(parseCommand("move --fail-if-macos-native-fullscreen --window-id 1 right").errorOrNil)
+        assertNil(parseCommand("move --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors right").errorOrNil)
+        assertEquals(
+            parseCommand("move --boundaries-action wrap-around-all-monitors right").errorOrNil,
+            "workspace and wrap-around-all-monitors is an invalid combination of values",
+        )
+    }
+
+    func testWrapAroundAllMonitors_onSingleMonitor() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TestWindow.new(id: 2, parent: $0)
+            assertEquals(TestWindow.new(id: 3, parent: $0).focusWindow(), true)
+        }
+
+        let command = "move --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors"
+        var result = await parseCommand("\(command) right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(root.layoutDescription, .h_tiles([.window(3), .window(1), .window(2)]))
+        assertEquals(focus.windowOrNil?.windowId, 3)
+
+        result = await parseCommand("\(command) left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2), .window(3)]))
+        assertEquals(focus.windowOrNil?.windowId, 3)
+    }
+
+    func testWrapAroundAllMonitors_onSingleMonitorWithOppositeRootOrientation() async {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+        }
+
+        let result = await parseCommand(
+            "move --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors up",
+        ).cmdOrDie.run(.defaultEnv, .emptyStdin)
+
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .v_tiles([
+                    .h_tiles([.window(2)]),
+                    .window(1),
+                ]),
+            ]),
+        )
+        assertEquals(focus.windowOrNil?.windowId, 1)
+    }
+
+    func testWrapAroundAllMonitors_acrossTwoMonitors() async {
+        let (leftMonitor, rightMonitor) = useTwoTestMonitors()
+        let leftWorkspace = Workspace.get(byName: "left")
+        let rightWorkspace = Workspace.get(byName: "right")
+        assertEquals(leftMonitor.setActiveWorkspace(leftWorkspace), true)
+        assertEquals(rightMonitor.setActiveWorkspace(rightWorkspace), true)
+
+        leftWorkspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TestWindow.new(id: 2, parent: $0)
+        }
+        rightWorkspace.rootTilingContainer.apply {
+            TestWindow.new(id: 3, parent: $0)
+            assertEquals(TestWindow.new(id: 4, parent: $0).focusWindow(), true)
+        }
+
+        let result = await parseCommand(
+            "move --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors right",
+        ).cmdOrDie.run(.defaultEnv, .emptyStdin)
+
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(leftWorkspace.rootTilingContainer.layoutDescription, .h_tiles([.window(4), .window(1), .window(2)]))
+        assertEquals(rightWorkspace.rootTilingContainer.layoutDescription, .h_tiles([.window(3)]))
+        assertEquals(focus.windowOrNil?.windowId, 4)
+        assertEquals(focus.workspace, leftWorkspace)
+
+        let reverseResult = await parseCommand(
+            "move --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors left",
+        ).cmdOrDie.run(.defaultEnv, .emptyStdin)
+
+        assertEquals(reverseResult.exitCode.rawValue, 0)
+        assertEquals(leftWorkspace.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2)]))
+        assertEquals(rightWorkspace.rootTilingContainer.layoutDescription, .h_tiles([.window(3), .window(4)]))
+        assertEquals(focus.windowOrNil?.windowId, 4)
+        assertEquals(focus.workspace, rightWorkspace)
+    }
+
+    func testWrapAroundAllMonitors_usesSameMonitorAsFocus() async {
+        for orientation in [Orientation.h, .v] {
+            let positive: CardinalDirection = orientation == .h ? .right : .down
+            let negative: CardinalDirection = orientation == .h ? .left : .up
+            for (direction, sourceIndex, expectedIndex) in [(positive, 2, 0), (negative, 0, 2), (positive, 1, 2), (negative, 1, 0)] {
+                setUpWorkspacesForTests()
+                config.defaultRootContainerOrientation = orientation == .h ? .horizontal : .vertical
+                let monitors = useTestMonitors((0 ..< 3).map { index in
+                    Rect(
+                        topLeftX: orientation == .h ? CGFloat(index) * 1920 : 0,
+                        topLeftY: orientation == .v ? CGFloat(index) * 1080 : 0,
+                        width: 1920,
+                        height: 1080,
+                    )
+                })
+                let workspaces = monitors.enumerated().map { index, monitor in
+                    let workspace = Workspace.get(byName: "monitor-\(index)")
+                    assertEquals(monitor.setActiveWorkspace(workspace), true)
+                    return workspace
+                }
+                let windows = workspaces.enumerated().map { index, workspace in
+                    TestWindow.new(id: UInt32(index + 1), parent: workspace.rootTilingContainer)
+                }
+                let sourceWindow = windows[sourceIndex]
+                assertEquals(sourceWindow.focusWindow(), true)
+
+                let options = "--boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors \(direction.rawValue)"
+                let focusResult = await parseCommand("focus \(options)").cmdOrDie.run(.defaultEnv, .emptyStdin)
+                assertEquals(focusResult.exitCode.rawValue, 0)
+                let focusWorkspace = focus.workspace
+                assertEquals(focusWorkspace, workspaces[expectedIndex])
+
+                assertEquals(sourceWindow.focusWindow(), true)
+                let moveResult = await parseCommand("move \(options)").cmdOrDie.run(.defaultEnv, .emptyStdin)
+                assertEquals(moveResult.exitCode.rawValue, 0)
+                assertEquals(sourceWindow.nodeWorkspace, focusWorkspace)
+                assertEquals(focus.workspace, focusWorkspace)
+                assertEquals(focus.windowOrNil?.windowId, sourceWindow.windowId)
+            }
+        }
+    }
+
+    func testWrapAroundAllMonitors_doesNotStealFocusForExplicitWindow() async {
+        let (leftMonitor, rightMonitor) = useTwoTestMonitors()
+        let leftWorkspace = Workspace.get(byName: "left")
+        let rightWorkspace = Workspace.get(byName: "right")
+        assertEquals(leftMonitor.setActiveWorkspace(leftWorkspace), true)
+        assertEquals(rightMonitor.setActiveWorkspace(rightWorkspace), true)
+
+        leftWorkspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+        }
+        TestWindow.new(id: 2, parent: rightWorkspace.rootTilingContainer)
+
+        let result = await parseCommand(
+            "move --window-id 2 --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors right",
+        ).cmdOrDie.run(.defaultEnv, .emptyStdin)
+
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(leftWorkspace.rootTilingContainer.layoutDescription, .h_tiles([.window(2), .window(1)]))
+        assertEquals(rightWorkspace.rootTilingContainer.layoutDescription, .h_tiles([]))
+        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(focus.workspace, leftWorkspace)
     }
 
     func testFailIfFullscreen() async {
@@ -320,6 +470,38 @@ final class MoveCommandTest: XCTestCase {
         )
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
+}
+
+private struct MoveCommandTestMonitorInfo: MonitorInfo {
+    let monitorAppKitNsScreenScreensId: Int
+    let name: String
+    let rect: Rect
+    let visibleRect: Rect
+    let isMain: Bool
+    var width: CGFloat { rect.width }
+    var height: CGFloat { rect.height }
+}
+
+private func useTwoTestMonitors() -> (left: MonitorInfo, right: MonitorInfo) {
+    let monitors = useTestMonitors([
+        Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080),
+        Rect(topLeftX: 1920, topLeftY: 0, width: 1920, height: 1080),
+    ])
+    return (monitors[0], monitors[1])
+}
+
+private func useTestMonitors(_ rects: [Rect]) -> [MonitorInfo] {
+    let monitors = rects.enumerated().map { index, rect in
+        MoveCommandTestMonitorInfo(
+            monitorAppKitNsScreenScreensId: index + 1,
+            name: "Test Monitor \(index + 1)",
+            rect: rect,
+            visibleRect: rect,
+            isMain: index == 0,
+        )
+    }
+    monitorInfosForTests = monitors
+    return monitors
 }
 
 extension TreeNode {

@@ -15,23 +15,42 @@ struct MoveNodeToMonitorCommand: Command {
         }
         switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor):
-                let targetWs = targetMonitor.activeWorkspace
-                let index = true == args.target.val.directionOrNil
-                    .map { dir in dir.isPositive && targetWs.rootTilingContainer.orientation == dir.orientation }
-                    ? 0
-                    : INDEX_BIND_LAST
-                return moveWindowToWorkspace(
+                return moveWindowToMonitor(
                     window,
-                    targetWs,
+                    targetMonitor,
                     io,
+                    direction: args.target.val.directionOrNil,
                     focusFollowsWindow: args.focusFollowsWindow,
                     failIfNoop: args.failIfNoop,
-                    index: index,
                 )
             case .failure(let msg):
                 return .fail(io.err(msg))
         }
     }
+}
+
+@MainActor
+func moveWindowToMonitor(
+    _ window: Window,
+    _ targetMonitor: MonitorInfo,
+    _ io: CmdIo,
+    direction: CardinalDirection?,
+    focusFollowsWindow: Bool,
+    failIfNoop: Bool,
+) -> BinaryExitCode {
+    let targetWs = targetMonitor.activeWorkspace
+    let index = true == direction
+        .map { dir in dir.isPositive && targetWs.rootTilingContainer.orientation == dir.orientation }
+        ? 0
+        : INDEX_BIND_LAST
+    return moveWindowToWorkspace(
+        window,
+        targetWs,
+        io,
+        focusFollowsWindow: focusFollowsWindow,
+        failIfNoop: failIfNoop,
+        index: index,
+    )
 }
 
 func windowIsntPartOfTree(_ window: Window) -> String {

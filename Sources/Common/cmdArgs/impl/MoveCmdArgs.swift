@@ -29,6 +29,7 @@ public struct MoveCmdArgs: CmdArgs {
         case stop = "stop"
         case fail = "fail"
         case createImplicitContainer = "create-implicit-container"
+        case wrapAroundAllMonitors = "wrap-around-all-monitors"
     }
 }
 
@@ -39,6 +40,11 @@ extension MoveCmdArgs {
 
 func parseMoveCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveCmdArgs> {
     parseSpecificCmdArgs(MoveCmdArgs(rawArgs: args), args)
+        .flatMap { (raw: MoveCmdArgs) -> ParsedCmd<MoveCmdArgs> in
+            raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors
+                ? .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")
+                : .cmd(raw)
+        }
 }
 
 private func parseBoundaries(i: SubArgParserInput) -> ParsedCliArgs<MoveCmdArgs.Boundaries> {

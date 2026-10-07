@@ -33,7 +33,7 @@ struct MoveCommand: Command {
                             return .succ
                     }
                 } else {
-                    return moveOut(tilingWindow: currentWindow, direction: direction, io, args, env)
+                    return moveOut(tilingWindow: currentWindow, direction: direction, io, args)
                 }
             case .floatingWindowsContainer: // floating window
                 return .fail(io.err("moving floating windows isn't yet supported")) // todo
@@ -51,7 +51,6 @@ struct MoveCommand: Command {
     _ io: CmdIo,
     _ args: MoveCmdArgs,
     _ direction: CardinalDirection,
-    _ env: CmdEnv,
 ) -> BinaryExitCode {
     switch args.boundaries {
         case .workspace:
@@ -61,20 +60,27 @@ struct MoveCommand: Command {
                 case .createImplicitContainer:
                     createImplicitContainerAndMoveWindow(window, workspace, direction)
                     return .succ
+                case .wrapAroundAllMonitors:
+                    return .fail(io.err("Must be discarded by args parser"))
             }
         case .allMonitorsOuterFrame:
-            guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
-                return .fail(io.err("Should never happen. Can't find the current monitor"))
+            let currentMonitor = workspace.workspaceMonitor
+            guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
+                return .fail(io.err(bugPrompt("Should never happen. Can't find the current monitor")))
             }
 
-            if monitors.indices.contains(index) {
-                let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(target: .direction(direction))
-                    .copy(\.windowId, window.windowId)
-                    .copy(\.focusFollowsWindow, focus.windowOrNil == window)
-
-                return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
+            if let targetMonitor = monitors.getOrNil(atIndex: index) {
+                return moveWindowToMonitor(
+                    window,
+                    targetMonitor,
+                    io,
+                    direction: direction,
+                    focusFollowsWindow: focus.windowOrNil == window,
+                    failIfNoop: false,
+                )
             } else {
-                return hitAllMonitorsOuterFrameBoundaries(window, workspace, args, direction)
+                guard let wrapped = monitors.get(wrappingIndex: index) else { return .fail(io.err(bugPrompt("\(index) \(monitors)"))) }
+                return hitAllMonitorsOuterFrameBoundaries(window, workspace, io, args, direction, wrapped)
             }
     }
 }
@@ -82,8 +88,10 @@ struct MoveCommand: Command {
 @MainActor private func hitAllMonitorsOuterFrameBoundaries(
     _ window: Window,
     _ workspace: Workspace,
+    _ io: CmdIo,
     _ args: MoveCmdArgs,
     _ direction: CardinalDirection,
+    _ wrappedMonitor: MonitorInfo,
 ) -> BinaryExitCode {
     switch args.boundariesAction {
         case .stop: return .succ
@@ -91,7 +99,37 @@ struct MoveCommand: Command {
         case .createImplicitContainer:
             createImplicitContainerAndMoveWindow(window, workspace, direction)
             return .succ
+        case .wrapAroundAllMonitors:
+            if wrappedMonitor.rect.topLeftCorner == workspace.workspaceMonitor.rect.topLeftCorner {
+                return wrapAroundTheWorkspace(window, workspace, direction)
+            }
+
+            return moveWindowToMonitor(
+                window,
+                wrappedMonitor,
+                io,
+                direction: direction,
+                focusFollowsWindow: focus.windowOrNil == window,
+                failIfNoop: false,
+            )
     }
+}
+
+@MainActor private func wrapAroundTheWorkspace(
+    _ window: Window,
+    _ workspace: Workspace,
+    _ direction: CardinalDirection,
+) -> BinaryExitCode {
+    if workspace.rootTilingContainer.orientation == direction.orientation {
+        window.bind(
+            to: workspace.rootTilingContainer,
+            adaptiveWeight: WEIGHT_AUTO,
+            index: direction.isPositive ? 0 : INDEX_BIND_LAST,
+        )
+    } else {
+        createImplicitContainerAndMoveWindow(window, workspace, direction.opposite)
+    }
+    return .succ
 }
 
 private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
@@ -101,7 +139,6 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
     direction: CardinalDirection,
     _ io: CmdIo,
     _ args: MoveCmdArgs,
-    _ env: CmdEnv,
 ) -> BinaryExitCode {
     let innerMostTilingContainer = window.parents.first(where: {
         return switch $0.parent?.cases {
@@ -125,7 +162,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
             window.bind(to: parent, adaptiveWeight: WEIGHT_AUTO, index: ownIndex + direction.insertionOffset)
             return .succ
         case .workspace(let parent):
-            return hitWorkspaceBoundaries(window, parent, io, args, direction, env)
+            return hitWorkspaceBoundaries(window, parent, io, args, direction)
     }
 }
 
