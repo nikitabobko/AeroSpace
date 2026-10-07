@@ -15,15 +15,22 @@ struct SummonWorkspaceCommand: Command {
                     .succ(io.err("Workspace '\(workspace.name)' is already visible on the focused monitor. Tip: use --fail-if-noop to exit with non-zero code"))
             }
         }
-        let prevMonitor = workspace.isVisible ? workspace.workspaceMonitor : nil
-        if monitor.setActiveWorkspace(workspace) {
-            if let prevMonitor {
-                let stubWorkspace = getStubWorkspace(for: prevMonitor)
-                check(
-                    prevMonitor.setActiveWorkspace(stubWorkspace),
-                    "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",
-                )
+        if workspace.isVisible {
+            // The workspace is already visible on another monitor
+            let otherMonitor = workspace.workspaceMonitor
+            switch args.whenVisible {
+                case .swap:
+                    let currentWorkspace = monitor.activeWorkspace
+                    if otherMonitor.setActiveWorkspace(currentWorkspace) && monitor.setActiveWorkspace(workspace) {
+                        return .from(bool: workspace.focusWorkspace())
+                    } else {
+                        return .fail(io.err("Can't swap workspaces due to workspace-to-monitor-force-assignment restrictions"))
+                    }
+                case .focus:
+                    return .from(bool: workspace.focusWorkspace())
             }
+        }
+        if monitor.setActiveWorkspace(workspace) {
             return .from(bool: workspace.focusWorkspace())
         } else {
             return .fail(io.err("Can't move workspace '\(workspace.name)' to monitor '\(monitor.name)'. workspace-to-monitor-force-assignment doesn't allow it"))
