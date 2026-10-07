@@ -8,6 +8,7 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case debugWindows = "debug-windows"
     case echo
     case enable
+    case enableNormalization = "enable-normalization"
     case eval
     case execAndForget = "exec-and-forget"
 
@@ -70,6 +71,8 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(EchoCmdArgs.init)
             case .enable:
                 result[kind.rawValue] = SubCommandParser(parseEnableCmdArgs)
+            case .enableNormalization:
+                result[kind.rawValue] = SubCommandParser(parseEnableNormalizationCmdArgs)
             case .eval:
                 result[kind.rawValue] = SubCommandParser(EvalCmdArgs.init)
             case .execAndForget:

@@ -8,6 +8,7 @@ let subcommandDescriptions = [
     ["  config", "Query AeroSpace config options"],
     ["  debug-windows", "Interactive command to record Accessibility API debug information to create bug reports"],
     ["  echo", "Print arguments and interpolation variables to stdout"],
+    ["  enable-normalization", "Set or clear a per-workspace override for a refresh-time normalization"],
     ["  enable", "Temporarily disable window management"],
     ["  eval", "Send multiple commands to AeroSpace at once"],
     ["  false", "Return false value"],

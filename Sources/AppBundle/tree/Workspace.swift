@@ -35,6 +35,11 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     nonisolated private let nameLogicalSegments: StringLogicalSegments
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
+    /// Per-workspace overrides for normalization flags. Empty by default; absent
+    /// kinds fall through to the global config value. Lives as long as the
+    /// workspace itself: `garbageCollectUnusedWorkspaces` destroys the override
+    /// together with the workspace. Not persisted across restarts.
+    var normalizationOverride: [NormalizationKind: Bool] = [:]
 
     @MainActor
     private init(_ name: String) {
@@ -80,16 +85,22 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
         return "Workspace(\(description))"
     }
 
+    /// True when garbageCollectUnusedWorkspaces would destroy this workspace.
+    @MainActor
+    var isDoomedToGarbageCollection: Bool {
+        !config.persistentWorkspaces.contains(name)
+            && isEffectivelyEmpty
+            && !isVisible
+            && name != focus.workspace.name
+    }
+
     @MainActor
     static func garbageCollectUnusedWorkspaces() {
         for name in config.persistentWorkspaces {
             _ = get(byName: name) // Make sure that all persistent workspaces are "cached"
         }
         workspaceNameToWorkspace = workspaceNameToWorkspace.filter { (_, workspace: Workspace) in
-            config.persistentWorkspaces.contains(workspace.name) ||
-                !workspace.isEffectivelyEmpty ||
-                workspace.isVisible ||
-                workspace.name == focus.workspace.name
+            !workspace.isDoomedToGarbageCollection
         }
     }
 
