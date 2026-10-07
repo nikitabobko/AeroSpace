@@ -367,6 +367,16 @@ extension AXUIElement: AxUiElementMock {
             ? cgWindowId
             : nil
     }
+
+    /// Same as ``containingWindowId()``, but keeps the error.
+    /// `.cannotComplete` means that the app didn't respond in time, so it's unknown whether the window is alive.
+    func containingWindowIdError() -> AXError {
+        let state = signposter.beginInterval(#function, "axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer { signposter.endInterval(#function, state) }
+        var cgWindowId = CGWindowID()
+        let error = unsafe _AXUIElementGetWindow(self, &cgWindowId)
+        return error == .success && cgWindowId == kCGNullWindowID ? .failure : error
+    }
 }
 
 extension AXObserver {
