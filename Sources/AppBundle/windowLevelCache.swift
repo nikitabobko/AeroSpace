@@ -1,4 +1,5 @@
 import CoreGraphics
+import Common
 import Foundation
 
 @MainActor
@@ -24,6 +25,14 @@ func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
     }
     cache = result
     return result[windowId]
+}
+
+/// Windows that are ordered in on the current macOS Space. Windows of invisible AeroSpace workspaces are still on screen
+/// (they are just moved to the corner), but background tabs of macOS native tab groups are not
+func getOnScreenWindowIds() -> Set<UInt32>? {
+    let options = CGWindowListOption(arrayLiteral: .excludeDesktopElements, .optionOnScreenOnly)
+    guard let cfArray = CGWindowListCopyWindowInfo(options, CGWindowID(0)) as? [CFDictionary] else { return nil }
+    return cfArray.compactMap { ((($0 as NSDictionary)[kCGWindowNumber] as? NSNumber)?.uint32Value) }.toSet()
 }
 
 enum MacOsWindowLevel: Sendable, Equatable {

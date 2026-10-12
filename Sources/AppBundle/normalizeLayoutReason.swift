@@ -1,10 +1,13 @@
+import Common
+
 @MainActor
 func normalizeLayoutReason() async throws {
+    let onScreenWindowIds = isUnitTest ? nil : getOnScreenWindowIds()
     for workspace in Workspace.all {
         let windows: [Window] = workspace.allLeafWindowsRecursive
-        try await _normalizeLayoutReason(workspace: workspace, windows: windows)
+        try await _normalizeLayoutReason(workspace: workspace, windows: windows, onScreenWindowIds)
     }
-    try await _normalizeLayoutReason(workspace: focus.workspace, windows: macosMinimizedWindowsContainer.children.filterIsInstance(of: Window.self))
+    try await _normalizeLayoutReason(workspace: focus.workspace, windows: macosMinimizedWindowsContainer.children.filterIsInstance(of: Window.self), onScreenWindowIds)
     try await validateStillPopups()
 }
 
@@ -21,12 +24,17 @@ private func validateStillPopups() async throws {
 }
 
 @MainActor
-private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) async throws {
+private func _normalizeLayoutReason(workspace: Workspace, windows: [Window], _ onScreenWindowIds: Set<UInt32>?) async throws {
     for window in windows {
         let isMacosFullscreen = try await window.isMacosFullscreen(.cancellable)
         let isMacosMinimized = try await (!isMacosFullscreen).andAsync { @MainActor @Sendable in try await window.isMacosMinimized(.cancellable) }
         let isMacosWindowOfHiddenApp = !isMacosFullscreen && !isMacosMinimized &&
             !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.nsApp.isHidden
+        let selectedTab: Window? = if let onScreenWindowIds, !isMacosFullscreen, !isMacosMinimized, !window.macAppUnsafe.nsApp.isHidden {
+            findSelectedMacosNativeTab(ofBackgroundTab: window, workspace, onScreenWindowIds)
+        } else {
+            nil
+        }
         switch window.layoutReason {
             case .standard:
                 guard let parent = window.parent else { continue }
@@ -40,14 +48,47 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) asy
                     case isMacosWindowOfHiddenApp:
                         window.layoutReason = .macos(prevParentKind: parent.kind)
                         window.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+                    case selectedTab != nil:
+                        let selectedTab = selectedTab.orDie()
+                        let prevMostRecent = workspace.mostRecentWindowRecursive
+                        // The user switched tabs. The newly selected tab takes over the slot of the previously selected tab
+                        if selectedTab.parent is MacosBackgroundTabsWindowsContainer,
+                           let tilingParent = parent as? TilingContainer,
+                           let index = window.ownIndex
+                        {
+                            selectedTab.layoutReason = .standard
+                            selectedTab.bind(to: tilingParent, adaptiveWeight: window.getWeight(tilingParent.orientation), index: index)
+                        }
+                        window.layoutReason = .macos(prevParentKind: parent.kind)
+                        window.bind(to: workspace.macOsNativeBackgroundTabsWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+                        // bind() marks the background tab as the most recent window. If AeroSpace ever focuses it, macOS
+                        // selects it back. Restore the most recent window
+                        let mostRecent = prevMostRecent == window ? selectedTab : prevMostRecent
+                        if let mostRecent, !(mostRecent.parent is MacosBackgroundTabsWindowsContainer) {
+                            mostRecent.markAsMostRecentChild()
+                        }
                     default: break
                 }
             case .macos(let prevParentKind):
-                if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {
+                if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp && selectedTab == nil {
                     try await exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace, .cancellable)
                 }
         }
     }
+}
+
+/// macOS native tabs (Ghostty, Terminal, Finder, Safari, etc.) are separate windows from the AX perspective.
+/// Only the selected tab is on screen. Background tabs are neither minimized nor hidden, they are just not on screen.
+/// Returns the selected tab (an on-screen window of the same app on the same workspace), if `window` is a background tab
+/// https://github.com/nikitabobko/AeroSpace/issues/68
+@MainActor
+private func findSelectedMacosNativeTab(ofBackgroundTab window: Window, _ workspace: Workspace, _ onScreenWindowIds: Set<UInt32>) -> Window? {
+    if onScreenWindowIds.contains(window.windowId) { return nil }
+    let candidates = workspace.allLeafWindowsRecursive.filter {
+        $0 != window && $0.app.pid == window.app.pid && onScreenWindowIds.contains($0.windowId)
+    }
+    // Prefer the tab that has just been selected (it's still in the background tabs container)
+    return candidates.first(where: { $0.parent is MacosBackgroundTabsWindowsContainer }) ?? candidates.first
 }
 
 @MainActor
