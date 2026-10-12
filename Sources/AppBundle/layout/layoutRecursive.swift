@@ -50,7 +50,7 @@ extension TreeNode {
                         try await container.layoutAccordion(point, width: width, height: height, virtual: virtual, context)
                 }
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
-                 .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
+                 .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer, .macosBackgroundTabsWindowsContainer:
                 return // Nothing to do for weirdos
         }
     }

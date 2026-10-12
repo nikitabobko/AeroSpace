@@ -51,6 +51,15 @@ extension Workspace {
         }
     }
 
+    @MainActor var macOsNativeBackgroundTabsWindowsContainer: MacosBackgroundTabsWindowsContainer {
+        let containers = children.filterIsInstance(of: MacosBackgroundTabsWindowsContainer.self)
+        return switch containers.count {
+            case 0: MacosBackgroundTabsWindowsContainer(parent: self)
+            case 1: containers.singleOrNil().orDie()
+            default: dieT("Workspace must contain zero or one MacosBackgroundTabsWindowsContainer")
+        }
+    }
+
     @MainActor var forceAssignedMonitor: MonitorInfo? {
         guard let monitorDescriptions = config.workspaceToMonitorForceAssignment[name] else { return nil }
         let sortedMonitors = sortedMonitorInfos

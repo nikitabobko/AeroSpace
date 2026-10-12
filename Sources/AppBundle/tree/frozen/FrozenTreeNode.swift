@@ -20,7 +20,7 @@ struct FrozenContainer: Sendable {
                 case .workspace,
                      .floatingWindowsContainer,
                      .macosMinimizedWindowsContainer,
-                     .macosHiddenAppsWindowsContainer,
+                     .macosHiddenAppsWindowsContainer, .macosBackgroundTabsWindowsContainer,
                      .macosFullscreenWindowsContainer,
                      .macosPopupWindowsContainer:
                     illegalChildParentRelation(child: $0, parent: container)

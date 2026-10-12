@@ -15,6 +15,15 @@ final class MacosHiddenAppsWindowsContainer: TreeNode, NonLeafTreeNodeObject {
     }
 }
 
+/// The container for background tabs of macOS native tab groups (Ghostty, Terminal, Finder, Safari, etc.)
+/// macOS reports every native tab as a separate window, but only the selected tab is on screen
+final class MacosBackgroundTabsWindowsContainer: TreeNode, NonLeafTreeNodeObject {
+    @MainActor
+    init(parent: Workspace) {
+        super.init(parent: parent, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+    }
+}
+
 @MainActor let macosMinimizedWindowsContainer = MacosMinimizedWindowsContainer()
 final class MacosMinimizedWindowsContainer: TreeNode, NonLeafTreeNodeObject {
     @MainActor

@@ -37,7 +37,7 @@ struct MoveCommand: Command {
                 }
             case .floatingWindowsContainer: // floating window
                 return .fail(io.err("moving floating windows isn't yet supported")) // todo
-            case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
+            case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer, .macosBackgroundTabsWindowsContainer:
                 return .fail(io.err(moveOutMacosUnconventionalWindow))
             case .macosPopupWindowsContainer:
                 return .fail(io.err(bugPrompt())) // Impossible
@@ -112,7 +112,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
             case .floatingWindowsContainer,
                  .macosMinimizedWindowsContainer,
                  .macosFullscreenWindowsContainer,
-                 .macosHiddenAppsWindowsContainer,
+                 .macosHiddenAppsWindowsContainer, .macosBackgroundTabsWindowsContainer,
                  .macosPopupWindowsContainer: true
         }
     }) as? TilingContainer

@@ -53,7 +53,7 @@ extension Window {
         switch windowParentCases {
             case .floatingWindowsContainer: true
             case .macosFullscreenWindowsContainer: false
-            case .macosHiddenAppsWindowsContainer: false
+            case .macosHiddenAppsWindowsContainer, .macosBackgroundTabsWindowsContainer: false
             case .macosMinimizedWindowsContainer: false
             case .macosPopupWindowsContainer: false
             case .tilingContainer: false

@@ -196,6 +196,13 @@ final class FormatTest: XCTestCase {
         assertPrimitive(FormatVar.window(.windowLayout).expandFormatVar(obj: obj), .string("macos_native_window_of_hidden_app"))
     }
 
+    func testExpandWindowLayoutMacosNativeBackgroundTab() {
+        let workspace = Workspace.get(byName: name)
+        let window = TestWindow.new(id: 1, parent: workspace.macOsNativeBackgroundTabsWindowsContainer)
+        let obj = AeroObj.window(.forTest(window: window, title: nil))
+        assertPrimitive(FormatVar.window(.windowLayout).expandFormatVar(obj: obj), .string("macos_native_background_tab"))
+    }
+
     func testExpandWindowLayoutMacosNativeMinimized() {
         let window = TestWindow.new(id: 1, parent: macosMinimizedWindowsContainer)
         let obj = AeroObj.window(.forTest(window: window, title: nil))
