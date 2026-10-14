@@ -5,6 +5,27 @@ import Common
 private var activeRefreshTask: Task<(), any Error>? = nil
 
 @MainActor
+private var enumerationRetryTask: Task<(), Never>? = nil
+@MainActor
+private var consecutiveEnumerationRetries = 0
+
+/// Schedule a delayed complete refresh session because some app didn't respond to the window
+/// enumeration request in time. Debounced (at most one pending retry), with exponential backoff
+/// capped at 30 seconds so a permanently unresponsive app can't cause a refresh storm. #1615
+@MainActor
+private func scheduleEnumerationRetry() {
+    if enumerationRetryTask != nil { return }
+    let delaySeconds = min(1 << min(consecutiveEnumerationRetries, 5), 30)
+    consecutiveEnumerationRetries += 1
+    enumerationRetryTask = Task.startUnstructured { @MainActor in
+        defer { enumerationRetryTask = nil }
+        try? await Task.sleep(for: .seconds(delaySeconds))
+        if Task.isCancelled { return }
+        scheduleCancellableCompleteRefreshSession(.ax("windowsEnumerationRetry"))
+    }
+}
+
+@MainActor
 func scheduleCancellableCompleteRefreshSession(
     _ event: RefreshSessionEvent,
     optimisticallyPreLayoutWorkspaces: Bool = false,
@@ -122,7 +143,15 @@ func refreshModel_nonCancellable() async {
 @MainActor
 private func refresh() async throws {
     // Garbage collect terminated apps and windows before working with all windows
-    let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
+    let (mapping, incomplete) = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
+    if incomplete {
+        // Some app didn't respond to the window enumeration request in time (e.g. the system is
+        // under load during boot). Without a retry, windows of that app stay undetected until the
+        // next AX event, which on an idle system may never come. #1615
+        scheduleEnumerationRetry()
+    } else {
+        consecutiveEnumerationRetries = 0
+    }
     let aliveWindowIds = mapping.values.flatMap(id).toSet()
 
     for window in MacWindow.allWindows {

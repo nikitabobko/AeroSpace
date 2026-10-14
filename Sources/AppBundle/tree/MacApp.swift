@@ -257,18 +257,19 @@ final class MacApp: AbstractApp {
     }
 
     @MainActor
-    static func refreshAllAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [MacApp: [UInt32]] {
+    static func refreshAllAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> (mapping: [MacApp: [UInt32]], incomplete: Bool) {
         for (_, app) in MacApp.allAppsMap { // gc dead apps
             try checkCancellation()
             if app.nsApp.isTerminated {
                 await app.destroy()
             }
         }
-        return try await withThrowingTaskGroup(of: (pid_t, [UInt32]).self, returning: [MacApp: [UInt32]].self) { group in
+        return try await withThrowingTaskGroup(of: (pid_t, [UInt32], Bool).self, returning: ([MacApp: [UInt32]], Bool).self) { group in
             func refreshTheApp(_ nsApp: NSRunningApplication) {
                 group.addTask { @Sendable @MainActor in
-                    guard let app = try await MacApp.getOrRegister(nsApp) else { return (nsApp.processIdentifier, []) }
-                    return (nsApp.processIdentifier, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
+                    guard let app = try await MacApp.getOrRegister(nsApp) else { return (nsApp.processIdentifier, [], false) }
+                    let (windowIds, incomplete) = try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId)
+                    return (nsApp.processIdentifier, windowIds, incomplete)
                 }
             }
             // Register new apps
@@ -288,46 +289,70 @@ final class MacApp: AbstractApp {
                 }
             }
             var result: [MacApp: [UInt32]] = [:]
-            for try await (pid, windowIds) in group {
+            var anyIncomplete = false
+            for try await (pid, windowIds, incomplete) in group {
                 if let app = MacApp.allAppsMap[pid] {
                     result[app] = windowIds
                 }
+                anyIncomplete = anyIncomplete || incomplete
             }
-            return result
+            return (result, anyIncomplete)
         }
     }
 
-    private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [UInt32] {
+    /// `incomplete` is true when the app didn't respond to the window enumeration request in time
+    /// (e.g. the app is busy, or the system is under load during boot). The returned window ids are
+    /// still valid, but new windows of the app may be missing - the caller should schedule a retry.
+    /// https://github.com/nikitabobko/AeroSpace/issues/1615
+    private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> (windowIds: [UInt32], incomplete: Bool) {
         if nsApp.isTerminated {
             await destroy()
-            return []
+            return ([], false)
         }
-        guard let thread else { return [] }
-        let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
+        guard let thread else { return ([], false) }
+        let (alive, dead, incomplete) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32], Bool) in
             var alive: [UInt32: AxWindow] = windows.threadGuarded
             var dead = [UInt32: AxWindow]()
+            var incomplete = false
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
                 (alive, dead) = try alive.partition {
                     try job.checkCancellation()
-                    return $0.value.ax.containingWindowId() != nil
+                    switch $0.value.ax.windowLiveness() {
+                        case .alive: return true
+                        case .dead: return false
+                        case .unknown:
+                            // The app didn't respond in time. Unknown is not dead: reaping windows of a
+                            // merely busy app makes them vanish from the tree and reappear later.
+                            incomplete = true
+                            return true
+                    }
                 }
             }
 
-            for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
-                try job.checkCancellation()
-                try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
+            let (axWindows, axError) = axApp.threadGuarded.getOrError(Ax.windowsAttr)
+            switch axError {
+                case .success:
+                    for (id, window) in axWindows ?? [] {
+                        try job.checkCancellation()
+                        try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
+                    }
+                case .cannotComplete:
+                    // The app didn't respond to the enumeration request in time. It doesn't mean the
+                    // app has no windows - keep the known set, and let the caller schedule a retry
+                    incomplete = true
+                default: break // Preserve the old `get(...) ?? []` behavior for all other errors
             }
 
             windows.threadGuarded = alive
-            return (Array(alive.keys), Array(dead.keys))
+            return (Array(alive.keys), Array(dead.keys), incomplete)
         }
         windowsCount = alive.count
         for windowId in dead {
             setFrameJobs.removeValue(forKey: windowId)?.cancel()
         }
-        return alive
+        return (alive, incomplete)
     }
 
     private func destroy() async {
