@@ -341,6 +341,16 @@ private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElementMock? {
     }
 }
 
+/// The result of asking an app's AX server whether an element still resolves to a window.
+/// `unknown` (the app didn't respond in time, e.g. it is busy or the system is under load)
+/// is deliberately distinct from `dead`: treating a timeout as death makes windows of
+/// merely unresponsive apps vanish from the tree. https://github.com/nikitabobko/AeroSpace/issues/1615
+enum AxWindowLiveness {
+    case alive(CGWindowID)
+    case dead
+    case unknown
+}
+
 extension AXUIElement: AxUiElementMock {
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
@@ -349,6 +359,17 @@ extension AXUIElement: AxUiElementMock {
         return unsafe AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success
             ? raw.flatMap(attr.getter)
             : nil
+    }
+
+    /// Like `get`, but surfaces the AXError instead of collapsing it into nil, so callers can
+    /// tell "the attribute has no value" apart from "the app didn't respond" (.cannotComplete).
+    /// `value` is non-nil only when `error == .success`
+    func getOrError<Attr: ReadableAttr>(_ attr: Attr) -> (value: Attr.T?, error: AXError) {
+        let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer { signposter.endInterval(#function, state) }
+        var raw: AnyObject?
+        let error = unsafe AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw)
+        return error == .success ? (raw.flatMap(attr.getter), .success) : (nil, error)
     }
 
     @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
@@ -366,6 +387,18 @@ extension AXUIElement: AxUiElementMock {
         return unsafe _AXUIElementGetWindow(self, &cgWindowId) == .success && cgWindowId != kCGNullWindowID
             ? cgWindowId
             : nil
+    }
+
+    /// containingWindowId that distinguishes a destroyed window from an app that didn't respond in time
+    func windowLiveness() -> AxWindowLiveness {
+        let state = signposter.beginInterval(#function, "axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer { signposter.endInterval(#function, state) }
+        var cgWindowId = CGWindowID()
+        return switch unsafe _AXUIElementGetWindow(self, &cgWindowId) {
+            case .success: cgWindowId != kCGNullWindowID ? .alive(cgWindowId) : .dead
+            case .cannotComplete: .unknown // The app event loop is busy, or the messaging timeout expired
+            default: .dead
+        }
     }
 }
 
