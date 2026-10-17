@@ -119,6 +119,9 @@ final class MacWindow: Window {
     }
 
     // todo it's part of the window layout and should be moved to layoutRecursive.swift
+    /// The size last sent to the window, hidden or shown, so `hideInCorner` resizes only on change.
+    private var sentSize: CGSize? = nil
+
     @MainActor
     func hideInCorner(_ corner: OptimalHideCorner) async throws {
         guard let nodeMonitor else { return }
@@ -137,9 +140,13 @@ final class MacWindow: Window {
                 }
             }
         }
+        let slot = lastAppliedLayoutPhysicalRect.map { CGSize(width: $0.width, height: $0.height) }
+        let slotSize = slot == sentSize ? nil : slot
         let p: CGPoint
         switch corner {
             case .bottomLeftCorner:
+                // Parked by its right edge at the screen's left: as wide as the app makes it, which a
+                // minimum width can leave wider than the slot, or the window pokes onto the screen.
                 guard let s = try await getAxSize(.cancellable) else { fallthrough }
                 // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
                 // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
@@ -151,7 +158,7 @@ final class MacWindow: Window {
                 let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: 1)
                 p = nodeMonitor.visibleRect.bottomRightCorner - onePixelOffset
         }
-        setAxFrame(p, nil)
+        setAxFrame(p, slotSize)
     }
 
     @MainActor
@@ -191,6 +198,7 @@ final class MacWindow: Window {
     }
 
     override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) {
+        if let size { sentSize = size }
         macApp.setAxFrame(windowId, topLeft, size)
     }
 

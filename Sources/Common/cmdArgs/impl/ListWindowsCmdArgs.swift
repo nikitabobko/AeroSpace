@@ -182,6 +182,7 @@ public enum FormatVar: RawRepresentable, Equatable, CaseIterable, Sendable {
         case windowTitle = "window-title"
         case windowLayout = "window-layout" // An alias for windowParentContainerLayout
         case windowParentContainerLayout = "window-parent-container-layout"
+        case windowLayoutRect = "window-layout-rect"
     }
 
     public enum WorkspaceFormatVar: String, Equatable, CaseIterable, Sendable {

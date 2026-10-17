@@ -26,18 +26,18 @@ extension TreeNode {
                 for window in container.children.filterIsInstance(of: Window.self) {
                     window.lastAppliedLayoutPhysicalRect = nil
                     window.lastAppliedLayoutVirtualRect = nil
-                    try await window.layoutFloatingWindow(context)
+                    if context.movesWindows { try await window.layoutFloatingWindow(context) }
                 }
             case .window(let window):
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
                     lastAppliedLayoutVirtualRect = virtual
                     if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive {
                         lastAppliedLayoutPhysicalRect = nil
-                        window.layoutFullscreen(context)
+                        if context.movesWindows { window.layoutFullscreen(context) }
                     } else {
                         lastAppliedLayoutPhysicalRect = physicalRect
                         window.isFullscreen = false
-                        window.setAxFrame(point, CGSize(width: width, height: height))
+                        if context.movesWindows { window.setAxFrame(point, CGSize(width: width, height: height)) }
                     }
                 }
             case .tilingContainer(let container):
@@ -59,11 +59,13 @@ extension TreeNode {
 private struct LayoutContext {
     let workspace: Workspace
     let resolvedGaps: ResolvedGaps
+    let movesWindows: Bool // false for invisible workspaces while enabled: only the tree is laid out, windows stay hidden
 
     @MainActor
     init(_ workspace: Workspace) {
         self.workspace = workspace
         self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)
+        self.movesWindows = workspace.isVisible || !TrayMenuModel.shared.isEnabled
     }
 }
 

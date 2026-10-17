@@ -153,6 +153,9 @@ final class FormatTest: XCTestCase {
         assertPrimitive(FormatVar.window(.windowId).expandFormatVar(obj: obj), .int(Int64(9)))
         assertPrimitive(FormatVar.window(.windowIsFullscreen).expandFormatVar(obj: obj), .bool(true))
         assertPrimitive(FormatVar.window(.windowTitle).expandFormatVar(obj: obj), .string("title-x"))
+        assertPrimitive(FormatVar.window(.windowLayoutRect).expandFormatVar(obj: obj), .string(""))   // never laid out
+        window.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 16, topLeftY: 48, width: 842.4, height: 1052)
+        assertPrimitive(FormatVar.window(.windowLayoutRect).expandFormatVar(obj: obj), .string("16,48,842,1052"))
     }
 
     func testExpandWindowLayoutTiling() {

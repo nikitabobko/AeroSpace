@@ -81,6 +81,7 @@ The following variables can be used inside `<output-format>`:
 %{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
 %{window-layout}:: String. An alias for `%{window-parent-container-layout}`
 %{window-parent-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
+%{window-layout-rect}:: String. `x,y,width,height` of the rect the layout last assigned to the window (points, top-left origin, gaps applied). Also known for windows on invisible workspaces: where the window goes when the workspace is shown. Empty for floating windows and for a fullscreen window in front
 
 %{app-bundle-id}:: String. Application unique identifier. https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
 %{app-name}:: String. Application name

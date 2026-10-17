@@ -160,6 +160,7 @@ extension FormatVar {
                     case .windowIsFullscreen: .success(.bool(w.window.isFullscreen))
                     case .windowTitle: .success(.string(w.title.orDie("Title wasn't prefetched")))
                     case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w.window)
+                    case .windowLayoutRect: .success(.string(w.window.lastAppliedLayoutPhysicalRect.map(toRectString) ?? ""))
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
@@ -241,6 +242,10 @@ private func toLayoutString(tc: TilingContainer) -> String {
         case (.accordion, .h): return LayoutCmdArgs.LayoutDescription.h_accordion.rawValue
         case (.accordion, .v): return LayoutCmdArgs.LayoutDescription.v_accordion.rawValue
     }
+}
+
+private func toRectString(_ rect: Rect) -> String {
+    [rect.topLeftX, rect.topLeftY, rect.width, rect.height].map { String(Int($0.rounded())) }.joined(separator: ",")
 }
 
 private func toLayoutResult(w: Window) -> Result<Primitive, InterVarExpansionError> {
