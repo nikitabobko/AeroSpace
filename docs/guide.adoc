@@ -135,6 +135,32 @@ Working with binding modes consists of two parts:
     equal = 'resize smart +50'
 ----
 
+[#keybindings-disabled-for-frontmost-apps]
+=== Disable keybindings for certain apps
+
+AeroSpace bindings are global hotkeys: macOS delivers them to AeroSpace instead of the frontmost application.
+That becomes a problem for apps that forward the keyboard to another machine
+(e.g. macOS Screen Sharing, VNC clients or virtual machines):
+the bindings are intercepted on the local machine and never reach the remote one.
+
+You can make AeroSpace disable all its bindings while one of the listed apps is frontmost
+(the keys are then delivered to the app as if AeroSpace wasn't running):
+
+[source,toml]
+----
+keybindings-disabled-for-frontmost-apps = ['com.apple.ScreenSharing']
+----
+
+The value is an array of app bundle ids with the same semantics as `if.app-id` in
+<<on-window-detected-callback>> callbacks.
+You can find the bundle id of an app with `osascript -e 'id of app "Screen Sharing"'`.
+
+[NOTE]
+====
+AeroSpace bindings are still disabled for the listed apps even when a non-'main'
+xref:./commands.adoc#mode[binding mode] is active.
+====
+
 [#commands]
 === Commands
 

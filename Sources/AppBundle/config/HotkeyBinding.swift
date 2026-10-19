@@ -26,6 +26,16 @@ extension HotKey {
 }
 
 @MainActor var activeMode: String? = mainModeId
+
+@MainActor func syncHotkeysEnabledState() {
+    let frontmostAppBundleId = NSWorkspace.shared.frontmostApplication?.bundleIdentifier
+    let keybindingsAreDisabled = frontmostAppBundleId.map { config.keybindingsDisabledForFrontmostApps.contains($0) } ?? false
+    let activeModeBindings = activeMode.flatMap { config.modes[$0] }?.bindings ?? [:]
+    for (binding, key) in hotkeys {
+        key.isEnabled = !keybindingsAreDisabled && activeModeBindings.keys.contains(binding)
+    }
+}
+
 @MainActor func activateMode_nonCancellable(_ targetMode: String?) async {
     let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? [:]
     for binding in targetBindings.values where !hotkeys.keys.contains(binding.descriptionWithKeyCode) {
@@ -44,11 +54,9 @@ extension HotKey {
             }
         })
     }
-    for (binding, key) in hotkeys {
-        key.isEnabled = targetBindings.keys.contains(binding)
-    }
     let oldMode = activeMode
     activeMode = targetMode
+    syncHotkeysEnabledState()
     if oldMode != targetMode {
         broadcastEvent(.modeChanged(mode: targetMode))
         _ = await config.onModeChanged.run(.defaultEnv, .emptyStdin)

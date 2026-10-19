@@ -65,6 +65,15 @@ focus-follows-mouse.enabled = false
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 key-mapping.preset = 'qwerty'
 
+# Disable all AeroSpace bindings when one of the listed apps is frontmost
+# (the keys are then delivered to the app as if AeroSpace wasn't running).
+# Useful for apps that forward the keyboard to another machine
+# (e.g. macOS Screen Sharing, VNC clients, virtual machines)
+# 'app-id' semantics is the same as for 'on-window-detected' callbacks
+# See: https://nikitabobko.github.io/AeroSpace/guide#keybindings-disabled-for-frontmost-apps
+# Fallback value (if you omit the key): keybindings-disabled-for-frontmost-apps = []
+keybindings-disabled-for-frontmost-apps = []
+
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:     gaps.outer.top = 8
