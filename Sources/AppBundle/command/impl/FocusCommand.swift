@@ -47,7 +47,7 @@ struct FocusCommand: Command {
             case .dfsRelative(let nextPrev):
                 let windows = target.workspace.rootTilingContainer.allInhabitedLeafWindowsRecursive
                 guard let currentIndex = windows.firstIndex(where: { $0 == target.windowOrNil }) else {
-                    return .fail
+                    return .fail(io.err("Can't find the focused window in the tiling tree of workspace '\(target.workspace.name)'"))
                 }
                 var targetIndex = switch nextPrev {
                     case .dfsNext: currentIndex + 1
@@ -155,22 +155,33 @@ struct FocusCommand: Command {
             tilingParent = workspace.rootTilingContainer
         }
 
-        let data = window.unbindFromParent()
-        let floatingWindowData = FloatingWindowData(
+        _floatingWindows.append(FloatingWindowData(
             window: window,
             center: center,
             tilingParent: tilingParent,
-            adaptiveWeight: data.adaptiveWeight,
             index: index,
-        )
-        _floatingWindows.append(floatingWindowData)
+        ))
     }
     let floatingWindows: [FloatingWindowData] = _floatingWindows.sortedBy { $0.center.getProjection($0.tilingParent.orientation) }.reversed()
 
-    for floating in floatingWindows { // Make floating windows be seen as tiling
-        floating.window.bind(to: floating.tilingParent, adaptiveWeight: 1, index: floating.index)
+    // Mutations must happen only after the last `await`, otherwise the tree could be observed
+    // in an intermediate state by concurrent tasks (commands and model refreshes share MainActor)
+    var boundFloatingWindows: [FloatingWindowData] = []
+    for var floating in floatingWindows { // Make floating windows be seen as tiling
+        // The window could be closed, re-detected or moved to another workspace during the reads above
+        guard floating.window.nodeWorkspace == workspace else { continue }
+        // `tilingParent` and `index` could become stale during the reads above (e.g. due to containers normalization)
+        if floating.tilingParent.nodeWorkspace != workspace {
+            floating.tilingParent = workspace.rootTilingContainer
+            floating.index = 0
+        }
+        floating.index = min(max(floating.index, 0), floating.tilingParent.children.count)
+        // `bind` also unbinds the window from `floatingWindowsContainer`. The old binding data is used to restore
+        // the original adaptive weight in `restoreFloatingWindows`
+        floating.adaptiveWeight = floating.window.bind(to: floating.tilingParent, adaptiveWeight: 1, index: floating.index)?.adaptiveWeight ?? WEIGHT_DOESNT_MATTER
+        boundFloatingWindows.append(floating)
     }
-    return floatingWindows
+    return boundFloatingWindows
 }
 
 @MainActor private func restoreFloatingWindows(floatingWindows: [FloatingWindowData], workspace: Workspace) {
@@ -187,9 +198,9 @@ private struct FloatingWindowData {
     let window: Window
     let center: CGPoint
 
-    let tilingParent: TilingContainer
-    let adaptiveWeight: CGFloat
-    let index: Int
+    var tilingParent: TilingContainer
+    var adaptiveWeight: CGFloat = WEIGHT_DOESNT_MATTER
+    var index: Int
 }
 
 extension TreeNode {
