@@ -162,7 +162,16 @@ struct FocusCommand: Command {
             index: index,
         ))
     }
-    let floatingWindows: [FloatingWindowData] = _floatingWindows.sortedBy { $0.center.getProjection($0.tilingParent.orientation) }.reversed()
+    // Equal projections are possible (e.g. native macOS tiled windows). The order of such windows must not
+    // depend on the previous tree state, otherwise `focus dfs-next` toggles between them instead of cycling
+    let floatingWindows: [FloatingWindowData] = _floatingWindows
+        .sorted {
+            let lhsProjection = $0.center.getProjection($0.tilingParent.orientation)
+            let rhsProjection = $1.center.getProjection($1.tilingParent.orientation)
+            if lhsProjection != rhsProjection { return lhsProjection < rhsProjection }
+            return $0.window.windowId < $1.window.windowId
+        }
+        .reversed()
 
     // Mutations must happen only after the last `await`, otherwise the tree could be observed
     // in an intermediate state by concurrent tasks (commands and model refreshes share MainActor)
