@@ -64,6 +64,27 @@ final class ConfigTest: XCTestCase {
         assertEquals(result.warnings, [])
     }
 
+    func testKeybindingsDisabledForFrontmostApps() {
+        let result = parseConfig(
+            """
+            config-version = 2
+            keybindings-disabled-for-frontmost-apps = ['com.apple.ScreenSharing']
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.warnings, [])
+        assertEquals(result.config.keybindingsDisabledForFrontmostApps, ["com.apple.ScreenSharing"])
+    }
+
+    func testKeybindingsDisabledForFrontmostAppsDifferentTypesError() {
+        let errors = parseConfig(
+            """
+            keybindings-disabled-for-frontmost-apps = ['', 1]
+            """,
+        ).strErrors
+        assertEquals(errors, ["[ERROR] keybindings-disabled-for-frontmost-apps[1]: Expected type is \'String\'. But actual type is \'Int\'"])
+    }
+
     func testExecOnWorkspaceChangeDifferentTypesError() {
         let errors = parseConfig(
             """

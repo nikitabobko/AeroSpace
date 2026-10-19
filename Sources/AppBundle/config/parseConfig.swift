@@ -150,6 +150,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
     "exec": Parser(\.execConfig, parseExecConfig),
 
+    "keybindings-disabled-for-frontmost-apps": Parser(\.keybindingsDisabledForFrontmostApps, parseArrayOfStrings),
+
     keyMappingConfigRootKey: Parser(\.keyMapping, skipParsing(Config().keyMapping)), // Parsed manually
     modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
 
