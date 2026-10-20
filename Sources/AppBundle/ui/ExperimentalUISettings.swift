@@ -13,6 +13,19 @@ struct ExperimentalUISettings {
             UserDefaults.standard.synchronize()
         }
     }
+
+    var showWorkspacesSuffix: Bool {
+        get {
+            switch UserDefaults.standard.object(forKey: ExperimentalUISettingsItems.showWorkspacesSuffix.rawValue) {
+                case let value as Bool: value
+                default: true
+            }
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: ExperimentalUISettingsItems.showWorkspacesSuffix.rawValue)
+            UserDefaults.standard.synchronize()
+        }
+    }
 }
 
 enum MenuBarStyle: String, CaseIterable, Identifiable, Equatable, Hashable {
@@ -35,6 +48,7 @@ enum MenuBarStyle: String, CaseIterable, Identifiable, Equatable, Hashable {
 
 enum ExperimentalUISettingsItems: String {
     case displayStyle
+    case showWorkspacesSuffix
 }
 
 @MainActor
@@ -44,6 +58,15 @@ func getExperimentalUISettingsMenu(viewModel: TrayMenuModel) -> some View {
         Text("Menu bar style (macOS 14 or later):")
         ForEach(MenuBarStyle.allCases, id: \.id) { style in
             MenuBarStyleButton(style: style, color: color).environmentObject(viewModel)
+        }
+        Divider()
+        Text("Menu dropdown:")
+        Button {
+            viewModel.experimentalUISettings.showWorkspacesSuffix.toggle()
+        } label: {
+            Toggle(isOn: .constant(viewModel.experimentalUISettings.showWorkspacesSuffix)) {
+                Text("Show open apps / monitor next to workspace names")
+            }
         }
     } label: {
         Text("Experimental UI Settings (No stability guarantees)")
