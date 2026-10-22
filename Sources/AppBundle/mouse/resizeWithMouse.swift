@@ -5,6 +5,7 @@ import Common
 private var resizeWithMouseTask: Task<(), any Error>? = nil
 
 func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
+    if !isUnitTest && !isLeftMouseButtonDown { return }
     let notif = notif as String
     let nativeWindowId = ax.containingNativeWindowId()
     let pid = ax.pid
@@ -12,9 +13,22 @@ func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutabl
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let nativeWindowId,
               let pid,
-              let window = Window.get(byNativeId: nativeWindowId, pid: pid),
-              try await isManipulatedWithMouse(window)
-        else {
+              let window = Window.get(byNativeId: nativeWindowId, pid: pid)
+        else { return }
+        guard try await isManipulatedWithMouse(window) else {
+            if let macWindow = window as? MacWindow {
+                if macWindow.isSuppressingMoveResizeNotifications {
+                    return
+                }
+                if macWindow.isFloating && !macWindow.isHiddenInCorner {
+                    if !isUnitTest, let cgRect = getCgWindowRect(for: macWindow) {
+                        macWindow.lastFloatingSize = cgRect.size
+                    }
+                    if globalUnsortedMonitorInfos.count <= 1 && (macWindow.nodeWorkspace?.allLeafWindowsRecursive.count ?? 0) <= 1 {
+                        return
+                    }
+                }
+            }
             scheduleCancellableCompleteRefreshSession(.ax(notif))
             return
         }

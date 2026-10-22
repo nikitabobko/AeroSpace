@@ -1,4 +1,18 @@
+import AppKit
+import Common
+
 @MainActor func normalizeLayoutReason() async throws {
+    if !isUnitTest {
+        switch refreshSessionEvent {
+            case .startup,
+                 .ax(kAXWindowMiniaturizedNotification),
+                 .ax(kAXWindowDeminiaturizedNotification),
+                 .globalObserver(NSWorkspace.activeSpaceDidChangeNotification.rawValue):
+                break
+            default:
+                return
+        }
+    }
     for workspace in Workspace.all {
         let windows: [Window] = workspace.allLeafWindowsRecursive
         try await _normalizeLayoutReason(workspace: workspace, windows: windows)
@@ -23,7 +37,8 @@
         if !workspace.isVisible,
            window.layoutReason == .standard,
            let macApp = window.app as? MacApp,
-           macApp.isHiddenByAeroSpace && macApp.nsApp.isHidden
+           !macApp.isUserHidden,
+           window.isHiddenInCorner || (macApp.isHiddenByAeroSpace && macApp.nsApp.isHidden)
         {
             continue
         }

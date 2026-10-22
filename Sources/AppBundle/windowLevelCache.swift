@@ -5,6 +5,23 @@ import Foundation
 @MainActor private var cache: [UInt32: MacOsWindowLevel] = [:]
 @MainActor private var wip: AwaitableOneTimeBroadcastLatch? = nil
 
+@MainActor
+func getCgWindowRect(for windowId: UInt32) -> Rect? {
+    guard let cfArray = CGWindowListCopyWindowInfo(.optionIncludingWindow, CGWindowID(windowId)) as? [CFDictionary],
+          let elem = cfArray.first
+    else { return nil }
+    let dict = elem as NSDictionary
+    guard let boundsObj = dict[kCGWindowBounds] else { return nil }
+    var cgRect = CGRect.zero
+    guard unsafe CGRectMakeWithDictionaryRepresentation(boundsObj as! CFDictionary, &cgRect) else { return nil }
+    return Rect(topLeftX: cgRect.origin.x, topLeftY: cgRect.origin.y, width: cgRect.size.width, height: cgRect.size.height)
+}
+
+func getCgWindowRect(for window: MacWindow) -> Rect? {
+    guard let nativeId = window.macApp.nativeWindowId(of: window.windowId) else { return nil }
+    return getCgWindowRect(for: nativeId)
+}
+
 @MainActor func getWindowLevel(forNativeId windowId: UInt32, _ cm: CancellationMode) async throws -> MacOsWindowLevel? {
     if let existing = cache[windowId] { return existing }
     if let wip {
