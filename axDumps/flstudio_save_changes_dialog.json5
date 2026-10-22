@@ -1,0 +1,78 @@
+// FL Studio 2026 -> make a change -> FL Studio's own File menu -> Open... -> 'Save changes to untitled.flp?' dialog
+{
+  "AXActivationPoint" : "<AXValue 0x7c7d549f0> {value = x:-1.000000 y:957.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x7c7ea7180> {value = x:601.000000 y:404.000000 w:268.000000 h:182.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 0,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 1,
+  "AXParent" : "<AXUIElement Application 0x7c7d549f0> {pid=2111}",
+  "AXPosition" : "<AXValue 0x7c7d549f0> {value = x:601.000000 y:404.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+
+  ],
+  "AXSize" : "<AXValue 0x7c7d549f0> {value = w:268.000000 h:182.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXUnknown",
+  "AXTitle" : "Confirm",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=68444, title=\"Confirm\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=68444, title=\"Confirm\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : null,
+    "AXMenuBar" : "<AXUIElement 0x7c7d543f0> {pid=2111}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "FL Studio",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=68443, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(AxWindowId=68444, title=\"Confirm\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(AxWindowId=68308, title=\"Mixer - Current\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(AxWindowId=68309, title=\"FL Studio 2026\", role=\"AXWindow\", subrole=\"AXUnknown\")"
+    ],
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), get.AXExtrasMenuBar(noValue), isWritable.AXExtrasMenuBar(failure), get.AXMainWindow(noValue), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
+  },
+  "Aero.App.appBundleId" : "com.image-line.flstudio",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.appBundlePath" : "file:///Applications/FL%20Studio%202026.app/",
+  "Aero.App.nsApp.execPath" : "file:///Applications/FL%20Studio%202026.app/Contents/MacOS/OsxFL",
+  "Aero.App.pid" : 2111,
+  "Aero.App.version" : "26.1.6.5406",
+  "Aero.App.versionShort" : "26.1.6.5406",
+  "Aero.AxFailed" : "isWritable.AXFrame(failure), get.AXGrowArea(failure), get.AXMinimizeButton(noValue), get.AXDocument(noValue), get.AXCloseButton(noValue), isWritable.AXActivationPoint(failure), get.AXFullScreenButton(noValue), get.AXProxy(noValue), get.AXDefaultButton(noValue), get.AXTitleUIElement(noValue), get.AXCancelButton(noValue), get.AXZoomButton(noValue), get.AXToolbarButton(noValue)",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxWritable" : "AXPosition, AXSections",
+  "Aero.axWindowId" : 68444,
+  "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
+  "Aero.on-window-detected" : [
+    {
+      "commands" : "layout floating; exec-and-forget  osascript \"/Users/remitoshniwal/Library/Application Support/AeroSpace/maximize.applescript\"",
+      "matcher" : "true"
+    }
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
+  "Aero.windowLevel" : 8,
+  "Aero.workspace" : null
+}
