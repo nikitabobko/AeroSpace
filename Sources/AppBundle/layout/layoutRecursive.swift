@@ -143,16 +143,13 @@ extension TilingContainer {
     @MainActor
     fileprivate func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
         guard let mruIndex: Int = mostRecentChild?.ownIndex else { return }
+        let paddings = accordionPaddings(
+            count: children.count,
+            mruIndex: mruIndex,
+            padding: CGFloat(config.accordionPadding),
+        )
         for (index, child) in children.enumerated() {
-            let padding = CGFloat(config.accordionPadding)
-            let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {
-                case 0 where children.count == 1: (0, 0)
-                case 0:                           (0, padding)
-                case children.indices.last:       (padding, 0)
-                case mruIndex - 1:                (0, 2 * padding)
-                case mruIndex + 1:                (2 * padding, 0)
-                default:                          (padding, padding)
-            }
+            let (lPadding, rPadding) = paddings[index]
             switch orientation {
                 case .h:
                     try await child.layoutRecursive(
@@ -171,6 +168,20 @@ extension TilingContainer {
                         context,
                     )
             }
+        }
+    }
+}
+
+/// Returns (leading, trailing) padding for every child of an accordion container
+func accordionPaddings(count: Int, mruIndex: Int, padding: CGFloat) -> [(CGFloat, CGFloat)] {
+    (0 ..< count).map { index in
+        switch index {
+            case 0 where count == 1: (0, 0)
+            case 0:                  (0, padding)
+            case count - 1:          (padding, 0)
+            case mruIndex - 1:       (0, 2 * padding)
+            case mruIndex + 1:       (2 * padding, 0)
+            default:                 (padding, padding)
         }
     }
 }
