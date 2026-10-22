@@ -226,10 +226,15 @@ private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, w
     window?.unbindFromParent() // It's important to unbind to get correct data from below
     let mruWindow = workspace.mostRecentWindowRecursive
     if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
+        let mruIndex = mruWindow.ownIndex.orDie()
+        let index = switch config.defaultWindowsInsertionPoint {
+            case .afterTheMruWindow: mruIndex + 1
+            case .beforeTheMruWindow: mruIndex
+        }
         return BindingData(
             parent: tilingParent,
             adaptiveWeight: WEIGHT_AUTO,
-            index: mruWindow.ownIndex.orDie() + 1,
+            index: index,
         )
     } else {
         return BindingData(
