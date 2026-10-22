@@ -350,6 +350,11 @@ While in a `v_accordion`, you can navigate the windows using the `focus (up|down
 
 Accordion padding is configurable via `accordion-padding` option.
 
+By default, only the neighbors of the focused window peek out.
+Set `accordion-style = 'fan'` to make every window peek out:
+the neighbors by `accordion-padding`, and each step farther away by half as much (but at least 6 points).
+Possible values: `classic` (default), `fan`.
+
 [#normalization]
 === Normalization
 
