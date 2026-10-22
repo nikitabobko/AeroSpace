@@ -4,6 +4,7 @@ import Common
 final class MacWindow: Window {
     let macApp: MacApp
     private var prevUnhiddenProportionalPositionInsideWorkspaceRect: CGPoint?
+    private var hiddenInCorner: OptimalHideCorner?
 
     @MainActor
     private init(_ id: UInt32, _ actor: MacApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
@@ -136,6 +137,8 @@ final class MacWindow: Window {
                     lastFloatingSize = windowRect.size
                 }
             }
+        } else if hiddenInCorner == corner && macApp.isHiddenByAeroSpace && macApp.nsApp.isHidden {
+            return
         }
         let p: CGPoint
         switch corner {
@@ -151,11 +154,13 @@ final class MacWindow: Window {
                 let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: 1)
                 p = nodeMonitor.visibleRect.bottomRightCorner - onePixelOffset
         }
+        hiddenInCorner = corner
         setAxFrame(p, nil)
     }
 
     @MainActor
     func unhideFromCorner() {
+        self.hiddenInCorner = nil
         guard let prevUnhiddenProportionalPositionInsideWorkspaceRect else { return }
         guard let nodeWorkspace else { return } // hiding only makes sense for workspace windows
         guard let parent else { return }

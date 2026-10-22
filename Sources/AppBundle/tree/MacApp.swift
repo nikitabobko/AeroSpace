@@ -14,6 +14,12 @@ final class MacApp: AbstractApp {
     private let windows: ThreadGuardedValue<[UInt32: AxWindow]> = .init([:])
     private var windowsCount = 0
     var lastNativeFocusedWindowId: UInt32? = nil
+    @MainActor var isHiddenByAeroSpace: Bool = false
+    @MainActor var isUserHidden: Bool { nsApp.isHidden && !isHiddenByAeroSpace }
+    @MainActor private var hideTaskGeneration: UInt64 = 0
+    @MainActor private var suppressNextHideNotification: Bool = false
+    @MainActor private var suppressNextUnhideNotification: Bool = false
+    @MainActor private var preventAutoHideUntil: ContinuousClock.Instant? = nil
     private var thread: Thread?
     private var setFrameJobs: [UInt32: RunLoopJob] = [:]
     @MainActor private static var focusJob: RunLoopJob? = nil
@@ -129,6 +135,7 @@ final class MacApp: AbstractApp {
 
     @MainActor func nativeFocus(_ windowId: UInt32) {
         if serverArgs.isReadOnly { return }
+        unhideIfHiddenByAeroSpace()
         MacApp.focusJob?.cancel()
         // Performance optimization. If possible avoid doing AX requests
         // (important for apps which are slow at responding even such basic AX requests. E.g. Godot)
@@ -145,6 +152,99 @@ final class MacApp: AbstractApp {
                 nsApp.activate(options: .activateIgnoringOtherApps)
             }
         }
+    }
+
+    @MainActor
+    func unhideIfHiddenByAeroSpace() {
+        hideTaskGeneration &+= 1
+        guard isHiddenByAeroSpace else { return }
+        isHiddenByAeroSpace = false
+        if !isUnitTest && !serverArgs.isReadOnly && nsApp.isHidden {
+            suppressNextUnhideNotification = true
+            nsApp.unhide()
+        }
+    }
+
+    @MainActor
+    func consumeSuppressedHideNotification() -> Bool {
+        if suppressNextHideNotification {
+            suppressNextHideNotification = false
+            return true
+        }
+        return isHiddenByAeroSpace
+    }
+
+    @MainActor
+    func consumeSuppressedUnhideNotification() -> Bool {
+        if suppressNextUnhideNotification {
+            suppressNextUnhideNotification = false
+            return true
+        }
+        return false
+    }
+
+    @MainActor
+    func markExternallyUnhiddenOrActivated() {
+        guard isHiddenByAeroSpace else { return }
+        hideTaskGeneration &+= 1
+        isHiddenByAeroSpace = false
+        preventAutoHideUntil = ContinuousClock.now.advanced(by: .seconds(1))
+    }
+
+    @MainActor
+    func scheduleHideByAeroSpaceIfEligible() {
+        if isUnitTest || serverArgs.isReadOnly || !TrayMenuModel.shared.isEnabled { return }
+        if let until = preventAutoHideUntil, ContinuousClock.now < until { return }
+        if isHiddenByAeroSpace && nsApp.isHidden { return }
+        if nsApp.isHidden { return } // Already hidden by the user (Cmd+H)
+
+        hideTaskGeneration &+= 1
+        let generation = hideTaskGeneration
+        Task.startUnstructured { @MainActor [weak self] in
+            guard let self else { return }
+            // Wait for any pending corner setAxFrame jobs queued on this app's AX thread
+            // so all windows are parked in the hide corner before hiding the app.
+            _ = try? await self.thread?.runInLoop(.cancellable) { _ in () }
+            guard self.hideTaskGeneration == generation,
+                  TrayMenuModel.shared.isEnabled,
+                  !serverArgs.isReadOnly,
+                  !self.nsApp.isTerminated,
+                  !self.nsApp.isHidden
+            else { return }
+            if let until = self.preventAutoHideUntil, ContinuousClock.now < until { return }
+            guard self.isEligibleForAeroSpaceAutoHide() else { return }
+            self.isHiddenByAeroSpace = true
+            self.suppressNextHideNotification = true
+            self.nsApp.hide()
+        }
+    }
+
+    @MainActor
+    func isEligibleForAeroSpaceAutoHide() -> Bool {
+        if focus.windowOrNil?.app.pid == pid { return false }
+        for node in macosPopupWindowsContainer.children {
+            if (node as? Window)?.app.pid == pid { return false }
+        }
+        var hasInvisibleWorkspaceWindows = false
+        for workspace in Workspace.all {
+            let hasWindowInWorkspace = workspace.allLeafWindowsRecursive.contains { $0.app.pid == pid }
+            if hasWindowInWorkspace {
+                if workspace.isVisible {
+                    return false
+                }
+                hasInvisibleWorkspaceWindows = true
+            }
+            if workspace.macOsNativeFullscreenWindowsContainer.children.contains(where: { ($0 as? Window)?.app.pid == pid }) {
+                if workspace.isVisible {
+                    return false
+                }
+                hasInvisibleWorkspaceWindows = true
+            }
+            if workspace.macOsNativeHiddenAppsWindowsContainer.children.contains(where: { ($0 as? Window)?.app.pid == pid }) {
+                return false
+            }
+        }
+        return hasInvisibleWorkspaceWindows
     }
 
     func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {

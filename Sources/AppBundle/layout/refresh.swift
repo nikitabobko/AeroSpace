@@ -155,6 +155,9 @@ enum OptimalHideCorner {
 @MainActor
 private func layoutWorkspaces() async throws {
     if !TrayMenuModel.shared.isEnabled {
+        for app in MacApp.allAppsMap.values {
+            app.unhideIfHiddenByAeroSpace()
+        }
         HideCornerOccluder.shared.hideAll()
         for workspace in Workspace.all {
             workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
@@ -189,9 +192,19 @@ private func layoutWorkspaces() async throws {
     }
 
     // to reduce flicker, first unhide visible workspaces, then hide invisible ones
+    for node in macosPopupWindowsContainer.children {
+        (node as? MacWindow)?.macApp.unhideIfHiddenByAeroSpace()
+    }
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
-        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
+        for window in workspace.allLeafWindowsRecursive {
+            let macWindow = window as! MacWindow // todo as!
+            macWindow.macApp.unhideIfHiddenByAeroSpace()
+            macWindow.unhideFromCorner()
+        }
+        for node in workspace.macOsNativeFullscreenWindowsContainer.children {
+            (node as? MacWindow)?.macApp.unhideIfHiddenByAeroSpace()
+        }
         try await workspace.layoutWorkspace()
     }
     var monitorsWithHiddenWindows: Set<CGPoint> = []
@@ -211,6 +224,13 @@ private func layoutWorkspaces() async throws {
         monitorToOptimalHideCorner: monitorToOptimalHideCorner,
         monitorsWithHiddenWindows: monitorsWithHiddenWindows,
     )
+    for app in MacApp.allAppsMap.values {
+        if app.isEligibleForAeroSpaceAutoHide() {
+            app.scheduleHideByAeroSpaceIfEligible()
+        } else {
+            app.unhideIfHiddenByAeroSpace()
+        }
+    }
 }
 
 @MainActor
