@@ -19,12 +19,22 @@
 }
 
 @MainActor private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) async throws {
-    let states = try await windows.mapConcurrently { try await $0.getMacosWindowNativeState(.cancellable) }
-    for (window, state) in zip(windows, states) {
+    let windowsToCheck = windows.filter { window in
+        if !workspace.isVisible,
+           window.layoutReason == .standard,
+           let macApp = window.app as? MacApp,
+           macApp.isHiddenByAeroSpace && macApp.nsApp.isHidden
+        {
+            return false
+        }
+        return true
+    }
+    let states = try await windowsToCheck.mapConcurrently { try await $0.getMacosWindowNativeState(.cancellable) }
+    for (window, state) in zip(windowsToCheck, states) {
         let isMacosFullscreen = state == .nativeFullscreen
         let isMacosMinimized = state == .nativeMinimized
         let isMacosWindowOfHiddenApp = !isMacosFullscreen && !isMacosMinimized &&
-            !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.nsApp.isHidden
+            !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.isUserHidden
         switch window.layoutReason {
             case .standard:
                 guard let parent = window.windowParentCases else { continue }
