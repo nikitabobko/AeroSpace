@@ -30,7 +30,16 @@ extension TreeNode {
             case .floatingWindowsContainer(let container):
                 let windows = container.children.filterIsInstance(of: Window.self)
                 // todo make it parallel among different workspaces. Get rid of 'try await'
-                let rects = try await windows.mapConcurrently { try await $0.getAxRect(.cancellable) } // Probably not idempotent
+                let rects: [Rect?] = if !isUnitTest && globalUnsortedMonitorInfos.count <= 1 {
+                    Array(repeating: nil, count: windows.count)
+                } else {
+                    try await windows.mapConcurrently { window in
+                        if !isUnitTest, let macWin = window as? MacWindow {
+                            return macWin.expectedUnhiddenRect() ?? getCgWindowRect(for: macWin)
+                        }
+                        return try await window.getAxRect(.cancellable) // Probably not idempotent
+                    }
+                }
                 for (window, windowRect) in zip(windows, rects) {
                     window.lastAppliedLayoutPhysicalRect = nil
                     window.lastAppliedLayoutVirtualRect = nil
@@ -78,23 +87,25 @@ private struct LayoutContext {
 extension Window {
     @MainActor
     fileprivate func layoutFloatingWindow(_ context: LayoutContext, _ windowRect: Rect?) {
-        let workspace = context.workspace
-        let currentMonitor = windowRect?.center.monitorApproximation
-        if let currentMonitor, let windowRect, workspace != currentMonitor.visibleWorkspace {
-            let windowTopLeftCorner = windowRect.topLeftCorner
-            let xProportion = (windowTopLeftCorner.x - currentMonitor.visibleRect.topLeftX) / currentMonitor.visibleRect.width
-            let yProportion = (windowTopLeftCorner.y - currentMonitor.visibleRect.topLeftY) / currentMonitor.visibleRect.height
+        if globalUnsortedMonitorInfos.count > 1 {
+            let workspace = context.workspace
+            let currentMonitor = windowRect?.center.monitorApproximation
+            if let currentMonitor, let windowRect, workspace != currentMonitor.visibleWorkspace {
+                let windowTopLeftCorner = windowRect.topLeftCorner
+                let xProportion = (windowTopLeftCorner.x - currentMonitor.visibleRect.topLeftX) / currentMonitor.visibleRect.width
+                let yProportion = (windowTopLeftCorner.y - currentMonitor.visibleRect.topLeftY) / currentMonitor.visibleRect.height
 
-            let workspaceRect = workspace.workspaceMonitorInfo.visibleRect
-            var newX = workspaceRect.topLeftX + xProportion * workspaceRect.width
-            var newY = workspaceRect.topLeftY + yProportion * workspaceRect.height
+                let workspaceRect = workspace.workspaceMonitorInfo.visibleRect
+                var newX = workspaceRect.topLeftX + xProportion * workspaceRect.width
+                var newY = workspaceRect.topLeftY + yProportion * workspaceRect.height
 
-            let windowWidth = windowRect.width
-            let windowHeight = windowRect.height
-            newX = newX.coerce(in: workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
-            newY = newY.coerce(in: workspaceRect.minY ... max(workspaceRect.minY, workspaceRect.maxY - windowHeight))
+                let windowWidth = windowRect.width
+                let windowHeight = windowRect.height
+                newX = newX.coerce(in: workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
+                newY = newY.coerce(in: workspaceRect.minY ... max(workspaceRect.minY, workspaceRect.maxY - windowHeight))
 
-            setAxFrame(Point(x: newX, y: newY), nil)
+                setAxFrame(Point(x: newX, y: newY), nil)
+            }
         }
         if isFullscreen {
             layoutFullscreen(context)
