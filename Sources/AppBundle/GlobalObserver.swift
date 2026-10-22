@@ -20,6 +20,18 @@ enum GlobalObserver {
                     }
                     app.markExternallyUnhiddenOrActivated()
                 } else if notifName == NSWorkspace.didActivateApplicationNotification.rawValue {
+                    onAppActivatedInWorkspace(notifPid)
+                    if (app.isSuppressingSelfFocusNotifications || !app.isHiddenByAeroSpace) && focus.windowOrNil?.app.pid == app.pid {
+                        cancelActiveRefreshTask()
+                        return
+                    }
+                    if let hideTime = MacApp.lastAeroSpaceActiveAppHideTime,
+                       hideTime.duration(to: .now) < .milliseconds(400),
+                       app.isEligibleForAeroSpaceAutoHide()
+                    {
+                        app.scheduleHideByAeroSpaceIfEligible()
+                        return
+                    }
                     app.markExternallyUnhiddenOrActivated()
                 }
             }

@@ -31,7 +31,7 @@ open class Window: TreeNode, Hashable {
     }
 
     func getAxSize(_ cm: CancellationMode) async throws -> CGSize? { die("Not implemented") }
-    func getTitle(_ cm: CancellationMode) async throws -> String { die("Not implemented") }
+    @MainActor func getTitle(_ cm: CancellationMode) async throws -> String { die("Not implemented") }
     func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { false }
     func isMacosMinimized(_ cm: CancellationMode) async throws -> Bool { false } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
     var isHiddenInCorner: Bool { die("Not implemented") }

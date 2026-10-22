@@ -31,7 +31,7 @@ final class TestWindow: Window, CustomStringConvertible {
         unbindFromParent()
     }
 
-    override func getTitle(_ cm: CancellationMode) async throws -> String { description }
+    @MainActor override func getTitle(_ cm: CancellationMode) async throws -> String { description }
 
     @MainActor override func getAxRect(_ cm: CancellationMode) async throws -> Rect? { // todo change to not Optional
         _rect

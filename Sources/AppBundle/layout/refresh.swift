@@ -5,10 +5,20 @@ import Common
 private var activeRefreshTask: Task<(), any Error>? = nil
 
 @MainActor
+private var isRunningLightSession = false
+
+@MainActor
+func cancelActiveRefreshTask() {
+    activeRefreshTask?.cancel()
+    activeRefreshTask = nil
+}
+
+@MainActor
 func scheduleCancellableCompleteRefreshSession(
     _ event: RefreshSessionEvent,
     optimisticallyPreLayoutWorkspaces: Bool = false,
 ) {
+    if !isUnitTest && isRunningLightSession { return }
     activeRefreshTask?.cancel()
     activeRefreshTask = Task.startUnstructured { @MainActor in
         try checkCancellation()
@@ -36,7 +46,7 @@ func runHeavyCompleteRefreshSession(
             if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
             updateFocusCache(nativeFocused)
 
-            if shouldLayoutWorkspaces && optimisticallyPreLayoutWorkspaces { try await layoutWorkspaces() }
+            if shouldLayoutWorkspaces && optimisticallyPreLayoutWorkspaces { try await layoutWorkspaces(allowAutoHide: false) }
 
             await refreshModel_nonCancellable()
             try await refresh()
@@ -63,12 +73,21 @@ func runLightSession<T>(
 ) async throws -> T {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
     defer { signposter.endInterval(#function, state) }
+    if !isUnitTest && event.isReadOnlyOrExecAndForget {
+        return try await $refreshSessionEvent.withValue(event) {
+            try await body()
+        }
+    }
     activeRefreshTask?.cancel() // Give priority to runSession
     activeRefreshTask = nil
+    isRunningLightSession = true
+    defer { isRunningLightSession = false }
     return try await $refreshSessionEvent.withValue(event) {
-        let nativeFocused = try await getNativeFocusedWindow(.cancellable)
-        if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
-        updateFocusCache(nativeFocused)
+        if isUnitTest || !event.isWorkspaceSwitch {
+            let nativeFocused = try await getNativeFocusedWindow(.cancellable)
+            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
+            updateFocusCache(nativeFocused)
+        }
         let focusBefore = focus.windowOrNil
 
         await refreshModel_nonCancellable()
@@ -76,14 +95,20 @@ func runLightSession<T>(
         await refreshModel_nonCancellable()
 
         let focusAfter = focus.windowOrNil
+        let isExplicitFocusCommand = if case .socketServer(let args) = event { args is FocusCmdArgs } else { false }
+        let focusToSync = (focusBefore != focusAfter || isExplicitFocusCommand) ? focusAfter : nil
 
+        if !event.isFocusFollowsMouse {
+            try await layoutWorkspaces(focusToSync: focusToSync)
+        } else {
+            focusToSync?.nativeFocus() // syncFocusToMacOs
+        }
         updateTrayText()
         SecureInputPanel.shared.refresh()
-        if !event.isFocusFollowsMouse { try await layoutWorkspaces() }
-        if focusBefore != focusAfter {
-            focusAfter?.nativeFocus() // syncFocusToMacOs
+        isRunningLightSession = false
+        if !event.isFocusFollowsMouse && (isUnitTest || !event.isWorkspaceSwitch) {
+            scheduleCancellableCompleteRefreshSession(event)
         }
-        if !event.isFocusFollowsMouse { scheduleCancellableCompleteRefreshSession(event) }
         return result
     }
 }
@@ -142,8 +167,29 @@ private func refresh() async throws {
 
 func refreshObs(_: AXObserver, _: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
     let notif = notif as String
+    let pid = axTaskLocalAppThreadToken?.pid
     Task.startUnstructured { @MainActor in
         if !TrayMenuModel.shared.isEnabled { return }
+        if let pid, let app = MacApp.allAppsMap[pid] {
+            if notif == kAXWindowCreatedNotification || notif == kAXUIElementDestroyedNotification {
+                app.needsWindowRefresh = true
+            }
+            if notif == kAXWindowCreatedNotification {
+                app.markExternallyUnhiddenOrActivated()
+                app.unhideIfHiddenByAeroSpace(forceIfHidden: true)
+            }
+        }
+        if notif == kAXFocusedWindowChangedNotification {
+            if let pid, let app = MacApp.allAppsMap[pid], app.isSuppressingSelfFocusNotifications {
+                return
+            }
+            if let focusedMacWindow = focus.windowOrNil as? MacWindow,
+               focusedMacWindow.macApp.pid == pid,
+               focusedMacWindow.macApp.isSuppressingSelfFocusNotifications
+            {
+                return
+            }
+        }
         scheduleCancellableCompleteRefreshSession(.ax(notif))
     }
 }
@@ -153,16 +199,17 @@ enum OptimalHideCorner {
 }
 
 @MainActor
-private func layoutWorkspaces() async throws {
+private func layoutWorkspaces(allowAutoHide: Bool = true, focusToSync: Window? = nil) async throws {
     if !TrayMenuModel.shared.isEnabled {
         for app in MacApp.allAppsMap.values {
             app.unhideIfHiddenByAeroSpace()
         }
         HideCornerOccluder.shared.hideAll()
         for workspace in Workspace.all {
-            workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
+            workspace.allLeafWindowsRecursiveMru.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
             try await workspace.layoutWorkspace() // Unhide tiling windows from corner
         }
+        focusToSync?.nativeFocus()
         return
     }
     let monitors = monitorInfos
@@ -192,22 +239,32 @@ private func layoutWorkspaces() async throws {
     }
 
     // to reduce flicker, first unhide visible workspaces, then hide invisible ones
-    for node in macosPopupWindowsContainer.children {
-        (node as? MacWindow)?.macApp.unhideIfHiddenByAeroSpace()
-    }
+    var didSyncFocus = false
+    var monitorsWithHiddenWindows: Set<CGPoint> = []
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
-        for window in workspace.allLeafWindowsRecursive {
-            let macWindow = window as! MacWindow // todo as!
-            macWindow.macApp.unhideIfHiddenByAeroSpace()
-            macWindow.unhideFromCorner()
-        }
+        let mruWindows = workspace.allLeafWindowsRecursiveMru.map { $0 as! MacWindow } // todo as!
+
         for node in workspace.macOsNativeFullscreenWindowsContainer.children {
-            (node as? MacWindow)?.macApp.unhideIfHiddenByAeroSpace()
+            (node as? MacWindow)?.macApp.unhideIfHiddenByAeroSpace(forceIfHidden: true)
+        }
+
+        for macWindow in mruWindows {
+            macWindow.macApp.unhideIfHiddenByAeroSpace(forceIfHidden: true)
+        }
+
+        for macWindow in mruWindows {
+            macWindow.unhideFromCorner()
+            if let focusToSync, macWindow == focusToSync {
+                focusToSync.nativeFocus()
+                didSyncFocus = true
+            }
         }
         try await workspace.layoutWorkspace()
     }
-    var monitorsWithHiddenWindows: Set<CGPoint> = []
+    if !didSyncFocus {
+        focusToSync?.nativeFocus()
+    }
     for workspace in Workspace.all where !workspace.isVisible {
         let monitorOrigin = workspace.workspaceMonitor.rect.topLeftCorner
         let corner = monitorToOptimalHideCorner[monitorOrigin] ?? .bottomRightCorner
@@ -226,11 +283,57 @@ private func layoutWorkspaces() async throws {
     )
     for app in MacApp.allAppsMap.values {
         if app.isEligibleForAeroSpaceAutoHide() {
-            app.scheduleHideByAeroSpaceIfEligible()
+            if allowAutoHide {
+                app.scheduleHideByAeroSpaceIfEligible()
+            }
         } else {
             app.unhideIfHiddenByAeroSpace()
         }
     }
+}
+
+private func isRectCompletelyCovered(_ target: Rect, by frontRects: [Rect]) -> Bool {
+    guard !frontRects.isEmpty else { return false }
+    let inset: CGFloat = 4
+    let shrunk = Rect(
+        topLeftX: target.minX + inset,
+        topLeftY: target.minY + inset,
+        width: max(0, target.width - inset * 2),
+        height: max(0, target.height - inset * 2),
+    )
+    if shrunk.width <= 0 || shrunk.height <= 0 { return true }
+    var remaining: [Rect] = [shrunk]
+    for front in frontRects {
+        var nextRemaining: [Rect] = []
+        for r in remaining {
+            if front.maxX <= r.minX || front.minX >= r.maxX || front.maxY <= r.minY || front.minY >= r.maxY {
+                nextRemaining.append(r)
+                continue
+            }
+            if front.minY > r.minY {
+                nextRemaining.append(Rect(topLeftX: r.minX, topLeftY: r.minY, width: r.width, height: front.minY - r.minY))
+            }
+            if front.maxY < r.maxY {
+                nextRemaining.append(Rect(topLeftX: r.minX, topLeftY: front.maxY, width: r.width, height: r.maxY - front.maxY))
+            }
+            let clampedMinY = max(r.minY, front.minY)
+            let clampedMaxY = min(r.maxY, front.maxY)
+            let midHeight = clampedMaxY - clampedMinY
+            if midHeight > 0 {
+                if front.minX > r.minX {
+                    nextRemaining.append(Rect(topLeftX: r.minX, topLeftY: clampedMinY, width: front.minX - r.minX, height: midHeight))
+                }
+                if front.maxX < r.maxX {
+                    nextRemaining.append(Rect(topLeftX: front.maxX, topLeftY: clampedMinY, width: r.maxX - front.maxX, height: midHeight))
+                }
+            }
+        }
+        remaining = nextRemaining
+        if remaining.isEmpty {
+            return true
+        }
+    }
+    return remaining.isEmpty
 }
 
 @MainActor

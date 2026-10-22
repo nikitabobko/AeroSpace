@@ -5,11 +5,24 @@ import Common
 private var moveWithMouseTask: Task<(), any Error>? = nil
 
 func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
+    if !isUnitTest && !isLeftMouseButtonDown { return }
     let windowId = ax.containingWindowId()
     let notif = notif as String
     Task.startUnstructured { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
-        guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
+        guard let windowId, let window = Window.get(byId: windowId) else { return }
+        guard try await isManipulatedWithMouse(window) else {
+            if let macWindow = window as? MacWindow {
+                if macWindow.isSuppressingMoveResizeNotifications {
+                    return
+                }
+                if macWindow.isFloating && !macWindow.isHiddenInCorner && monitorInfos.count <= 1 && (macWindow.nodeWorkspace?.allLeafWindowsRecursive.count ?? 0) <= 1 {
+                    return
+                }
+                if macWindow.isHiddenInCorner {
+                    macWindow.needsCornerRehide = true
+                }
+            }
             scheduleCancellableCompleteRefreshSession(.ax(notif))
             return
         }
@@ -39,7 +52,11 @@ private func moveWithMouse(_ window: Window) async throws { // todo cover with t
 
 @MainActor
 private func moveFloatingWindow(_ window: Window) async throws {
-    guard let targetWorkspace = try await window.getCenter(.cancellable)?.monitorApproximation.activeWorkspace else { return }
+    guard !window.isHiddenInCorner else { return }
+    guard let currentWorkspace = window.nodeWorkspace, currentWorkspace.isVisible else { return }
+    guard let targetMonitor = try await window.getCenter(.cancellable)?.monitorApproximation else { return }
+    guard targetMonitor.rect.topLeftCorner != currentWorkspace.workspaceMonitor.rect.topLeftCorner else { return }
+    let targetWorkspace = targetMonitor.activeWorkspace
     guard let parent = window.parent else { return }
     if targetWorkspace != parent {
         window.bindAsFloatingWindow(to: targetWorkspace)

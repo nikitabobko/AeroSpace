@@ -15,11 +15,26 @@ final class MacApp: AbstractApp {
     private var windowsCount = 0
     var lastNativeFocusedWindowId: UInt32? = nil
     @MainActor var isHiddenByAeroSpace: Bool = false
-    @MainActor var isUserHidden: Bool { nsApp.isHidden && !isHiddenByAeroSpace }
+    @MainActor var isUserHidden: Bool {
+        if !isUnitTest && !config.automaticallyUnhideMacosHiddenApps {
+            return false
+        }
+        return nsApp.isHidden && !isHiddenByAeroSpace
+    }
     @MainActor private var hideTaskGeneration: UInt64 = 0
+    @MainActor private var isAutoHideTaskPending: Bool = false
     @MainActor private var suppressNextHideNotification: Bool = false
     @MainActor private var suppressNextUnhideNotification: Bool = false
     @MainActor private var preventAutoHideUntil: ContinuousClock.Instant? = nil
+    @MainActor static var lastAeroSpaceActiveAppHideTime: ContinuousClock.Instant? = nil
+    @MainActor private var inFlightFocusJobsCount: Int = 0
+    @MainActor private var lastNativeFocusTime: ContinuousClock.Instant? = nil
+    @MainActor private(set) var isDetachingTabToNewWindow: Bool = false
+    @MainActor private var cachedAliveWindowIds: [UInt32] = []
+    @MainActor private var hasCompletedInitialWindowRefresh: Bool = false
+    @MainActor var needsWindowRefresh: Bool = false
+    @MainActor private var cachedTitles: [UInt32: String] = [:]
+    @MainActor private var lastBackgroundMainWindowId: UInt32? = nil
     private var thread: Thread?
     private var setFrameJobs: [UInt32: RunLoopJob] = [:]
     @MainActor private static var focusJob: RunLoopJob? = nil
@@ -71,6 +86,8 @@ final class MacApp: AbstractApp {
         let thread = Thread {
             $axTaskLocalAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
                 let axApp = AXUIElementCreateApplication(nsApp.processIdentifier)
+                AXUIElementSetMessagingTimeout(axApp, 0.5)
+                AXUIElementSetMessagingTimeout(AXUIElementCreateSystemWide(), 0.5)
                 let handlers: HandlerToNotifKeyMapping = unsafe [
                     (refreshObs, [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification]),
                 ]
@@ -84,6 +101,9 @@ final class MacApp: AbstractApp {
                 let axAppThreadGuarded = app?.axApp
 
                 Task.startUnstructured { @MainActor in
+                    if let app, isStartup && nsApp.isHidden {
+                        app.isHiddenByAeroSpace = true
+                    }
                     allAppsMap[pid] = app
                     wipPids[pid] = nil
                     await wip.signalToAll()
@@ -135,33 +155,77 @@ final class MacApp: AbstractApp {
 
     @MainActor func nativeFocus(_ windowId: UInt32) {
         if serverArgs.isReadOnly { return }
-        unhideIfHiddenByAeroSpace()
+        unhideIfHiddenByAeroSpace(forceIfHidden: true)
+        lastBackgroundMainWindowId = windowId
         MacApp.focusJob?.cancel()
-        // Performance optimization. If possible avoid doing AX requests
-        // (important for apps which are slow at responding even such basic AX requests. E.g. Godot)
-        // Beware of the macOS bug: https://github.com/nikitabobko/AeroSpace/issues/101
-        if (!NSScreen.screensHaveSeparateSpaces || monitorInfos.count == 1) &&
-            (lastNativeFocusedWindowId == windowId || windowsCount == 1)
-        {
-            nsApp.activate(options: .activateIgnoringOtherApps)
-        } else {
-            MacApp.focusJob = withWindowAsync(windowId, .cancellable) { [nsApp] window, job in
-                // Raise firstly to make sure that by the time we activate the app, the window would be already on top
-                window.set(Ax.isMainAttr, true)
-                AXUIElementPerformAction(window, kAXRaiseAction as CFString)
-                nsApp.activate(options: .activateIgnoringOtherApps)
+        recordAeroSpaceNativeFocus(windowId, app: self)
+        inFlightFocusJobsCount += 1
+        lastNativeFocusTime = .now
+        let pid = self.pid
+        MacApp.focusJob = withWindowAsync(windowId, .cancellable, onComplete: {
+            Task.startUnstructured { @MainActor in
+                if let app = MacApp.allAppsMap[pid] {
+                    app.inFlightFocusJobsCount = max(0, app.inFlightFocusJobsCount - 1)
+                    app.lastNativeFocusTime = .now
+                    if app.inFlightFocusJobsCount == 0 && NSWorkspace.shared.frontmostApplication?.processIdentifier == pid {
+                        onAppActivatedInWorkspace(pid)
+                    }
+                }
             }
+        }) { [nsApp] window, job in
+            // Raise firstly to make sure that by the time we activate the app, the window would be already on top
+            window.set(Ax.isMainAttr, true)
+            AXUIElementPerformAction(window, kAXRaiseAction as CFString)
+            nsApp.activate(options: .activateIgnoringOtherApps)
         }
     }
 
     @MainActor
-    func unhideIfHiddenByAeroSpace() {
+    func hasStandardChromeTitle(_ windowId: UInt32) -> Bool {
+        cachedTitles[windowId]?.contains("Google Chrome") == true
+    }
+
+    @MainActor
+    func setMainWindowWithoutActivating(_ windowId: UInt32) {
+        if isUnitTest || serverArgs.isReadOnly { return }
+        guard lastBackgroundMainWindowId != windowId else { return }
+        lastBackgroundMainWindowId = windowId
+        lastNativeFocusedWindowId = windowId
+        inFlightFocusJobsCount += 1
+        let pid = self.pid
+        _ = withWindowAsync(windowId, .cancellable, onComplete: {
+            Task.startUnstructured { @MainActor in
+                if let app = MacApp.allAppsMap[pid] {
+                    app.inFlightFocusJobsCount = max(0, app.inFlightFocusJobsCount - 1)
+                }
+            }
+        }) { window, _ in
+            window.set(Ax.isMainAttr, true)
+        }
+    }
+
+    @MainActor
+    var isSuppressingSelfFocusNotifications: Bool {
+        if inFlightFocusJobsCount > 0 { return true }
+        if let lastNativeFocusTime, lastNativeFocusTime.duration(to: .now) < .milliseconds(500) {
+            return true
+        }
+        return false
+    }
+
+    @MainActor
+    func unhideIfHiddenByAeroSpace(forceIfHidden: Bool = false) {
         hideTaskGeneration &+= 1
-        guard isHiddenByAeroSpace else { return }
+        isAutoHideTaskPending = false
+        let shouldUnhide = isHiddenByAeroSpace || (forceIfHidden && !isUnitTest && !config.automaticallyUnhideMacosHiddenApps && nsApp.isHidden)
+        guard shouldUnhide else { return }
         isHiddenByAeroSpace = false
         if !isUnitTest && !serverArgs.isReadOnly && nsApp.isHidden {
             suppressNextUnhideNotification = true
             nsApp.unhide()
+            _ = thread?.runInLoopAsync(job: RunLoopJob(.cancellable), autoCheckCancelled: false) { [axApp] _ in
+                _ = AXUIElementSetAttributeValue(axApp.threadGuarded, kAXHiddenAttribute as CFString, kCFBooleanFalse)
+            }
         }
     }
 
@@ -185,8 +249,10 @@ final class MacApp: AbstractApp {
 
     @MainActor
     func markExternallyUnhiddenOrActivated() {
+        needsWindowRefresh = true
         guard isHiddenByAeroSpace else { return }
         hideTaskGeneration &+= 1
+        isAutoHideTaskPending = false
         isHiddenByAeroSpace = false
         preventAutoHideUntil = ContinuousClock.now.advanced(by: .seconds(1))
     }
@@ -197,14 +263,24 @@ final class MacApp: AbstractApp {
         if let until = preventAutoHideUntil, ContinuousClock.now < until { return }
         if isHiddenByAeroSpace && nsApp.isHidden { return }
         if nsApp.isHidden { return } // Already hidden by the user (Cmd+H)
+        if isAutoHideTaskPending { return }
 
         hideTaskGeneration &+= 1
+        isAutoHideTaskPending = true
         let generation = hideTaskGeneration
         Task.startUnstructured { @MainActor [weak self] in
             guard let self else { return }
+            defer {
+                if self.hideTaskGeneration == generation {
+                    self.isAutoHideTaskPending = false
+                }
+            }
             // Wait for any pending corner setAxFrame jobs queued on this app's AX thread
             // so all windows are parked in the hide corner before hiding the app.
             _ = try? await self.thread?.runInLoop(.cancellable) { _ in () }
+            if self.nsApp.isActive {
+                try? await Task.sleep(for: .milliseconds(120))
+            }
             guard self.hideTaskGeneration == generation,
                   TrayMenuModel.shared.isEnabled,
                   !serverArgs.isReadOnly,
@@ -213,6 +289,9 @@ final class MacApp: AbstractApp {
             else { return }
             if let until = self.preventAutoHideUntil, ContinuousClock.now < until { return }
             guard self.isEligibleForAeroSpaceAutoHide() else { return }
+            if self.nsApp.isActive {
+                MacApp.lastAeroSpaceActiveAppHideTime = .now
+            }
             self.isHiddenByAeroSpace = true
             self.suppressNextHideNotification = true
             self.nsApp.hide()
@@ -221,14 +300,14 @@ final class MacApp: AbstractApp {
 
     @MainActor
     func isEligibleForAeroSpaceAutoHide() -> Bool {
+        if needsWindowRefresh || isDetachingTabToNewWindow { return false }
         if focus.windowOrNil?.app.pid == pid { return false }
         for node in macosPopupWindowsContainer.children {
             if (node as? Window)?.app.pid == pid { return false }
         }
         var hasInvisibleWorkspaceWindows = false
         for workspace in Workspace.all {
-            let hasWindowInWorkspace = workspace.allLeafWindowsRecursive.contains { $0.app.pid == pid }
-            if hasWindowInWorkspace {
+            for window in workspace.allLeafWindowsRecursive where window.app.pid == pid {
                 if workspace.isVisible {
                     return false
                 }
@@ -247,11 +326,27 @@ final class MacApp: AbstractApp {
         return hasInvisibleWorkspaceWindows
     }
 
+    func waitForPendingAxJobs() async {
+        if isUnitTest || serverArgs.isReadOnly { return }
+        _ = try? await thread?.runInLoop(.cancellable) { _ in () }
+    }
+
     func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp] window, job in
-            try disableAnimations(app: axApp.threadGuarded, job) {
-                try setFrame(window, topLeft, size, job)
+        setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable, onComplete: {
+            Task.startUnstructured { @MainActor in
+                if let win = MacWindow.allWindowsMap[windowId] {
+                    win.inFlightSetFrameCount = max(0, win.inFlightSetFrameCount - 1)
+                    win.lastSetFrameTime = .now
+                }
+            }
+        }) { [axApp] window, job in
+            if size != nil {
+                try disableAnimations(app: axApp.threadGuarded, job) {
+                    try setFrame(window, topLeft, size, job)
+                }
+            } else {
+                try setFrame(window, topLeft, nil, job)
             }
         }
     }
@@ -338,10 +433,31 @@ final class MacApp: AbstractApp {
         } ?? [:]
     }
 
+    @MainActor
+    func updateCachedTitle(_ windowId: UInt32, _ title: String) {
+        cachedTitles[windowId] = title
+    }
+
+    @MainActor
     func getAxTitle(_ windowId: UInt32, _ cm: CancellationMode) async throws -> String? {
-        try await withWindow(windowId, cm) { window, job in
+        if !isUnitTest, let cached = cachedTitles[windowId], (!cached.isEmpty || nsApp.isHidden) {
+            if !nsApp.isHidden {
+                _ = withWindowAsync(windowId, .cancellable) { [pid] window, _ in
+                    guard let title = window.get(Ax.titleAttr) else { return }
+                    Task.startUnstructured { @MainActor in
+                        MacApp.allAppsMap[pid]?.cachedTitles[windowId] = title
+                    }
+                }
+            }
+            return cached
+        }
+        let title = try await withWindow(windowId, cm) { window, job in
             window.get(Ax.titleAttr)
         }
+        if let title {
+            cachedTitles[windowId] = title
+        }
+        return title
     }
 
     func isMacosNativeFullscreen(_ windowId: UInt32, _ cm: CancellationMode) async throws -> Bool? {
@@ -397,15 +513,28 @@ final class MacApp: AbstractApp {
         }
     }
 
+    @MainActor
     private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [UInt32] {
         if nsApp.isTerminated {
             await destroy()
             return []
         }
+        if !isUnitTest && hasCompletedInitialWindowRefresh && !needsWindowRefresh {
+            switch refreshSessionEvent {
+                case .startup:
+                    break
+                case .globalObserverLeftMouseUp where nsApp.bundleIdentifier == frontmostAppBundleId:
+                    break
+                default:
+                    return cachedAliveWindowIds
+            }
+        }
         guard let thread else { return [] }
-        let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
+        let existingTitleIds = Set(cachedTitles.keys)
+        let (alive, dead, newTitles) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32], [UInt32: String]) in
             var alive: [UInt32: AxWindow] = windows.threadGuarded
             var dead = [UInt32: AxWindow]()
+            var newTitles: [UInt32: String] = [:]
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
@@ -417,15 +546,26 @@ final class MacApp: AbstractApp {
 
             for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
                 try job.checkCancellation()
-                try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
+                if let axWin = try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job),
+                   !existingTitleIds.contains(id)
+                {
+                    newTitles[id] = axWin.ax.get(Ax.titleAttr) ?? ""
+                }
             }
 
             windows.threadGuarded = alive
-            return (Array(alive.keys), Array(dead.keys))
+            return (Array(alive.keys), Array(dead.keys), newTitles)
         }
+        hasCompletedInitialWindowRefresh = true
+        needsWindowRefresh = false
         windowsCount = alive.count
+        cachedAliveWindowIds = alive
+        for (windowId, title) in newTitles {
+            cachedTitles[windowId] = title
+        }
         for windowId in dead {
             setFrameJobs.removeValue(forKey: windowId)?.cancel()
+            cachedTitles.removeValue(forKey: windowId)
         }
         return alive
     }
@@ -451,11 +591,28 @@ final class MacApp: AbstractApp {
         }
     }
 
-    private func withWindowAsync(_ windowId: UInt32, _ cm: CancellationMode, _ body: @Sendable @escaping (AXUIElement, RunLoopJob) throws -> ()) -> RunLoopJob {
-        thread?.runInLoopAsync(job: RunLoopJob(cm)) { [windows] job in
+    private func withWindowAsync(
+        _ windowId: UInt32,
+        _ cm: CancellationMode,
+        onComplete: (@Sendable () -> ())? = nil,
+        _ body: @Sendable @escaping (AXUIElement, RunLoopJob) throws -> (),
+    ) -> RunLoopJob {
+        guard let thread else {
+            onComplete?()
+            return .cancelled
+        }
+        return thread.runInLoopAsync(job: RunLoopJob(cm), autoCheckCancelled: false) { [windows] job in
+            defer {
+                if let onComplete {
+                    _ = Thread.current.runInLoopAsync(job: RunLoopJob(.nonCancellable), autoCheckCancelled: false) { _ in
+                        onComplete()
+                    }
+                }
+            }
+            if job.isCancelled { return }
             guard let window = windows.threadGuarded[windowId] else { return }
             try? body(window.ax, job)
-        } ?? .cancelled
+        }
     }
 }
 
@@ -480,6 +637,16 @@ private final class AxWindow {
         ]
         let subscriptions = try unsafe AxSubscription.bulkSubscribe(nsApp, ax, job, handlers)
         return !subscriptions.isEmpty ? AxWindow(windowId: windowId, ax, subscriptions) : nil
+    }
+}
+
+private func titleChangedObs(_: AXObserver, ax: AXUIElement, _: CFString, _: UnsafeMutableRawPointer?) {
+    guard let pid = axTaskLocalAppThreadToken?.pid,
+          let windowId = ax.containingWindowId(),
+          let title = ax.get(Ax.titleAttr)
+    else { return }
+    Task.startUnstructured { @MainActor in
+        MacApp.allAppsMap[pid]?.updateCachedTitle(windowId, title)
     }
 }
 

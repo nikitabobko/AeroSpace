@@ -16,6 +16,25 @@ extension TreeNode {
         return result
     }
 
+    private func visitMru(node: TreeNode, result: inout [Window]) {
+        if let node = node as? Window {
+            result.append(node)
+        }
+        let mruList = Array(node.mruChildren)
+        for child in mruList {
+            visitMru(node: child, result: &result)
+        }
+        for child in node.children where !mruList.contains(child) {
+            visitMru(node: child, result: &result)
+        }
+    }
+
+    var allLeafWindowsRecursiveMru: [Window] {
+        var result: [Window] = []
+        visitMru(node: self, result: &result)
+        return result
+    }
+
     var ownIndex: Int? {
         guard let parent else { return nil }
         return parent.children.firstIndex(of: self).orDie()
