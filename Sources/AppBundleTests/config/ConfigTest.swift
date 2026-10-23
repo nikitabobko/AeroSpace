@@ -35,7 +35,7 @@ final class ConfigTest: XCTestCase {
         assertEquals(fan.config.accordionStyle, .fan)
 
         let invalid = parseConfig("config-version = 2\naccordion-style = 'spiral'")
-        assertEquals(invalid.strErrors, ["accordion-style: Can't parse accordion style 'spiral'. Possible values: classic, fan"])
+        assertEquals(invalid.strErrors, ["[ERROR] accordion-style: Can't parse accordion style 'spiral'. Possible values: classic, fan"])
     }
 
     func testConfigVersionOutOfBounds() {
