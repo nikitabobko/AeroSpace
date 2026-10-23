@@ -113,6 +113,10 @@ final class MacWindow: Window {
         macApp.nativeFocus(windowId)
     }
 
+    override func raise(_ cm: CancellationMode) async throws {
+        try await macApp.raise(windowId, cm)
+    }
+
     override func closeAxWindow() {
         garbageCollect(skipClosedWindowsCache: true)
         macApp.closeAndUnregisterAxWindow(windowId)

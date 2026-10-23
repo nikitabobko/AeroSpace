@@ -45,7 +45,10 @@ func runHeavyCompleteRefreshSession(
             updateTrayText()
             SecureInputPanel.shared.refresh()
             try await normalizeLayoutReason()
-            if shouldLayoutWorkspaces { try await layoutWorkspaces() }
+            if shouldLayoutWorkspaces {
+                try await layoutWorkspaces()
+                try await restackFanAccordion(preempt: false) // macOS might have changed the stacking (clicks, cmd-tab, new windows)
+            }
         }
     }
     switch res {
@@ -75,14 +78,15 @@ func runLightSession<T>(
         let result = try await body()
         await refreshModel_nonCancellable()
 
-        let focusAfter = focus.windowOrNil
-
         updateTrayText()
         SecureInputPanel.shared.refresh()
-        // AX requests of the same app run sequentially. If the focus moves within the same workspace, raise the window
-        // before the layout. Otherwise, the raise waits for the frames of all the app windows to be set, and the
-        // previously focused window flashes in its new frame. (Within the same workspace, the window is already
-        // visible, so it's safe to raise it before the layout)
+        if !event.isFocusFollowsMouse { try await restackFanAccordion(preempt: true) }
+        // Read the focus after the suspension points. Concurrent sessions (e.g. quickly repeated hotkeys) might have
+        // changed it, and macOS must end up with the latest focus
+        let focusAfter = focus.windowOrNil
+        // AX requests of the same app run sequentially. If the focus moves within the same workspace, focus the window
+        // before the layout. Otherwise, the focus waits until the frames of all the app windows are set. (Within the
+        // same workspace, the window is already visible, so it's safe to focus it before the layout)
         let nativeFocusBeforeLayout = focusBefore != focusAfter && focusBefore?.visualWorkspace == focusAfter?.visualWorkspace
         if nativeFocusBeforeLayout {
             focusAfter?.nativeFocus() // syncFocusToMacOs

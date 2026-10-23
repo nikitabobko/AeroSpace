@@ -95,6 +95,7 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     case resetManipulatedWithMouse
     case ax(String)
     case focusFollowsMouse
+    case expectedNativeFocusTimeout
 
     public var isStartup: Bool {
         if case .startup = self { return true } else { return false }
@@ -116,6 +117,7 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
             case .socketServer(let args): "socketServer: \(args)"
             case .startup: "startup"
             case .focusFollowsMouse: "focusFollowsMouse"
+            case .expectedNativeFocusTimeout: "expectedNativeFocusTimeout"
         }
     }
 }

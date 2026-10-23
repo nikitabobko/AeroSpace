@@ -147,6 +147,13 @@ final class MacApp: AbstractApp {
         }
     }
 
+    func raise(_ windowId: UInt32, _ cm: CancellationMode) async throws {
+        if serverArgs.isReadOnly { return }
+        _ = try await withWindow(windowId, cm) { window, job in
+            AXUIElementPerformAction(window, kAXRaiseAction as CFString) == .success
+        }
+    }
+
     func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp] window, job in
