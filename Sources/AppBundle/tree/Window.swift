@@ -36,8 +36,6 @@ open class Window: TreeNode, Hashable {
     func isMacosMinimized(_ cm: CancellationMode) async throws -> Bool { false } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
     var isHiddenInCorner: Bool { die("Not implemented") }
     @MainActor func nativeFocus() { die("Not implemented") }
-    /// Bring the window to the front without focusing it
-    func raise(_ cm: CancellationMode) async throws { die("Not implemented") }
     func getAxRect(_ cm: CancellationMode) async throws -> Rect? { die("Not implemented") }
     func getCenter(_ cm: CancellationMode) async throws -> CGPoint? { try await getAxRect(cm)?.center }
 
