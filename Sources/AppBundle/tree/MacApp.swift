@@ -306,16 +306,26 @@ final class MacApp: AbstractApp {
         let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
             var alive: [UInt32: AxWindow] = windows.threadGuarded
             var dead = [UInt32: AxWindow]()
+            var isAppUnresponsive = false
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
                 (alive, dead) = try alive.partition {
                     try job.checkCancellation()
-                    return $0.value.ax.containingWindowId() != nil
+                    if isAppUnresponsive { return isWindowOnScreen($0.key) }
+                    switch $0.value.ax.containingWindowIdError() {
+                        case .success: return true
+                        // the app hangs or is too busy to respond. Don't mistake it for a closed window
+                        // https://github.com/nikitabobko/AeroSpace/issues/1216
+                        case .cannotComplete:
+                            isAppUnresponsive = true
+                            return isWindowOnScreen($0.key)
+                        default: return false
+                    }
                 }
             }
 
-            for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
+            for (id, window) in isAppUnresponsive ? [] : axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
                 try job.checkCancellation()
                 try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
             }
@@ -406,6 +416,11 @@ private func getAxRect(window: AXUIElement, job: RunLoopJob) throws -> Rect? {
     try job.checkCancellation()
     guard let size = window.get(Ax.sizeAttr) else { return nil }
     return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
+}
+
+private func isWindowOnScreen(_ windowId: UInt32) -> Bool {
+    let info = (CGWindowListCopyWindowInfo(.optionIncludingWindow, windowId) as? [[String: Any]])?.first
+    return info?[kCGWindowIsOnscreen as String] as? Bool == true
 }
 
 private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob) throws {
