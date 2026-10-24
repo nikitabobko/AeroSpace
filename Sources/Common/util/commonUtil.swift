@@ -104,6 +104,35 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
         if case .focusFollowsMouse = self { return true } else { return false }
     }
 
+    public var isReadOnlyOrExecAndForget: Bool {
+        switch self {
+            case .socketServer(let args):
+                args is ListWorkspacesCmdArgs ||
+                    args is ListWindowsCmdArgs ||
+                    args is ListAppsCmdArgs ||
+                    args is ListMonitorsCmdArgs ||
+                    args is ListModesCmdArgs ||
+                    args is ListExecEnvVarsCmdArgs ||
+                    args is ConfigCmdArgs ||
+                    args is ExecAndForgetCmdArgs
+            default:
+                false
+        }
+    }
+
+    public var isWorkspaceSwitch: Bool {
+        switch self {
+            case .socketServer(let args):
+                args is WorkspaceCmdArgs ||
+                    args is WorkspaceBackAndForthCmdArgs ||
+                    args is SummonWorkspaceCmdArgs
+            case .menuBarButton:
+                true
+            default:
+                false
+        }
+    }
+
     public var description: String {
         switch self {
             case .ax(let str): "ax(\(str))"

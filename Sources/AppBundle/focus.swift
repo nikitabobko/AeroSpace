@@ -26,6 +26,8 @@ struct LiveFocus: AeroAny, Equatable {
     }
 }
 
+@MainActor var stickyClosedAppPidOnCurrentWorkspace: pid_t? = nil
+
 /// "old", "captured", "frozen in time" Focus
 /// It's safe to keep a hard reference to this object.
 /// Unlike in LiveFocus, information inside FrozenFocus isn't guaranteed to be self-consistent.
@@ -39,6 +41,10 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
     @MainActor var live: LiveFocus { // Important: don't access focus.monitorId here. monitorId is not part of the focus. Always prefer workspace
         let window: Window? = windowId.flatMap { Window.get(byId: $0) }
         let workspace = Workspace.get(byName: workspaceName)
+
+        if !isUnitTest && window == nil && stickyClosedAppPidOnCurrentWorkspace != nil {
+            return LiveFocus(windowOrNil: nil, workspace: workspace)
+        }
 
         let workspaceFocus = workspace.toLiveFocus()
         let windowFocus = window?.toLiveFocusOrNil() ?? workspaceFocus
@@ -61,6 +67,9 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
 @MainActor var focus: LiveFocus { _focus.live }
 
 @MainActor func setFocus(to newFocus: LiveFocus) -> Bool {
+    if newFocus.windowOrNil != nil || newFocus.workspace.name != _focus.workspaceName {
+        stickyClosedAppPidOnCurrentWorkspace = nil
+    }
     if _focus == newFocus.frozen { return true }
     let oldFocus = focus
     // Normalize mruWindow when focus away from a workspace

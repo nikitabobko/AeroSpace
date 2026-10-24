@@ -21,6 +21,9 @@ import Foundation
         GlobalObserver.initObserver()
         Workspace.garbageCollectUnusedWorkspaces() // init workspaces
         _ = Workspace.all.first?.focusWorkspace()
+        for nsApp in NSWorkspace.shared.runningApplications where nsApp.activationPolicy == .regular && nsApp.isHidden {
+            nsApp.unhide()
+        }
         await runHeavyCompleteRefreshSession(
             .startup,
             // It's important for the first initialization to be non cancellable

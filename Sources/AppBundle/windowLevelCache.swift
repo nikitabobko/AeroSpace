@@ -1,8 +1,20 @@
+import Common
 import CoreGraphics
 import Foundation
 
 @MainActor
 private var cache: [UInt32: MacOsWindowLevel] = [:]
+
+func getCgWindowRect(for windowId: UInt32) -> Rect? {
+    guard let cfArray = CGWindowListCopyWindowInfo(.optionIncludingWindow, CGWindowID(windowId)) as? [CFDictionary],
+          let elem = cfArray.first
+    else { return nil }
+    let dict = elem as NSDictionary
+    guard let boundsObj = dict[kCGWindowBounds] else { return nil }
+    var cgRect = CGRect.zero
+    guard unsafe CGRectMakeWithDictionaryRepresentation(boundsObj as! CFDictionary, &cgRect) else { return nil }
+    return Rect(topLeftX: cgRect.origin.x, topLeftY: cgRect.origin.y, width: cgRect.size.width, height: cgRect.size.height)
+}
 
 @MainActor
 func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
