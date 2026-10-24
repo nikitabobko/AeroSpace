@@ -5,7 +5,6 @@ import Foundation
 @MainActor
 private var cache: [UInt32: MacOsWindowLevel] = [:]
 
-@MainActor
 func getCgWindowRect(for windowId: UInt32) -> Rect? {
     guard let cfArray = CGWindowListCopyWindowInfo(.optionIncludingWindow, CGWindowID(windowId)) as? [CFDictionary],
           let elem = cfArray.first

@@ -75,10 +75,8 @@ extension Window {
             let workspace = context.workspace
             let windowRect: Rect? = if isUnitTest {
                 try await getAxRect(.cancellable) // Probably not idempotent
-            } else if let macWin = self as? MacWindow {
-                macWin.expectedUnhiddenRect() ?? getCgWindowRect(for: windowId)
             } else {
-                try await getAxRect(.cancellable)
+                getCgWindowRect(for: windowId)
             }
             let currentMonitor = windowRect?.center.monitorApproximation
             if let currentMonitor, let windowRect, workspace != currentMonitor.activeWorkspace {

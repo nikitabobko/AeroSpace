@@ -11,6 +11,9 @@ func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableR
     Task.startUnstructured { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId) else { return }
+        if !isUnitTest && window.isFloating && !window.isHiddenInCorner && monitorInfos.count <= 1 {
+            return
+        }
         guard try await isManipulatedWithMouse(window) else {
             if let macWindow = window as? MacWindow {
                 if macWindow.isSuppressingMoveResizeNotifications {

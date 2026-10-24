@@ -11,6 +11,12 @@ func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutabl
     Task.startUnstructured { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId) else { return }
+        if !isUnitTest, let macWindow = window as? MacWindow, macWindow.isFloating && !macWindow.isHiddenInCorner {
+            if let cgRect = getCgWindowRect(for: macWindow.windowId) {
+                macWindow.lastFloatingSize = cgRect.size
+            }
+            return
+        }
         guard try await isManipulatedWithMouse(window) else {
             if let macWindow = window as? MacWindow {
                 if macWindow.isSuppressingMoveResizeNotifications {

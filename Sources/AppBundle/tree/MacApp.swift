@@ -226,6 +226,20 @@ final class MacApp: AbstractApp {
             _ = thread?.runInLoopAsync(job: RunLoopJob(.cancellable), autoCheckCancelled: false) { [axApp] _ in
                 _ = AXUIElementSetAttributeValue(axApp.threadGuarded, kAXHiddenAttribute as CFString, kCFBooleanFalse)
             }
+            Task.startUnstructured { @MainActor [weak self] in
+                for delayMs in [60, 180] {
+                    try? await Task.sleep(for: .milliseconds(delayMs))
+                    guard let self, !self.nsApp.isHidden else { return }
+                    for workspace in Workspace.all where !workspace.isVisible {
+                        for window in workspace.allLeafWindowsRecursive where window.app.pid == self.pid {
+                            let macWin = window as! MacWindow
+                            if !macWin.isCurrentlyInHideCorner() {
+                                try? await macWin.hideInCorner(.bottomRightCorner)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -301,7 +315,7 @@ final class MacApp: AbstractApp {
     @MainActor
     func isEligibleForAeroSpaceAutoHide() -> Bool {
         if needsWindowRefresh || isDetachingTabToNewWindow { return false }
-        if focus.windowOrNil?.app.pid == pid { return false }
+        if focus.windowOrNil?.app.pid == pid || stickyClosedAppPidOnCurrentWorkspace == pid || (focus.windowOrNil == nil && nsApp.isActive) { return false }
         for node in macosPopupWindowsContainer.children {
             if (node as? Window)?.app.pid == pid { return false }
         }
