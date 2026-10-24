@@ -15,6 +15,9 @@ func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableR
               let pid,
               let window = Window.get(byNativeId: nativeWindowId, pid: pid)
         else { return }
+        if !isUnitTest && window.isFloating && !window.isHiddenInCorner && globalUnsortedMonitorInfos.count <= 1 {
+            return
+        }
         guard try await isManipulatedWithMouse(window) else {
             if let macWindow = window as? MacWindow {
                 if macWindow.isSuppressingMoveResizeNotifications {

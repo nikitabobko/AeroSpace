@@ -80,7 +80,7 @@ extension Window {
             let windowRect: Rect? = if isUnitTest {
                 try await getAxRect(.cancellable) // Probably not idempotent
             } else if let macWin = self as? MacWindow {
-                macWin.expectedUnhiddenRect() ?? getCgWindowRect(for: macWin)
+                getCgWindowRect(for: macWin)
             } else {
                 try await getAxRect(.cancellable)
             }

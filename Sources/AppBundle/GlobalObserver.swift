@@ -19,6 +19,9 @@ enum GlobalObserver {
                         return
                     }
                     app.markExternallyUnhiddenOrActivated()
+                    if app.rawAppBundleId == "com.google.Chrome" {
+                        await app.checkForNewlyOpenedExternalChromeTab()
+                    }
                 } else if notifName == NSWorkspace.didActivateApplicationNotification.rawValue {
                     onAppActivatedInWorkspace(notifPid)
                     if (app.isSuppressingSelfFocusNotifications || !app.isHiddenByAeroSpace) && globalFocus.windowOrNil?.app.pid == app.pid {
@@ -33,6 +36,9 @@ enum GlobalObserver {
                         return
                     }
                     app.markExternallyUnhiddenOrActivated()
+                    if app.rawAppBundleId == "com.google.Chrome" {
+                        await app.checkForNewlyOpenedExternalChromeTab()
+                    }
                 }
             }
             if notifName == NSWorkspace.didActivateApplicationNotification.rawValue {
@@ -100,6 +106,14 @@ enum GlobalObserver {
                     //  And trigger new window detection that could be delayed due to mouseDown event
                     default:
                         scheduleCancellableCompleteRefreshSession(.globalObserverLeftMouseUp)
+                        if globalFocus.windowOrNil?.app.rawAppBundleId != "com.google.Chrome" {
+                            for delayMs in [120, 320] {
+                                try? await Task.sleep(for: .milliseconds(delayMs))
+                                for app in MacApp.allAppsMap.values where app.rawAppBundleId == "com.google.Chrome" {
+                                    await app.checkForNewlyOpenedExternalChromeTab()
+                                }
+                            }
+                        }
                 }
             }
         }

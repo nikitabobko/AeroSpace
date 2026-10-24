@@ -15,6 +15,12 @@ func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutabl
               let pid,
               let window = Window.get(byNativeId: nativeWindowId, pid: pid)
         else { return }
+        if !isUnitTest, let macWindow = window as? MacWindow, macWindow.isFloating && !macWindow.isHiddenInCorner {
+            if let cgRect = getCgWindowRect(for: macWindow) {
+                macWindow.lastFloatingSize = cgRect.size
+            }
+            return
+        }
         guard try await isManipulatedWithMouse(window) else {
             if let macWindow = window as? MacWindow {
                 if macWindow.isSuppressingMoveResizeNotifications {
