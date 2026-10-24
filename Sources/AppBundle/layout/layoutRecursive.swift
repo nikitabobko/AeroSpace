@@ -35,7 +35,7 @@ extension TreeNode {
                 } else {
                     try await windows.mapConcurrently { window in
                         if !isUnitTest, let macWin = window as? MacWindow {
-                            return macWin.expectedUnhiddenRect() ?? getCgWindowRect(for: macWin)
+                            return getCgWindowRect(for: macWin)
                         }
                         return try await window.getAxRect(.cancellable) // Probably not idempotent
                     }

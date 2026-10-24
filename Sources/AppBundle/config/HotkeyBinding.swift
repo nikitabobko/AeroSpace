@@ -173,15 +173,14 @@ private func handleFastHotkeyExecIfPossible(_ bashScript: String) async throws -
                 $0.app.rawAppBundleId == "com.googlecode.iterm2"
             }
             if !matching.isEmpty {
-                let targetWin: Window
-                if matching.count == 1 {
-                    targetWin = matching[0]
+                let targetWin: Window = if matching.count == 1 {
+                    matching[0]
                 } else if let focusedId = globalFocus.windowOrNil?.windowId,
                           let idx = matching.firstIndex(where: { $0.windowId == focusedId })
                 {
-                    targetWin = matching[(idx + 1) % matching.count]
+                    matching[(idx + 1) % matching.count]
                 } else {
-                    targetWin = matching[0]
+                    matching[0]
                 }
                 try await runLightSession(.menuBarButton, guardToken) {
                     _ = targetWin.focusWindow()

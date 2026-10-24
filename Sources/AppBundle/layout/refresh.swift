@@ -238,7 +238,7 @@ private func layoutWorkspaces(allowAutoHide: Bool = true, focusToSync: Window? =
 
     // to reduce flicker, first unhide visible workspaces, then hide invisible ones
     var didSyncFocus = false
-    var monitorsWithHiddenWindows: Set<CGPoint> = []
+    var monitorsWithHiddenWindows: Set<Point> = []
     for monitor in monitors {
         let workspace = monitor.visibleWorkspace
         let mruWindows = workspace.allLeafWindowsRecursiveMru.map { $0 as! MacWindow } // todo as!
