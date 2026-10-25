@@ -194,7 +194,13 @@ private func layoutWorkspaces() async throws {
         try await workspace.layoutWorkspace()
     }
     for workspace in Workspace.all where !workspace.isVisible {
-        let corner = monitorToOptimalHideCorner[workspace.workspaceMonitor.rect.topLeftCorner] ?? .bottomRightCorner
+        let monitorPoint = workspace.workspaceMonitor.rect.topLeftCorner
+        // https://github.com/nikitabobko/AeroSpace/issues/1287
+        // If the visible workspace on the monitor consists of a single tiling window, it overlaps
+        // windows of other (invisible) workspaces on this monitor anyway, so don't waste AX
+        // requests on moving those windows to the corner of the screen
+        if workspace.workspaceMonitor.doesVisibleWorkspaceCoverMonitor { continue }
+        let corner = monitorToOptimalHideCorner[monitorPoint] ?? .bottomRightCorner
         for window in workspace.allLeafWindowsRecursive {
             try await (window as! MacWindow).hideInCorner(corner) // todo as!
         }
