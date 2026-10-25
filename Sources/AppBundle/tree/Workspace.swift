@@ -121,9 +121,23 @@ extension MonitorInfo {
         }
         // What if monitor configuration changed? (frame.origin is changed)
         rearrangeWorkspacesOnMonitors()
-        // Normally, recursion should happen only once more because we must take the value from the cache
-        // (Unless, monitor configuration data race happens)
-        return self.activeWorkspace
+        // Normally, the value must already be in the cache after the rearrangement
+        if let existing = screenPointToVisibleWorkspace[rect.topLeftCorner] {
+            return existing
+        }
+        // Otherwise, this MonitorInfo is stale: the display configuration changed while the caller
+        // was suspended at an async call site (e.g. layoutWorkspaces holds MonitorInfo across awaits).
+        // Recursing again cannot terminate. Degrade to the workspace of the currently attached
+        // monitor that is the closest to this one's position.
+        // https://github.com/nikitabobko/AeroSpace/issues/506
+        if let nearestSeated = monitorInfos
+            .map(\.rect.topLeftCorner)
+            .minBy({ ($0 - rect.topLeftCorner).vectorLength })
+            .flatMap({ screenPointToVisibleWorkspace[$0] })
+        {
+            return nearestSeated
+        }
+        return getStubWorkspace(for: mainMonitorInfo)
     }
 
     @MainActor

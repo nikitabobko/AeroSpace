@@ -94,6 +94,17 @@ private let testMonitorInfo = MonitorInfoImpl(
     isMain: true,
 )
 
+// Test hook. Used by AppBundleTests to simulate stale monitors of a changed display configuration
+func newTestMonitorInfo(rect: Rect, isMain: Bool) -> MonitorInfo {
+    MonitorInfoImpl(
+        monitorAppKitNsScreenScreensId: -1,
+        name: "Test Monitor \(rect.topLeftCorner)",
+        rect: rect,
+        visibleRect: rect,
+        isMain: isMain,
+    )
+}
+
 var mainMonitorInfo: MonitorInfo {
     if isUnitTest { return testMonitorInfo }
     let screens = NSScreen.screens
