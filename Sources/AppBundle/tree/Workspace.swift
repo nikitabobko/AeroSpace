@@ -130,6 +130,15 @@ extension MonitorInfo {
     func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         rect.topLeftCorner.setActiveWorkspace(workspace)
     }
+
+    /// - See: https://github.com/nikitabobko/AeroSpace/issues/1287
+    ///
+    /// If the visible workspace on the monitor consists of a single tiling window,
+    /// it overlaps windows of other (invisible) workspaces on this monitor anyway.
+    @MainActor
+    var doesVisibleWorkspaceCoverMonitor: Bool {
+        activeWorkspace.rootTilingContainer.allLeafWindowsRecursive.count == 1
+    }
 }
 
 @MainActor
