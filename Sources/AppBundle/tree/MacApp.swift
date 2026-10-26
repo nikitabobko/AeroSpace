@@ -21,6 +21,9 @@ final class MacApp: AbstractApp {
     /*conforms*/ var name: String? { nsApp.localizedName }
     /*conforms*/ var execPath: String? { nsApp.executableURL?.path }
     /*conforms*/ var bundlePath: String? { nsApp.bundleURL?.path }
+    // NSRunningApplication.isTerminated is updated a few milliseconds after the process exits,
+    // later than macOS activates the next app
+    /*conforms*/ var isTerminated: Bool { nsApp.isTerminated || kill(pid, 0) != 0 && errno == ESRCH }
 
     // todo think if it's possible to integrate this global mutable state to https://github.com/nikitabobko/AeroSpace/issues/1215
     //      and make deinitialization automatic in deinit

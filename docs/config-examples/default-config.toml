@@ -46,6 +46,11 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
+# When the app of the focused window quits, macOS activates the app that was used before it,
+# which is often on another workspace, and AeroSpace follows it there.
+# Set to true to stay on the current workspace instead
+stay-on-workspace-when-app-quits = false
+
 # List of workspaces that should stay alive even when they contain no windows,
 # even when they are invisible.
 # This config option is only available since 'config-version = 2'
