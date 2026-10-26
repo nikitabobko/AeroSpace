@@ -29,6 +29,30 @@ final class TreeNodeTest: XCTestCase {
         XCTAssertTrue(!workspace.isEffectivelyEmpty)
     }
 
+    func testToLiveFocus_skipsEmptyFloatingContainer() {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            assertTrue(TestWindow.new(id: 2, parent: $0).focusWindow())
+        }
+        let dialog = TestWindow.new(id: 3, parent: workspace.floatingWindowsContainer)
+        assertTrue(dialog.focusWindow())
+
+        dialog.unbindFromParent()
+        assertEquals(workspace.toLiveFocus().windowOrNil?.windowId, 2)
+    }
+
+    func testToLiveFocus_skipsEmptyTilingContainer() {
+        let workspace = Workspace.get(byName: name)
+        TestWindow.new(id: 1, parent: workspace.floatingWindowsContainer)
+        assertTrue(TestWindow.new(id: 2, parent: workspace.floatingWindowsContainer).focusWindow())
+        let tilingWindow = TestWindow.new(id: 3, parent: workspace.rootTilingContainer)
+        assertTrue(tilingWindow.focusWindow())
+
+        tilingWindow.unbindFromParent()
+        assertEquals(workspace.toLiveFocus().windowOrNil?.windowId, 2)
+    }
+
     func testNormalizeContainers_dontRemoveRoot() {
         let workspace = Workspace.get(byName: name)
         weak let root = workspace.rootTilingContainer

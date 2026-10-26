@@ -50,6 +50,16 @@ extension TreeNode {
         self as? Window ?? mostRecentChild?.mostRecentWindowRecursive
     }
 
+    /// Unlike mostRecentWindowRecursive, skips the MRU children that don't contain windows.
+    /// E.g. floatingWindowsContainer stays the most recent child of the workspace after its last window is closed
+    var mostRecentNonEmptyWindowRecursive: Window? {
+        if let window = self as? Window { return window }
+        for child in mruChildren {
+            if let window = child.mostRecentNonEmptyWindowRecursive { return window }
+        }
+        return nil
+    }
+
     var anyLeafWindowRecursive: Window? {
         if let window = self as? Window {
             return window
