@@ -23,6 +23,9 @@ import AppKit
         focusFollowsTask?.cancel()
         focusFollowsTask = Task.startUnstructured { @MainActor in
             guard let token: RunSessionGuard = .isServerEnabled else { return }
+            // Password and Touch ID prompts are accessory agents. They are frontmost, and they are not the
+            // managed window under the pointer, so a hover would focus the tile underneath and dismiss them.
+            if isFocusPinnedByFrontmostApp() { return }
             try checkCancellation()
             // Ignores macOS menubar dropdown, but, unfortunately, it doesn't ignore non-native menu-like fake windows.
             // todo: It would be cool to somehow reuse isWindowHeuristic logic here
@@ -43,6 +46,8 @@ import AppKit
                 window = location.findWindowRecursively(in: workspace.rootTilingContainer, virtual: false, fullscreenCoversAll: true)
             }
             if let window {
+                // The hit-test awaits above can outlive the moment the prompt appears
+                if isFocusPinnedByFrontmostApp() { return }
                 try await runLightSession(.focusFollowsMouse, token) {
                     _ = window.focusWindow()
                     window.nativeFocus()
@@ -50,6 +55,12 @@ import AppKit
             }
         }
     }
+}
+
+@MainActor
+private func isFocusPinnedByFrontmostApp() -> Bool {
+    guard let bundleId = NSWorkspace.shared.frontmostApplication?.bundleIdentifier else { return false }
+    return config.focusFollowsMouse.pinnedApps.contains(bundleId)
 }
 
 @concurrent

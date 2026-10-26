@@ -60,6 +60,17 @@ persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B",
 on-mode-changed = []
 
 focus-follows-mouse.enabled = false
+# While one of these apps is frontmost, hover does not move focus.
+# Fallback when the key is omitted: SecurityAgent, LocalAuthentication.UIAgent, authorizationhost,
+# NetAuthAgent, and loginwindow (system password, Touch ID, and lock-screen prompts).
+# Setting the key replaces that fallback. Repeat those ids to extend the list.
+# focus-follows-mouse.pinned-apps = [
+#     'com.apple.SecurityAgent',
+#     'com.apple.LocalAuthentication.UIAgent',
+#     'com.apple.authorizationhost',
+#     'com.apple.NetAuthAgent',
+#     'com.apple.loginwindow',
+# ]
 
 # Possible values: (qwerty|dvorak|colemak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping

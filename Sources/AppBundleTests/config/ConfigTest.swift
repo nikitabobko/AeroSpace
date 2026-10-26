@@ -208,6 +208,41 @@ final class ConfigTest: XCTestCase {
         assertEquals(result.config.enableNormalizationFlattenContainers, false)
     }
 
+    func testFocusFollowsMousePinnedApps() {
+        let omitted = parseConfig("config-version = 2")
+        assertEquals(omitted.errors, [])
+        assertEquals(omitted.config.focusFollowsMouse.pinnedApps, Set([
+            "com.apple.SecurityAgent",
+            "com.apple.LocalAuthentication.UIAgent",
+            "com.apple.authorizationhost",
+            "com.apple.NetAuthAgent",
+            "com.apple.loginwindow",
+        ]))
+
+        let replaced = parseConfig(
+            """
+            config-version = 2
+            focus-follows-mouse.pinned-apps = ['com.example.one']
+            """,
+        )
+        assertEquals(replaced.errors, [])
+        assertEquals(replaced.config.focusFollowsMouse.pinnedApps, Set(["com.example.one"]))
+
+        let cleared = parseConfig(
+            """
+            config-version = 2
+            focus-follows-mouse.pinned-apps = []
+            """,
+        )
+        assertEquals(cleared.errors, [])
+        assertEquals(cleared.config.focusFollowsMouse.pinnedApps, Set())
+
+        assertEquals(
+            parseConfig("focus-follows-mouse.pinned-apps = ['valid', 123]").strErrors,
+            ["[ERROR] focus-follows-mouse.pinned-apps[1]: Expected type is 'String'. But actual type is 'Int'"],
+        )
+    }
+
     func testTypeMismatch() {
         let errors = parseConfig(
             """

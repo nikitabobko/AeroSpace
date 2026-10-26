@@ -64,7 +64,19 @@ struct Config: ConvenienceMutable {
 }
 
 struct FocusFollowsMouse: ConvenienceMutable {
+    /// Password and biometric prompts. They are accessory agents, not managed windows, and they are frontmost
+    /// while the prompt is up. Hover must not move focus away from them.
+    static let defaultPinnedApps: Set<String> = [
+        "com.apple.SecurityAgent",
+        "com.apple.LocalAuthentication.UIAgent",
+        "com.apple.authorizationhost",
+        "com.apple.NetAuthAgent",
+        lockScreenAppBundleId,
+    ]
+
     var enabled: Bool = false
+    /// While one of these apps is frontmost, hover does not move focus. Setting the config key replaces this set
+    var pinnedApps: Set<String> = FocusFollowsMouse.defaultPinnedApps
 }
 
 enum ConfigVersion: Int, Comparable, CaseIterable, Sendable, CustomStringConvertible {

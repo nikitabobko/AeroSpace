@@ -1,5 +1,6 @@
 private let focusFollowsMouseParserTable: [String: any ParserProtocol<FocusFollowsMouse>] = [
     "enabled": Parser(\.enabled, parseBool),
+    "pinned-apps": Parser(\.pinnedApps, parsePinnedApps),
 ]
 
 func parseFocusFollowsMouse(_ rawConfig: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> FocusFollowsMouse {
