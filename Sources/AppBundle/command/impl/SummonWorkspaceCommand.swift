@@ -16,7 +16,8 @@ struct SummonWorkspaceCommand: Command {
             }
         }
         let prevMonitor = workspace.isVisible ? workspace.workspaceMonitor : nil
-        if monitor.setActiveWorkspace(workspace) {
+        if monitor.setActiveWorkspace(workspace, ignoreForceAssignment: true) {
+            recordUserPlacement(workspace: workspace, monitor: monitor)
             if let prevMonitor {
                 let stubWorkspace = getStubWorkspace(for: prevMonitor)
                 check(
