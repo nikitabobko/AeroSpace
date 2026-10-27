@@ -119,11 +119,28 @@ extension MonitorInfo {
         if let existing = screenPointToVisibleWorkspace[rect.topLeftCorner] {
             return existing
         }
-        // What if monitor configuration changed? (frame.origin is changed)
-        rearrangeWorkspacesOnMonitors()
-        // Normally, recursion should happen only once more because we must take the value from the cache
-        // (Unless, monitor configuration data race happens)
-        return self.activeWorkspace
+        // Re-entrancy guard: rearrangeWorkspacesOnMonitors() can call back into
+        // activeWorkspace (getStubWorkspace -> workspaceMonitor -> monitorApproximation
+        // -> monitors -> activeWorkspace). When several displays reconnect at once the
+        // maps are still incomplete, so that cycle recursed without bound and the
+        // process died with EXC_BAD_ACCESS inside dyld's ObjC class lookup (the crash
+        // stack repeats `Monitor.activeWorkspace.getter` frames).
+        // Only the outermost call rearranges; nested ones take the stub path, which is
+        // what this function already documents as the correct fallback.
+        if !isRearrangingWorkspacesOnMonitors {
+            rearrangeWorkspacesOnMonitors()
+            if let existing = screenPointToVisibleWorkspace[rect.topLeftCorner] {
+                return existing
+            }
+        }
+        // rearrangeWorkspacesOnMonitors() guarantees that every live monitor's top-left corner
+        // ends up in screenPointToVisibleWorkspace. Therefore, a still-missing entry can only
+        // mean that the monitor configuration changed between the cache lookup and the rearrange
+        // (e.g. several displays reconnecting at once). Previously this branch recurred
+        // (return self.activeWorkspace), which under such a reconfiguration recursed without bound
+        // and crashed with "Thread stack size exceeded" (SIGSEGV). Return a proper stub workspace
+        // for this monitor instead — it will be reconciled on the next refresh.
+        return getStubWorkspace(for: self)
     }
 
     @MainActor
@@ -163,7 +180,19 @@ extension CGPoint {
 }
 
 @MainActor
+private var isRearrangingWorkspacesOnMonitors: Bool = false
+
+@MainActor
 private func rearrangeWorkspacesOnMonitors() {
+    // Re-entrancy guard: this function is reached from Monitor.activeWorkspace, and it can
+    // call back into it (getStubWorkspace -> workspaceMonitor -> monitorApproximation ->
+    // monitors -> activeWorkspace). Unguarded, a simultaneous multi-display reconfiguration
+    // recursed until the stack blew and the process died with EXC_BAD_ACCESS in dyld's
+    // ObjC class lookup. The outermost call wins; nested calls return immediately and let
+    // the caller fall back to a stub workspace, which is reconciled on the next refresh.
+    if isRearrangingWorkspacesOnMonitors { return }
+    isRearrangingWorkspacesOnMonitors = true
+    defer { isRearrangingWorkspacesOnMonitors = false }
     let newScreens = monitorInfos.map(\.rect.topLeftCorner)
     var newScreenToOldScreenMapping: [CGPoint: CGPoint] = [:]
     for (oldScreen, _) in screenPointToVisibleWorkspace {
