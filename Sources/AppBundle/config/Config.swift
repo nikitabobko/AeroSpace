@@ -50,6 +50,12 @@ struct Config: ConvenienceMutable {
     var execOnWorkspaceChange: [String] = [] // todo deprecate
     var keyMapping = KeyMapping()
     var execConfig: ExecConfig = ExecConfig()
+    /// When false, a PASSIVE trigger no longer makes a workspace visible: app activation
+    /// (notification banners, background apps, app launch), AX-reported focus changes, display
+    /// events and config reloads are ignored, and the native focus is pulled back to the window
+    /// AeroSpace has focused. Deliberate actions still reveal: hotkeys, CLI commands, the menu
+    /// bar, mouse clicks and focus-follows-mouse. Default true = stock AeroSpace behaviour.
+    var revealWorkspaceOnPassiveFocus: Bool = true
     var focusFollowsMouse: FocusFollowsMouse = FocusFollowsMouse()
 
     var onFocusChanged: Shell<any Command> = .empty
