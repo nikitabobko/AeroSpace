@@ -15,7 +15,10 @@ struct MoveWorkspaceToMonitorCommand: Command {
                 if targetMonitor.monitorId_oneBased == prevMonitor.monitorId_oneBased {
                     return .succ
                 }
-                if targetMonitor.setActiveWorkspace(focusedWorkspace) {
+                // Explicit user action: bypass a stale force assignment and record the placement,
+                // so the workspace stays here next launch and can always be moved again.
+                if targetMonitor.setActiveWorkspace(focusedWorkspace, ignoreForceAssignment: true) {
+                    recordUserPlacement(workspace: focusedWorkspace, monitor: targetMonitor)
                     let stubWorkspace = getStubWorkspace(for: prevMonitor)
                     check(
                         prevMonitor.setActiveWorkspace(stubWorkspace),

@@ -106,8 +106,20 @@ extension Workspace {
     var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
     @MainActor
     var workspaceMonitor: MonitorInfo {
-        forceAssignedMonitor
-            ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation
+        // Durable placement: a workspace the user explicitly put somewhere wins over both a stale
+        // force assignment and the monitor it happens to be visible on right now (a display
+        // disconnect must not silently rewrite intent). Only honoured while that monitor is
+        // connected — otherwise the old fallbacks are used unchanged.
+        let visibleMonitor = visibleWorkspaceToScreenPoint[self]?.monitorApproximation
+        let resolvedName = resolvePlacementMonitorName(
+            workspace: name,
+            forceAssignedName: forceAssignedMonitor?.name,
+            visibleMonitorName: visibleMonitor?.name,
+            persisted: workspacePlacement,
+            availableMonitorNames: monitorInfos.map(\.name).toSet(),
+        )
+        return resolvedName.flatMap { resolved in monitorInfos.first { $0.name == resolved } }
+            ?? visibleMonitor
             ?? assignedMonitorPoint?.monitorApproximation
             ?? mainMonitorInfo
     }
@@ -127,8 +139,8 @@ extension MonitorInfo {
     }
 
     @MainActor
-    func setActiveWorkspace(_ workspace: Workspace) -> Bool {
-        rect.topLeftCorner.setActiveWorkspace(workspace)
+    func setActiveWorkspace(_ workspace: Workspace, ignoreForceAssignment: Bool = false) -> Bool {
+        rect.topLeftCorner.setActiveWorkspace(workspace, ignoreForceAssignment: ignoreForceAssignment)
     }
 }
 
@@ -141,8 +153,8 @@ func gcMonitors() {
 
 extension CGPoint {
     @MainActor
-    fileprivate func setActiveWorkspace(_ workspace: Workspace) -> Bool {
-        if !isValidAssignment(workspace: workspace, screen: self) {
+    fileprivate func setActiveWorkspace(_ workspace: Workspace, ignoreForceAssignment: Bool = false) -> Bool {
+        if !ignoreForceAssignment && !isValidAssignment(workspace: workspace, screen: self) {
             return false
         }
         if let prevMonitorPoint = visibleWorkspaceToScreenPoint[workspace] {
