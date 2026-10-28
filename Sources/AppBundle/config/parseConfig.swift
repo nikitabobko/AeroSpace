@@ -145,7 +145,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "auto-reload-config": Parser(\.autoReloadConfig, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
-    "accordion-padding": Parser(\.accordionPadding, parseInt),
+    "accordion-padding": Parser(\.accordionPadding, parseAccordionPadding),
     persistentWorkspacesKey: Parser(\.persistentWorkspaces, parsePersistentWorkspaces),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
     "exec": Parser(\.execConfig, parseExecConfig),
@@ -327,6 +327,17 @@ func parseConfigVersion(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> Res
 
 func parseInt(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<Int> {
     raw.asIntOrNil.toResult(expectedActualTypeDiagnostic(expected: .int, actual: raw.tomlType, backtrace))
+}
+
+func parseAccordionPadding(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<AccordionPadding> {
+    if let points = raw.asIntOrNil { return .success(.points(points)) }
+    guard let string = raw.asStringOrNil else {
+        return .failure(expectedActualTypeDiagnostic(expected: [.int, .string], actual: raw.tomlType, backtrace))
+    }
+    guard string.hasSuffix("%"), let percent = Double(string.dropLast()), percent.isFinite, (0...50).contains(percent) else {
+        return .failure(.init(backtrace, "Expected a percentage between 0% and 50%, e.g. '15%'"))
+    }
+    return .success(.percent(percent))
 }
 
 func parseString(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<String> {

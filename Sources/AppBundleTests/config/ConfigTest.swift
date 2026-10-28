@@ -4,6 +4,24 @@ import XCTest
 
 @MainActor
 final class ConfigTest: XCTestCase {
+    func testAccordionPadding() {
+        let points = parseConfig("accordion-padding = 30")
+        assertEquals(points.errors, [])
+        assertEquals(points.config.accordionPadding, .points(30))
+        assertEquals(points.config.accordionPadding.resolve(monitorDimension: 1000, containerDimension: 40), 30)
+
+        let percent = parseConfig("accordion-padding = '15%'")
+        assertEquals(percent.errors, [])
+        assertEquals(percent.config.accordionPadding, .percent(15))
+        assertEquals(percent.config.accordionPadding.resolve(monitorDimension: 1000, containerDimension: 1000), 150)
+        assertEquals(percent.config.accordionPadding.resolve(monitorDimension: 2000, containerDimension: 2000), 300)
+        assertEquals(percent.config.accordionPadding.resolve(monitorDimension: 2000, containerDimension: 200), 100)
+
+        for value in ["'-1%'", "'51%'", "'nan%'", "'15'", "true"] {
+            assertFalse(parseConfig("accordion-padding = \(value)").errors.isEmpty)
+        }
+    }
+
     func testParseI3Config() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"), encoding: .utf8)
         let result = parseConfig(toml)
