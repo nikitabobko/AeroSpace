@@ -15,6 +15,9 @@ let projectRoot: URL = {
 
 @MainActor
 func setUpWorkspacesForTests() {
+    unsafe monitorInfosForTests = []
+    gcMonitors() // Forget monitors left by display configuration tests
+    unsafe monitorInfosForTests = nil
     config = defaultConfig
     configUrl = defaultConfigUrl
     config.enableNormalizationFlattenContainers = false // Make layout tests more predictable
