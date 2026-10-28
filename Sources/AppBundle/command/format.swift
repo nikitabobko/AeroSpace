@@ -234,13 +234,17 @@ func unknownInterpolationVariable(variable: String, _ obj: AeroObj) -> String {
         "Possible values:\n\(getAvailableInterVars(for: obj.kind).joined(separator: "\n").prependLines("  "))"
 }
 
-private func toLayoutString(tc: TilingContainer) -> String {
+private func concreteLayoutDescription(tc: TilingContainer) -> LayoutCmdArgs.LayoutDescription {
     switch (tc.layout, tc.orientation) {
-        case (.tiles, .h): return LayoutCmdArgs.LayoutDescription.h_tiles.rawValue
-        case (.tiles, .v): return LayoutCmdArgs.LayoutDescription.v_tiles.rawValue
-        case (.accordion, .h): return LayoutCmdArgs.LayoutDescription.h_accordion.rawValue
-        case (.accordion, .v): return LayoutCmdArgs.LayoutDescription.v_accordion.rawValue
+        case (.tiles, .h): return .h_tiles
+        case (.tiles, .v): return .v_tiles
+        case (.accordion, .h): return .h_accordion
+        case (.accordion, .v): return .v_accordion
     }
+}
+
+private func toLayoutString(tc: TilingContainer) -> String {
+    concreteLayoutDescription(tc: tc).rawValue
 }
 
 private func toLayoutResult(w: Window) -> Result<Primitive, InterVarExpansionError> {
@@ -255,5 +259,28 @@ private func toLayoutResult(w: Window) -> Result<Primitive, InterVarExpansionErr
 
         case .rootTilingContainer: .failure(.notPossible("Not possible"))
         case .shimContainerRelation: .failure(.windowParentIllegalRelation("Window cannot have a shim container relation"))
+    }
+}
+
+/// Whether `w`'s effective parent-container layout matches `target`. Uses the same
+/// `getChildParentRelation` source of truth as the `%{window-layout` interpolation variable, so
+/// `--layout floating` keeps exactly what `%{window-layout}` prints as `floating`. The `tiling`
+/// token matches every tiling variant; `tiles`/`accordion` match the layout family;
+/// `horizontal`/`vertical` match the orientation; and `h_*`/`v_*` match exactly. Windows with no
+/// parent, an illegal parent relation, or a native/popup relation match nothing.
+func windowMatchesLayout(_ w: Window, _ target: LayoutCmdArgs.LayoutDescription) -> Bool {
+    guard let parent = w.parent else { return false }
+    let relation = getChildParentRelation(child: w, parent: parent)
+    if case .floatingWindow = relation { return target == .floating }
+    guard case .tiling(let tc) = relation else { return false }
+    let concrete = concreteLayoutDescription(tc: tc)
+    if target == concrete { return true }
+    switch target {
+        case .tiling: return true
+        case .tiles: return concrete == .h_tiles || concrete == .v_tiles
+        case .accordion: return concrete == .h_accordion || concrete == .v_accordion
+        case .horizontal: return concrete == .h_tiles || concrete == .h_accordion
+        case .vertical: return concrete == .v_tiles || concrete == .v_accordion
+        default: return false
     }
 }

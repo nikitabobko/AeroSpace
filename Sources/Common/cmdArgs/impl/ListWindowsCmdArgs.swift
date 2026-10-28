@@ -17,6 +17,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--workspace": ArgParser(\.filteringOptions.workspaces, parseWorkspaces),
             "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>") { Int32($0).toResult("Can't convert to Int32") },
             "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>", Result.success),
+            "--layout": ArgParser(\.filteringOptions.layoutFilter, parseLayoutFilter),
 
             // Formatting flags
             "--format": formatParser(\._format, for: .window),
@@ -45,6 +46,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
         public var workspaces: [WorkspaceFilter] = []
         public var pidFilter: Int32?
         public var appIdFilter: String?
+        public var layoutFilter: LayoutCmdArgs.LayoutDescription?
     }
 }
 
@@ -116,6 +118,19 @@ private func parseWorkspaces(input: SubArgParserInput) -> ParsedCliArgs<[Workspa
         i += 1
     }
     return .succ(workspaces, advanceBy: workspaces.count)
+}
+
+private func parseLayoutFilter(input: SubArgParserInput) -> ParsedCliArgs<LayoutCmdArgs.LayoutDescription?> {
+    guard let arg = input.nonFlagArgOrNil() else {
+        return .fail("'\(input.superArg)' must be followed by '<target-layout>'", advanceBy: 0)
+    }
+    guard let layout = LayoutCmdArgs.LayoutDescription(rawValue: arg) else {
+        return .fail(
+            "Can't parse '--layout' argument. Possible values: \(LayoutCmdArgs.LayoutDescription.unionLiteral)",
+            advanceBy: 1,
+        )
+    }
+    return .succ(layout, advanceBy: 1)
 }
 
 public enum WorkspaceFilter: Equatable, Sendable {
