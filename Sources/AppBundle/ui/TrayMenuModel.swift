@@ -26,7 +26,8 @@ enum AxPermissionStatus: Equatable {
 @MainActor func updateTrayText() {
     let sortedMonitors = sortedMonitorInfos
     let focus = focus
-    TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
+    // @Published notifies even for equal values, invalidating the menu bar and menu body on every refresh session
+    let trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
         sortedMonitors
         .map {
             let hasFullscreenWindows = $0.activeWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
@@ -34,7 +35,8 @@ enum AxPermissionStatus: Equatable {
             return ($0.activeWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + activeWorkspaceName
         }
         .joined(separator: " │ ")
-    TrayMenuModel.shared.workspaces = Workspace.all.map {
+    if TrayMenuModel.shared.trayText != trayText { TrayMenuModel.shared.trayText = trayText }
+    let workspaces = Workspace.all.map {
         let apps = $0.allLeafWindowsRecursive.map { $0.app.name?.takeIf { !$0.isEmpty } }.filterNotNil().toSet()
         let dash = " - "
         let suffix = switch true {
@@ -52,6 +54,7 @@ enum AxPermissionStatus: Equatable {
             hasFullscreenWindows: hasFullscreenWindows,
         )
     }
+    if TrayMenuModel.shared.workspaces != workspaces { TrayMenuModel.shared.workspaces = workspaces }
     var items = sortedMonitors.map {
         let hasFullscreenWindows = $0.activeWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
         return TrayItem(
@@ -67,7 +70,7 @@ enum AxPermissionStatus: Equatable {
     if let mode {
         items.insert(mode, at: 0)
     }
-    TrayMenuModel.shared.trayItems = items
+    if TrayMenuModel.shared.trayItems != items { TrayMenuModel.shared.trayItems = items }
 }
 
 struct WorkspaceViewModel: Hashable {
