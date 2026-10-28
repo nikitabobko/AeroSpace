@@ -148,16 +148,14 @@ extension TilingContainer {
     @MainActor
     fileprivate func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
         guard let mruIndex: Int = mostRecentChild?.ownIndex else { return }
+        let paddings = accordionPaddings(
+            count: children.count,
+            mruIndex: mruIndex,
+            padding: CGFloat(config.accordionPadding),
+            style: config.accordionStyle,
+        )
         for (index, child) in children.enumerated() {
-            let padding = CGFloat(config.accordionPadding)
-            let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {
-                case 0 where children.count == 1: (0, 0)
-                case 0:                           (0, padding)
-                case children.indices.last:       (padding, 0)
-                case mruIndex - 1:                (0, 2 * padding)
-                case mruIndex + 1:                (2 * padding, 0)
-                default:                          (padding, padding)
-            }
+            let (lPadding, rPadding) = paddings[index]
             switch orientation {
                 case .h:
                     try await child.layoutRecursive(
@@ -177,5 +175,46 @@ extension TilingContainer {
                     )
             }
         }
+    }
+}
+
+/// Returns (leading, trailing) padding for every child of an accordion container
+func accordionPaddings(count: Int, mruIndex: Int, padding: CGFloat, style: AccordionStyle) -> [(CGFloat, CGFloat)] {
+    switch style {
+        case .classic:
+            return (0 ..< count).map { index in
+                switch index {
+                    case 0 where count == 1: (0, 0)
+                    case 0:                  (0, padding)
+                    case count - 1:          (padding, 0)
+                    case mruIndex - 1:       (0, 2 * padding)
+                    case mruIndex + 1:       (2 * padding, 0)
+                    default:                 (padding, padding)
+                }
+            }
+        case .fan:
+            // Strip of the window at distance 'd' from the focused one. Halves with every step, but never drops below
+            // a few points, so that far away windows are still discoverable
+            let minStrip = min(padding, 6)
+            func strip(_ d: Int) -> CGFloat { max(padding / pow(2, CGFloat(d - 1)), minStrip) }
+            // Sum of the strips of the windows at distances (d, maxDistance]
+            func stripsBeyond(_ d: Int, _ maxDistance: Int) -> CGFloat {
+                d < maxDistance ? (d + 1 ... maxDistance).reduce(0) { $0 + strip($1) } : 0
+            }
+            let leadingCount = mruIndex
+            let trailingCount = count - 1 - mruIndex
+            let focusedLeading = stripsBeyond(0, leadingCount)
+            let focusedTrailing = stripsBeyond(0, trailingCount)
+            // Farther windows start farther out, and every window extends under the focused one. So each window shows
+            // exactly its own strip, given that nearer windows are stacked above farther ones
+            return (0 ..< count).map { index in
+                if index < mruIndex {
+                    (stripsBeyond(mruIndex - index, leadingCount), focusedTrailing)
+                } else if index > mruIndex {
+                    (focusedLeading, stripsBeyond(index - mruIndex, trailingCount))
+                } else {
+                    (focusedLeading, focusedTrailing)
+                }
+            }
     }
 }

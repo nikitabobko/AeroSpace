@@ -115,6 +115,11 @@ final class MacWindow: Window {
         macApp.nativeFocus(windowId)
     }
 
+    /// Bring the window to the front without focusing it
+    func raise(_ cm: CancellationMode) async throws {
+        try await macApp.raise(windowId, cm)
+    }
+
     override func closeAxWindow() {
         garbageCollect(skipClosedWindowsCache: true)
         macApp.closeAndUnregisterAxWindow(windowId)

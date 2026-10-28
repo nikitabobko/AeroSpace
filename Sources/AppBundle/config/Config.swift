@@ -45,6 +45,7 @@ struct Config: ConvenienceMutable {
     var autoReloadConfig: Bool = false
     var automaticallyUnhideMacosHiddenApps: Bool = false
     var accordionPadding: Int = 30
+    var accordionStyle: AccordionStyle = .classic
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var persistentWorkspaces: OrderedSet<String> = []
     var execOnWorkspaceChange: [String] = [] // todo deprecate
@@ -80,4 +81,11 @@ enum ConfigVersion: Int, Comparable, CaseIterable, Sendable, CustomStringConvert
 
 enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
+}
+
+enum AccordionStyle: String {
+    /// Only the neighbors of the focused window peek out by 'accordion-padding'
+    case classic
+    /// Every window peeks out. The neighbors peek out by 'accordion-padding', and the strip halves with each step away
+    case fan
 }
