@@ -334,7 +334,7 @@ func parseAccordionPadding(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> 
     guard let string = raw.asStringOrNil else {
         return .failure(expectedActualTypeDiagnostic(expected: [.int, .string], actual: raw.tomlType, backtrace))
     }
-    guard string.hasSuffix("%"), let percent = Double(string.dropLast()), percent.isFinite, (0...50).contains(percent) else {
+    guard string.hasSuffix("%"), let percent = Double(string.dropLast()), percent.isFinite, (0 ... 50).contains(percent) else {
         return .failure(.init(backtrace, "Expected a percentage between 0% and 50%, e.g. '15%'"))
     }
     return .success(.percent(percent))
