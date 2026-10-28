@@ -165,6 +165,9 @@ extension CGPoint {
 @MainActor
 private func rearrangeWorkspacesOnMonitors() {
     let newScreens = monitorInfos.map(\.rect.topLeftCorner)
+    // Remember where the focused workspace belongs before the maps are reset
+    let focusedWorkspace = initializedFocusWorkspaceName.map { Workspace.get(byName: $0) }
+    let focusedWorkspaceScreen = newScreens.isEmpty ? nil : focusedWorkspace?.workspaceMonitor.rect.topLeftCorner
     var newScreenToOldScreenMapping: [CGPoint: CGPoint] = [:]
     for (oldScreen, _) in screenPointToVisibleWorkspace {
         guard let newScreen = newScreens.minBy({ ($0 - oldScreen).vectorLength }) else { continue }
@@ -190,6 +193,11 @@ private func rearrangeWorkspacesOnMonitors() {
         let stubWorkspace = getStubWorkspace(forPoint: newScreen)
         check(newScreen.setActiveWorkspace(stubWorkspace),
               "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(newScreen)")
+    }
+
+    // The nearest-screen mapping above can leave the focused workspace invisible (e.g. when a monitor disconnects)
+    if let focusedWorkspace, let focusedWorkspaceScreen, !focusedWorkspace.isVisible, newScreens.contains(focusedWorkspaceScreen) {
+        _ = focusedWorkspaceScreen.setActiveWorkspace(focusedWorkspace)
     }
 }
 
