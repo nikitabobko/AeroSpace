@@ -117,7 +117,7 @@ if test $all == 1 || test $periphery == 1; then
             git checkout -f $periphery_commit
             swift build
         cd -
-        rm "$input_hash_marker_parent_dir/*.marker"
+        rm -rf "$input_hash_marker_parent_dir/*.marker"
         touch "$input_hash_marker"
     fi
 fi
