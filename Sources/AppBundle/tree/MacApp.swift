@@ -254,7 +254,10 @@ final class MacApp: AbstractApp {
         }
     }
 
-    typealias NativeWindowId = (id: UInt32, lifeStatus: WindowLifeStatus)
+    struct NativeWindowId {
+        let id: UInt32
+        let lifeStatus: WindowLifeStatus
+    }
 
     @MainActor static func refreshAllAndGetAliveWindowIds(
         frontmostAppBundleId: String?,
@@ -323,7 +326,7 @@ final class MacApp: AbstractApp {
             }
 
             windows.threadGuarded = alive
-            return alive.keys.map { it in (id: it, lifeStatus: lifeStatuses[it] ?? .invisible) }
+            return alive.keys.map { it in NativeWindowId(id: it, lifeStatus: lifeStatuses[it] ?? .invisible) }
         }
         windowsCount = alive.count
         let aliveSet = alive.map { $0.id }.toSet()

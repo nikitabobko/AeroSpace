@@ -129,8 +129,8 @@ private func refresh() async throws {
         }
     }
     for (app, windowIds) in mapping {
-        for (id, lifeStatus) in windowIds {
-            try await MacWindow.getOrRegister(windowId: id, macApp: app).lifeStatus = lifeStatus
+        for nativeWindowId in windowIds {
+            try await MacWindow.getOrRegister(windowId: nativeWindowId.id, macApp: app).lifeStatus = nativeWindowId.lifeStatus
         }
     }
 
