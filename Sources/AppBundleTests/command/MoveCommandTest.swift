@@ -478,7 +478,7 @@ enum LayoutDescription: Equatable {
     case h_accordion([LayoutDescription])
     case v_accordion([LayoutDescription])
     case floatingWindowsContainer([LayoutDescription])
-    case window(UInt32)
+    case window(OpaqueWindowId)
     case macosPopupWindowsContainer
     case macosMinimized
     case macosHiddeAppWindow

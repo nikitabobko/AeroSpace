@@ -335,7 +335,7 @@ private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElementMock? {
     guard let any else { return nil }
     let potentialWindow = castToAxUiElementMock(any as AnyObject)
     // Filter out non-window objects (e.g. Finder's desktop)
-    return switch potentialWindow.containingWindowId() {
+    return switch potentialWindow.containingNativeWindowId() {
         case let windowId?: (windowId, potentialWindow)
         case nil: nil
     }
@@ -359,13 +359,18 @@ extension AXUIElement: AxUiElementMock {
         return AXUIElementSetAttributeValue(self, attr.key as CFString, value) == .success
     }
 
-    func containingWindowId() -> CGWindowID? {
+    func containingNativeWindowId() -> CGWindowID? {
         let state = signposter.beginInterval(#function, "axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }
         var cgWindowId = CGWindowID()
         return unsafe _AXUIElementGetWindow(self, &cgWindowId) == .success && cgWindowId != kCGNullWindowID
             ? cgWindowId
             : nil
+    }
+
+    var pid: pid_t? {
+        var pid: pid_t = 0
+        return unsafe AXUIElementGetPid(self, &pid) == .success ? pid : nil
     }
 }
 

@@ -6,10 +6,15 @@ private var resizeWithMouseTask: Task<(), any Error>? = nil
 
 func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
     let notif = notif as String
-    let windowId = ax.containingWindowId()
+    let nativeWindowId = ax.containingNativeWindowId()
+    let pid = ax.pid
     Task.startUnstructured { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
-        guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
+        guard let nativeWindowId,
+              let pid,
+              let window = Window.get(byNativeId: nativeWindowId, pid: pid),
+              try await isManipulatedWithMouse(window)
+        else {
             scheduleCancellableCompleteRefreshSession(.ax(notif))
             return
         }

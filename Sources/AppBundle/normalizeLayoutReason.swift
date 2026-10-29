@@ -10,7 +10,7 @@
 @MainActor private func validateStillPopups() async throws {
     for node in macosPopupWindowsContainer.children {
         let popup = (node as! MacWindow)
-        let windowLevel = try await getWindowLevel(for: popup.windowId, .cancellable)
+        let windowLevel = try await popup.getWindowLevel(.cancellable)
         if try await popup.isWindowHeuristic(windowLevel, .cancellable) {
             try await popup.relayoutWindow(on: globalFocus.workspace, .cancellable)
             await runOnWindowDetected(ifConventional: popup)

@@ -5,7 +5,7 @@ import Foundation
 @MainActor private var cache: [UInt32: MacOsWindowLevel] = [:]
 @MainActor private var wip: AwaitableOneTimeBroadcastLatch? = nil
 
-@MainActor func getWindowLevel(for windowId: UInt32, _ cm: CancellationMode) async throws -> MacOsWindowLevel? {
+@MainActor func getWindowLevel(forNativeId windowId: UInt32, _ cm: CancellationMode) async throws -> MacOsWindowLevel? {
     if let existing = cache[windowId] { return existing }
     if let wip {
         try await wip.await(cm)

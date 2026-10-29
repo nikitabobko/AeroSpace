@@ -164,7 +164,7 @@ extension AxUiElementMock {
 
             get(Ax.isFocused) == true ||  // 3 different ways to detect if the window is focused
             get(Ax.isMainAttr) == true ||
-            axApp.get(Ax.focusedWindowAttr)?.windowId == self.containingWindowId() ||
+            axApp.get(Ax.focusedWindowAttr)?.windowId == self.containingNativeWindowId() ||
 
             get(Ax.subroleAttr) == kAXStandardWindowSubrole
     }
@@ -185,7 +185,7 @@ extension AxUiElementMock {
 
             get(Ax.isFocused) == false &&  // Three different ways to detect if the window is not focused
             get(Ax.isMainAttr) == false &&
-            axApp.get(Ax.focusedWindowAttr)?.windowId != containingWindowId() &&
+            axApp.get(Ax.focusedWindowAttr)?.windowId != containingNativeWindowId() &&
 
             subrole != kAXStandardWindowSubrole &&
             // Share window purple "pill" indicator has "Window" title https://github.com/nikitabobko/AeroSpace/issues/1101

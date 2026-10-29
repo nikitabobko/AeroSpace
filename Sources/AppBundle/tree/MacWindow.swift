@@ -6,7 +6,7 @@ final class MacWindow: Window {
     private var prevUnhiddenProportionalPositionInsideWorkspaceRect: CGPoint?
 
     @MainActor private init(
-        _ id: UInt32,
+        _ id: OpaqueWindowId,
         _ actor: MacApp,
         lastFloatingSize: CGSize?,
         parent: NonLeafTreeNodeObject,
@@ -17,12 +17,12 @@ final class MacWindow: Window {
         super.init(id: id, actor, lastFloatingSize: lastFloatingSize, parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
-    @MainActor static var allWindowsMap: [UInt32: MacWindow] = [:]
+    @MainActor static var allWindowsMap: [OpaqueWindowId: MacWindow] = [:]
     @MainActor static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
 
     @MainActor
     @discardableResult
-    static func getOrRegister(windowId: UInt32, macApp: MacApp) async throws -> MacWindow {
+    static func getOrRegister(windowId: OpaqueWindowId, macApp: MacApp) async throws -> MacWindow {
         if let existing = allWindowsMap[windowId] { return existing }
         let rect = try await macApp.getAxRect(windowId, .cancellable)
         let data = try await unbindAndGetBindingDataForNewWindow(
@@ -69,6 +69,10 @@ final class MacWindow: Window {
 
     func dumpAxInfo(_ cm: CancellationMode) async throws -> [String: Json] {
         try await macApp.dumpWindowAxInfo(windowId: windowId, cm)
+    }
+
+    @MainActor func getWindowLevel(_ cm: CancellationMode) async throws -> MacOsWindowLevel? {
+        try await macApp.getWindowLevel(windowId, cm)
     }
 
     func setNativeFullscreen(_ value: Bool) {
@@ -219,8 +223,8 @@ extension Window {
 
 // The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
-private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?, _ cm: CancellationMode) async throws -> BindingData {
-    let windowLevel = try await getWindowLevel(for: windowId, cm)
+private func unbindAndGetBindingDataForNewWindow(_ windowId: OpaqueWindowId, _ macApp: MacApp, _ workspace: Workspace, window: Window?, _ cm: CancellationMode) async throws -> BindingData {
+    let windowLevel = try await macApp.getWindowLevel(windowId, cm)
     return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel, cm) {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .dialog: BindingData(parent: workspace.floatingWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)

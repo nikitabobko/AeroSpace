@@ -81,6 +81,7 @@ public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> ResOrS
 }
 
 public func parseUInt32(_ str: String) -> ResOrStr<UInt32> { UInt32(str).toResult("Can't convert '\(str)' to UInt32") }
+func parseWindowId(_ str: String) -> ResOrStr<OpaqueWindowId> { UInt64(str).map(OpaqueWindowId.init).toResult("Can't convert '\(str)' to window ID") }
 
 func parseCardinalDirectionArg(i: PosArgParserInput) -> ParsedCliArgs<CardinalDirection> {
     .init(parseEnum(i.arg, CardinalDirection.self), advanceBy: 1)

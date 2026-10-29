@@ -10,8 +10,15 @@ private let disclaimer =
     """
 
 @MainActor private var debugWindowsState: DebugWindowsState = .notRecording
-@MainActor private var debugWindowsLog: OrderedDictionary<UInt32, String> = [:]
+@MainActor private var debugWindowsLog: OrderedDictionary<CombinedWindowId, String> = [:]
 private let debugWindowsLimit = 10
+
+struct CombinedWindowId: Hashable {
+    // periphery:ignore - Used by Hashable conformance
+    var opaque: OpaqueWindowId
+    // periphery:ignore - Used by Hashable conformance
+    var native: UInt32
+}
 
 enum DebugWindowsState {
     case recording
@@ -28,7 +35,8 @@ struct DebugWindowsCommand: Command {
             guard let window = Window.get(byId: windowId) else {
                 return .fail(io.err("Can't find window with the specified window-id: \(windowId)"))
             }
-            guard let a = try? await dumpWindowDebugInfo(window, .nonCancellable) else { return .fail(io.err(bugPrompt())) }
+            let nativeWindowId = window.macAppUnsafe.nativeWindowId(of: window.windowId).orDie()
+            guard let a = try? await dumpWindowDebugInfo(window, nativeWindowId, .nonCancellable) else { return .fail(io.err(bugPrompt())) }
             io.out(a + "\n")
             io.out(disclaimer)
             return .succ
@@ -76,16 +84,17 @@ struct DebugWindowsCommand: Command {
 }
 
 @MainActor
-private func dumpWindowDebugInfo(_ window: Window, _ cm: CancellationMode) async throws -> String {
+private func dumpWindowDebugInfo(_ window: Window, _ nativeWindowId: UInt32, _ cm: CancellationMode) async throws -> String {
     let window = window as! MacWindow
     let appInfoDic = window.macApp.nsApp.bundleURL.flatMap { Bundle.init(url: $0) }?.infoDictionary ?? [:]
 
     var result: [String: Json] = try await window.dumpAxInfo(cm)
 
-    let windowLevel = try await getWindowLevel(for: window.windowId, cm)
+    let windowLevel = try await window.getWindowLevel(cm)
     let windowLevelJson = windowLevel?.toJson() ?? .null
     result["Aero.windowLevel"] = windowLevelJson
-    result["Aero.axWindowId"] = .int(window.windowId)
+    result["Aero.windowId_opaque"] = .string(window.windowId.description)
+    result["Aero.axWindowId"] = .int(nativeWindowId)
     result["Aero.workspace"] = .stringOrNull(window.nodeWorkspace?.name)
     result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
     result["Aero.macOS.version"] = .string(ProcessInfo().operatingSystemVersionString) // because built-in apps might behave differently depending on the OS version
@@ -123,8 +132,10 @@ func debugWindowsIfRecording(_ window: Window, _ cm: CancellationMode) async thr
         debugWindowsState = .recordingAborted
         debugWindowsLog = [:]
     }
-    if debugWindowsLog.keys.contains(window.windowId) {
+    let nativeWindowId = window.macAppUnsafe.nativeWindowId(of: window.windowId).orDie()
+    let combinedId = CombinedWindowId(opaque: window.windowId, native: nativeWindowId)
+    if debugWindowsLog.keys.contains(combinedId) {
         return
     }
-    debugWindowsLog[window.windowId] = try await dumpWindowDebugInfo(window, cm)
+    debugWindowsLog[combinedId] = try await dumpWindowDebugInfo(window, nativeWindowId, cm)
 }

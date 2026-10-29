@@ -4,7 +4,7 @@ import Common
 /// Alternative name: AttrAddressibleStorage
 protocol AxUiElementMock {
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T?
-    func containingWindowId() -> CGWindowID?
+    func containingNativeWindowId() -> CGWindowID?
 }
 
 extension AxUiElementMock {

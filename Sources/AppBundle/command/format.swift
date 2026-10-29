@@ -125,6 +125,7 @@ enum Primitive: Encodable {
     }
 
     public static func int(_ int: UInt32) -> Self { .int(Int64(exactly: int).orDie()) }
+    public static func int(_ int: UInt64) -> Self { .int(Int64(exactly: int).orDie()) }
     public static func int(_ int: Int32) -> Self { .int(Int64(exactly: int).orDie()) }
     public static func int(_ int: Int) -> Self { .int(Int64(exactly: int).orDie()) }
 }
@@ -156,7 +157,7 @@ extension FormatVar {
         switch (obj, self) {
             case (.window(let w), .window(let f)):
                 return switch f {
-                    case .windowId: .success(.int(w.window.windowId))
+                    case .windowId: .success(.int(w.window.windowId.rawId))
                     case .windowIsFullscreen: .success(.bool(w.window.isFullscreen))
                     case .windowTitle: .success(.string(w.title.orDie("Title wasn't prefetched")))
                     case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w.window)

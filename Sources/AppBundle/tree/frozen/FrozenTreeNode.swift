@@ -35,7 +35,7 @@ struct FrozenContainer: Sendable {
 }
 
 struct FrozenWindow: Sendable {
-    let id: UInt32
+    let id: OpaqueWindowId
     let weight: CGFloat
 
     @MainActor init(_ window: Window) {

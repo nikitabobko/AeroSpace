@@ -24,7 +24,7 @@ public protocol CmdArgs:
 
 public struct CmdArgsCommonState: Withable, Equatable, Sendable {
     let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    var windowId: UInt32? = nil
+    var windowId: OpaqueWindowId? = nil
     var workspaceName: WorkspaceName? = nil
     public var explicitStdinFlag: Bool? = nil
 
@@ -34,7 +34,7 @@ public struct CmdArgsCommonState: Withable, Equatable, Sendable {
 extension CmdArgs {
     public static var info: CmdStaticInfo { Self.parser.info }
 
-    public var windowId: UInt32? {
+    public var windowId: OpaqueWindowId? {
         get { commonState.windowId }
         set(value) { commonState.windowId = value }
     }

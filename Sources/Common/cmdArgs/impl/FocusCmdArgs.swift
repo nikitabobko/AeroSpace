@@ -36,7 +36,7 @@ public struct FocusCmdArgs: CmdArgs {
         self.cardinalOrDfsDirection = cardinalOrDfsDirection
     }
 
-    public init(rawArgs: StrArrSlice, windowId: UInt32) {
+    public init(rawArgs: StrArrSlice, windowId: OpaqueWindowId) {
         self.commonState = .init(rawArgs)
         self.windowId = windowId
     }
@@ -60,7 +60,7 @@ public struct FocusCmdArgs: CmdArgs {
 
 public enum FocusCmdTarget {
     case direction(CardinalDirection)
-    case windowId(UInt32)
+    case windowId(OpaqueWindowId)
     case dfsIndex(UInt32)
     case dfsRelative(DfsNextPrev)
 

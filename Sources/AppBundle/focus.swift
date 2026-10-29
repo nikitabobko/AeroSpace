@@ -31,7 +31,7 @@ struct LiveFocus: AeroAny, Equatable {
 /// Unlike in LiveFocus, information inside FrozenFocus isn't guaranteed to be self-consistent.
 /// window - workspace - monitor relation could change since the moment object was created
 private struct FrozenFocus: AeroAny, Equatable, Sendable {
-    let windowId: UInt32?
+    let windowId: OpaqueWindowId?
     let workspaceName: String
     // monitorId is not part of the focus. We keep it here only for 'on-focused-monitor-changed' to work
     let monitorId_oneBased: Int

@@ -1,4 +1,6 @@
-@MainActor private var lastKnownNativeFocusedWindowId: UInt32? = nil
+import Common
+
+@MainActor private var lastKnownNativeFocusedWindowId: OpaqueWindowId? = nil
 
 /// The data should flow (from nativeFocused to focused) and
 ///                      (from nativeFocused to lastKnownNativeFocusedWindowId)
@@ -11,5 +13,5 @@
         _ = nativeFocused?.focusWindow()
         lastKnownNativeFocusedWindowId = nativeFocused?.windowId
     }
-    nativeFocused?.macAppUnsafe.lastNativeFocusedWindowId = nativeFocused?.windowId
+    nativeFocused?.macAppUnsafe.lastFocusedNativeWindowOpaqueId = nativeFocused?.windowId
 }
