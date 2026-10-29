@@ -68,7 +68,7 @@ final class MacApp: AbstractApp {
             $axTaskLocalAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
                 let axApp = AXUIElementCreateApplication(nsApp.processIdentifier)
                 let handlers: HandlerToNotifKeyMapping = unsafe [
-                    (refreshObs, [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification]),
+                    (refreshObs, [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification, kAXMainWindowChangedNotification]),
                 ]
                 let job = RunLoopJob(.cancellable)
                 let subscriptions = (try? unsafe AxSubscription.bulkSubscribe(nsApp, axApp, job, handlers)) ?? []
