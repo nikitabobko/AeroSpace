@@ -1,0 +1,659 @@
+= AeroSpace Tree Tutorial
+include::util/site-attributes.adoc[]
+
+include::util/header.adoc[]
+
+++++
+<link rel="stylesheet" href="assets/tree-tutorial/tree-tutorial.css">
+<script src="assets/tree-tutorial/tree.js"></script>
+<script src="assets/tree-tutorial/quiz.js"></script>
+<script src="assets/tree-tutorial/monitors.js"></script>
+++++
+
+This is an interactive companion to the xref:guide.adoc#tree[Tree] section of the guide.
+After it, you should be able to predict where a new window lands, and how `move`, `join-with` and `layout` reshape the tree, _before_ you press the key.
+The last section covers setups with two monitors.
+
+Every section has a simulator, a quiz, and exercises to repeat on your real desktop.
+The simulator is a small JavaScript port of AeroSpace's own tree code (`docs/assets/tree-tutorial/tree.js`).
+Window sizes are always equal in the simulator, `resize` isn't simulated.
+
+[#notation]
+== Notation
+
+This tutorial writes trees compactly:
+
+* `h[1 v[2 3]]` is an `h_tiles` root container that contains window 1, followed by a `v_tiles` container with windows 2 and 3
+* Upper case (`H[...]`, `V[...]`) means accordion
+
+The same tree in the xref:commands.adoc[commands reference] notation:
+
+----
+h_tiles
+├── window 1
+└── v_tiles
+    ├── window 2 (focused)
+    └── window 3
+----
+
+++++
+<div id="tt-static"></div>
+<script>
+  Aero.renderScreen(document.getElementById("tt-static"), Aero.parse("h[1 v[2 3]]", {focus: 2}), {width: 300, height: 150});
+</script>
+++++
+
+The focused window has a white frame.
+
+[#new-windows]
+== Where new windows land
+
+[IMPORTANT]
+====
+A new window is inserted into the _same container_ as the _most recently focused_ window, _directly after it_.
+====
+
+That's the whole rule.
+(`unbindAndGetBindingDataForNewTilingWindow` in `Sources/AppBundle/tree/MacWindow.swift`)
+Three consequences follow:
+
+. *Focus first, then open.*
+Focus picks both the container and the slot.
+. *A new window never creates a container.*
+It only joins a container that already exists.
+Nesting always comes from a command such as <<join-with,`join-with`>> or <<move,`move`>>.
+. *Floating windows.*
+If the most recently focused window is floating, it has no tiling parent to join.
+The new window is appended to the end of the root container.
+
+The new window uses the orientation of its container.
+In an `h_...` container it appears to the right of the focused window, in a `v_...` container it appears below.
+xref:guide.adoc#normalization[Normalization] keeps the tree tidy: containers with one child are flattened, and nested containers alternate orientation.
+
+[#new-windows-play]
+=== Play
+
+Click a window to focus it, then press *open new window*.
+You can also click inside the box and use the keys `n`, `h` `j` `k` `l`, and `x`.
+Use `join-with` to build nesting, then watch where new windows go.
+
+++++
+<div id="tt-sim-new"></div>
+<script>
+  Aero.mount(document.getElementById("tt-sim-new"), Aero.parse("h[1 2 3]", {focus: 3}),
+    {controls: ["new", "focus", "join", "close", "flatten"], width: 420, height: 240});
+</script>
+++++
+
+[#new-windows-predict]
+=== Predict
+
+Commit to an answer before you click.
+
+++++
+<div id="tt-quiz-new"></div>
+<script>
+  Quiz.mount(document.getElementById("tt-quiz-new"), [
+    { prompt: "Window 2 is focused.", setup: "h[1 2 3]", focus: 2, cmd: "open new window",
+      options: ["h[1 2 4 3]", "h[1 2 3 4]", "h[4 1 2 3]"], answer: 0,
+      why: "It lands directly after the focused window (2), not at the end." },
+    { prompt: "Window 1 is focused.", setup: "h[1 v[2 3]]", focus: 1, cmd: "open new window",
+      options: ["h[1 4 v[2 3]]", "h[1 v[2 3 4]]", "h[1 v[2 3] 4]"], answer: 0,
+      why: "1's parent is the root, so window 4 joins the root right after 1 and squeezes between 1 and the stack." },
+    { prompt: "Window 2 is focused.", setup: "h[1 v[2 3]]", focus: 2, cmd: "open new window",
+      options: ["h[1 v[2 4 3]]", "h[1 4 v[2 3]]", "h[1 v[2 3] 4]"], answer: 0,
+      why: "2's parent is the v_tiles container. Window 4 goes into it, right after 2 (below it)." },
+    { prompt: "Vertical root (for example, a portrait monitor). Window 1 is focused.", setup: "v[1 2]", focus: 1, cmd: "open new window",
+      options: ["v[1 3 2]", "v[1 2 3]", "h[v[1 3] 2]"], answer: 0,
+      why: "Same rule. Orientation only decides whether 'after' means right or below." },
+    { prompt: "Window 3 is focused inside a v_accordion.", setup: "h[1 V[2 3]]", focus: 3, cmd: "open new window",
+      options: ["h[1 V[2 3 4]]", "h[1 4 V[2 3]]", "h[1 V[2 3] 4]"], answer: 0,
+      why: "Accordion or tiles doesn't matter: 4 joins 3's container, the accordion, and is shown on top." },
+    { prompt: "Window 3 is focused.", setup: "h[v[1 2] 3]", focus: 3, cmd: "open new window",
+      options: ["h[v[1 2] 3 4]", "h[v[1 2 4] 3]", "h[v[1 2] v[3 4]]"], answer: 0,
+      why: "3 sits in the root, so 4 goes into the root after 3. No new container is created." },
+    { prompt: "You want a new terminal to join the right-hand container in <code>h[1 v[2 3]]</code>. What must be true just before you open it?",
+      options: ["A window in that container is focused", "The root container itself is focused", "The leftmost window is focused last"],
+      answer: 0, why: "The container of the most recently focused window receives the new window." },
+    { prompt: "The window you focused last is a <b>floating</b> window. Where does a new tiling window go?",
+      options: ["At the end of the root container", "Right after the last tiled window", "Into a new floating container"],
+      answer: 0, why: "A floating window has no tiling parent, so AeroSpace falls back to appending to the root container." },
+  ]);
+</script>
+++++
+
+[#new-windows-try]
+=== Try it for real
+
+Use any app that opens a new window with `cmd-n` (e.g. TextEdit or Terminal).
+The key bindings below are from the xref:guide.adoc#default-config[default config].
+
+. Switch to an *empty* workspace and open three windows.
+You should see `h[1 2 3]`, since each new window lands after the one you just focused.
+. Focus window 2 (`alt-h` / `alt-l`).
+Enter the service mode with `alt-shift-;`, then press `alt-shift-l` (`join-with right`).
+You now have `h[1 v[2 3]]`.
+. Focus window 1, _say out loud_ where window 4 will land, then open it.
+. Focus window 3, predict, then open a new window.
+
+[#reshaping]
+== Reshaping with `move` and `join-with`
+
+* xref:commands.adoc#join-with[`join-with <direction>`] _creates_ nesting.
+It wraps the focused window and its neighbour into a new container.
+* xref:commands.adoc#move[`move <direction>`] _relocates_ the focused window.
+Nesting disappears on its own when a container is left with one child (flatten normalization).
+
+New windows never create containers.
+So these two commands (plus xref:commands.adoc#layout[`layout`]) are how every nested layout is built.
+
+[#join-with]
+=== `join-with`: wrap me and my neighbour
+
+[IMPORTANT]
+====
+Take the focused window and the _nearest node_ in the direction.
+Put both into a _new container_ with the _opposite orientation_ of their parent, at the neighbour's old place.
+====
+
+* `join-with right` / `join-with down`: the focused window ends up *first* (left or top) in the new container.
+* `join-with left` / `join-with up`: the focused window ends up *last*.
+* The neighbour can be a whole container.
+Then the new container holds the focused window plus that entire subtree, which can rotate things you didn't expect (see the quiz).
+
+++++
+<div id="tt-join-ex" class="tt-before-after"></div>
+<script>
+  (() => {
+    const el = document.getElementById("tt-join-ex");
+    const before = Aero.parse("h[1 2 3]", {focus: 2}), after = before.clone(); after.joinWith("right");
+    const box = (ws, label) => {
+      const d = document.createElement("div"), s = document.createElement("div");
+      d.appendChild(s); Aero.renderScreen(s, ws, {width: 220, height: 120});
+      d.insertAdjacentHTML("beforeend", `<div class="tt-caption">${label}</div>`); return d;
+    };
+    el.appendChild(box(before, "h[1 2 3], window 2 focused"));
+    el.insertAdjacentHTML("beforeend", `<code>join-with right</code> →`);
+    el.appendChild(box(after, after.compact()));
+  })();
+</script>
+++++
+
+[#move]
+=== `move`: three cases
+
+Look at the parent of the focused window.
+Does it have the orientation of the move (horizontal for `left`/`right`, vertical for `up`/`down`), and is there a sibling in that direction?
+
+[cols="1,2,2"]
+|===
+|Situation |Result |Example
+
+|*1. Swap.* The sibling is a window.
+|The two windows trade places.
+|`h[1 2 3]`, 2 focused, `move right` → `h[1 3 2]`
+
+|*2. Move in.* The sibling is a container.
+|The window dives into the container and lands after its _most recently focused_ window (the new-window rule again).
+|`h[1 2 v[3 4]]`, 2 focused, `move right` → `h[1 v[3 2 4]]` if 3 was focused more recently than 4
+
+|*3. Move out.* The parent has the wrong orientation, or there is no sibling in that direction.
+|Climb up until an ancestor has the right orientation. Land right beside the container you climbed out of.
+|`h[1 v[2 3]]`, 3 focused, `move left` → `h[1 3 2]`
+|===
+
+[IMPORTANT]
+.The workspace edge
+====
+If the move out climbs all the way to the root container, AeroSpace wraps the _entire old tree_ in a new root container with the orientation of the move, and puts the window beside it.
+
+`h[1 2 3]`, 3 focused, `move down` → `v[h[1 2] 3]`: window 3 spans the full width at the bottom.
+====
+
+This is `--boundaries-action create-implicit-container`, the default.
+It also explains why `move right` on the rightmost window of `h[1 2 3]` doesn't do nothing: it gives `h[v[1 2] 3]`.
+
+[#reshaping-play]
+=== Play
+
+Click inside the box.
+`h` `j` `k` `l` focus, `H` `J` `K` `L` move, `n` new window, `x` close.
+`join-with` and `flatten-workspace-tree` are buttons.
+
+++++
+<div id="tt-sim-reshape"></div>
+<script>
+  Aero.mount(document.getElementById("tt-sim-reshape"), Aero.parse("h[1 2 3]", {focus: 2}),
+    {controls: ["focus", "move", "join", "new", "close", "flatten"], width: 420, height: 240});
+</script>
+++++
+
+[#reshaping-predict]
+=== Predict
+
+++++
+<div id="tt-quiz-reshape"></div>
+<script>
+  Quiz.mount(document.getElementById("tt-quiz-reshape"), [
+    { prompt: "Window 2 is focused.", setup: "h[1 2 3]", focus: 2, cmd: "move right",
+      options: ["h[1 3 2]", "h[1 v[2 3]]", "h[1 2 3]"], answer: 0,
+      why: "Case 1: the sibling is a window, so they swap." },
+    { prompt: "Window 3 is focused.", setup: "h[1 v[2 3]]", focus: 3, cmd: "move left",
+      options: ["h[1 3 2]", "h[3 1 2]", "h[1 v[3 2]]"], answer: 0,
+      why: "Case 3: the parent is vertical, so 3 climbs out to the root and lands just left of its old container. That container now has one child and is flattened." },
+    { prompt: "Window 2 is focused. Inside the v_tiles container, 3 was focused more recently than 4.", setup: "h[1 2 v[3 4]]", focus: 2,
+      prep: (ws) => { ws.find(3).markMru(); ws.focus(ws.find(2)); }, cmd: "move right",
+      options: ["h[1 v[3 2 4]]", "h[1 v[2 3 4]]", "h[1 v[3 4] 2]"], answer: 0,
+      why: "Case 2: the sibling is a container, so 2 dives in and lands after its most recently focused window (3)." },
+    { prompt: "Window 2 is focused.", setup: "h[v[1 2] v[3 4]]", focus: 2, cmd: "move right",
+      options: ["h[1 2 v[3 4]]", "h[v[1] v[3 2 4]]", "h[v[1 2] v[3 4]]"], answer: 0,
+      why: "Case 3: 2's parent is vertical, so it climbs out and lands right after its old container. That container has one child left and is flattened to plain 1." },
+    { prompt: "Window 3 is focused.", setup: "h[1 2 3]", focus: 3, cmd: "move down",
+      options: ["v[h[1 2] 3]", "h[1 v[2 3]]", "h[1 2 3]"], answer: 0,
+      why: "The workspace edge: nothing vertical above 3, so the whole tree is wrapped in a new vertical root, and 3 lands below it at full width." },
+    { prompt: "Window 3 is focused (already rightmost).", setup: "h[1 2 3]", focus: 3, cmd: "move right",
+      options: ["h[v[1 2] 3]", "h[1 2 3]", "h[1 v[2 3]]"], answer: 0,
+      why: "The workspace edge again. The old root is wrapped into a new horizontal root beside 3. The opposite orientation normalization turns the wrapped h into v." },
+    { prompt: "Window 2 is focused.", setup: "h[1 2 3]", focus: 2, cmd: "join-with left",
+      options: ["h[v[1 2] 3]", "h[v[2 1] 3]", "h[1 v[2 3]]"], answer: 0,
+      why: "join-with left: the new container takes 1's place, and the focused window (2) ends up last, i.e. below 1." },
+    { prompt: "Window 1 is focused.", setup: "h[1 v[2 3]]", focus: 1, cmd: "join-with right",
+      options: ["v[1 h[2 3]]", "h[v[1 2] 3]", "h[1 v[2 3]]"], answer: 0,
+      why: "The neighbour is the whole v_tiles container. A new vertical container wraps 1 and it. The root now has one child and is flattened, and the old container flips to horizontal. Everything rotates." },
+    { prompt: "Window 4 is focused.", setup: "h[1 v[2 3 4]]", focus: 4, cmd: "join-with up",
+      options: ["h[1 v[2 h[3 4]]]", "h[1 v[h[2 3] 4]]", "h[1 v[2 3 4]]"], answer: 0,
+      why: "The nearest node above 4 is 3. They get wrapped in a horizontal container (opposite of their vertical parent), placed where 3 was." },
+    { prompt: "You want <code>h[1 v[2 3]]</code> starting from <code>h[1 2 3]</code>. Which single command does it?",
+      options: ["Focus 2, join-with right", "Focus 2, move right", "Focus 3, move down"], answer: 0,
+      why: "Only join-with creates a nested container here. 'move right' just swaps, and 'move down' hits the workspace edge and makes a full-width bottom row." },
+  ]);
+</script>
+++++
+
+[#reshaping-build]
+=== Build it
+
+Reach each target layout with as few commands as possible (focus counts).
+
+++++
+<div id="tt-challenge"></div>
+<script>
+  Challenge.mount(document.getElementById("tt-challenge"), [
+    { start: "h[1 2 3]", focus: 3, goal: "h[1 v[2 3]]", par: 1 },
+    { start: "h[1 2 3]", focus: 1, goal: "v[h[1 2] 3]", par: 3 },
+    { start: "h[1 2 3 4]", focus: 1, goal: "h[v[1 2] v[3 4]]", par: 3 },
+    { start: "h[1 v[2 3]]", focus: 1, goal: "h[1 3 2]", par: 2 },
+    { start: "h[1 2 3]", focus: 1, goal: "v[1 h[2 3]]", par: 1 },
+  ]);
+</script>
+++++
+
+[#reshaping-try]
+=== Try it for real
+
+With the xref:guide.adoc#default-config[default config], `alt-shift-h/j/k/l` is `move` in the main mode and `join-with` in the service mode (`alt-shift-;`).
+`alt-shift-;` `r` runs `flatten-workspace-tree`: all windows go back into a single root container.
+
+. Open three windows: `h[1 2 3]`.
+Focus window 2, then `join-with right` → `h[1 v[2 3]]`.
+Reset.
+. Focus window 3, then `join-with left`.
+Same tree? Why?
+. From `h[1 2 3]`, focus window 3 and `move down`.
+Predict first.
+. From `h[1 v[2 3]]`, focus window 3 and `move left`.
+Then focus window 1 and `move right` twice.
+Say each result out loud first.
+. Reset, then build `h[v[1 2] v[3 4]]` from `h[1 2 3 4]`.
+
+[#layouts]
+== Layouts: tiles, accordion, orientation
+
+Windows don't have a layout.
+Every _container_ has two independent properties, a layout and an orientation (see xref:guide.adoc#layouts[Layouts]):
+
+[cols="1,2,2"]
+|===
+| |`horizontal` |`vertical`
+
+|`tiles`
+|`h[...]` side by side
+|`v[...]` stacked
+
+|`accordion`
+|`H[...]` one window visible, the others peek out left and right
+|`V[...]` one window visible, the others peek out at the top and bottom
+|===
+
+xref:commands.adoc#layout[`layout`] changes the _parent container of the focused window_.
+Just like for new windows, focus picks the target.
+
+In an accordion, the most recently focused window fills the container.
+The other windows are stacked behind it, their edges visible as `accordion-padding`.
+`focus` in the direction of the accordion cycles through them.
+
+[#layout-keys]
+=== `alt-slash` and `alt-comma`
+
+The xref:guide.adoc#default-config[default config] binds:
+
+[source,toml]
+----
+alt-slash = 'layout tiles horizontal vertical'
+alt-comma = 'layout accordion horizontal vertical'
+----
+
+[IMPORTANT]
+====
+Walk the arguments left to right, and apply the _first one that doesn't already describe_ the container.
+`tiles` and `accordion` keep the orientation.
+`horizontal` and `vertical` keep the layout.
+====
+
+So each key toggles in two steps:
+
+[cols="1,2,2"]
+|===
+|Container is |`alt-slash` |`alt-comma`
+
+|`h` tiles |→ `v` (flip) |→ `H` (to accordion)
+|`v` tiles |→ `h` (flip) |→ `V` (to accordion)
+|`H` accordion |→ `h` (to tiles) |→ `V` (flip)
+|`V` accordion |→ `v` (to tiles) |→ `H` (flip)
+|===
+
+In short: if the layout is wrong, switch the layout; if the layout is right, flip the orientation.
+
+[#layout-flip]
+=== Flipping the orientation rotates the ancestors
+
+[IMPORTANT]
+====
+With `enable-normalization-opposite-orientation-for-nested-containers` (the default), flipping the orientation of a nested container also flips _every ancestor_, alternating up to the root container.
+Nested containers must stay opposite to their parent.
+====
+
+In `h[1 v[2 3]]` with window 2 focused, `alt-slash` doesn't put 2 and 3 side by side on the right.
+It gives `v[1 h[2 3]]`: 1 on top, 2 and 3 below.
+The whole workspace rotates by 90°.
+(`changeOrientation` in `Sources/AppBundle/tree/TilingContainer.swift`)
+
+++++
+<div id="tt-flip-ex" class="tt-before-after"></div>
+<script>
+  (() => {
+    const el = document.getElementById("tt-flip-ex");
+    const before = Aero.parse("h[1 v[2 3]]", {focus: 2}), after = before.clone();
+    after.layout("tiles", "horizontal", "vertical");
+    const box = (ws, label) => {
+      const d = document.createElement("div"), s = document.createElement("div");
+      d.appendChild(s); Aero.renderScreen(s, ws, {width: 220, height: 120});
+      d.insertAdjacentHTML("beforeend", `<div class="tt-caption">${label}</div>`); return d;
+    };
+    el.appendChild(box(before, "h[1 v[2 3]], window 2 focused"));
+    el.insertAdjacentHTML("beforeend", `<code>alt-slash</code> →`);
+    el.appendChild(box(after, after.compact()));
+  })();
+</script>
+++++
+
+* Switching between `tiles` and `accordion` never touches the ancestors.
+Only orientation flips propagate.
+* To get 2 and 3 side by side on the right, un-nest them: that's `h[1 2 3]`.
+Use `move`, not `layout`.
+
+A typical use of an accordion is one slot for several windows that you look at one at a time.
+For example, `h[1 V[2 3 4]]`: an editor on the left, and a browser, a terminal and docs on the right that you cycle with `alt-j` / `alt-k`.
+Build the nesting first (<<reshaping>>), focus a window inside it, then press `alt-comma`.
+
+[#layouts-play]
+=== Play
+
+Click inside the box.
+`/` and `,` are `alt-slash` and `alt-comma`.
+`h` `j` `k` `l` focus, `H` `J` `K` `L` move, `n` new window, `x` close.
+
+++++
+<div id="tt-sim-layout"></div>
+<script>
+  Aero.mount(document.getElementById("tt-sim-layout"), Aero.parse("h[1 v[2 3]]", {focus: 2}),
+    {controls: ["focus", "move", "join", "layout", "new", "close", "flatten"], width: 420, height: 240});
+</script>
+++++
+
+[#layouts-predict]
+=== Predict
+
+++++
+<div id="tt-quiz-layout"></div>
+<script>
+  Quiz.mount(document.getElementById("tt-quiz-layout"), [
+    { prompt: "Window 1 is focused.", setup: "h[1 2 3]", focus: 1, cmd: "alt-slash (layout tiles horizontal vertical)",
+      options: ["v[1 2 3]", "h[1 2 3]", "H[1 2 3]"], answer: 0,
+      why: "'tiles' and 'horizontal' already match, so 'vertical' is the first one that doesn't. The orientation flips." },
+    { prompt: "Window 1 is focused.", setup: "h[1 2 3]", focus: 1, cmd: "alt-comma (layout accordion horizontal vertical)",
+      options: ["H[1 2 3]", "V[1 2 3]", "v[1 2 3]"], answer: 0,
+      why: "'accordion' doesn't match, so it's applied. The orientation is kept." },
+    { prompt: "Window 1 is focused.", setup: "H[1 2 3]", focus: 1, cmd: "alt-comma",
+      options: ["V[1 2 3]", "h[1 2 3]", "H[1 2 3]"], answer: 0,
+      why: "Already accordion and horizontal, so 'vertical' wins: flip to V." },
+    { prompt: "Window 1 is focused.", setup: "V[1 2 3]", focus: 1, cmd: "alt-slash",
+      options: ["v[1 2 3]", "h[1 2 3]", "H[1 2 3]"], answer: 0,
+      why: "'tiles' doesn't match, so the layout switches and the orientation stays vertical." },
+    { prompt: "Window 2 is focused.", setup: "h[1 v[2 3]]", focus: 2, cmd: "alt-slash",
+      options: ["v[1 h[2 3]]", "h[1 h[2 3]]", "h[1 2 3]"], answer: 0,
+      why: "The v_tiles container flips to horizontal, so its parent (the root) must flip to vertical. The whole workspace rotates." },
+    { prompt: "Window 1 is focused.", setup: "h[1 v[2 3]]", focus: 1, cmd: "alt-slash",
+      options: ["v[1 h[2 3]]", "v[1 v[2 3]]", "h[1 v[2 3]]"], answer: 0,
+      why: "1's parent is the root. The root flips to vertical, and normalization flips the nested container to horizontal. Same result as with 2 focused." },
+    { prompt: "Window 2 is focused.", setup: "h[1 v[2 3]]", focus: 2, cmd: "alt-comma",
+      options: ["h[1 V[2 3]]", "H[1 v[2 3]]", "v[1 H[2 3]]"], answer: 0,
+      why: "Layout switches don't propagate. Only 2's parent becomes an accordion." },
+    { prompt: "Window 2 is focused.", setup: "h[1 V[2 3]]", focus: 2, cmd: "alt-comma",
+      options: ["v[1 H[2 3]]", "h[1 H[2 3]]", "h[1 v[2 3]]"], answer: 0,
+      why: "Already accordion, so the orientation flips to H, and the root rotates to vertical with it." },
+    { prompt: "Window 3 is focused.", setup: "h[1 V[2 3]]", focus: 3, cmd: "open new window",
+      options: ["h[1 V[2 3 4]]", "h[1 4 V[2 3]]", "h[1 V[2 3] 4]"], answer: 0,
+      why: "The new-window rule: it joins 3's container, the accordion, and becomes the visible window." },
+    { prompt: "You want 2 and 3 side by side on the right of <code>h[1 v[2 3]]</code>. Which command does it?",
+      options: ["Focus 2, move left", "Focus 2, alt-slash", "Focus 2, alt-comma twice"], answer: 0,
+      why: "move left un-nests 2 and gives h[1 2 3]. Any orientation flip of the nested container rotates the root too." },
+  ]);
+</script>
+++++
+
+[#layouts-build]
+=== Build it
+
+++++
+<div id="tt-challenge-layout"></div>
+<script>
+  Challenge.mount(document.getElementById("tt-challenge-layout"), [
+    { start: "h[1 2 3]", focus: 1, goal: "v[1 2 3]", par: 1 },
+    { start: "h[1 2 3]", focus: 1, goal: "V[1 2 3]", par: 2 },
+    { start: "h[1 V[2 3]]", focus: 2, goal: "h[1 v[2 3]]", par: 1 },
+    { start: "h[1 2 3]", focus: 3, goal: "h[1 V[2 3]]", par: 2 },
+    { start: "v[1 h[2 3]]", focus: 1, goal: "h[1 v[2 3]]", par: 1 },
+    { start: "h[1 2 3 4]", focus: 1, goal: "h[1 V[2 3 4]]", par: 2 },
+  ], { controls: ["focus", "move", "join", "layout", "flatten"] });
+</script>
+++++
+
+[#layouts-try]
+=== Try it for real
+
+. Open three windows: `h[1 2 3]`.
+Press `alt-slash`, `alt-slash`, `alt-comma`, `alt-comma`, `alt-slash`.
+Name the layout after each press _before_ you look.
+. In `H[1 2 3]`, cycle through the windows with `alt-h` / `alt-l`.
+Then press `alt-comma` to get `V[1 2 3]`: which keys cycle now?
+. Reset (`alt-shift-;` `r`), build `h[1 v[2 3]]`, focus window 2, and press `alt-slash`.
+Predict first.
+Then press `alt-slash` again.
+. From `h[1 2 3 4]`, build `h[1 V[2 3 4]]`.
+Then open a new window from inside the accordion: where does it land?
+
+[#monitors]
+== Two monitors
+
+See also xref:guide.adoc#multiple-monitors[Multiple monitors] in the guide.
+
+* All monitors share *one pool* of workspaces.
+Each monitor shows exactly one of them, its _visible_ workspace.
+Two monitors can't show the same workspace.
+* Every workspace, even an invisible or an empty one, *belongs to a monitor*.
+* Monitors are numbered from left to right, starting at 1.
+`main` is the monitor set as the main display in `System Settings -> Displays`.
+
+[IMPORTANT]
+.Which monitor does a workspace belong to?
+====
+The first of:
+
+. its xref:guide.adoc#assign-workspaces-to-monitors[forced assignment] from the config
+. the monitor it's _visible_ on
+. the monitor it was _last shown_ on
+. the `main` monitor
+====
+
+(`workspaceMonitor` in `Sources/AppBundle/tree/Workspace.swift`)
+Step 3 is easy to forget: a workspace remembers where it was last shown.
+
+[#monitors-workspace]
+=== `workspace X`
+
+* *X is visible:* nothing moves, only the focus jumps to the monitor that shows X.
+* *X is invisible:* X replaces the workspace that its monitor shows, and the focus jumps there.
+This happens even if you were working on the other monitor.
+* *X doesn't exist yet:* it belongs to the `main` monitor.
+Unlike i3, AeroSpace doesn't open it on the monitor you're looking at.
+
+[NOTE]
+====
+An empty, invisible workspace is destroyed, unless it's listed in `persistent-workspaces`.
+It forgets the monitor it was shown on.
+When you switch to it again, it's a new workspace, and it appears on the `main` monitor.
+====
+
+[#monitors-move]
+=== Moving windows and workspaces
+
+[cols="1,1,2"]
+|===
+|To |Command |What happens
+
+|move the focused *window* to the other monitor
+|xref:commands.adoc#move-node-to-monitor[`move-node-to-monitor next`]
+|The window joins the root container of the workspace visible there.
+With `right` or `down` into a root of the same orientation, it lands *first*, on the side it came from.
+Otherwise, it lands *last*.
+The focus stays behind unless you add `--focus-follows-window`.
+
+|move the focused *workspace* to the other monitor
+|xref:commands.adoc#move-workspace-to-monitor[`move-workspace-to-monitor --wrap-around next`] (`alt-shift-tab` in the default config)
+|The workspace moves and stays focused.
+The monitor it left shows another workspace instead.
+Fails for workspaces with a forced assignment.
+
+|bring *workspace X* to the focused monitor
+|xref:commands.adoc#summon-workspace[`summon-workspace X`]
+|X appears on the focused monitor, wherever it was before.
+From now on, X belongs to this monitor (step 3).
+|===
+
+"Another workspace instead" means: the workspace that the monitor showed before, or any invisible workspace that belongs to the monitor, or the first empty workspace with a numeric name (`1`, `2`, ...).
+(`getStubWorkspace` in `Sources/AppBundle/tree/Workspace.swift`)
+
+[#monitors-focus]
+=== Focus across monitors
+
+`alt-h` / `alt-l` in the default config are `focus left` / `focus right`.
+The default is `--boundaries workspace`, so the focus *stops* at the edge of the monitor.
+
+* `focus --boundaries all-monitors-outer-frame right` continues onto the next monitor.
+It focuses the _most recently focused_ window of that monitor's workspace, not the geometrically closest one.
+* `move` has the same flag.
+At the edge, the window goes to the other monitor, like `move-node-to-monitor` with the focus following it.
+But then the inner monitor edge no longer creates an implicit container (see <<move,the workspace edge>>).
+
+[#monitors-play]
+=== Play
+
+The main monitor is on the left, the secondary one on the right.
+The blue frame marks the focused monitor.
+The list below shows every workspace and the monitor it belongs to (`→M` or `→S`).
+Workspace `B` has a forced assignment to the secondary monitor.
+Click a window to focus it.
+
+++++
+<div id="tt-sim-monitors"></div>
+<script>
+  Monitors.mount(document.getElementById("tt-sim-monitors"), {
+    workspaces: { "1": "h[1 2]", "2": "h[3 4]", "3": "h[5]", "B": "h[6]" },
+    visible: ["1", "2"], focus: 0, forced: { "B": "secondary" }, extra: ["5"],
+  });
+</script>
+++++
+
+[#monitors-predict]
+=== Predict
+
+The main monitor shows workspace 1 and the secondary monitor shows workspace 2, unless the question says otherwise.
+
+++++
+<div id="tt-quiz-monitors"></div>
+<script>
+  Quiz.mount(document.getElementById("tt-quiz-monitors"), [
+    { prompt: "The focus is on the <b>main</b> monitor. Workspace 3 is invisible and was last shown on the main monitor. You run <code>workspace 3</code>.",
+      options: ["3 replaces 1 on the main monitor", "3 replaces 2 on the secondary monitor", "Nothing, 3 is invisible"], answer: 0,
+      why: "3 belongs to the main monitor (it was last shown there), so it appears there." },
+    { prompt: "The focus is on the <b>secondary</b> monitor. Workspace 3 is invisible and belongs to the main monitor. You run <code>workspace 3</code>.",
+      options: ["3 replaces 1 on the main monitor, the focus jumps there", "3 replaces 2 on the secondary monitor", "3 and 2 swap"], answer: 0,
+      why: "A workspace appears on the monitor it belongs to, not on the monitor you're looking at." },
+    { prompt: "The focus is on the main monitor. You run <code>workspace 2</code> (visible on the secondary monitor).",
+      options: ["The focus moves to the secondary monitor, nothing else changes", "2 moves to the main monitor", "1 and 2 swap monitors"], answer: 0,
+      why: "A visible workspace isn't moved. Only the focus jumps." },
+    { prompt: "The focus is on the secondary monitor. Workspace 7 doesn't exist yet. You run <code>workspace 7</code>.",
+      options: ["7 appears on the main monitor", "7 appears on the secondary monitor", "Error: no such workspace"], answer: 0,
+      why: "A new workspace has never been shown, so it belongs to the main monitor. (i3 would use the focused monitor.)" },
+    { prompt: "The focus is on the main monitor. You run <code>summon-workspace 2</code>.",
+      options: ["2 moves to the main monitor, the secondary monitor shows another workspace", "1 and 2 swap", "The focus just moves to the secondary monitor"], answer: 0,
+      why: "summon-workspace pulls 2 to the focused monitor. The secondary monitor takes a workspace that belongs to it, or the first empty numbered one." },
+    { prompt: "The main monitor shows <code>h[1 2]</code> with 2 focused (rightmost). You run <code>focus right</code>.",
+      options: ["Nothing happens", "The focus moves to the secondary monitor", "The focus wraps to window 1"], answer: 0,
+      why: "The defaults are --boundaries workspace and --boundaries-action stop." },
+    { prompt: "Same, but <code>focus --boundaries all-monitors-outer-frame right</code>. The secondary monitor shows <code>h[3 4]</code>, and 4 was focused more recently than 3.",
+      options: ["Window 4", "Window 3 (closest to the edge)", "The workspace, but no window"], answer: 0,
+      why: "Crossing to another monitor focuses the most recently focused window of its workspace." },
+    { prompt: "Window 2 is focused on the main monitor. The secondary monitor shows <code>h[3 4]</code>. You run <code>move-node-to-monitor right</code>.",
+      options: ["h[2 3 4]", "h[3 4 2]", "h[3 v[4 2]]"], answer: 0,
+      why: "Moving right into a horizontal root, the window enters on the near side: index 0." },
+    { prompt: "Same, but <code>move-node-to-monitor next</code>.",
+      options: ["h[3 4 2]", "h[2 3 4]", "h[3 2 4]"], answer: 0,
+      why: "next, prev and monitor patterns always append to the end of the root container." },
+    { prompt: "Workspace B has a forced assignment to <code>secondary</code> and is focused there. You run <code>move-workspace-to-monitor --wrap-around next</code>.",
+      options: ["It fails, B stays", "B moves to the main monitor", "B moves, and the assignment is updated"], answer: 0,
+      why: "move-workspace-to-monitor and summon-workspace don't break a forced assignment." },
+  ]);
+</script>
+++++
+
+[#monitors-try]
+=== Try it for real
+
+----
+aerospace list-monitors
+aerospace list-workspaces --all --format '%{workspace} %{monitor-name} %{workspace-is-visible}'
+----
+
+. Run the `list-workspaces` command.
+Predict the monitor column before you read it.
+. Focus the secondary monitor, then switch to workspace 1 (`alt-1`).
+Where does 1 appear, and where is the focus?
+. On workspace 1, press `alt-shift-tab`.
+Predict what the main monitor shows now.
+Run `list-workspaces` again: which monitor does 1 belong to now?
+. Open two windows on the main monitor and run `aerospace move-node-to-monitor --focus-follows-window next`.
+Predict whether the window lands on the left or the right.
+. Focus the rightmost window on the main monitor and press `alt-l`.
+Then try `aerospace focus --boundaries all-monitors-outer-frame right`.
