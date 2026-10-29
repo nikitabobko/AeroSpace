@@ -64,7 +64,7 @@ private func prettyValue(_ value: Any?, recursionDepth: Int) -> Json {
             let title = ax.get(Ax.titleAttr)?.doubleQuoted ?? "nil"
             let role = ax.get(Ax.roleAttr)?.doubleQuoted ?? "nil"
             let subrole = ax.get(Ax.subroleAttr)?.doubleQuoted ?? "nil"
-            return .string("AXUIElement(AxWindowId=\(windowId), title=\(title), role=\(role), subrole=\(subrole))")
+            return .string("AXUIElement(windowId_native=\(windowId), title=\(title), role=\(role), subrole=\(subrole))")
         }
         return .string(String(describing: value))
     }

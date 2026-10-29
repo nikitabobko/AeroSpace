@@ -28,22 +28,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4259, title=\"Media viewer\", role=\"AXWindow\", subrole=\"AXDialog\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=4259, title=\"Media viewer\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=4259, title=\"Media viewer\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=4259, title=\"Media viewer\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=4232, title=\"‎⁨redacted⁩ – (57469)\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=4232, title=\"‎⁨redacted⁩ – (57469)\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x600001431620> {pid=75417}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Telegram",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=4259, title=\"Media viewer\", role=\"AXWindow\", subrole=\"AXDialog\")",
-      "AXUIElement(AxWindowId=4232, title=\"‎⁨redacted⁩ – (57469)\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=4259, title=\"Media viewer\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(windowId_native=4232, title=\"‎⁨redacted⁩ – (57469)\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },

@@ -312,7 +312,7 @@ let kAXAeroSynthetic = "Aero.synthetic"
 private func castToAxUiElementMock(_ a: AnyObject) -> AxUiElementMock {
     if isUnitTest {
         if let str = a as? String, let commaIndex = str.firstIndex(of: ",") {
-            let windowId = UInt32.init(String(str.prefix(upTo: commaIndex)).removePrefix("AXUIElement(AxWindowId="))
+            let windowId = UInt32.init(String(str.prefix(upTo: commaIndex)).removePrefix("AXUIElement(windowId_native="))
             if let windowId {
                 return castToAxUiElementMock([
                     "Aero.windowId_native": Json.int(windowId),
