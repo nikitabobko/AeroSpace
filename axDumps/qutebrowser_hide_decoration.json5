@@ -63,7 +63,7 @@
   "Aero.AxUiElementWindowType" : "window",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMinimized, AXSize",
-  "Aero.axWindowId" : 4799,
+  "Aero.windowId_native" : 4799,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 

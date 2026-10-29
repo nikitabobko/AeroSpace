@@ -53,7 +53,7 @@
   "Aero.App.version" : "13725.4.14",
   "Aero.App.versionShort" : "137.0.2",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 13196,
+  "Aero.windowId_native" : 13196,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.on-window-detected" : [

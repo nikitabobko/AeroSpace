@@ -53,7 +53,7 @@
   "Aero.App.version" : "5.15.4",
   "Aero.App.versionShort" : "5.15.4",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 4259,
+  "Aero.windowId_native" : 4259,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxUiElementWindowType" : "dialog",
   "Aero.macOS.version" : "Version 15.5 (Build 24F74)",

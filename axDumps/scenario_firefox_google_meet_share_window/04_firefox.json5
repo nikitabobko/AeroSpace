@@ -56,7 +56,7 @@
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
-  "Aero.axWindowId" : 14,
+  "Aero.windowId_native" : 14,
   "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
   "Aero.on-window-detected" : [
 

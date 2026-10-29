@@ -94,7 +94,7 @@ private func dumpWindowDebugInfo(_ window: Window, _ nativeWindowId: UInt32, _ c
     let windowLevelJson = windowLevel?.toJson() ?? .null
     result["Aero.windowLevel"] = windowLevelJson
     result["Aero.windowId_opaque"] = .string(window.windowId.description)
-    result["Aero.axWindowId"] = .int(nativeWindowId)
+    result["Aero.windowId_native"] = .int(nativeWindowId)
     result["Aero.workspace"] = .stringOrNull(window.nodeWorkspace?.name)
     result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
     result["Aero.macOS.version"] = .string(ProcessInfo().operatingSystemVersionString) // because built-in apps might behave differently depending on the OS version

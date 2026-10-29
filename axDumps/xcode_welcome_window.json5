@@ -61,7 +61,7 @@
   "Aero.AxUiElementWindowType" : "popup", // todo fix
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections",
-  "Aero.axWindowId" : 794,
+  "Aero.windowId_native" : 794,
   "Aero.macOS.version" : "Version 26.2 (Build 25C56)",
   "Aero.on-window-detected" : [
 

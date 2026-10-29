@@ -92,7 +92,7 @@
   "Aero.App.version" : "20621.1.15.11.10",
   "Aero.App.versionShort" : "18.4",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 14665,
+  "Aero.windowId_native" : 14665,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxUiElementWindowType" : "window",
   "Aero.on-window-detected" : [

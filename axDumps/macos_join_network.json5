@@ -100,7 +100,7 @@
   "Aero.AxUiElementWindowType" : "dialog",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 9780,
+  "Aero.windowId_native" : 9780,
   "Aero.macOS.version" : "Version 15.6.1 (Build 24G90)",
   "Aero.on-window-detected" : [
 

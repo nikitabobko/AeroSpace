@@ -93,7 +93,7 @@
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.AxUiElementWindowType" : "window",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
-  "Aero.axWindowId" : 11545,
+  "Aero.windowId_native" : 11545,
   "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
   "Aero.on-window-detected" : [
 

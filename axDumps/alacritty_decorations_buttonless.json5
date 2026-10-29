@@ -90,7 +90,7 @@
   "Aero.App.version" : "1",
   "Aero.App.versionShort" : "0.15.1",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : "197",
+  "Aero.windowId_native" : "197",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxUiElementWindowType" : "window",
   "Aero.treeNodeParent" : "AppBundle.TilingContainer",

@@ -90,7 +90,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain, AXMinimized, AXSize",
-  "Aero.axWindowId" : 3017,
+  "Aero.windowId_native" : 3017,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 
