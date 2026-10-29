@@ -20,7 +20,6 @@ jobs:
       # fail-fast: false # Disable fail-fast in matrix
       matrix:
         # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories
-        # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md
@@ -28,7 +27,7 @@ jobs:
         # Xcode versions:
         # - https://en.wikipedia.org/wiki/Xcode
         # - https://xcodereleases.com/?scope=release
-        os: [macos-14, macos-15, macos-26, xcode-27]
+        os: [macos-15, macos-26, xcode-27]
     name: build-debug
     runs-on: ${{ matrix.os }}
     steps:
@@ -38,7 +37,6 @@ jobs:
       - run: brew update && brew install swiftly bash
       - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
       - run: swiftly run swift --version
-      - run: ./build-debug.sh
       - run: ./test.sh
 
   # We build release artifacts only on the latest macOS versions because:
