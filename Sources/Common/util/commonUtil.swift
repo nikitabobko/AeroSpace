@@ -104,6 +104,18 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
         if case .focusFollowsMouse = self { return true } else { return false }
     }
 
+    /// True when the refresh was triggered by something the user did on purpose: a hotkey,
+    /// a CLI command, the menu bar, a mouse click, focus-follows-mouse, or startup.
+    /// Everything else (app activation, AX-reported focus changes, display events, config
+    /// reload) is passive: it must not reveal a hidden workspace on its own.
+    public var isExplicitUserTrigger: Bool {
+        switch self {
+            case .hotkeyBinding, .socketServer, .menuBarButton, .globalObserverLeftMouseUp,
+                 .focusFollowsMouse, .startup, .resetManipulatedWithMouse: true
+            default: false
+        }
+    }
+
     public var description: String {
         switch self {
             case .ax(let str): "ax(\(str))"

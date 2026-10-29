@@ -64,6 +64,30 @@ final class ConfigTest: XCTestCase {
         assertEquals(result.warnings, [])
     }
 
+    func testParseRevealWorkspaceOnPassiveFocus() {
+        let result = parseConfig(
+            """
+            reveal-workspace-on-passive-focus = false
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.config.revealWorkspaceOnPassiveFocus, false)
+        // Default must stay stock (true) so the patch is purely additive
+        assertEquals(parseConfig("").config.revealWorkspaceOnPassiveFocus, true)
+    }
+
+    func testExplicitUserTriggerClassification() {
+        // Passive triggers must not reveal a hidden workspace on their own
+        assertEquals(RefreshSessionEvent.globalObserver("NSWorkspaceDidActivateApplicationNotification").isExplicitUserTrigger, false)
+        assertEquals(RefreshSessionEvent.ax("someAxEvent").isExplicitUserTrigger, false)
+        assertEquals(RefreshSessionEvent.configAutoReload.isExplicitUserTrigger, false)
+        // Deliberate user actions keep the stock follow behaviour
+        assertEquals(RefreshSessionEvent.hotkeyBinding.isExplicitUserTrigger, true)
+        assertEquals(RefreshSessionEvent.globalObserverLeftMouseUp.isExplicitUserTrigger, true)
+        assertEquals(RefreshSessionEvent.focusFollowsMouse.isExplicitUserTrigger, true)
+        assertEquals(RefreshSessionEvent.menuBarButton.isExplicitUserTrigger, true)
+    }
+
     func testExecOnWorkspaceChangeDifferentTypesError() {
         let errors = parseConfig(
             """

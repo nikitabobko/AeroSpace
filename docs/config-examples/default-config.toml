@@ -17,6 +17,14 @@ start-at-login = false
 # After setting this to true, reload once manually to start the auto-reloading
 auto-reload-config = false
 
+# Reveal a workspace when macOS hands focus to an app — app activation, accessibility
+# events, display events. Deliberate actions (hotkey, CLI, menu bar, mouse click,
+# focus-follows-mouse) always reveal.
+# Set to false so apps that activate themselves in the background cannot switch the
+# visible workspace; the previously focused window keeps keyboard focus.
+# Fallback value (if you omit the key): reveal-workspace-on-passive-focus = true
+reveal-workspace-on-passive-focus = true
+
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
