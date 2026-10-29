@@ -626,6 +626,28 @@ final class ConfigTest: XCTestCase {
         )
     }
 
+    func testParseDefaultWindowsInsertionPoint() {
+        assertEquals(defaultConfig.defaultWindowsInsertionPoint, .afterTheMruWindow)
+
+        let result = parseConfig(
+            """
+            default-windows-insertion-point = 'before-the-mru-window'
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.config.defaultWindowsInsertionPoint, .beforeTheMruWindow)
+
+        let bad = parseConfig(
+            """
+            default-windows-insertion-point = 'bogus'
+            """,
+        )
+        assertEquals(
+            bad.strErrors,
+            ["[ERROR] default-windows-insertion-point: Can\'t parse windows insertion point \'bogus\'"],
+        )
+    }
+
     func testDeprecatedIndentForNestedContainers() {
         let errors = parseConfig(
             """

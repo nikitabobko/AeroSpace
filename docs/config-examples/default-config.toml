@@ -34,6 +34,10 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
+# Where new tiling windows are inserted relative to the most recently used window
+# Possible values: after-the-mru-window|before-the-mru-window
+default-windows-insertion-point = 'after-the-mru-window'
+
 # Mouse follows focus when focused monitor changes
 # Drop it from your config, if you don't like this behavior
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
