@@ -166,6 +166,20 @@ exec-on-workspace-change = [
 ]
 ----
 
+[#show-aerospace-workspaces-in-stablebar]
+== Show AeroSpace workspaces in StableBar
+
+link:https://github.com/Seb-GRAF/StableBar[StableBar] reads AeroSpace workspaces itself through `aerospace subscribe`, so it needs no `exec-on-workspace-change` or `on-focus-changed` callbacks.
+
+To keep windows clear of the bar, set `outer.top` in the `[gaps]` table to the bar's height (40 by default):
+
+.~/.aerospace.toml
+[source,toml]
+----
+[gaps]
+outer.top = 40
+----
+
 [#open-a-new-window-with-applescript]
 == Open a new window with AppleScript
 
