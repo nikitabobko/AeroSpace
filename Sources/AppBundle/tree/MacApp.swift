@@ -323,38 +323,59 @@ final class MacApp: AbstractApp {
             return [:]
         }
         guard let thread else { return [:] }
-        let alive = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> [FatNativeWindowId] in
-            var alive: [UInt32: AxWindow] = windows.threadGuarded
-            var lifeStatuses = [UInt32: WindowLifeStatus]()
-            // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
-            // Second and third lines of defence are technically needed only to avoid potential flickering
-            if frontmostAppBundleId != lockScreenAppBundleId {
-                alive = try alive.filter {
-                    try job.checkCancellation()
-                    return $0.value.ax.containingNativeWindowId() != nil
+        var aliveOrInvisible = try await thread
+            .runInLoop(.cancellable) { [nsApp, windows, axApp, bgTabsScheduledForPrune] (job) -> [UInt32: WindowLifeStatus] in
+                var aliveOrInvisible: [UInt32: AxWindow] = windows.threadGuarded.filter { !bgTabsScheduledForPrune.contains($0.key) }
+                var aliveWindowIds: Set<UInt32> = []
+                // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
+                // Second and third lines of defence are technically needed only to avoid potential flickering
+                if frontmostAppBundleId != lockScreenAppBundleId {
+                    aliveOrInvisible = try aliveOrInvisible.filter {
+                        try job.checkCancellation()
+                        return $0.value.ax.containingNativeWindowId() != nil
+                    }
                 }
-            }
 
-            for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
-                try job.checkCancellation()
-                try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
-                lifeStatuses[id] = .alive
-            }
+                for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
+                    try job.checkCancellation()
+                    try aliveOrInvisible.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
+                    aliveWindowIds.insert(id)
+                }
 
-            windows.threadGuarded = alive
-            return alive.keys.map { it in FatNativeWindowId(id: it, lifeStatus: lifeStatuses[it] ?? .invisible) }
-        }
-        windowsCount = alive.count
-        var result: [OpaqueWindowId: WindowLifeStatus] = [:]
-        for nativeWindowId in alive {
-            result[getOrRegisterOpaqueWindowId(nativeWindowId.id)] = nativeWindowId.lifeStatus
+                windows.threadGuarded = aliveOrInvisible
+                return aliveOrInvisible.keys.associate(with: { it in aliveWindowIds.contains(it) ? .alive : .invisible })
+            }
+        bgTabsScheduledForPrune = []
+        windowsCount = aliveOrInvisible.count
+
+        nonidempotentNativeTabSwapHeuristic(&aliveOrInvisible)
+
+        var aliveOrInvisibleMap: [OpaqueWindowId: WindowLifeStatus] = [:]
+        for (id, lifeStatus) in aliveOrInvisible {
+            aliveOrInvisibleMap[getOrRegisterOpaqueWindowId(id)] = lifeStatus
         }
         for windowId in setFrameJobs.keys {
-            if result[windowId] == nil {
+            if !aliveOrInvisibleMap.keys.contains(windowId) {
                 setFrameJobs.removeValue(forKey: windowId)?.cancel()
             }
         }
-        return result
+        return aliveOrInvisibleMap
+    }
+
+    private var bgTabsScheduledForPrune: Set<UInt32> = []
+    private var lifeStatusesOfLastRefresh: [UInt32: WindowLifeStatus] = [:]
+    @MainActor private func nonidempotentNativeTabSwapHeuristic(_ aliveOrInvisible: inout [UInt32: WindowLifeStatus]) {
+        let noLongerAlive = lifeStatusesOfLastRefresh.filter { (id, lifeStatus) in lifeStatus == .alive && aliveOrInvisible[id] != .alive }
+        let becameAlive = aliveOrInvisible.filter { (id, lifeStatus) in lifeStatus == .alive && lifeStatusesOfLastRefresh[id] != .alive }
+        lifeStatusesOfLastRefresh = aliveOrInvisible
+        if let backgroundTabId = noLongerAlive.singleOrNil()?.key,
+           let frontmostTabId = becameAlive.singleOrNil()?.key
+        {
+            let tabGroupWindowId = getOrRegisterOpaqueWindowId(backgroundTabId)
+            windowIdMapping.put(tabGroupWindowId, frontmostTabId)
+            aliveOrInvisible[backgroundTabId] = nil
+            bgTabsScheduledForPrune.insert(backgroundTabId)
+        }
     }
 
     private func destroy() async {
@@ -386,11 +407,6 @@ final class MacApp: AbstractApp {
             try? body(window.ax, job)
         } ?? .cancelled
     }
-}
-
-struct FatNativeWindowId {
-    let id: UInt32
-    let lifeStatus: WindowLifeStatus
 }
 
 private final class AxWindow {

@@ -146,6 +146,14 @@ extension Sequence {
         }
         return result
     }
+
+    public func associate<Value>(with valueProducer: (Element) -> Value) -> [Element: Value] {
+        var result = [Element: Value]()
+        for elem in self {
+            result[elem] = valueProducer(elem)
+        }
+        return result
+    }
 }
 
 public enum SequencePattern<Seq: Sequence> {
