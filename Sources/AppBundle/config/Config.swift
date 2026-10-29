@@ -44,7 +44,7 @@ struct Config: ConvenienceMutable {
     var startAtLogin: Bool = false
     var autoReloadConfig: Bool = false
     var automaticallyUnhideMacosHiddenApps: Bool = false
-    var accordionPadding: Int = 30
+    var accordionPadding: AccordionPadding = .points(30)
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var persistentWorkspaces: OrderedSet<String> = []
     var execOnWorkspaceChange: [String] = [] // todo deprecate
@@ -61,6 +61,18 @@ struct Config: ConvenienceMutable {
     var modes: [String: Mode] = [:]
     var onWindowDetected: [WindowDetectedCallback] = []
     var onModeChanged: Shell<any Command> = .empty
+}
+
+enum AccordionPadding: Equatable, Sendable {
+    case points(Int)
+    case percent(Double)
+
+    func resolve(monitorDimension: CGFloat, containerDimension: CGFloat) -> CGFloat {
+        switch self {
+            case .points(let points): CGFloat(points)
+            case .percent(let percent): min(monitorDimension * percent / 100, max(0, containerDimension / 2))
+        }
+    }
 }
 
 struct FocusFollowsMouse: ConvenienceMutable {

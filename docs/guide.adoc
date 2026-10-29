@@ -350,6 +350,10 @@ You can navigate the windows in an `h_accordion` by using the `focus (left|right
 While in a `v_accordion`, you can navigate the windows using the `focus (up|down)` command.
 
 Accordion padding is configurable via `accordion-padding` option.
+It accepts an integer in points (for example `accordion-padding = 30`), or a percentage string
+(for example `accordion-padding = '15%'`). Percentages are relative to the monitor's visible width
+for horizontal accordions and visible height for vertical accordions. The supported range is 0% to 50%;
+in nested accordions the resulting padding is limited to half the container's dimension.
 
 [#normalization]
 === Normalization
