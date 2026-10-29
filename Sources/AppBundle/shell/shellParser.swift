@@ -18,7 +18,7 @@ import Common
 
 extension String {
     func lexAndParseShell() -> ResOrStr<Shell<[String]>> {
-        self.shellLexerTokens().flatMap(AppBundle.parseShell)
+        self.shellLexerTokens().flatMap(AppBundle::parseShell)
     }
 }
 
