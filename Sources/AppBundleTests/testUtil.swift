@@ -38,6 +38,7 @@ func setUpWorkspacesForTests() {
 
     TestApp.shared.focusedWindow = nil
     TestApp.shared.windows = []
+    TestApp.shared.isTerminated = false
 
     global_layoutForNextDetectedWindow = nil
 }

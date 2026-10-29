@@ -7,6 +7,7 @@ final class TestApp: AbstractApp {
     let name: String?
     let execPath: String? = nil
     let bundlePath: String? = nil
+    var isTerminated: Bool = false
     @MainActor
     static let shared = TestApp()
 

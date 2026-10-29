@@ -8,6 +8,7 @@ protocol AbstractApp: AnyObject, Hashable, AeroAny {
     var name: String? { get }
     var execPath: String? { get }
     var bundlePath: String? { get }
+    var isTerminated: Bool { get }
 }
 
 extension AbstractApp {
