@@ -8,17 +8,17 @@ struct MoveWorkspaceToMonitorCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         let focusedWorkspace = target.workspace
-        let prevMonitor = focusedWorkspace.workspaceMonitor
+        let prevMonitor = focusedWorkspace.workspaceMonitorInfo
 
-        switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
+        switch args.target.val.resolve(target.workspace.workspaceMonitorInfo, wrapAround: args.wrapAround) {
             case .success(let targetMonitor):
                 if targetMonitor.monitorId_oneBased == prevMonitor.monitorId_oneBased {
                     return .succ
                 }
-                if targetMonitor.setActiveWorkspace(focusedWorkspace) {
+                if targetMonitor.setVisibleWorkspace(focusedWorkspace) {
                     let stubWorkspace = getStubWorkspace(for: prevMonitor)
                     check(
-                        prevMonitor.setActiveWorkspace(stubWorkspace),
+                        prevMonitor.setVisibleWorkspace(stubWorkspace),
                         "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",
                     )
                     return .succ

@@ -30,7 +30,7 @@ private struct AppServerTerminationHandler: TerminationHandler {
         for window in MacWindow.allWindowsMap.values {
             // makeAllWindowsVisibleAndRestoreSize may be invoked when something went wrong (e.g. some windows are unbound)
             // that's why it's not allowed to use `.parent` call in here
-            let monitor = window.macApp.getAxRectForTermination(window.windowId)?.center.monitorApproximation ?? mainMonitor
+            let monitor = window.macApp.getAxRectForTermination(window.windowId)?.center.monitorApproximation ?? mainMonitorInfo
             let monitorVisibleRect = monitor.visibleRect
             let windowSize = window.lastFloatingSize ?? CGSize(width: monitorVisibleRect.width, height: monitorVisibleRect.height)
             let point = CGPoint(
@@ -74,7 +74,7 @@ func + (a: CGPoint, b: CGPoint) -> CGPoint {
     CGPoint(x: a.x + b.x, y: a.y + b.y)
 }
 
-extension CGPoint: ConvenienceMutable {}
+extension CGPoint: Withable {}
 
 extension CGPoint {
     func distance(toOuterFrame rect: Rect) -> CGFloat {
@@ -99,14 +99,7 @@ extension CGPoint {
 
     var vectorLength: CGFloat { sqrt(x * x + y * y) }
 
-    var monitorApproximation: Monitor { monitors.minByOrDie { distance(toOuterFrame: $0.rect) } }
-
-    var withYAxisFlipped: CGPoint {
-        consuming get {
-            self.y = mainMonitor.height - self.y
-            return self
-        }
-    }
+    var monitorApproximation: MonitorInfo { globalUnsortedMonitorInfos.minByOrDie { distance(toOuterFrame: $0.rect) } }
 }
 
 extension CGFloat {

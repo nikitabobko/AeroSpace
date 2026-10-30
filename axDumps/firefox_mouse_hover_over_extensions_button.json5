@@ -28,22 +28,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=13054, title=nil, role=\"AXWebArea\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=13054, title=\"The small float tips in firefox will be trated as a window in v0.17.0-Beta · nikitabobko/AeroSpace · Discussion #1115\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=13054, title=nil, role=\"AXWebArea\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=13054, title=\"The small float tips in firefox will be trated as a window in v0.17.0-Beta · nikitabobko/AeroSpace · Discussion #1115\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=13054, title=\"The small float tips in firefox will be trated as a window in v0.17.0-Beta · nikitabobko/AeroSpace · Discussion #1115\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=13054, title=\"The small float tips in firefox will be trated as a window in v0.17.0-Beta · nikitabobko/AeroSpace · Discussion #1115\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x60000193bbd0> {pid=1405}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Firefox",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=13196, title=\"Extensions\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=13054, title=\"The small float tips in firefox will be trated as a window in v0.17.0-Beta · nikitabobko/AeroSpace · Discussion #1115\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=13196, title=\"Extensions\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(windowId_native=13054, title=\"The small float tips in firefox will be trated as a window in v0.17.0-Beta · nikitabobko/AeroSpace · Discussion #1115\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -53,7 +53,7 @@
   "Aero.App.version" : "13725.4.14",
   "Aero.App.versionShort" : "137.0.2",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 13196,
+  "Aero.windowId_native" : 13196,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.on-window-detected" : [

@@ -1,6 +1,6 @@
 import Common
 
-struct WindowDetectedCallback: ConvenienceMutable, Equatable {
+struct WindowDetectedCallback: Withable, Equatable {
     var matcher: WindowDetectedCallbackMatcher = .command(.empty)
     var checkFurtherCallbacks: Bool = false
     var rawRun: Shell<any Command>? = nil
@@ -26,7 +26,7 @@ struct WindowDetectedCallback: ConvenienceMutable, Equatable {
     }
 }
 
-struct LegacyWindowDetectedCallbackMatcher: ConvenienceMutable, Equatable {
+struct LegacyWindowDetectedCallbackMatcher: Withable, Equatable {
     var appId: String?
     var appNameRegexSubstring: CaseInsensitiveRegex?
     var windowTitleRegexSubstring: CaseInsensitiveRegex?
@@ -103,7 +103,7 @@ private func parseCasInsensitiveRegex(_ raw: OrderedJson, _ backtrace: ConfigBac
 private func parseMatcher(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> WindowDetectedCallbackMatcher {
     switch raw {
         case .dict(let raw):
-            return .legacy(raw.parseTable(LegacyWindowDetectedCallbackMatcher(), matcherParsers, backtrace, &c))
+            return .legacy(raw.parseTable(LegacyWindowDetectedCallbackMatcher(), matcherParsers, backtrace, &c, allowEmpty: false))
         case .string(let raw):
             return .command(parseCommand(raw, allowExecAndForget: false, allowEval: false).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty)
         default:
@@ -115,7 +115,7 @@ private func parseMatcher(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c:
 
 private func parseWindowDetectedCallback(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> WindowDetectedCallback? {
     var myContext = ConfigParserContext(configVersion: c.configVersion, errors: [], warnings: [])
-    let callback = parseTable(raw, WindowDetectedCallback(), windowDetectedParser, backtrace, &myContext)
+    let callback = parseNonEmptyTable(raw, WindowDetectedCallback(), windowDetectedParser, backtrace, &myContext)
 
     if callback.matcher == .command(.empty) && !callback.checkFurtherCallbacks {
         let msg = "Omitting 'if' is error prone. You can use `if = 'true'` to preserve the previous behavior.\n" +

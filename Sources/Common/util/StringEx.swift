@@ -25,7 +25,7 @@ extension String {
 extension [String] {
     public func joinErrors() -> String { // todo reuse in config parsing?
         map { (error: String) -> String in
-            error.split(separator: "\n").enumerated()
+            error.split(separator: "\n").enumerated().lazy
                 .map { (i, line) in
                     i == 0
                         ? "ERROR: " + line
@@ -62,7 +62,7 @@ extension [String] {
 
 extension [[String]] {
     public func toPaddingTable(columnSeparator: String = " | ") -> [String] {
-        let pads: [Int] = transposed().map { column in column.map { $0.count }.max().orDie() }
+        let pads: [Int] = transposed().map { column in column.lazy.map { $0.count }.max().orDie() }
         return self.map { (row: [String]) in
             zip(row.enumerated(), pads)
                 .map { (elem: (Int, String), pad: Int) in

@@ -6,6 +6,14 @@ struct LayoutCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
+        if args.forNextDetectedWindow {
+            if let it = args.toggleBetween.val.singleOrNil() {
+                global_layoutForNextDetectedWindow = it
+                return .succ
+            } else {
+                return .fail(io.err(bugPrompt()))
+            }
+        }
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
 
         let node: ConventionalWindowParentCases
@@ -14,15 +22,16 @@ struct LayoutCommand: Command {
                 switch window.windowParentCases {
                     case .floatingWindowsContainer(let it):
                         node = .floatingWindowsContainer(it)
-                    case .tilingContainer(let it):
-                        node = .tilingContainer(it)
+                    case .tilingContainer:
+                        guard let (parent, _) = window.nearestAliveTilingParent() else { return .fail(io.err(bugPrompt())) }
+                        node = .tilingContainer(parent)
                     case .macosFullscreenWindowsContainer,
                          .macosHiddenAppsWindowsContainer,
                          .macosMinimizedWindowsContainer:
                         let msg = "Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. " +
                             "This behavior is subject to change"
                         return .fail(io.err(msg))
-                    case .unbound, .macosPopupWindowsContainer:
+                    case nil, .macosPopupWindowsContainer:
                         return .fail(io.err(bugPrompt()))
                 }
             case nil:
@@ -81,6 +90,8 @@ struct LayoutCommand: Command {
         }
     }
 }
+
+@MainActor var global_layoutForNextDetectedWindow: LayoutCmdArgs.LayoutDescription? = nil
 
 @MainActor private func changeTilingLayout(
     _ io: CmdIo,

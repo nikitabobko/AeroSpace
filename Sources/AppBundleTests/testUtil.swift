@@ -32,12 +32,14 @@ func setUpWorkspacesForTests() {
     }
     check(Workspace.get(byName: "setUpWorkspacesForTests").focusWorkspace())
     Workspace.garbageCollectUnusedWorkspaces()
-    check(focus.workspace.isEffectivelyEmpty)
-    check(focus.workspace === Workspace.all.singleOrNil(), Workspace.all.map(\.description).joined(separator: ", "))
-    check(mainMonitor.setActiveWorkspace(focus.workspace))
+    check(globalFocus.workspace.isEffectivelyEmpty)
+    check(globalFocus.workspace === Workspace.all.singleOrNil(), Workspace.all.map(\.description).joined(separator: ", "))
+    check(mainMonitorInfo.setVisibleWorkspace(globalFocus.workspace))
 
     TestApp.shared.focusedWindow = nil
     TestApp.shared.windows = []
+
+    global_layoutForNextDetectedWindow = nil
 }
 
 extension ParsedCmd {

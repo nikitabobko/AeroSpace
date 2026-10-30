@@ -29,22 +29,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14384, title=\"YouTube Video Player in Full screen\", role=\"AXGroup\", subrole=\"AXApplicationGroup\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=14384, title=\"Поперечный - ПОП КУЛЬТУРА - YouTube\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=14384, title=\"YouTube Video Player in Full screen\", role=\"AXGroup\", subrole=\"AXApplicationGroup\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=14384, title=\"Поперечный - ПОП КУЛЬТУРА - YouTube\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=14384, title=\"Поперечный - ПОП КУЛЬТУРА - YouTube\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=14384, title=\"Поперечный - ПОП КУЛЬТУРА - YouTube\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXMenuBar" : "<AXUIElement 0x6000018d05d0> {pid=1405}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Firefox",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=14384, title=\"Поперечный - ПОП КУЛЬТУРА - YouTube\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=13054, title=\"YouTube\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=14384, title=\"Поперечный - ПОП КУЛЬТУРА - YouTube\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(windowId_native=13054, title=\"YouTube\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -54,7 +54,7 @@
   "Aero.App.version" : "13725.4.14",
   "Aero.App.versionShort" : "137.0.2",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 14384,
+  "Aero.windowId_native" : 14384,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxUiElementWindowType" : "dialog",
   "Aero.on-window-detected" : [

@@ -1,4 +1,5 @@
 import AppKit
+import Common
 
 @MainActor private var focusFollowsMouseMonitor: Any? = nil
 @MainActor private var focusFollowsTask: Task<(), any Error>? = nil
@@ -21,16 +22,16 @@ import AppKit
     focusFollowsMouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: .mouseMoved) { @MainActor event in
         let location = event.locationInWindow.withYAxisFlipped
         focusFollowsTask?.cancel()
+        guard let token: RunSessionGuard = .isServerEnabled else { return }
         focusFollowsTask = Task.startUnstructured { @MainActor in
-            guard let token: RunSessionGuard = .isServerEnabled else { return }
             try checkCancellation()
             // Ignores macOS menubar dropdown, but, unfortunately, it doesn't ignore non-native menu-like fake windows.
             // todo: It would be cool to somehow reuse isWindowHeuristic logic here
             if await isAxWindowUnderMouse(location) == false { return }
             try checkCancellation()
-            let workspace = location.monitorApproximation.activeWorkspace
+            let workspace = location.monitorApproximation.visibleWorkspace
             var window: Window? = nil
-            for child in workspace.floatingWindowsContainer.mruChildren {
+            for child in workspace.floatingWindowsContainer._mruChildren {
                 try checkCancellation()
                 guard let child = child as? Window else { continue }
                 guard let rect = try await child.getAxRect(.cancellable) else { continue }

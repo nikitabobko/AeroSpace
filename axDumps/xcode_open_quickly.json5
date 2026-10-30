@@ -4,12 +4,12 @@
   "AXCancelButton" : null,
   "AXCloseButton" : {
     "AXEnabled" : 0,
-    "AXParent" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXParent" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXCloseButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
-    "AXWindow" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXWindow" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
   },
@@ -24,12 +24,12 @@
   "AXMain" : 0,
   "AXMinimizeButton" : {
     "AXEnabled" : 0,
-    "AXParent" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXParent" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXMinimizeButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
-    "AXWindow" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXWindow" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
   },
@@ -50,33 +50,33 @@
   "AXToolbarButton" : null,
   "AXZoomButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXParent" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXZoomButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
-    "AXWindow" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXWindow" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=28188, title=nil, role=\"AXTextField\", subrole=\"AXSearchField\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=28188, title=nil, role=\"AXTextField\", subrole=\"AXSearchField\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=28187, title=\"AeroSpace — AeroSpace.xcodeproj\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=28187, title=\"AeroSpace — AeroSpace.xcodeproj\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x600002fb91d0> {pid=76223}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Xcode",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
-      "AXUIElement(AxWindowId=28187, title=\"AeroSpace — AeroSpace.xcodeproj\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=28188, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(windowId_native=28187, title=\"AeroSpace — AeroSpace.xcodeproj\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -94,7 +94,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXSize",
-  "Aero.axWindowId" : 28188,
+  "Aero.windowId_native" : 28188,
   "Aero.macOS.version" : "Version 15.7.1 (Build 24G231)",
   "Aero.on-window-detected" : [
 

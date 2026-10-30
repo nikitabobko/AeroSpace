@@ -28,21 +28,21 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=26499, title=nil, role=\"AXTextField\", subrole=\"raycast_searchField\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=26499, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=26499, title=nil, role=\"AXTextField\", subrole=\"raycast_searchField\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=26499, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=26499, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=26499, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
     "AXMenuBar" : "<AXUIElement 0x600002fca730> {pid=76823}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Raycast",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=26499, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")"
+      "AXUIElement(windowId_native=26499, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -60,7 +60,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 26499,
+  "Aero.windowId_native" : 26499,
   "Aero.macOS.version" : "Version 15.7.1 (Build 24G231)",
   "Aero.on-window-detected" : [
 

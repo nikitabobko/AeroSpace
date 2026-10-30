@@ -1,14 +1,7 @@
 /// Like Swift's built-in Optional but avoids implicit nil coercions
-public enum Nullable<T> {
+public enum Nullable<T: ~Copyable>: ~Copyable {
     case just(T)
     case null
-
-    public var valueOrNil: T? {
-        switch self {
-            case .just(let value): value
-            case .null: nil
-        }
-    }
-
-    public var isNull: Bool { valueOrNil == nil }
 }
+
+extension Nullable: Copyable where T: Copyable {}

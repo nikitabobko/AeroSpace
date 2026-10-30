@@ -136,11 +136,11 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
   Ricing issues are not a priority, and they are mostly ignored.
   The ricing stance can change only with the appearance of more maintainers.
 
-## macOS compatibility table
+## macOS compatibility
 
 * AeroSpace binary runs on: macOS 13+
 * AeroSpace debug build from sources is supported on: macOS 14+
-* AeroSpace release build from sources is supported on: macOS 15+ (Requires Xcode 26+)
+* AeroSpace release build from sources is supported on: macOS 15+ (Requires: Swift 6.4, Xcode 26.6+)
 
 ## Sponsorship
 
@@ -167,6 +167,14 @@ Source: [reddit](https://www.reddit.com/r/MacOS/comments/k6hiwk/keyboard_modifie
 
 ## Related projects
 
-- [Amethyst](https://github.com/ianyh/Amethyst) - tiling window manager à la xmonad
-- [InstantSpaceSwitcher](https://github.com/jurplel/InstantSpaceSwitcher) - Instant space switching by synthesizing trackpad gesture with an artificially high velocity
-- [yabai](https://github.com/koekeishiya/yabai) - a tiling window manager for macOS based on binary space partitioning
+In alphabetical order:
+
+- [Amethyst](https://github.com/ianyh/Amethyst) -
+  Beginners friendly GUI-configurable tiling window manager with automatic layouts à la xmonad.
+- [InstantSpaceSwitcher](https://github.com/jurplel/InstantSpaceSwitcher) -
+  Instant space switching by synthesizing trackpad gesture with an artificially high velocity.
+- [rift](https://github.com/acsandmann/rift) -
+  Virtual workspaces + private APIs.
+- [yabai](https://github.com/koekeishiya/yabai) -
+  A window manager that provides tight integration with native macOS Spaces and goes all the way to private APIs and code injection.
+  yabai is a source of inspiration for a lot of other OSS projects.

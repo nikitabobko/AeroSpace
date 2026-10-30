@@ -1,3 +1,4 @@
+// periphery:ignore:all
 extension Dictionary {
     @inlinable public func partition(_ predicate: (Dictionary<Key, Value>.Element) throws -> Bool) rethrows -> ([Key: Value], [Key: Value]) {
         var matching = [Key: Value]()
@@ -27,4 +28,8 @@ extension Dictionary where Key: Comparable {
     public var sortedEntries: [(key: Key, value: Value)] {
         entries.sortedBy { $0.key }
     }
+}
+
+public func + <K, V>(lhs: [K: V], rhs: [K: V]) -> [K: V] {
+    lhs.merging(rhs) { _, r in r }
 }

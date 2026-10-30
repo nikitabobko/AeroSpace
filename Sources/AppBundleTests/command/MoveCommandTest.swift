@@ -58,6 +58,128 @@ final class MoveCommandTest: XCTestCase {
         assertEquals(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
+    func testMove_swapWindows_skipsTombstones() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
+            TestWindow.new(id: 3, parent: $0)
+        }
+
+        await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription, .h_tiles([.window(2), .window(3), .window(1)]))
+
+        await parseCommand("move left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription, .h_tiles([.window(2), .window(1), .window(3)]))
+    }
+
+    func testMoveInto_skipsTombstones() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
+                TestWindow.new(id: 3, parent: $0).lifeStatus = .invisible
+                $0.lifeStatus = .deadOrInvisible
+            }
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 4, parent: $0)
+                TestWindow.new(id: 5, parent: $0).lifeStatus = .dead // The most recent child of its parent
+            }
+        }
+
+        await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([
+                .v_tiles([.window(2), .window(3)]),
+                .v_tiles([.window(4), .window(1), .window(5)]),
+            ]),
+        )
+    }
+
+    func testMoveInto_deepTargetInsideMustBeFlattenedContainer_bindsOutsideOfIt() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 2, parent: $0)
+                TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                    TestWindow.new(id: 3, parent: $0).lifeStatus = .dead
+                    TestWindow.new(id: 4, parent: $0)
+                    $0.lifeStatus = .mustBeFlattened
+                }
+            }
+        }
+
+        await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([
+                .v_tiles([
+                    .window(2),
+                    .v_tiles([.window(3), .window(4)]),
+                    .window(1),
+                ]),
+            ]),
+        )
+    }
+
+    func testMoveInto_skipsMustBeFlattenedContainers() async {
+        config.enableNormalizationFlattenContainers = true
+
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            // Same orientation as the root. Without tombstones it would have been flattened
+            TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
+                TestWindow.new(id: 3, parent: $0)
+                $0.lifeStatus = .mustBeFlattened
+            }
+        }
+
+        await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription, .h_tiles([.h_tiles([.window(2), .window(3)]), .window(1)]))
+
+        await parseCommand("move left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription, .h_tiles([.window(1), .h_tiles([.window(2), .window(3)])]))
+    }
+
+    func testMoveOut_skipsMustBeFlattenedContainers() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            // Same orientation as the root. Without tombstones it would have been flattened
+            TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
+                TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                    assertEquals(TestWindow.new(id: 3, parent: $0).focusWindow(), true)
+                    TestWindow.new(id: 4, parent: $0)
+                }
+                $0.lifeStatus = .mustBeFlattened
+            }
+        }
+
+        await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([
+                .window(1),
+                .h_tiles([.window(2), .v_tiles([.window(4)])]),
+                .window(3),
+            ]),
+        )
+    }
+
+    func testMoveOut_whenOnlyTombstoneSiblings() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+                TestWindow.new(id: 2, parent: $0)
+            }
+            TestWindow.new(id: 3, parent: $0).lifeStatus = .dead
+        }
+
+        await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription, .h_tiles([.v_tiles([.window(2)]), .window(1), .window(3)]))
+    }
+
     func testMoveInto_findTopMostContainerWithRightOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 0, parent: $0)
@@ -299,7 +421,7 @@ final class MoveCommandTest: XCTestCase {
                 .window(2),
             ]),
         )
-        assertEquals(focus.windowOrNil?.windowId, 2)
+        assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
     func testMoveOutWithNormalization_left() async {
@@ -318,7 +440,7 @@ final class MoveCommandTest: XCTestCase {
                 .window(2),
             ]),
         )
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
     }
 }
 
@@ -331,6 +453,8 @@ extension TreeNode {
             case .macosMinimizedWindowsContainer: .macosMinimized
             case .macosFullscreenWindowsContainer: .macosFullscreen
             case .macosHiddenAppsWindowsContainer: .macosHiddeAppWindow
+            case .monitor: .monitor
+            case .workspacesContainer: .workspacesContainer
             case .macosPopupWindowsContainer: .macosPopupWindowsContainer
             case .tilingContainer(let container):
                 switch container.layout {
@@ -354,9 +478,13 @@ enum LayoutDescription: Equatable {
     case h_accordion([LayoutDescription])
     case v_accordion([LayoutDescription])
     case floatingWindowsContainer([LayoutDescription])
-    case window(UInt32)
+    case window(OpaqueWindowId)
     case macosPopupWindowsContainer
     case macosMinimized
     case macosHiddeAppWindow
     case macosFullscreen
+
+    // todo think about it
+    case workspacesContainer
+    case monitor
 }

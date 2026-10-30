@@ -3,12 +3,12 @@
   "AXCancelButton" : null,
   "AXCloseButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXCloseButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle(noValue)",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
   },
@@ -23,12 +23,12 @@
   "AXMain" : 1,
   "AXMinimizeButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXMinimizeButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle(noValue)",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
   },
@@ -44,36 +44,36 @@
   "AXSize" : "<AXValue 0xca6f7e310> {value = w:725.000000 h:64.000000 type = kAXValueCGSizeType}",
   "AXSubrole" : "AXStandardWindow",
   "AXTitle" : "VLC media player",
-  "AXTitleUIElement" : "AXUIElement(AxWindowId=18872, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXTitleUIElement" : "AXUIElement(windowId_native=18872, title=nil, role=\"AXStaticText\", subrole=nil)",
   "AXToolbarButton" : null,
   "AXZoomButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXZoomButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle(noValue)",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : "<AXUIElement 0xca6f70810> {pid=80574}",
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=18872, title=nil, role=\"AXTextField\", subrole=\"AXSearchField\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=18872, title=nil, role=\"AXTextField\", subrole=\"AXSearchField\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0xca6f70810> {pid=80574}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "VLC",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=18872, title=\"VLC media player\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), isWritable.AXExtrasMenuBar(failure), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -91,7 +91,7 @@
   "Aero.AxUiElementWindowType" : "dialog",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain, AXMinimized, AXSize",
-  "Aero.axWindowId" : 18872,
+  "Aero.windowId_native" : 18872,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

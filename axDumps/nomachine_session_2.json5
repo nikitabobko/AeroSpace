@@ -3,12 +3,12 @@
   "AXCancelButton" : null,
   "AXCloseButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXCloseButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
   },
   "AXDefaultButton" : null,
@@ -21,12 +21,12 @@
   "AXMain" : 1,
   "AXMinimizeButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXMinimizeButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
   },
   "AXMinimized" : 0,
@@ -41,36 +41,36 @@
   "AXSize" : "<AXValue 0x60000372a430> {value = w:1512.000000 h:950.000000 type = kAXValueCGSizeType}",
   "AXSubrole" : "AXStandardWindow",
   "AXTitle" : "NoMachine - ubuntu20, Ubuntu 22.04.5 LTS",
-  "AXTitleUIElement" : "AXUIElement(AxWindowId=38734, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXTitleUIElement" : "AXUIElement(windowId_native=38734, title=nil, role=\"AXStaticText\", subrole=nil)",
   "AXToolbarButton" : null,
   "AXZoomButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXZoomButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=38734, title=nil, role=\"AXUnknown\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=38734, title=nil, role=\"AXUnknown\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 0,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x600003753c30> {pid=98872}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "NoMachine",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=38736, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=38734, title=\"NoMachine - ubuntu20, Ubuntu 22.04.5 LTS\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(windowId_native=38736, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -82,7 +82,7 @@
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.AxUiElementWindowType" : "dialog",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
-  "Aero.axWindowId" : 38734,
+  "Aero.windowId_native" : 38734,
   "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
   "Aero.on-window-detected" : [
     {

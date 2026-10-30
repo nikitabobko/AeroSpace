@@ -30,22 +30,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=2861, title=nil, role=\"AXTextArea\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=2861, title=\"~\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=2861, title=nil, role=\"AXTextArea\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=2861, title=\"~\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=2861, title=\"~\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=2861, title=\"~\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
     "AXMenuBar" : "<AXUIElement 0x7dcc2ea90> {pid=18587}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Ghostty",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=2861, title=\"~\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
-      "AXUIElement(AxWindowId=2854, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=2861, title=\"~\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+      "AXUIElement(windowId_native=2854, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -63,7 +63,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain, AXMinimized, AXSize",
-  "Aero.axWindowId" : 2861,
+  "Aero.windowId_native" : 2861,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 

@@ -28,21 +28,21 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=19108, title=\"lecture-9-done.mp4 - mpv\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=19108, title=\"lecture-9-done.mp4 - mpv\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=19108, title=\"lecture-9-done.mp4 - mpv\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=19108, title=\"lecture-9-done.mp4 - mpv\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=19108, title=\"lecture-9-done.mp4 - mpv\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=19108, title=\"lecture-9-done.mp4 - mpv\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXMenuBar" : "<AXUIElement 0xca6fa5e90> {pid=88824}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "mpv",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=19108, title=\"lecture-9-done.mp4 - mpv\", role=\"AXWindow\", subrole=\"AXUnknown\")"
+      "AXUIElement(windowId_native=19108, title=\"lecture-9-done.mp4 - mpv\", role=\"AXWindow\", subrole=\"AXUnknown\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), get.AXExtrasMenuBar(noValue), isWritable.AXExtrasMenuBar(failure), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -60,7 +60,7 @@
   "Aero.AxUiElementWindowType" : "popup", // todo fix?
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXFullScreen, AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 19108,
+  "Aero.windowId_native" : 19108,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

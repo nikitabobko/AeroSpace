@@ -3,12 +3,12 @@
   "AXCancelButton" : null,
   "AXCloseButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXCloseButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
   },
@@ -19,12 +19,12 @@
   "AXFullScreen" : 0,
   "AXFullScreenButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXFullScreenButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
@@ -33,12 +33,12 @@
   "AXMain" : 1,
   "AXMinimizeButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXMinimizeButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
   },
@@ -60,12 +60,12 @@
   "AXToolbarButton" : null,
   "AXZoomButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXFullScreenButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
@@ -75,27 +75,27 @@
       "AXDescription" : "previous year",
       "AXEnabled" : 1,
       "AXIdentifier" : "previous year",
-      "AXParent" : "AXUIElement(AxWindowId=4734, title=nil, role=\"AXGroup\", subrole=nil)",
+      "AXParent" : "AXUIElement(windowId_native=4734, title=nil, role=\"AXGroup\", subrole=nil)",
       "AXRole" : "AXButton",
       "AXTitle" : "",
-      "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXWindow" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXTopLevelUIElement" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXWindow" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
       "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
     },
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x978098090> {pid=93759}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Calendar",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=4734, title=\"Calendar\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -113,7 +113,7 @@
   "Aero.AxUiElementWindowType" : "window",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxWritable" : "AXFullScreen, AXPosition, AXSections, AXMain, AXMinimized, AXSize",
-  "Aero.axWindowId" : 4734,
+  "Aero.windowId_native" : 4734,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 

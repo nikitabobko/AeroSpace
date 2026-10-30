@@ -27,20 +27,20 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=78408, title=\"test.py – Doom Emacs\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=78408, title=\"test.py – Doom Emacs\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=78408, title=\"test.py – Doom Emacs\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=78408, title=\"test.py – Doom Emacs\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 0,
     "AXFunctionRowTopLevelElements" : [],
-    "AXMainWindow" : "AXUIElement(AxWindowId=78408, title=\"test.py – Doom Emacs\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=78408, title=\"test.py – Doom Emacs\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x88c447570> {pid=39373}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Emacs",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=78636, title=\"posframe\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
-      "AXUIElement(AxWindowId=78408, title=\"test.py – Doom Emacs\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=78636, title=\"posframe\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+      "AXUIElement(windowId_native=78408, title=\"test.py – Doom Emacs\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -50,7 +50,7 @@
   "Aero.App.version" : "9.0",
   "Aero.App.versionShort" : "30.2",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 78636,
+  "Aero.windowId_native" : 78636,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.on-window-detected" : [],

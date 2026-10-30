@@ -5,11 +5,16 @@ import Common
 private var moveWithMouseTask: Task<(), any Error>? = nil
 
 func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
-    let windowId = ax.containingWindowId()
+    let nativeWindowId = ax.containingNativeWindowId()
     let notif = notif as String
+    let pid = ax.pid
     Task.startUnstructured { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
-        guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
+        guard let nativeWindowId,
+              let pid,
+              let window = Window.get(byNativeId: nativeWindowId, pid: pid),
+              try await isManipulatedWithMouse(window)
+        else {
             scheduleCancellableCompleteRefreshSession(.ax(notif))
             return
         }
@@ -33,13 +38,13 @@ private func moveWithMouse(_ window: Window) async throws { // todo cover with t
             return // Unconventional windows can't be moved with mouse
         case .tilingContainer:
             moveTilingWindow(window)
-        case .unbound: return
+        case nil: return
     }
 }
 
 @MainActor
 private func moveFloatingWindow(_ window: Window) async throws {
-    guard let targetWorkspace = try await window.getCenter(.cancellable)?.monitorApproximation.activeWorkspace else { return }
+    guard let targetWorkspace = try await window.getCenter(.cancellable)?.monitorApproximation.visibleWorkspace else { return }
     guard let parent = window.parent else { return }
     if targetWorkspace != parent {
         window.bindAsFloatingWindow(to: targetWorkspace)
@@ -51,23 +56,26 @@ private func moveTilingWindow(_ window: Window) {
     currentlyManipulatedWithMouseWindowId = window.windowId
     window.lastAppliedLayoutPhysicalRect = nil
     let mouseLocation = mouseLocation
-    let targetWorkspace = mouseLocation.monitorApproximation.activeWorkspace
+    let targetWorkspace = mouseLocation.monitorApproximation.visibleWorkspace
     let swapTarget = mouseLocation
         .findWindowRecursively(in: targetWorkspace.rootTilingContainer, virtual: false, fullscreenCoversAll: false)?
         .takeIf { $0 != window }
     if targetWorkspace != window.nodeWorkspace { // Move window to a different monitor
-        let index: Int = if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutPhysicalRect {
-            mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
-                ? swapTarget.ownIndex.orDie() + 1
-                : swapTarget.ownIndex.orDie()
+        let parent: TilingContainer
+        let index: Int
+        if let swapTarget,
+           let (_parent, _index) = swapTarget.nearestAliveTilingParent(),
+           let targetRect = swapTarget.lastAppliedLayoutPhysicalRect
+        {
+            parent = _parent
+            index = mouseLocation.getProjection(_parent.orientation) >= targetRect.center.getProjection(_parent.orientation)
+                ? _index + 1
+                : _index
         } else {
-            0
+            parent = targetWorkspace.rootTilingContainer
+            index = 0
         }
-        window.bind(
-            to: swapTarget?.parent ?? targetWorkspace.rootTilingContainer,
-            adaptiveWeight: WEIGHT_AUTO,
-            index: index,
-        )
+        window.bind(to: parent, adaptiveWeight: WEIGHT_AUTO, index: index)
     } else if let swapTarget {
         swapWindows(mruDominant: window, swapTarget)
     }
@@ -104,11 +112,11 @@ extension CGPoint {
         let point = self
         let target: TreeNode? = switch tree.layout {
             case .tiles:
-                tree.children.first(where: {
+                tree.inhabitedChildren.first(where: {
                     (virtual ? $0.lastAppliedLayoutVirtualRect : $0.lastAppliedLayoutPhysicalRect)?.contains(point) == true
                 })
             case .accordion:
-                tree.mostRecentChild
+                tree.mostRecentInhabitedChild
         }
         guard let target else { return nil }
         return switch target.tilingTreeNodeCasesOrDie() {

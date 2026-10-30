@@ -33,7 +33,7 @@ extension CmdArgs {
             return Workspace.get(byName: wsName).toLiveFocus()
         }
         // Real Focus
-        return focus
+        return globalFocus
     }
 }
 

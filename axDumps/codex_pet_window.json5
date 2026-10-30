@@ -30,21 +30,21 @@
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : "<AXUIElement 0x79c149b60> {pid=57720}",
     "AXFocusedUIElement" : null,
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=23883, title=\"Codex\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=23883, title=\"Codex\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 0,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=23883, title=\"Codex\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=23883, title=\"Codex\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x79c149b60> {pid=57720}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Codex",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=25375, title=\"Codex\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=23883, title=\"Codex\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=25375, title=\"Codex\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(windowId_native=23883, title=\"Codex\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXFocusedUIElement, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -62,7 +62,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 25375,
+  "Aero.windowId_native" : 25375,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

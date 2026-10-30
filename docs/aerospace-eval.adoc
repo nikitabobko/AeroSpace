@@ -19,6 +19,8 @@ aerospace eval [-h|--help] [--stdin] [--] <aerospace-shell-expr>
 // tag::body[]
 {manpurpose}
 
+// todo: improve documentation. E.g. eval is more performant then sending multiple commands via CLI
+
 // =========================================================== Options
 include::./util/conditional-options-header.adoc[]
 

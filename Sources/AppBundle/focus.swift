@@ -21,7 +21,7 @@ struct LiveFocus: AeroAny, Equatable {
         return FrozenFocus(
             windowId: windowOrNil?.windowId,
             workspaceName: workspace.name,
-            monitorId_oneBased: workspace.workspaceMonitor.monitorId_oneBased ?? 0,
+            monitorId_oneBased: workspace.workspaceMonitorInfo.monitorId_oneBased ?? 0,
         )
     }
 }
@@ -31,7 +31,7 @@ struct LiveFocus: AeroAny, Equatable {
 /// Unlike in LiveFocus, information inside FrozenFocus isn't guaranteed to be self-consistent.
 /// window - workspace - monitor relation could change since the moment object was created
 private struct FrozenFocus: AeroAny, Equatable, Sendable {
-    let windowId: UInt32?
+    let windowId: OpaqueWindowId?
     let workspaceName: String
     // monitorId is not part of the focus. We keep it here only for 'on-focused-monitor-changed' to work
     let monitorId_oneBased: Int
@@ -50,26 +50,26 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
 }
 
 @MainActor private var _focus: FrozenFocus = {
-    let monitor = mainMonitor
-    return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId_oneBased: monitor.monitorId_oneBased ?? 0)
+    let monitor = mainMonitorInfo
+    return FrozenFocus(windowId: nil, workspaceName: monitor.visibleWorkspace.name, monitorId_oneBased: monitor.monitorId_oneBased ?? 0)
 }()
 
 /// Global focus.
 /// Commands must be cautious about accessing this property directly. There are legitimate cases.
 /// But, in general, commands must firstly check --window-id, --workspace, AEROSPACE_WINDOW_ID env and
 /// AEROSPACE_WORKSPACE env before accessing the global focus.
-@MainActor var focus: LiveFocus { _focus.live }
+@MainActor var globalFocus: LiveFocus { _focus.live }
 
 @MainActor func setFocus(to newFocus: LiveFocus) -> Bool {
     if _focus == newFocus.frozen { return true }
-    let oldFocus = focus
+    let oldFocus = globalFocus
     // Normalize mruWindow when focus away from a workspace
     if oldFocus.workspace != newFocus.workspace {
         oldFocus.windowOrNil?.markAsMostRecentChild()
     }
 
     _focus = newFocus.frozen
-    let status = newFocus.workspace.workspaceMonitor.setActiveWorkspace(newFocus.workspace)
+    let status = newFocus.workspace.workspaceMonitorInfo.setVisibleWorkspace(newFocus.workspace)
 
     newFocus.windowOrNil?.markAsMostRecentChild()
     return status
@@ -114,7 +114,7 @@ extension Workspace {
 
 // Used by focus-back-and-forth
 @MainActor private var _prevFocus: FrozenFocus? = nil
-@MainActor var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
+@MainActor var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != globalFocus } }
 
 @MainActor private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
@@ -122,7 +122,7 @@ extension Workspace {
     if refreshSessionEvent?.isStartup == true {
         return
     }
-    let focus = focus
+    let focus = globalFocus
     let frozenFocus = focus.frozen
     var hasFocusChanged = false
     var hasFocusedWorkspaceChanged = false
@@ -157,7 +157,7 @@ extension Workspace {
 @MainActor func onFocusedMonitorChanged(_ env: CmdEnv, _ io: CmdIo, _ focus: LiveFocus) async -> Int32ExitCode {
     broadcastEvent(.focusedMonitorChanged(
         workspace: focus.workspace.name,
-        monitorId_oneBased: focus.workspace.workspaceMonitor.monitorId_oneBased ?? 0,
+        monitorId_oneBased: focus.workspace.workspaceMonitorInfo.monitorId_oneBased ?? 0,
     ))
     return await config.onFocusedMonitorChanged.run(env.withFocus(focus), io)
 }

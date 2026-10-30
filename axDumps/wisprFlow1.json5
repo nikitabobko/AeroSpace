@@ -46,7 +46,7 @@
     "AXSize" : null,
     "AXTitle" : "Wispr Flow",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=4379, title=\"Status\", role=\"AXWindow\", subrole=\"AXDialog\")"
+      "AXUIElement(windowId_native=4379, title=\"Status\", role=\"AXWindow\", subrole=\"AXDialog\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), get.AXFocusedUIElement(noValue), isWritable.AXExtrasMenuBar(failure), get.AXMainWindow(noValue), get.AXFocusedWindow(noValue), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -64,7 +64,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections",
-  "Aero.axWindowId" : 4379,
+  "Aero.windowId_native" : 4379,
   "Aero.macOS.version" : "...",
   "Aero.on-window-detected" : [
 

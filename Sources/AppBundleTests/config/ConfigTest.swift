@@ -105,7 +105,7 @@ final class ConfigTest: XCTestCase {
     func testDropBindings() {
         let result = parseConfig(
             """
-            mode.main = {}
+            mode.main.binding = {}
             """,
         )
         assertTrue(result.allowReloadConfig)
@@ -354,9 +354,9 @@ final class ConfigTest: XCTestCase {
             """,
         )
         let matcher6Args = TestCmdArgs(rawArgs: [])
-            .copy(\.lhs, .initialized(.app(.appBundleId)))
-            .copy(\.infixOperator, .initialized(.equals))
-            .copy(\.rhs, .initialized("org.alacritty"))
+            .with(\.lhs, .initialized(.app(.appBundleId)))
+            .with(\.infixOperator, .initialized(.equals))
+            .with(\.rhs, .initialized("org.alacritty"))
         assertEquals(result.config.onWindowDetected, [
             WindowDetectedCallback( // 0
                 matcher: .command(.cmd(TrueCommand.instance)),
@@ -400,6 +400,7 @@ final class ConfigTest: XCTestCase {
         ])
 
         assertEquals(result.strErrors, [
+            "[ERROR] on-window-detected[2]: empty table is not allowed here",
             "[ERROR] on-window-detected[2]: Omitting \'if\' is error prone. You can use `if = \'true\'` to preserve the previous behavior.\nBut heads up! You may have missed \'check-further-callbacks = true\'",
             "[ERROR] on-window-detected[2]: \'run\' is mandatory key",
             "[ERROR] on-window-detected[7]: Omitting \'if\' is error prone. You can use `if = \'true\'` to preserve the previous behavior.\nBut heads up! You may have missed \'check-further-callbacks = true\'",

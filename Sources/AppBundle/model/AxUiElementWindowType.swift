@@ -105,7 +105,7 @@ extension AxUiElementMock {
         _ windowLevel: MacOsWindowLevel?,
     ) -> Bool {
         if windowLevel != .normalWindow &&
-            // Slowly roll out windowLevel for applications for which we have the appropriate dumps
+            // todo: Slowly roll out windowLevel for applications for which we have the appropriate dumps
             (id == .slack || id == .chrome || id?.isFirefox == true || id == .braveBrowser || id == .screenstudio || id == .cleanshotx || id == .iterm2 || id == .outlook || id == .codex || id == .wisprFlow)
         {
             return false
@@ -164,7 +164,7 @@ extension AxUiElementMock {
 
             get(Ax.isFocused) == true ||  // 3 different ways to detect if the window is focused
             get(Ax.isMainAttr) == true ||
-            axApp.get(Ax.focusedWindowAttr)?.windowId == self.containingWindowId() ||
+            axApp.get(Ax.focusedWindowAttr)?.windowId == self.containingNativeWindowId() ||
 
             get(Ax.subroleAttr) == kAXStandardWindowSubrole
     }
@@ -185,7 +185,7 @@ extension AxUiElementMock {
 
             get(Ax.isFocused) == false &&  // Three different ways to detect if the window is not focused
             get(Ax.isMainAttr) == false &&
-            axApp.get(Ax.focusedWindowAttr)?.windowId != containingWindowId() &&
+            axApp.get(Ax.focusedWindowAttr)?.windowId != containingNativeWindowId() &&
 
             subrole != kAXStandardWindowSubrole &&
             // Share window purple "pill" indicator has "Window" title https://github.com/nikitabobko/AeroSpace/issues/1101

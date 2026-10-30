@@ -17,7 +17,7 @@ struct ExecConfig: Equatable {
     var envVariables: [String: String] = env + defaultOverriddenEnvVars
 }
 
-struct RawExecConfig: ConvenienceMutable, Equatable {
+struct RawExecConfig: Withable, Equatable {
     var inheritEnvVariables = true
     // Already interpolated value of overridden vars
     var overriddenVars: [String: String] = [:]
@@ -29,7 +29,7 @@ struct RawExecConfig: ConvenienceMutable, Equatable {
 }
 
 func parseExecConfig(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> ExecConfig {
-    parseTable(raw, RawExecConfig(), rawExecConfigParser, backtrace, &c).expand()
+    parseNonEmptyTable(raw, RawExecConfig(), rawExecConfigParser, backtrace, &c).expand()
 }
 
 private func parseEnvVariables(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> [String: String] {

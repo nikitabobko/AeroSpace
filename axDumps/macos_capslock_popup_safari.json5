@@ -26,23 +26,23 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=46, title=nil, role=\"AXTextField\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=46, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=46, title=nil, role=\"AXTextField\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=46, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
     "AXIsScribbleActive" : 0,
-    "AXMainWindow" : "AXUIElement(AxWindowId=46, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=46, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x7a7343c0c0> {pid=476}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Safari",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=45, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
-      "AXUIElement(AxWindowId=46, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=45, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(windowId_native=46, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, isWritable.AXIsScribbleActive, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -60,7 +60,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections",
-  "Aero.axWindowId" : 45,
+  "Aero.windowId_native" : 45,
   "Aero.macOS.version" : "Version 27.0 (Build 26A5368g)",
   "Aero.on-window-detected" : [
 

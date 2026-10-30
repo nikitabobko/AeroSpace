@@ -8,7 +8,7 @@ public struct TriggerBindingCmdArgs: CmdArgs {
             "--mode": singleValueSubArgParser(\._mode, "<mode-id>", Result.success),
         ],
         posArgs: [
-            dashDashArg(mandatory: false),
+            doubleDashArg(mandatory: false),
             newMandatoryPosArgParser(\.binding, consumeStrCliArg, placeholder: "<binding>"),
         ],
     )

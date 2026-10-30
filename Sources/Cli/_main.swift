@@ -105,7 +105,7 @@ struct Main {
             }
         }
 
-        let windowId = ProcessInfo.processInfo.environment[AEROSPACE_WINDOW_ID].flatMap(UInt32.init)
+        let windowId = ProcessInfo.processInfo.environment[AEROSPACE_WINDOW_ID].flatMap(UInt64.init).map(OpaqueWindowId.init)
         let workspace = ProcessInfo.processInfo.environment[AEROSPACE_WORKSPACE]
 
         // Handle subscribe command specially
@@ -134,7 +134,7 @@ struct Main {
     }
 }
 
-func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UInt32?, workspace: String?, failExitCode: Int32) async {
+func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: OpaqueWindowId?, workspace: String?, failExitCode: Int32) async {
     if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: "", windowId: windowId, workspace: workspace)).error {
         exit(failExitCode, err: "Failed to write to server socket: \(e)")
     }
@@ -154,7 +154,7 @@ func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UIn
     }
 }
 
-func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?, failExitCode: Int32) async -> ServerAnswer {
+func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: OpaqueWindowId?, workspace: String?, failExitCode: Int32) async -> ServerAnswer {
     if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)).error {
         exit(failExitCode, err: "Failed to write to server socket: \(e)")
     }

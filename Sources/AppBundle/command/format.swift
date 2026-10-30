@@ -33,7 +33,7 @@ enum AeroObj {
     case window(WindowWithPrefetchedTitle)
     case workspace(Workspace)
     case app(any AbstractApp)
-    case monitor(Monitor)
+    case monitor(MonitorInfo)
 
     var kind: AeroObjKind {
         switch self {
@@ -74,7 +74,7 @@ extension [AeroObj] {
         let result = cellTable
             .transposed()
             .map { column in
-                let columndWidth = column.map { $0.value.count }.max().orDie()
+                let columndWidth = column.lazy.map { $0.value.count }.max().orDie()
                 return column.map {
                     $0.rightPadding
                         ? $0.value + String(repeating: " ", count: columndWidth - $0.value.count)
@@ -125,6 +125,7 @@ enum Primitive: Encodable {
     }
 
     public static func int(_ int: UInt32) -> Self { .int(Int64(exactly: int).orDie()) }
+    public static func int(_ int: UInt64) -> Self { .int(Int64(exactly: int).orDie()) }
     public static func int(_ int: Int32) -> Self { .int(Int64(exactly: int).orDie()) }
     public static func int(_ int: Int) -> Self { .int(Int64(exactly: int).orDie()) }
 }
@@ -140,13 +141,13 @@ extension FormatVar {
             case (.window(let w), .workspace):
                 return w.window.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WORKSPACE"))
             case (.window(let w), .monitor):
-                return w.window.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
+                return w.window.nodeMonitorInfo.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
             case (.window(let w), .app):
                 return expandFormatVar(obj: .app(w.window.app))
             case (.window(_), .window): break
 
             case (.workspace(let ws), .monitor):
-                return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
+                return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitorInfo))
             case (.workspace, _): break
 
             case (.app(_), _): break
@@ -156,7 +157,7 @@ extension FormatVar {
         switch (obj, self) {
             case (.window(let w), .window(let f)):
                 return switch f {
-                    case .windowId: .success(.int(w.window.windowId))
+                    case .windowId: .success(.int(w.window.windowId.rawId))
                     case .windowIsFullscreen: .success(.bool(w.window.isFullscreen))
                     case .windowTitle: .success(.string(w.title.orDie("Title wasn't prefetched")))
                     case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w.window)
@@ -165,7 +166,7 @@ extension FormatVar {
                 return switch f {
                     case .workspaceName: .success(.string(w.name))
                     case .workspaceVisible: .success(.bool(w.isVisible))
-                    case .workspaceFocused: .success(.bool(focus.workspace == w))
+                    case .workspaceFocused: .success(.bool(globalFocus.workspace == w))
                     case .workspaceRootContainerLayout: .success(.string(toLayoutString(tc: w.rootTilingContainer)))
                 }
             case (.monitor(let m), .monitor(let f)):

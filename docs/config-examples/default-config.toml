@@ -57,7 +57,7 @@ persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B",
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
-on-mode-changed = []
+on-mode-changed = ""
 
 focus-follows-mouse.enabled = false
 

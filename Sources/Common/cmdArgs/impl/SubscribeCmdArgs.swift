@@ -27,7 +27,7 @@ public func parseSubscribeCmdArgs(_ args: StrArrSlice) -> ParsedCmd<SubscribeCmd
             raw.allAlias.implies(raw.events.isEmpty)
         }
         .map { raw in
-            raw.allAlias ? raw.copy(\.events, Set(ServerEventType.allCases)).copy(\.allAlias, false) : raw
+            raw.allAlias ? raw.with(\.events, Set(ServerEventType.allCases)).with(\.allAlias, false) : raw
         }
 }
 

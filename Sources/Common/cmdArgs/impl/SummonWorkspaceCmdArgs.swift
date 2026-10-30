@@ -8,7 +8,7 @@ public struct SummonWorkspaceCmdArgs: CmdArgs {
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
         posArgs: [
-            dashDashArg(mandatory: false),
+            doubleDashArg(mandatory: false),
             newMandatoryPosArgParser(\.target, parseWorkspaceName, placeholder: "<workspace>"),
         ],
     )

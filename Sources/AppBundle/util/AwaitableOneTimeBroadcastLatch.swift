@@ -1,45 +1,52 @@
+import BasicContainers
 import Common
 import Foundation
 
 actor AwaitableOneTimeBroadcastLatch {
     private var done = false
-    private var awaiters: [UniqueToken: Nullable<CheckedContinuation<(), any Error>>] = [:]
+    private var awaiters = UniqueDictionary<UniqueToken, Nullable<any StrictContinuation<(), any Error> & ~Copyable>>()
 
-    func await() async throws {
-        try checkCancellation()
+    func await(_ cm: CancellationMode) async throws {
+        try checkCancellation(cm)
         if done { return }
 
         let id = UniqueToken()
         try await withTaskCancellationHandler {
-            try await withCheckedThrowingContinuation { (cont: CheckedContinuation<(), any Error>) in
+            try await withStrictContinuation(of: Void.self, throwing: (any Error).self) { cont in
                 switch awaiters.removeValue(forKey: id) {
-                    case let awaiter?:
-                        check(awaiter.isNull)
-                        cont.resume(throwing: CancellationError())
+                    case .null: cont.resume(throwing: CancellationError())
+                    case .just: die()
                     case nil where done: cont.resume()
-                    case nil: awaiters[id] = .just(cont)
+                    case nil: check(awaiters.insertValue(.just(cont), forKey: id) == nil)
                 }
             }
         } onCancel: {
-            Task.startUnstructured { await self.cancel(id: id) }
+            if cm == .cancellable {
+                Task.startUnstructured { await self.cancel(id: id) }
+            }
         }
     }
 
     private func cancel(id: UniqueToken) {
         switch awaiters.removeValue(forKey: id) {
-            case let awaiter?: awaiter.valueOrNil.orDie().resume(throwing: CancellationError())
+            case .just(let cont): cont.resume(throwing: CancellationError())
+            case .null: die()
             case nil where !done:
                 // Indicate to 'await' that the client should be cancelled right away when it suspends
-                awaiters[id] = .null
+                awaiters.insertValue(.null, forKey: id)
             case nil: break
         }
     }
 
     func signalToAll() {
         done = true
-        for (_, awaiter) in awaiters {
-            awaiter.valueOrNil?.resume()
+        let keys: [UniqueToken] = awaiters.copiedOutKeys
+        for id in keys {
+            switch awaiters.removeValue(forKey: id) {
+                case .just(let cont): cont.resume()
+                case .null: break
+                case nil: break
+            }
         }
-        awaiters = [:]
     }
 }

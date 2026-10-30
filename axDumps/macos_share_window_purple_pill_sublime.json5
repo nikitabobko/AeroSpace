@@ -28,22 +28,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=18996, title=\"untitled — AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=18996, title=\"untitled — AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=18996, title=\"untitled — AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=18996, title=\"untitled — AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 0,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=18996, title=\"untitled — AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=18996, title=\"untitled — AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0xca6d317a0> {pid=88048}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Sublime Text",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=19064, title=\"Window\", role=\"AXWindow\", subrole=\"AXDialog\")",
-      "AXUIElement(AxWindowId=18996, title=\"untitled — AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=19064, title=\"Window\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(windowId_native=18996, title=\"untitled — AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), get.AXExtrasMenuBar(noValue), isWritable.AXExtrasMenuBar(failure), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -61,7 +61,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections",
-  "Aero.axWindowId" : 19064,
+  "Aero.windowId_native" : 19064,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

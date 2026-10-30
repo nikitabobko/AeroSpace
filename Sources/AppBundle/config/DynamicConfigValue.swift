@@ -13,15 +13,15 @@ enum DynamicConfigValue<Value: Equatable>: Equatable {
 extension DynamicConfigValue: Sendable where Value: Sendable {}
 
 extension DynamicConfigValue {
-    @MainActor func getValue(for monitor: any Monitor) -> Value {
+    @MainActor func getValue(for monitor: any MonitorInfo) -> Value {
         switch self {
             case .constant(let value): return value
             case .perMonitor(let array, let defaultValue):
-                let sortedMonitors = sortedMonitors
+                let sortedMonitors = globalSortedMonitorInfos
                 return array
                     .lazy
                     .compactMap {
-                        $0.description.resolveMonitor(sortedMonitors: sortedMonitors)?.rect.topLeftCorner == monitor.rect.topLeftCorner
+                        $0.description.resolveMonitorInfo(sortedMonitors: sortedMonitors)?.rect.topLeftCorner == monitor.rect.topLeftCorner
                             ? $0.value
                             : nil
                     }

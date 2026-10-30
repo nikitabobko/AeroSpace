@@ -14,9 +14,9 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             "--all": trueBoolFlag(\.all),
 
             // Filtering flags
-            "--visible": boolFlag(\.filteringOptions.visible),
-            "--empty": boolFlag(\.filteringOptions.empty),
-            "--monitor": ArgParser(\.filteringOptions.onMonitors, parseMonitorIds),
+            "--visible": boolFlag(\.filteringFlags.visible),
+            "--empty": boolFlag(\.filteringFlags.empty),
+            "--monitor": ArgParser(\.filteringFlags.onMonitors, parseMonitorIds),
 
             // Formatting flags
             "--format": formatParser(\._format, for: .workspace),
@@ -24,7 +24,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             "--json": trueBoolFlag(\.json),
         ],
         posArgs: [],
-        conflictingOptions: [
+        conflictingFlags: [
             ["--all", "--focused", "--monitor"],
             ["--count", "--format"],
             ["--count", "--json"],
@@ -34,12 +34,12 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     fileprivate var all: Bool = false // Alias
     fileprivate var focused: Bool = false // Alias
 
-    public var filteringOptions = FilteringOptions()
+    public var filteringFlags = FilteringFlags()
     public var _format: [InterToken<InterVar>] = [.interVar(.formatVar(.workspace(.workspaceName)))]
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
-    public struct FilteringOptions: ConvenienceMutable, Equatable, Sendable {
+    public struct FilteringFlags: Withable, Equatable, Sendable {
         public var onMonitors: [MonitorId] = []
         public var visible: Bool?
         public var empty: Bool?
@@ -53,22 +53,22 @@ extension ListWorkspacesCmdArgs {
 func parseListWorkspacesCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWorkspacesCmdArgs> {
     parseSpecificCmdArgs(ListWorkspacesCmdArgs(commonState: .init(args)), args)
         .filter("Mandatory option is not specified (--all|--focused|--monitor)") { raw in
-            raw.all || raw.focused || !raw.filteringOptions.onMonitors.isEmpty
+            raw.all || raw.focused || !raw.filteringFlags.onMonitors.isEmpty
         }
         .filter("--all conflicts with any other \"filtering\" options") { raw in
-            raw.all.implies(raw.filteringOptions == ListWorkspacesCmdArgs.FilteringOptions())
+            raw.all.implies(raw.filteringFlags == ListWorkspacesCmdArgs.FilteringFlags())
         }
         .filter("--focused conflicts with all other \"filtering\" options") { raw in
-            raw.focused.implies(raw.filteringOptions == ListWorkspacesCmdArgs.FilteringOptions())
+            raw.focused.implies(raw.filteringFlags == ListWorkspacesCmdArgs.FilteringFlags())
         }
         .map { raw in
-            raw.all ? raw.copy(\.filteringOptions.onMonitors, [.all]).copy(\.all, false) : raw
+            raw.all ? raw.with(\.filteringFlags.onMonitors, [.all]).with(\.all, false) : raw
         }
         .map { raw in // Expand alias
             raw.focused
-                ? raw.copy(\.filteringOptions.onMonitors, [.focused])
-                    .copy(\.filteringOptions.visible, true)
-                    .copy(\.focused, false)
+                ? raw.with(\.filteringFlags.onMonitors, [.focused])
+                    .with(\.filteringFlags.visible, true)
+                    .with(\.focused, false)
                 : raw
         }
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }

@@ -25,26 +25,26 @@
   "AXSize" : "<AXValue 0x9780372d0> {value = w:800.000000 h:387.000000 type = kAXValueCGSizeType}",
   "AXSubrole" : "AXStandardWindow",
   "AXTitle" : "",
-  "AXTitleUIElement" : "AXUIElement(AxWindowId=4753, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXTitleUIElement" : "AXUIElement(windowId_native=4753, title=nil, role=\"AXStaticText\", subrole=nil)",
   "AXToolbarButton" : null,
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4753, title=nil, role=\"AXTextField\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=4753, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=4753, title=nil, role=\"AXTextField\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=4753, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=4753, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=4753, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x97809cbd0> {pid=93987}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "choose",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=4753, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=4753, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -62,7 +62,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 4753,
+  "Aero.windowId_native" : 4753,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 

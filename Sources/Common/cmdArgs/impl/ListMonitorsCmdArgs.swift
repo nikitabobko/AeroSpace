@@ -14,7 +14,7 @@ public struct ListMonitorsCmdArgs: CmdArgs {
             "--json": trueBoolFlag(\.json),
         ],
         posArgs: [],
-        conflictingOptions: [
+        conflictingFlags: [
             ["--count", "--format"],
             ["--count", "--json"],
         ],

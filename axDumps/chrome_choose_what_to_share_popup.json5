@@ -44,7 +44,7 @@
       "AXInsertionPointLineNumber" : 0,
       "AXInvalid" : "false",
       "AXNumberOfCharacters" : 0,
-      "AXParent" : "AXUIElement(AxWindowId=19097, title=\"\", role=\"AXGroup\", subrole=nil)",
+      "AXParent" : "AXUIElement(windowId_native=19097, title=\"\", role=\"AXGroup\", subrole=nil)",
       "AXPlaceholderValue" : null,
       "AXRequired" : 0,
       "AXRole" : "AXButton",
@@ -63,32 +63,32 @@
       "AXSubrole" : null,
       "AXTitle" : "",
       "AXTitleUIElement" : null,
-      "AXTopLevelUIElement" : "AXUIElement(AxWindowId=19097, title=\"Choose what to share with meet.google.com\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXTopLevelUIElement" : "AXUIElement(windowId_native=19097, title=\"Choose what to share with meet.google.com\", role=\"AXWindow\", subrole=\"AXUnknown\")",
       "AXURL" : null,
       "AXValue" : "",
       "AXVisibleCharacterRange" : "<AXValue 0xca6f7ccc0> {value = location:0 length:0 type = kAXValueCFRangeType}",
       "AXVisited" : 0,
-      "AXWindow" : "AXUIElement(AxWindowId=19097, title=\"Choose what to share with meet.google.com\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXWindow" : "AXUIElement(windowId_native=19097, title=\"Choose what to share with meet.google.com\", role=\"AXWindow\", subrole=\"AXUnknown\")",
       "Aero.AxFailed" : "get.AXURL(noValue), get.AXPlaceholderValue(noValue), get.AXTitleUIElement(noValue), get.AXAccessKey(noValue), get.AXSubrole(noValue), get.AXColumnHeaderUIElements(noValue), get.AXCustomContent(noValue)",
       "Aero.AxIgnored" : "AXFocused, AXRoleDescription, AXHelp, AXChildren, AXSize, AXFocusableAncestor, AXPosition, AXFrame",
       "Aero.AxWritable" : "AXSelectedText, AXSelectedTextRange, AXValue, AXCustomContent",
       "ChromeAXNodeId" : "2160"
     },
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=19097, title=\"Choose what to share with meet.google.com\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=19097, title=\"Choose what to share with meet.google.com\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=19068, title=\"Meet – sqg-eqgf-jjj - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=19068, title=\"Meet – sqg-eqgf-jjj - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0xca6f73b70> {pid=88242}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Chrome",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=19097, title=\"Choose what to share with meet.google.com\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=19068, title=\"Meet – sqg-eqgf-jjj - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=19097, title=\"Choose what to share with meet.google.com\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(windowId_native=19068, title=\"Meet – sqg-eqgf-jjj - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), get.AXExtrasMenuBar(noValue), isWritable.AXExtrasMenuBar(failure), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -106,7 +106,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections",
-  "Aero.axWindowId" : 19097,
+  "Aero.windowId_native" : 19097,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

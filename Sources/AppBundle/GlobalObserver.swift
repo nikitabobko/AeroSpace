@@ -54,19 +54,19 @@ enum GlobalObserver {
         nc.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main, using: onNotif)
 
         NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { _ in
+            guard let token: RunSessionGuard = .isServerEnabled else { return }
             // todo reduce number of refreshSession in the callback
             //  resetManipulatedWithMouseIfPossible might call its own refreshSession
             //  The end of the callback calls refreshSession
             Task.startUnstructured { @MainActor in
-                guard let token: RunSessionGuard = .isServerEnabled else { return }
                 try await resetManipulatedWithMouseIfPossible()
                 let mouseLocation = mouseLocation
                 let clickedMonitor = mouseLocation.monitorApproximation
                 switch true {
                     // Detect clicks on desktop of different monitors
-                    case clickedMonitor.visibleRect.contains(mouseLocation) && clickedMonitor.activeWorkspace != focus.workspace:
+                    case clickedMonitor.visibleRect.contains(mouseLocation) && clickedMonitor.visibleWorkspace != globalFocus.workspace:
                         _ = try await runLightSession(.globalObserverLeftMouseUp, token) {
-                            clickedMonitor.activeWorkspace.focusWorkspace()
+                            clickedMonitor.visibleWorkspace.focusWorkspace()
                         }
                     // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable
                     //  And trigger new window detection that could be delayed due to mouseDown event

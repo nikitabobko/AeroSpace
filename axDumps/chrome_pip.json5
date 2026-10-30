@@ -31,21 +31,21 @@
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
     "AXFocusedUIElement" : null,
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=14413, title=\"Picture-in-picture\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=14413, title=\"Picture-in-picture\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=14413, title=\"Picture-in-picture\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=14413, title=\"Picture-in-picture\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x6000018cd3e0> {pid=34617}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Chrome",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=14413, title=\"Picture-in-picture\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=14400, title=\"John Cena Prank Call - YouTube – Video playing in picture-in-picture mode - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=14413, title=\"Picture-in-picture\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(windowId_native=14400, title=\"John Cena Prank Call - YouTube – Video playing in picture-in-picture mode - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -55,7 +55,7 @@
   "Aero.App.version" : "7049.116",
   "Aero.App.versionShort" : "135.0.7049.116",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 14413,
+  "Aero.windowId_native" : 14413,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.on-window-detected" : [

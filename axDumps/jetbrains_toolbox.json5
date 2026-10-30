@@ -30,20 +30,20 @@
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : "<AXUIElement 0xca6d33ab0> {pid=75306}",
     "AXFocusedUIElement" : "<AXUIElement 0xca6d33ab0> {pid=75306}",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=18676, title=\"Toolbox\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=18676, title=\"Toolbox\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=18676, title=\"Toolbox\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=18676, title=\"Toolbox\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
     "AXMenuBar" : "<AXUIElement 0xca6d335a0> {pid=75306}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "JetBrains Toolbox",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=18676, title=\"Toolbox\", role=\"AXWindow\", subrole=\"AXSystemDialog\")"
+      "AXUIElement(windowId_native=18676, title=\"Toolbox\", role=\"AXWindow\", subrole=\"AXSystemDialog\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), isWritable.AXExtrasMenuBar(failure), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -61,7 +61,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 18676,
+  "Aero.windowId_native" : 18676,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

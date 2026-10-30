@@ -28,24 +28,24 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : "<AXUIElement 0x9dec48840> {pid=972}",
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=70857, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=70857, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=70857, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=70857, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=70857, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=70857, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x9dec48840> {pid=972}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "CleanShot X",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=70858, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=70857, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=70860, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=70859, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=70858, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(windowId_native=70857, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(windowId_native=70860, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(windowId_native=70859, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -63,7 +63,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 70857,
+  "Aero.windowId_native" : 70857,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
     {

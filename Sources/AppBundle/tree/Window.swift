@@ -2,25 +2,30 @@ import AppKit
 import Common
 
 open class Window: TreeNode, Hashable {
-    let windowId: UInt32
+    let windowId: OpaqueWindowId
     let app: any AbstractApp
     var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
     var noOuterGapsInFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard
+    var lifeStatus: WindowLifeStatus = .alive
 
     @MainActor
-    init(id: UInt32, _ app: any AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
+    init(id: OpaqueWindowId, _ app: any AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
         self.windowId = id
         self.app = app
         self.lastFloatingSize = lastFloatingSize
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
-    @MainActor static func get(byId windowId: UInt32) -> Window? { // todo make non optional
+    @MainActor static func get(byId windowId: OpaqueWindowId) -> Window? { // todo make non optional
         isUnitTest
             ? Workspace.all.flatMap { $0.allLeafWindowsRecursive }.first(where: { $0.windowId == windowId })
             : MacWindow.allWindowsMap[windowId]
+    }
+
+    @MainActor static func get(byNativeId nativeWindowId: UInt32, pid: pid_t) -> Window? {
+        MacApp.allAppsMap[pid]?.opaqueWindowId(of: nativeWindowId).flatMap { get(byId: $0) }
     }
 
     @MainActor
@@ -45,7 +50,7 @@ open class Window: TreeNode, Hashable {
 enum LayoutReason: Equatable {
     case standard
     /// Reason for the cur temp layout is macOS native fullscreen, minimize, or hide
-    case macos(prevParentKind: NonLeafTreeNodeKind)
+    case macos(prevParentKind: WindowParentCases.Kind)
 }
 
 extension Window {
@@ -57,7 +62,7 @@ extension Window {
             case .macosMinimizedWindowsContainer: false
             case .macosPopupWindowsContainer: false
             case .tilingContainer: false
-            case .unbound: false
+            case nil: false
         }
     }
 

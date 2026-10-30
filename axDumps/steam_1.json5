@@ -33,20 +33,20 @@
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
     "AXFocusedUIElement" : null,
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=18969, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=18969, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=18969, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=18969, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : null,
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Steam Helper",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=18969, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=18969, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), get.AXFocusedUIElement(noValue), get.AXExtrasMenuBar(noValue), isWritable.AXExtrasMenuBar(failure), get.AXMenuBar(noValue), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -64,7 +64,7 @@
   "Aero.AxUiElementWindowType" : "window",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxWritable" : "AXFullScreen, AXPosition, AXSections, AXMain, AXMinimized, AXSize",
-  "Aero.axWindowId" : 18969,
+  "Aero.windowId_native" : 18969,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

@@ -16,7 +16,7 @@ public struct FocusCmdArgs: CmdArgs {
             "--wrap-around": trueBoolFlag(\.wrapAroundAlias),
         ],
         posArgs: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
-        conflictingOptions: [
+        conflictingFlags: [
             ["--wrap-around", "--boundaries-action"],
             ["--wrap-around", "--boundaries"],
         ],
@@ -36,7 +36,7 @@ public struct FocusCmdArgs: CmdArgs {
         self.cardinalOrDfsDirection = cardinalOrDfsDirection
     }
 
-    public init(rawArgs: StrArrSlice, windowId: UInt32) {
+    public init(rawArgs: StrArrSlice, windowId: OpaqueWindowId) {
         self.commonState = .init(rawArgs)
         self.windowId = windowId
     }
@@ -60,7 +60,7 @@ public struct FocusCmdArgs: CmdArgs {
 
 public enum FocusCmdTarget {
     case direction(CardinalDirection)
-    case windowId(UInt32)
+    case windowId(OpaqueWindowId)
     case dfsIndex(UInt32)
     case dfsRelative(DfsNextPrev)
 
@@ -77,7 +77,7 @@ extension FocusCmdArgs {
         if let cardinalOrDfsDirection {
             return switch cardinalOrDfsDirection {
                 case .direction(let dir): .direction(dir)
-                case .dfsRelative(let nextPrev): .dfsRelative(nextPrev)
+                case .dfsNextPrev(let nextPrev): .dfsRelative(nextPrev)
             }
         }
         if let windowId {

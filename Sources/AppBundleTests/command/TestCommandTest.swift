@@ -10,16 +10,16 @@ final class TestCommandTest: XCTestCase {
         testParseSingleCommandSucc(
             "test %{app-bundle-id} = foo",
             TestCmdArgs(rawArgs: [])
-                .copy(\.lhs, .initialized(.app(.appBundleId)))
-                .copy(\.infixOperator, .initialized(.equals))
-                .copy(\.rhs, .initialized("foo")),
+                .with(\.lhs, .initialized(.app(.appBundleId)))
+                .with(\.infixOperator, .initialized(.equals))
+                .with(\.rhs, .initialized("foo")),
         )
         testParseSingleCommandSucc(
             "test-not %{app-bundle-id} ~= foo",
             TestNotCmdArgs(rawArgs: [])
-                .copy(\.testArgs.lhs, .initialized(.app(.appBundleId)))
-                .copy(\.testArgs.infixOperator, .initialized(.matchesRegex))
-                .copy(\.testArgs.rhs, .initialized("foo")),
+                .with(\.testArgs.lhs, .initialized(.app(.appBundleId)))
+                .with(\.testArgs.infixOperator, .initialized(.matchesRegex))
+                .with(\.testArgs.rhs, .initialized("foo")),
         )
 
         testParseCommandFail("test %{foo} = foo", msg: "ERROR: Can\'t parse \'foo\'.\n       Possible values: (window-id|window-is-fullscreen|window-title|window-layout|window-parent-container-layout|workspace|workspace-is-focused|workspace-is-visible|workspace-root-container-layout|app-bundle-id|app-name|app-pid|app-exec-path|app-bundle-path|monitor-id|monitor-appkit-nsscreen-screens-id|monitor-name|monitor-is-main)", exitCode: 2)

@@ -4,12 +4,12 @@
   "AXCancelButton" : null,
   "AXCloseButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXCloseButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle(noValue)",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
   },
@@ -23,12 +23,12 @@
   "AXMain" : 1,
   "AXMinimizeButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXMinimizeButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle(noValue)",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
   },
@@ -49,25 +49,25 @@
   "AXToolbarButton" : null,
   "AXZoomButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXZoomButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle(noValue)",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
     "AXFocusedUIElement" : null,
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXManualAccessibility" : 0,
     "AXMenuBar" : "<AXUIElement 0xca6f737b0> {pid=79695}",
     "AXPosition" : null,
@@ -75,7 +75,7 @@
     "AXSize" : null,
     "AXTitle" : "Code",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=18837, title=\"Release Notes: 1.127.0\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), get.AXFocusedUIElement(noValue), get.AXExtrasMenuBar(noValue), isWritable.AXExtrasMenuBar(failure), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -93,7 +93,7 @@
   "Aero.AxUiElementWindowType" : "window",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain, AXMinimized, AXSize",
-  "Aero.axWindowId" : 18837,
+  "Aero.windowId_native" : 18837,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

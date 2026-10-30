@@ -31,21 +31,21 @@
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
     "AXFocusedUIElement" : null,
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=14076, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=14076, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x6000019884b0> {pid=34617}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Chrome",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=14076, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=14076, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(windowId_native=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -55,7 +55,7 @@
   "Aero.App.version" : "7049.116",
   "Aero.App.versionShort" : "135.0.7049.116",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 14076,
+  "Aero.windowId_native" : 14076,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.on-window-detected" : [

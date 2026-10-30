@@ -29,21 +29,21 @@
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : "<AXUIElement 0x7a6601b30> {pid=5114}",
     "AXFocusedUIElement" : "<AXUIElement 0x7a6601b30> {pid=5122}",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=10742, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=10742, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=10742, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=10742, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x7a6602550> {pid=5114}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Zebar",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=10742, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=10743, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=10742, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(windowId_native=10743, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -55,7 +55,7 @@
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
-  "Aero.axWindowId" : 10742,
+  "Aero.windowId_native" : 10742,
   "Aero.macOS.version" : "Version 26.0 (Build 25A354)",
   "Aero.on-window-detected" : [
     {

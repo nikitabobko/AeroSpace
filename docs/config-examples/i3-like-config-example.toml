@@ -21,10 +21,10 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     'tell application "Terminal" to tell (do script) to activate' '''
 
     # i3 wraps focus by default
-    alt-j =         'focus --boundaries-action wrap-around-the-workspace left'
-    alt-k =         'focus --boundaries-action wrap-around-the-workspace down'
-    alt-l =         'focus --boundaries-action wrap-around-the-workspace up'
-    alt-semicolon = 'focus --boundaries-action wrap-around-the-workspace right'
+    alt-j =         'focus --wrap-around left'
+    alt-k =         'focus --wrap-around down'
+    alt-l =         'focus --wrap-around up'
+    alt-semicolon = 'focus --wrap-around right'
 
     alt-shift-j = 'move left'
     alt-shift-k = 'move down'

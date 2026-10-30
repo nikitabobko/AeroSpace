@@ -4,12 +4,12 @@
   "AXCancelButton" : null,
   "AXCloseButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXCloseButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
   },
   "AXDefaultButton" : null,
@@ -19,24 +19,24 @@
   "AXFullScreen" : 0,
   "AXFullScreenButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXFullScreenButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
   "AXGrowArea" : null,
   "AXMain" : 1,
   "AXMinimizeButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXMinimizeButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
   },
   "AXMinimized" : 0,
@@ -56,32 +56,32 @@
   "AXToolbarButton" : null,
   "AXZoomButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXFullScreenButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14685, title=nil, role=\"AXWebArea\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=14685, title=nil, role=\"AXWebArea\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x6000018deb20> {pid=1405}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Firefox",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=13054, title=\"Pinterest\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=14685, title=\"Inloggen - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(windowId_native=13054, title=\"Pinterest\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -91,7 +91,7 @@
   "Aero.App.version" : "13725.4.14",
   "Aero.App.versionShort" : "137.0.2",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 14685,
+  "Aero.windowId_native" : 14685,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false, // todo fix?
   "Aero.AxUiElementWindowType" : "window",
   "Aero.on-window-detected" : [

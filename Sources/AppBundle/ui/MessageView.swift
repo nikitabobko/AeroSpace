@@ -16,10 +16,11 @@ public func getMessageWindow(messageModel: MessageModel) -> some Scene {
                     }
                 }
             }
-        // .windowMinimizeBehavior(WindowInteractionBehavior.disabled) // SwiftUI way of hiding minimize button. Available only since macOS 15
+        // .windowMinimizeBehavior(WindowInteractionBehavior.disabled) // SwiftUI way of hiding minimize button.
+        // Available only since #macos15
     }
     .windowResizability(.contentMinSize)
-    //.windowLevel(.floating) //This might be the SwiftUI way of doing window level instead of the onAppear block above, but it's only available from macOS 15.0
+    //.windowLevel(.floating) //This might be the SwiftUI way of doing window level instead of the onAppear block above, but it's only available from #macos15
 }
 
 public let messageWindowId = "\(aeroSpaceAppName).messageView"
@@ -58,7 +59,8 @@ struct MessageView: View {
                         TextEditor(text: cancelOnEnterBinding)
                             .font(.system(size: 12).monospaced())
                             .focused($focus)
-                        //  .onKeyPress(.return) { return .handled } // enter handling alternative. Only available since macOS 14
+                        //  // enter handling alternative. Only available since #macos14
+                        //  .onKeyPress(.return) { return .handled }
                         Spacer()
                     }
                     Spacer()

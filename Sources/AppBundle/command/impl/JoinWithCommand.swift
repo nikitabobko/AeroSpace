@@ -11,10 +11,10 @@ struct JoinWithCommand: Command {
         guard let currentWindow = target.windowOrNil else {
             return .fail(io.err(noWindowIsFocused))
         }
-        guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else {
+        guard let (parent, _, neighborIndex) = currentWindow.closestParent(hasInhabitedChildrenInDirection: direction, withLayout: nil) else {
             return .fail(io.err("No windows in the specified direction"))
         }
-        let joinWithTarget = parent.children[ownIndex + direction.focusOffset]
+        let joinWithTarget = parent.children[neighborIndex]
         let prevBinding = joinWithTarget.unbindFromParent()
         let newParent = TilingContainer(
             parent: parent,

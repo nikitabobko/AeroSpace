@@ -29,22 +29,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=15127, title=nil, role=\"AXGroup\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=15127, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/src/_052.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=15127, title=nil, role=\"AXGroup\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=15127, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/src/_052.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=15127, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/src/_052.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=15127, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/src/_052.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0xca6d31620> {pid=61359}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "IntelliJ IDEA",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=18680, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=15127, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/src/_052.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=18680, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(windowId_native=15127, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/src/_052.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), get.AXExtrasMenuBar(noValue), isWritable.AXExtrasMenuBar(failure), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -62,7 +62,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections",
-  "Aero.axWindowId" : 18680,
+  "Aero.windowId_native" : 18680,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

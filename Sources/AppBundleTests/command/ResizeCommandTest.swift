@@ -79,6 +79,73 @@ final class ResizeCommandTest: XCTestCase {
         assertEquals(window3.hWeight, 3)
     }
 
+    func testWidthAdd_skipsTombstones() async {
+        var window1: Window!
+        var window2: Window!
+        var window3: Window!
+        var invisibleWindow: Window!
+        var deadContainer: TilingContainer!
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            window1 = TestWindow.new(id: 1, parent: $0, adaptiveWeight: 4)
+            invisibleWindow = TestWindow.new(id: 2, parent: $0, adaptiveWeight: 4).apply { $0.lifeStatus = .invisible }
+            window2 = TestWindow.new(id: 3, parent: $0, adaptiveWeight: 4)
+            deadContainer = TilingContainer.newVTiles(parent: $0, adaptiveWeight: 4).apply {
+                TestWindow.new(id: 4, parent: $0).lifeStatus = .dead
+                $0.lifeStatus = .deadOrInvisible
+            }
+            window3 = TestWindow.new(id: 5, parent: $0, adaptiveWeight: 4)
+        }
+        _ = window1.focusWindow()
+
+        await parseCommand("resize width +2").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        // diff = +2, childDiff = 2 / (3 visible - 1) = 1
+        assertEquals(window1.hWeight, 6)
+        assertEquals(window2.hWeight, 3)
+        assertEquals(window3.hWeight, 3)
+        assertEquals(invisibleWindow.hWeight, 4)
+        assertEquals(deadContainer.hWeight, 4)
+    }
+
+    func testWidthAdd_parentIsMustBeFlattened_resizesInAliveAncestor() async {
+        var window1: Window!
+        var window2: Window!
+        var window3: Window!
+        var mustBeFlattened: TilingContainer!
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            window1 = TestWindow.new(id: 1, parent: $0, adaptiveWeight: 4)
+            mustBeFlattened = TilingContainer.newHTiles(parent: $0, adaptiveWeight: 4).apply {
+                TestWindow.new(id: 2, parent: $0, adaptiveWeight: 4).lifeStatus = .dead
+                window2 = TestWindow.new(id: 3, parent: $0, adaptiveWeight: 4)
+                $0.lifeStatus = .mustBeFlattened
+            }
+            window3 = TestWindow.new(id: 4, parent: $0, adaptiveWeight: 4)
+        }
+        _ = window2.focusWindow()
+
+        let result = await parseCommand("resize width +2").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        // diff = +2 applied to the mustBeFlattened container in the root, childDiff = 2 / (3 visible - 1) = 1
+        assertEquals(mustBeFlattened.hWeight, 6)
+        assertEquals(window1.hWeight, 3)
+        assertEquals(window3.hWeight, 3)
+        assertEquals(window2.hWeight, 4)
+    }
+
+    func testSingleInhabitedChildParent_failsCleanly() async {
+        var window1: Window!
+        var invisibleWindow: Window!
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            window1 = TestWindow.new(id: 1, parent: $0, adaptiveWeight: 4)
+            invisibleWindow = TestWindow.new(id: 2, parent: $0, adaptiveWeight: 4).apply { $0.lifeStatus = .invisible }
+        }
+        _ = window1.focusWindow()
+
+        let result = await parseCommand("resize width +2").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(window1.hWeight, 4)
+        assertEquals(invisibleWindow.hWeight, 4)
+    }
+
     func testHeight_climbsToVerticalAncestor() async {
         // Root is horizontal; height must locate the nested vertical tile container.
         var window1: Window!

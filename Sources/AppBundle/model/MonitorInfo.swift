@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-private struct MonitorImpl {
+private struct MonitorInfoImpl {
     let monitorAppKitNsScreenScreensId: Int
     let name: String
     let rect: Rect
@@ -9,13 +9,13 @@ private struct MonitorImpl {
     let isMain: Bool
 }
 
-extension MonitorImpl: Monitor {
+extension MonitorInfoImpl: MonitorInfo {
     var height: CGFloat { rect.height }
     var width: CGFloat { rect.width }
 }
 
 /// Use it instead of NSScreen because it can be mocked in tests
-protocol Monitor: AeroAny {
+protocol MonitorInfo: AeroAny {
     /// The index in NSScreen.screens array. 1-based index
     var monitorAppKitNsScreenScreensId: Int { get }
     var name: String { get }
@@ -26,7 +26,7 @@ protocol Monitor: AeroAny {
     var isMain: Bool { get }
 }
 
-final class LazyMonitor: Monitor {
+final class LazyMonitorInfo: MonitorInfo {
     private let screen: NSScreen
     let monitorAppKitNsScreenScreensId: Int
     let name: String
@@ -59,8 +59,8 @@ final class LazyMonitor: Monitor {
 // 2. It's inaccurate because NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
 //    kAXFocusedWindowChangedNotification callbacks.
 extension NSScreen {
-    fileprivate func toMonitor(monitorAppKitNsScreenScreensId: Int) -> Monitor {
-        MonitorImpl(
+    fileprivate func toMonitorInfo(monitorAppKitNsScreenScreensId: Int) -> MonitorInfo {
+        MonitorInfoImpl(
             monitorAppKitNsScreenScreensId: monitorAppKitNsScreenScreensId,
             name: localizedName,
             rect: rect,
@@ -79,37 +79,37 @@ extension NSScreen {
     /// - For ``frame``, (0, 0) is main screen bottom left corner, and positive y-axis goes up (which is crazy).
     ///
     /// The property "normalizes" ``frame``
-    fileprivate var rect: Rect { frame.monitorFrameNormalized() }
+    fileprivate var rect: Rect { frame.withYAxisFlipped }
 
     /// Same as ``rect`` but for ``visibleFrame``
-    fileprivate var visibleRect: Rect { visibleFrame.monitorFrameNormalized() }
+    fileprivate var visibleRect: Rect { visibleFrame.withYAxisFlipped }
 }
 
-private let testMonitorRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
-private let testMonitor = MonitorImpl(
+private let testMonitorInfoRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
+private let testMonitorInfo = MonitorInfoImpl(
     monitorAppKitNsScreenScreensId: 1,
     name: "Test Monitor",
-    rect: testMonitorRect,
-    visibleRect: testMonitorRect,
+    rect: testMonitorInfoRect,
+    visibleRect: testMonitorInfoRect,
     isMain: true,
 )
 
-var mainMonitor: Monitor {
-    if isUnitTest { return testMonitor }
+var mainMonitorInfo: MonitorInfo {
+    if isUnitTest { return testMonitorInfo }
     let screens = NSScreen.screens
     // Fallback: If main screen can't be found (e.g., during display reconfiguration),
     // return screens.first or testMonitor to avoid crash
     let screen = screens.withIndex.singleOrNil(where: \.value.isMainScreen) ?? screens.first.map { (0, $0) }
-    guard let screen else { return testMonitor }
-    return LazyMonitor(monitorAppKitNsScreenScreensId: screen.index + 1, isMain: true, screen.value)
+    guard let screen else { return testMonitorInfo }
+    return LazyMonitorInfo(monitorAppKitNsScreenScreensId: screen.index + 1, isMain: true, screen.value)
 }
 
-var monitors: [Monitor] {
+var globalUnsortedMonitorInfos: [MonitorInfo] {
     isUnitTest
-        ? [testMonitor]
-        : NSScreen.screens.enumerated().map { $0.element.toMonitor(monitorAppKitNsScreenScreensId: $0.offset + 1) }
+        ? [testMonitorInfo]
+        : NSScreen.screens.enumerated().map { $0.element.toMonitorInfo(monitorAppKitNsScreenScreensId: $0.offset + 1) }
 }
 
-var sortedMonitors: [Monitor] {
-    monitors.sortedBy([\.rect.minX, \.rect.minY])
+var globalSortedMonitorInfos: [MonitorInfo] {
+    globalUnsortedMonitorInfos.sortedBy([\.rect.minX, \.rect.minY])
 }

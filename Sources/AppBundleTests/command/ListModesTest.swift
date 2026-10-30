@@ -5,15 +5,15 @@ import XCTest
 final class ListModesTest: XCTestCase {
     func testParseListModesCommand() {
         testParseSingleCommandSucc("list-modes", ListModesCmdArgs(rawArgs: []))
-        testParseSingleCommandSucc("list-modes --current", ListModesCmdArgs(rawArgs: []).copy(\.current, true))
-        testParseSingleCommandSucc("list-modes --json", ListModesCmdArgs(rawArgs: []).copy(\.json, true))
-        testParseSingleCommandSucc("list-modes --count", ListModesCmdArgs(rawArgs: []).copy(\.outputOnlyCount, true))
-        testParseSingleCommandSucc("list-modes --current --json", ListModesCmdArgs(rawArgs: []).copy(\.current, true).copy(\.json, true))
+        testParseSingleCommandSucc("list-modes --current", ListModesCmdArgs(rawArgs: []).with(\.current, true))
+        testParseSingleCommandSucc("list-modes --json", ListModesCmdArgs(rawArgs: []).with(\.json, true))
+        testParseSingleCommandSucc("list-modes --count", ListModesCmdArgs(rawArgs: []).with(\.outputOnlyCount, true))
+        testParseSingleCommandSucc("list-modes --current --json", ListModesCmdArgs(rawArgs: []).with(\.current, true).with(\.json, true))
     }
 
     func testParseListModesCommandConflicts() {
-        assertEquals(parseCommand("list-modes --json --count").errorOrNil, "ERROR: Conflicting options: --count, --json")
-        assertEquals(parseCommand("list-modes --current --count").errorOrNil, "ERROR: Conflicting options: --count, --current")
+        assertEquals(parseCommand("list-modes --json --count").errorOrNil, "ERROR: Conflicting flags: --count, --json")
+        assertEquals(parseCommand("list-modes --current --count").errorOrNil, "ERROR: Conflicting flags: --count, --current")
     }
 
     @MainActor

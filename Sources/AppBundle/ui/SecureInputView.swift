@@ -23,7 +23,7 @@ public final class SecureInputPanel: NSPanelHud {
             hostingView = NSHostingView(rootView: SecureInputView())
             hostingView.frame = NSRect(x: 0, y: 0, width: iconSize.width, height: iconSize.height)
             self.contentView?.addSubview(hostingView)
-            let x = mainMonitor.width - iconSize.width - 20
+            let x = mainMonitorInfo.width - iconSize.width - 20
             let panelFrame = NSRect(x: x, y: 20, width: iconSize.width, height: iconSize.width)
             self.setFrame(panelFrame, display: true)
             self.orderFrontRegardless()
@@ -36,7 +36,7 @@ public final class SecureInputPanel: NSPanelHud {
         let width = isMinimized ? iconSize.width : textSize.width
         let height = isMinimized ? iconSize.height : textSize.height
         hostingView.frame = NSRect(x: 0, y: 0, width: width, height: height)
-        let x = mainMonitor.width - width - 20
+        let x = mainMonitorInfo.width - width - 20
         let panelFrame = NSRect(x: x, y: 20, width: width, height: height)
         self.setFrame(panelFrame, display: true)
     }

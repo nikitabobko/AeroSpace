@@ -31,8 +31,8 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4799, title=\"Change Log\", role=\"AXGroup\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=4799, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=4799, title=\"Change Log\", role=\"AXGroup\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=4799, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
@@ -45,7 +45,7 @@
     "AXSize" : null,
     "AXTitle" : "qutebrowser",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=4799, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")"
+      "AXUIElement(windowId_native=4799, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXMainWindow, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -63,7 +63,7 @@
   "Aero.AxUiElementWindowType" : "window",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMinimized, AXSize",
-  "Aero.axWindowId" : 4799,
+  "Aero.windowId_native" : 4799,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 

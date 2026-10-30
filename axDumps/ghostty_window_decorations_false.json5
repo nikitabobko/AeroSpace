@@ -31,21 +31,21 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14769, title=nil, role=\"AXUnknown\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=14769, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=14769, title=nil, role=\"AXUnknown\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=14769, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=14769, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=14769, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x6000018c5a10> {pid=46546}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Ghostty",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=14769, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=14769, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -55,7 +55,7 @@
   "Aero.App.version" : "9438",
   "Aero.App.versionShort" : "1.1.3",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 14769,
+  "Aero.windowId_native" : 14769,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxUiElementWindowType" : "window",
   "Aero.on-window-detected" : [

@@ -4,12 +4,20 @@ import Common
 final class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider renaming to GenericContainer
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }
-    var layout: Layout
+    private var _layout: Layout
+    var layout: Layout {
+        get { _layout }
+        set(value) {
+            if isDebug && lifeStatus != .alive { die("Can't change layout of not alive TilingContainer") }
+            _layout =  value
+        }
+    }
+    var lifeStatus: TilingContainerLifeStatus = .alive // todo tighten its visibility
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
         self._orientation = orientation
-        self.layout = layout
+        self._layout = layout
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
@@ -33,24 +41,22 @@ extension TilingContainer {
             return
         }
         if config.enableNormalizationOppositeOrientationForNestedContainers {
-            var orientation = targetOrientation
             parentsWithSelf
                 .filterIsInstance(of: TilingContainer.self)
-                .forEach {
-                    $0._orientation = orientation
-                    orientation = orientation.opposite
-                }
+                .forEach { $0._orientation.flip() }
         } else {
             _orientation = targetOrientation
         }
     }
 
-    func normalizeOppositeOrientationForNestedContainers() {
-        if orientation == (parent as? TilingContainer)?.orientation {
-            _orientation = orientation.opposite
+    func normalizeOppositeOrientationForNestedContainersRecursive(parentOrientation: Orientation?) {
+        switch lifeStatus {
+            case .deadOrInvisible: return
+            case .alive: _orientation = parentOrientation?.opposite ?? orientation
+            case .mustBeFlattened: _orientation = parentOrientation ?? orientation
         }
         for child in children {
-            (child as? TilingContainer)?.normalizeOppositeOrientationForNestedContainers()
+            (child as? TilingContainer)?.normalizeOppositeOrientationForNestedContainersRecursive(parentOrientation: orientation)
         }
     }
 }

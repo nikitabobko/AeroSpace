@@ -29,22 +29,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : "<AXUIElement 0x97809e0d0> {pid=86771}",
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXMenuBar" : "<AXUIElement 0x97809e0d0> {pid=86771}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "VLC",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=2941, title=\"Fullscreen Controls\", role=\"AXWindow\", subrole=\"AXDialog\")",
-      "AXUIElement(AxWindowId=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")"
+      "AXUIElement(windowId_native=2941, title=\"Fullscreen Controls\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(windowId_native=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -62,7 +62,7 @@
   "Aero.AxUiElementWindowType" : "popup", // todo fix
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 4856,
+  "Aero.windowId_native" : 4856,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 

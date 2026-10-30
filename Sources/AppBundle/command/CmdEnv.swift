@@ -1,7 +1,7 @@
 import Common
 
 struct CmdEnv {
-    var windowId: UInt32? = nil
+    var windowId: OpaqueWindowId? = nil
     var workspaceName: String? = nil
 
     static let defaultEnv: CmdEnv = .init()
@@ -13,7 +13,7 @@ struct CmdEnv {
         }
     }
 
-    consuming func withWindowId(_ windowId: UInt32) -> CmdEnv {
+    consuming func withWindowId(_ windowId: OpaqueWindowId) -> CmdEnv {
         self.windowId = windowId
         self.workspaceName = nil
         return self

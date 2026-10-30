@@ -7,14 +7,14 @@ final class EvalCommandTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testParse() {
-        testParseSingleCommandSucc("eval 'workspace foo'", EvalCmdArgs(rawArgs: []).copy(\.shellExpr, .initialized("workspace foo")))
+        testParseSingleCommandSucc("eval 'workspace foo'", EvalCmdArgs(rawArgs: []).with(\.shellExpr, .initialized("workspace foo")))
         assertEquals(parseCommand("eval").errorOrNil, "ERROR: Argument '<aerospace-shell-expr>' is mandatory")
     }
 
-    func testParseDashDash() {
+    func testParseDoubleDash() {
         testParseSingleCommandSucc(
             "eval -- '--anything'",
-            EvalCmdArgs(rawArgs: []).copy(\.shellExpr, .initialized("--anything")),
+            EvalCmdArgs(rawArgs: []).with(\.shellExpr, .initialized("--anything")),
         )
         assertEquals(parseCommand("eval --").errorOrNil, "ERROR: Argument '<aerospace-shell-expr>' is mandatory")
     }
@@ -26,7 +26,7 @@ final class EvalCommandTest: XCTestCase {
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, [])
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testRunForwardsStdout() async {
@@ -43,7 +43,7 @@ final class EvalCommandTest: XCTestCase {
 
         let result = await parseCommand("eval 'workspace a && workspace b'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testRunEmptyShellExpr() async {
@@ -88,6 +88,6 @@ final class EvalCommandTest: XCTestCase {
         let result = await parseCommand("eval 'eval \"workspace b\"'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stderr, ["Illegal eval (Tip: nested evals are forbidden)"])
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 }

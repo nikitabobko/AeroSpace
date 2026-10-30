@@ -3,12 +3,12 @@
   "AXCancelButton" : null,
   "AXCloseButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXCloseButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
   },
@@ -19,12 +19,12 @@
   "AXFullScreen" : 0,
   "AXFullScreenButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXFullScreenButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
@@ -32,12 +32,12 @@
   "AXMain" : 1,
   "AXMinimizeButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXMinimizeButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
   },
@@ -55,36 +55,36 @@
   "AXSize" : "<AXValue 0x978037c30> {value = w:900.000000 h:1128.000000 type = kAXValueCGSizeType}",
   "AXSubrole" : "AXStandardWindow",
   "AXTitle" : "Change Log - qutebrowser",
-  "AXTitleUIElement" : "AXUIElement(AxWindowId=4815, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXTitleUIElement" : "AXUIElement(windowId_native=4815, title=nil, role=\"AXStaticText\", subrole=nil)",
   "AXToolbarButton" : null,
   "AXZoomButton" : {
     "AXEnabled" : 1,
-    "AXParent" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXParent" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXRole" : "AXButton",
     "AXSubrole" : "AXFullScreenButton",
     "AXTitle" : null,
-    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXWindow" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "Aero.AxFailed" : "get.AXTitle",
     "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
   },
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4815, title=\"\", role=\"AXGroup\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=4815, title=\"\", role=\"AXGroup\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x97809dfb0> {pid=96882}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "qutebrowser",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -102,7 +102,7 @@
   "Aero.AxUiElementWindowType" : "window",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxWritable" : "AXFullScreen, AXPosition, AXSections, AXMain, AXMinimized, AXSize",
-  "Aero.axWindowId" : 4815,
+  "Aero.windowId_native" : 4815,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 

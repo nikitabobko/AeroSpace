@@ -43,9 +43,9 @@
     "AXSize" : null,
     "AXTitle" : "Slack",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=6600, title=\"Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=6155, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
-      "AXUIElement(AxWindowId=6141, title=\"bobko-test-2 (Channel) - JetBrains - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=6600, title=\"Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(windowId_native=6155, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
+      "AXUIElement(windowId_native=6141, title=\"bobko-test-2 (Channel) - JetBrains - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXFocusedUIElement, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXMainWindow, get.AXFocusedWindow, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -63,7 +63,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 6155,
+  "Aero.windowId_native" : 6155,
   "Aero.macOS.version" : "Version 15.7 (Build 24G222)",
   "Aero.on-window-detected" : [
 

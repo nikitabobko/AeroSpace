@@ -33,7 +33,7 @@ struct MenuBarLabel: View {
                 // In case image can't be rendered fallback to plain text
                 case nil: Text(viewModel.trayText)
             }
-        } else { // macOS 13 and lower
+        } else { // #macos13 and lower
             Text(viewModel.trayText)
         }
     }

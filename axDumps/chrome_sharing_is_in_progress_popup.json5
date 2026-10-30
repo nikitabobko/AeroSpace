@@ -30,22 +30,22 @@
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
     "AXFocusedUIElement" : null,
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=913, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=913, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=441, title=\"Meet – hjq-dnoz-obo - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=441, title=\"Meet – hjq-dnoz-obo - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x600002402940> {pid=552}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Chrome",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=920, title=\"meet.google.com is sharing a window.\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=913, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=441, title=\"Meet – hjq-dnoz-obo - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=920, title=\"meet.google.com is sharing a window.\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(windowId_native=913, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(windowId_native=441, title=\"Meet – hjq-dnoz-obo - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -57,7 +57,7 @@
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
-  "Aero.axWindowId" : 920,
+  "Aero.windowId_native" : 920,
   "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
   "Aero.on-window-detected" : [
 

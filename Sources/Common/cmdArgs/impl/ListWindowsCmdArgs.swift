@@ -12,11 +12,11 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--all": trueBoolFlag(\.allAlias),
 
             // Filtering flags
-            "--focused": trueBoolFlag(\.filteringOptions.focused),
-            "--monitor": ArgParser(\.filteringOptions.monitors, parseMonitorIds),
-            "--workspace": ArgParser(\.filteringOptions.workspaces, parseWorkspaces),
-            "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>") { Int32($0).toResult("Can't convert to Int32") },
-            "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>", Result.success),
+            "--focused": trueBoolFlag(\.filteringFlags.focused),
+            "--monitor": ArgParser(\.filteringFlags.monitors, parseMonitorIds),
+            "--workspace": ArgParser(\.filteringFlags.workspaces, parseWorkspaces),
+            "--pid": singleValueSubArgParser(\.filteringFlags.pidFilter, "<pid>") { Int32($0).toResult("Can't convert to Int32") },
+            "--app-bundle-id": singleValueSubArgParser(\.filteringFlags.appIdFilter, "<app-bundle-id>", Result.success),
 
             // Formatting flags
             "--format": formatParser(\._format, for: .window),
@@ -24,7 +24,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--json": trueBoolFlag(\.json),
         ],
         posArgs: [],
-        conflictingOptions: [
+        conflictingFlags: [
             ["--all", "--focused", "--workspace"],
             ["--all", "--focused", "--monitor"],
             ["--count", "--format"],
@@ -34,12 +34,12 @@ public struct ListWindowsCmdArgs: CmdArgs {
 
     fileprivate var allAlias: Bool = false
 
-    public var filteringOptions = FilteringOptions()
+    public var filteringFlags = FilteringFlags()
     public var _format: [InterToken<InterVar>] = []
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
-    public struct FilteringOptions: ConvenienceMutable, Equatable, Sendable {
+    public struct FilteringFlags: Withable, Equatable, Sendable {
         public var monitors: [MonitorId] = []
         public var focused: Bool = false
         public var workspaces: [WorkspaceFilter] = []
@@ -64,16 +64,16 @@ func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindowsCmdArg
     let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 }.slice // Compatibility
     return parseSpecificCmdArgs(ListWindowsCmdArgs(commonState: .init(args)), args)
         .filter("Mandatory option is not specified (--focused|--all|--monitor|--workspace)") { raw in
-            raw.filteringOptions.focused || raw.allAlias || !raw.filteringOptions.monitors.isEmpty || !raw.filteringOptions.workspaces.isEmpty
+            raw.filteringFlags.focused || raw.allAlias || !raw.filteringFlags.monitors.isEmpty || !raw.filteringFlags.workspaces.isEmpty
         }
         .filter("--all conflicts with \"filtering\" flags. Please use '--monitor all' instead of '--all' alias") { raw in
-            raw.allAlias.implies(raw.filteringOptions == ListWindowsCmdArgs.FilteringOptions())
+            raw.allAlias.implies(raw.filteringFlags == ListWindowsCmdArgs.FilteringFlags())
         }
         .filter("--focused conflicts with other \"filtering\" flags") { raw in
-            raw.filteringOptions.focused.implies(raw.filteringOptions.copy(\.focused, false) == ListWindowsCmdArgs.FilteringOptions())
+            raw.filteringFlags.focused.implies(raw.filteringFlags.with(\.focused, false) == ListWindowsCmdArgs.FilteringFlags())
         }
         .map { raw in
-            raw.allAlias ? raw.copy(\.filteringOptions.monitors, [.all]).copy(\.allAlias, false) : raw // Normalize alias
+            raw.allAlias ? raw.with(\.filteringFlags.monitors, [.all]).with(\.allAlias, false) : raw // Normalize alias
         }
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }

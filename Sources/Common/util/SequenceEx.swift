@@ -75,7 +75,7 @@ extension Sequence {
         self.max(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable public func sortedBy(_ selector: (Self.Element) -> some Comparable) -> [Self.Element] {
+    @inlinable public consuming func sortedBy(_ selector: (Self.Element) -> some Comparable) -> [Self.Element] {
         sorted(by: { a, b in selector(a) < selector(b) })
     }
 
@@ -136,6 +136,23 @@ extension Sequence {
         guard let second = iterator.next() else { return .one(first) }
         guard let _ = iterator.next() else { return .two(first, second) }
         return .many
+    }
+
+    public func toArray() -> [Element] {
+        var result = [Element]()
+        var iterator = makeIterator()
+        while let next = iterator.next() {
+            result.append(next)
+        }
+        return result
+    }
+
+    public func associate<Value>(with valueProducer: (Element) -> Value) -> [Element: Value] {
+        var result = [Element: Value]()
+        for elem in self {
+            result[elem] = valueProducer(elem)
+        }
+        return result
     }
 }
 

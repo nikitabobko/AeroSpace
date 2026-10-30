@@ -9,10 +9,10 @@ public struct EchoCmdArgs: CmdArgs {
             "--window-id": windowIdSubArgParser(),
         ],
         posArgs: [
-            dashDashArg(mandatory: true),
+            doubleDashArg(mandatory: true),
             newMandatoryPosArgParser(\.args, consumeWholeArrayOfInterpolatedPosArgs, placeholder: "<string>"),
         ],
-        conflictingOptions: [],
+        conflictingFlags: [],
     )
 
     public var args: Lateinit<[[InterToken<InterVar>]]> = .uninitialized

@@ -28,22 +28,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=18691, title=nil, role=\"AXList\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=18690, title=\"Open File or Project\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=18691, title=nil, role=\"AXList\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=18690, title=\"Open File or Project\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=18690, title=\"Open File or Project\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=18690, title=\"Open File or Project\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXMenuBar" : "<AXUIElement 0xca6d33d50> {pid=61359}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "IntelliJ IDEA",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=18690, title=\"Open File or Project\", role=\"AXWindow\", subrole=\"AXDialog\")",
-      "AXUIElement(AxWindowId=15127, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/src/_052.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=18690, title=\"Open File or Project\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(windowId_native=15127, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/src/_052.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXFrame(attributeUnsupported), isWritable.AXFrame(failure), get.AXExtrasMenuBar(noValue), isWritable.AXExtrasMenuBar(failure), get.AXSize(attributeUnsupported), isWritable.AXSize(attributeUnsupported), get.AXPosition(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -61,7 +61,7 @@
   "Aero.AxUiElementWindowType" : "dialog",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain, AXSize",
-  "Aero.axWindowId" : 18690,
+  "Aero.windowId_native" : 18690,
   "Aero.macOS.version" : "Version 26.5.1 (Build 25F80)",
   "Aero.on-window-detected" : [
 

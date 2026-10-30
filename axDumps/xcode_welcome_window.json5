@@ -29,8 +29,8 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=794, title=nil, role=\"AXOutline\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=794, title=\"Welcome to Xcode\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=794, title=nil, role=\"AXOutline\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=794, title=\"Welcome to Xcode\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
@@ -43,7 +43,7 @@
     "AXSize" : null,
     "AXTitle" : "Xcode",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=794, title=\"Welcome to Xcode\", role=\"AXWindow\", subrole=\"AXUnknown\")"
+      "AXUIElement(windowId_native=794, title=\"Welcome to Xcode\", role=\"AXWindow\", subrole=\"AXUnknown\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXMainWindow, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -61,7 +61,7 @@
   "Aero.AxUiElementWindowType" : "popup", // todo fix
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections",
-  "Aero.axWindowId" : 794,
+  "Aero.windowId_native" : 794,
   "Aero.macOS.version" : "Version 26.2 (Build 25C56)",
   "Aero.on-window-detected" : [
 

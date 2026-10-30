@@ -11,7 +11,7 @@ final class MoveWorkspaceToMonitorCommandTest: XCTestCase {
         assertEquals(parseMoveWorkspaceToMonitorTarget("move-workspace-to-monitor main"), .patterns([.main]))
     }
 
-    func testParseDashDash() {
+    func testParseDoubleDash() {
         assertEquals(parseMoveWorkspaceToMonitorTarget("move-workspace-to-monitor -- next"), .patterns([.pattern("next")!]))
         assertEquals(parseCommand("move-workspace-to-monitor --").errorOrNil, "ERROR: Argument \'(left|down|up|right|next|prev|<monitor-pattern>)\' is mandatory")
     }

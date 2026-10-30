@@ -21,7 +21,7 @@ public struct ServerAnswer: Codable, Sendable {
     }
 }
 
-public struct ClientRequest: Codable, Sendable, ConvenienceMutable, Equatable {
+public struct ClientRequest: Codable, Sendable, Withable, Equatable {
     // periphery:ignore - Unused. keep it for API compatibility with old servers for a couple of version
     public var command: String? = nil
 
@@ -29,13 +29,13 @@ public struct ClientRequest: Codable, Sendable, ConvenienceMutable, Equatable {
     public let stdin: String
 
     // Double Optional to encode explicit null into JSON
-    public var windowId: UInt32??  // Please forward AEROSPACE_WINDOW_ID env variable here
+    public var windowId: OpaqueWindowId??  // Please forward AEROSPACE_WINDOW_ID env variable here
     public var workspace: String?? // Please forward AEROSPACE_WORKSPACE env variable here
 
     public init(
         args: [String],
         stdin: String,
-        windowId: UInt32?,
+        windowId: OpaqueWindowId?,
         workspace: String?,
     ) {
         self.args = args
@@ -73,6 +73,6 @@ public struct ClientRequest: Codable, Sendable, ConvenienceMutable, Equatable {
 private struct ClientRequestData: Codable, Sendable {
     var args: [String]
     var stdin: String
-    var windowId: UInt32??
+    var windowId: OpaqueWindowId??
     var workspace: String??
 }

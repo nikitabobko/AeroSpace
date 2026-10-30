@@ -12,6 +12,7 @@ include::util/man-attributes.adoc[]
 aerospace layout [-h|--help] [--window-id <window-id>|--workspace <workspace>]
                  [--root] [--fail-if-noop]
                  (<target-layout>)...
+aerospace layout [-h|--help] --for-next-detected-window (tiling|floating)
 
 // end::synopsis[]
 
@@ -40,6 +41,18 @@ When you use this flag, `tiling` and `floating` become invalid values for `<targ
 Exit with non-zero exit code if already in the requested layout.
 When you use this flag, the command permits only one `<target-layout>` argument.
 
+--for-next-detected-window::
+Don't change the layout of any currently existing window.
+Instead, schedule the layout change, and apply it to the next window that AeroSpace detects.
++
+The scheduled layout change is applied both before and after the xref:guide.adoc#on-window-detected-callback[on-window-detected callbacks] are run,
+so that the callbacks observe the scheduled layout, and so that the scheduled layout wins over the callbacks.
+Running the `layout --for-next-detected-window` command again replaces the previously scheduled layout change.
++
+When you use this flag, the command permits exactly one `<target-layout>` argument,
+and `tiling` and `floating` are its only valid values.
+The flag is incompatible with all the other flags.
+
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]
 
@@ -67,6 +80,9 @@ include::./util/conditional-examples-header.adoc[]
 
 * Switch to `tiles` layout. Toggle the layout orientation if already in `tiles` layout: +
 `aerospace layout tiles horizontal vertical`
+
+* Make the next window that opens floating: +
+`aerospace layout floating --for-next-detected-window`
 
 // end::body[]
 

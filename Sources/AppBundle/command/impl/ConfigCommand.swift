@@ -13,7 +13,7 @@ struct ConfigCommand: Command {
                 let out = """
                     .
                     mode
-                    \(config.modes.keys.map { "mode.\($0).binding" }.joined(separator: "\n"))
+                    \(config.modes.keys.lazy.map { "mode.\($0).binding" }.joined(separator: "\n"))
                     """
                 return .succ(io.out(out))
             case .allKeys:

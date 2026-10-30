@@ -1,12 +1,12 @@
 import Common
 
-struct Gaps: ConvenienceMutable, Equatable, Sendable {
+struct Gaps: Withable, Equatable, Sendable {
     var inner: Inner
     var outer: Outer
 
     static let zero = Gaps(inner: .zero, outer: .zero)
 
-    struct Inner: ConvenienceMutable, Equatable, Sendable {
+    struct Inner: Withable, Equatable, Sendable {
         var vertical: DynamicConfigValue<Int>
         var horizontal: DynamicConfigValue<Int>
 
@@ -23,7 +23,7 @@ struct Gaps: ConvenienceMutable, Equatable, Sendable {
         }
     }
 
-    struct Outer: ConvenienceMutable, Equatable, Sendable {
+    struct Outer: Withable, Equatable, Sendable {
         var left: DynamicConfigValue<Int>
         var bottom: DynamicConfigValue<Int>
         var top: DynamicConfigValue<Int>
@@ -67,7 +67,7 @@ struct ResolvedGaps {
         let right: Int
     }
 
-    @MainActor init(gaps: Gaps, monitor: any Monitor) {
+    @MainActor init(gaps: Gaps, monitor: any MonitorInfo) {
         inner = .init(
             vertical: gaps.inner.vertical.getValue(for: monitor),
             horizontal: gaps.inner.horizontal.getValue(for: monitor),
@@ -104,13 +104,13 @@ private func parseIntDynamicValue(_ raw: OrderedJson, _ backtrace: ConfigBacktra
 }
 
 func parseGaps(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> Gaps {
-    parseTable(raw, .zero, gapsParser, backtrace, &c)
+    parseNonEmptyTable(raw, .zero, gapsParser, backtrace, &c)
 }
 
 func parseInner(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> Gaps.Inner {
-    parseTable(raw, Gaps.Inner.zero, innerParser, backtrace, &c)
+    parseNonEmptyTable(raw, Gaps.Inner.zero, innerParser, backtrace, &c)
 }
 
 func parseOuter(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> Gaps.Outer {
-    parseTable(raw, Gaps.Outer.zero, outerParser, backtrace, &c)
+    parseNonEmptyTable(raw, Gaps.Outer.zero, outerParser, backtrace, &c)
 }

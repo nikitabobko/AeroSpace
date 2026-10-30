@@ -264,8 +264,9 @@ You can configure environment variables of `exec-*` commands and callbacks (such
 +
 [source,toml]
 ----
-[exec.env-vars]
+exec.env-vars = {
     PATH = '${HOME}/bin:${PATH}'
+}
 ----
 +
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
@@ -275,10 +276,10 @@ That's why unless you override `exec` section in your config, AeroSpace falls ba
 +
 [source,toml]
 ----
-[exec]
-    inherit-env-vars = true
-[exec.env-vars]
+exec.inherit-env-vars = true
+exec.env-vars = {
     PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
+}
 ----
 
 [#tree]
@@ -353,7 +354,7 @@ Accordion padding is configurable via `accordion-padding` option.
 [#normalization]
 === Normalization
 
-By default, AeroSpace does two types of tree normalizations:
+By default, AeroSpace performs two types of tree normalizations:
 
 . Containers that have only one child are "flattened".
 The root container is an exception, it is allowed to have a single window child.
@@ -551,7 +552,7 @@ on-window-detected = [
 ----
 
 `on-window-detected` is an ordered list of callback objects.
-Every object has `if` (optional) and `run` (mandatory) keys inside.
+Every object has `if` and `run` (both are mandatory) keys inside.
 When a new window is detected:
 
 . AeroSpace processes the list of the callback objects in the defined order.
@@ -752,14 +753,15 @@ workspaces to always appear on particular monitors
 
 [source,toml]
 ----
-[workspace-to-monitor-force-assignment]
-    1 = 1                            # Monitor sequence number from left to right. 1-based indexing
-    2 = 'main'                       # Main monitor
-    3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
-    4 = 'built-in'                   # Case insensitive regex substring
-    5 = '^built-in retina display$'  # Case insensitive regex match
-    6 = ['secondary', 'dell']        # You can specify multiple patterns.
-                                     #   The first matching pattern will be used
+workspace-to-monitor-force-assignment = {
+    1 = 1,                            # Monitor sequence number from left to right. 1-based indexing
+    2 = 'main',                       # Main monitor
+    3 = 'secondary',                  # Non-main monitor in case when there are only two monitors
+    4 = 'built-in',                   # Case insensitive regex substring
+    5 = '^built-in retina display$',  # Case insensitive regex match
+    6 = ['secondary', 'dell'],        # You can specify multiple patterns.
+                                      #   The first matching pattern will be used
+}
 ----
 
 * Left hand side of the assignment is the workspace name
@@ -931,7 +933,7 @@ The reply to a one-shot command is a JSON object:
     "exitCode": 0,
     "stdout": "1\n2\n3",
     "stderr": "",
-    "serverVersionAndHash": "0.20.0-Beta 33fa0643"
+    "serverVersionAndHash": "0.20.0-Beta 1ec4234a"
 }
 ----
 

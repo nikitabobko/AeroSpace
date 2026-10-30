@@ -29,22 +29,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4815, title=\"Change Log\", role=\"AXGroup\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=4815, title=\"Change Log\", role=\"AXGroup\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x97809dfb0> {pid=96882}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "qutebrowser",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=4820, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
-      "AXUIElement(AxWindowId=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=4820, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(windowId_native=4815, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -62,7 +62,7 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMinimized",
-  "Aero.axWindowId" : 4820,
+  "Aero.windowId_native" : 4820,
   "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 

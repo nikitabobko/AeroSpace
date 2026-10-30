@@ -28,21 +28,21 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=372, title=\"Xcode\", role=\"AXWindow\", subrole=\"AXDialog\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=372, title=\"Xcode\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=372, title=\"Xcode\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=372, title=\"Xcode\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=372, title=\"Xcode\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=372, title=\"Xcode\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXMenuBar" : "<AXUIElement 0x600001dedc50> {pid=34828}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Xcode",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=372, title=\"Xcode\", role=\"AXWindow\", subrole=\"AXDialog\")"
+      "AXUIElement(windowId_native=372, title=\"Xcode\", role=\"AXWindow\", subrole=\"AXDialog\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -52,7 +52,7 @@
   "Aero.App.version" : "23792",
   "Aero.App.versionShort" : "16.4",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 372,
+  "Aero.windowId_native" : 372,
   "Aero.AxUiElementWindowType" : "dialog",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.macOS.version" : "Version 15.5 (Build 24F74)",

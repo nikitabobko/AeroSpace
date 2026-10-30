@@ -29,6 +29,25 @@ final class TreeNodeTest: XCTestCase {
         XCTAssertTrue(!workspace.isEffectivelyEmpty)
     }
 
+    func testBindWeightAuto_skipsTombstones() {
+        let root = Workspace.get(byName: name).rootTilingContainer
+        TestWindow.new(id: 1, parent: root, adaptiveWeight: 2)
+        TestWindow.new(id: 2, parent: root, adaptiveWeight: 10).lifeStatus = .invisible
+        TestWindow.new(id: 3, parent: root, adaptiveWeight: 4)
+        TilingContainer.newVTiles(parent: root, adaptiveWeight: 20).lifeStatus = .deadOrInvisible
+
+        let window = TestWindow.new(id: 4, parent: root, adaptiveWeight: WEIGHT_AUTO)
+        assertEquals(window.getWeight(root.orientation), 3) // (2 + 4) / 2
+    }
+
+    func testBindWeightAuto_onlyTombstoneSiblings() {
+        let root = Workspace.get(byName: name).rootTilingContainer
+        TestWindow.new(id: 1, parent: root, adaptiveWeight: 10).lifeStatus = .dead
+
+        let window = TestWindow.new(id: 2, parent: root, adaptiveWeight: WEIGHT_AUTO)
+        assertEquals(window.getWeight(root.orientation), 1)
+    }
+
     func testNormalizeContainers_dontRemoveRoot() {
         let workspace = Workspace.get(byName: name)
         weak let root = workspace.rootTilingContainer

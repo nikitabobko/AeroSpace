@@ -1,7 +1,7 @@
 struct PosArgParserInput: ArgParserInput {
     /*conforms*/ let index: Int
     /*conforms*/ let args: StrArrSlice
-    var sawDashDash: Bool
+    var sawDoubleDash: Bool
 
     var arg: String { args[index] }
 }

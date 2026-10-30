@@ -19,4 +19,4 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 
 [COMMIT_EDITMSG]
-max_line_length = 120
+max_line_length = 72

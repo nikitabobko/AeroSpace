@@ -15,7 +15,7 @@ func handleSubscribeAndWaitTillError(_ connection: NWConnection, _ args: Subscri
     subscribers[id] = Subscriber(connection: connection, events: args.events)
     defer { subscribers.removeValue(forKey: id) }
     if args.sendInitial {
-        let f = focus
+        let f = globalFocus
         for eventType in args.events {
             let event: ServerEvent
             switch eventType {
@@ -28,7 +28,7 @@ func handleSubscribeAndWaitTillError(_ connection: NWConnection, _ args: Subscri
                 case .focusedMonitorChanged:
                     event = .focusedMonitorChanged(
                         workspace: f.workspace.name,
-                        monitorId_oneBased: f.workspace.workspaceMonitor.monitorId_oneBased ?? 0,
+                        monitorId_oneBased: f.workspace.workspaceMonitorInfo.monitorId_oneBased ?? 0,
                     )
                 case .windowDetected, .bindingTriggered: continue
             }

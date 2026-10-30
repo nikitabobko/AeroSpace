@@ -30,22 +30,22 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14403, title=\"\", role=\"AXTextField\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=14403, title=\"Find in page\n    New Tab\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=14403, title=\"\", role=\"AXTextField\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=14403, title=\"Find in page\n    New Tab\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=14400, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(windowId_native=14400, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x6000018ce5e0> {pid=34617}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Chrome",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=14403, title=\"Find in page\n    New Tab\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=14400, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(windowId_native=14403, title=\"Find in page\n    New Tab\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(windowId_native=14400, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },
@@ -55,7 +55,7 @@
   "Aero.App.version" : "7049.116",
   "Aero.App.versionShort" : "135.0.7049.116",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 14403,
+  "Aero.windowId_native" : 14403,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.on-window-detected" : [

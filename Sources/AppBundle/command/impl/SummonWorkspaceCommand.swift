@@ -7,20 +7,20 @@ struct SummonWorkspaceCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         let workspace = Workspace.get(byName: args.target.val.raw)
-        let monitor = focus.workspace.workspaceMonitor
-        if monitor.activeWorkspace == workspace {
+        let monitor = globalFocus.workspace.workspaceMonitorInfo
+        if monitor.visibleWorkspace == workspace {
             return switch args.failIfNoop {
                 case true: .fail
                 case false:
                     .succ(io.err("Workspace '\(workspace.name)' is already visible on the focused monitor. Tip: use --fail-if-noop to exit with non-zero code"))
             }
         }
-        let prevMonitor = workspace.isVisible ? workspace.workspaceMonitor : nil
-        if monitor.setActiveWorkspace(workspace) {
+        let prevMonitor = workspace.isVisible ? workspace.workspaceMonitorInfo : nil
+        if monitor.setVisibleWorkspace(workspace) {
             if let prevMonitor {
                 let stubWorkspace = getStubWorkspace(for: prevMonitor)
                 check(
-                    prevMonitor.setActiveWorkspace(stubWorkspace),
+                    prevMonitor.setVisibleWorkspace(stubWorkspace),
                     "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",
                 )
             }

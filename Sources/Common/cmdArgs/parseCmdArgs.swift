@@ -11,7 +11,7 @@ public func parseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<any CmdArgs> {
 }
 
 public protocol CmdArgs:
-    ConvenienceMutable,
+    Withable,
     Equatable,
     CustomStringConvertible,
     AeroAny,
@@ -22,9 +22,9 @@ public protocol CmdArgs:
     var commonState: CmdArgsCommonState { get set }
 }
 
-public struct CmdArgsCommonState: ConvenienceMutable, Equatable, Sendable {
+public struct CmdArgsCommonState: Withable, Equatable, Sendable {
     let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    var windowId: UInt32? = nil
+    var windowId: OpaqueWindowId? = nil
     var workspaceName: WorkspaceName? = nil
     public var explicitStdinFlag: Bool? = nil
 
@@ -34,7 +34,7 @@ public struct CmdArgsCommonState: ConvenienceMutable, Equatable, Sendable {
 extension CmdArgs {
     public static var info: CmdStaticInfo { Self.parser.info }
 
-    public var windowId: UInt32? {
+    public var windowId: OpaqueWindowId? {
         get { commonState.windowId }
         set(value) { commonState.windowId = value }
     }
@@ -64,19 +64,22 @@ public struct CmdParser<Root>: Sendable {
     let info: CmdStaticInfo
     let flags: [String: any ArgParserProtocol<SubArgParserInput, Root, ()>]
     let positionalArgs: [any ArgParserProtocol<PosArgParserInput, Root, PosArgParserContext>]
-    let conflictingOptions: [Set<String>]
+    let conflictingFlags: [Set<String>]
+    let flagAllowlist: [String: Set<String>]
 
     init(
         kind: CmdKind,
         help: String,
         flags: [String: any ArgParserProtocol<SubArgParserInput, Root, ()>],
         posArgs: [any ArgParserProtocol<PosArgParserInput, Root, PosArgParserContext>],
-        conflictingOptions: [Set<String>] = [],
+        conflictingFlags: [Set<String>] = [],
+        flagAllowlist: [String: Set<String>] = [:],
     ) {
         self.info = CmdStaticInfo(help: help, kind: kind)
         self.flags = flags
         self.positionalArgs = posArgs
-        self.conflictingOptions = conflictingOptions
+        self.conflictingFlags = conflictingFlags
+        self.flagAllowlist = flagAllowlist
     }
 }
 
