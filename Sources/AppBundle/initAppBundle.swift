@@ -22,8 +22,7 @@ import Foundation
         Workspace.garbageCollectUnusedWorkspaces() // init workspaces
         for monitor in Monitor.all {
             _ = monitor.getWorkspacesContainerOrCreate().children.filterIsInstance(of: Workspace.self)
-                .sorted()
-                .first?
+                .min()?
                 .focusWorkspace()
         }
         await runHeavyCompleteRefreshSession(

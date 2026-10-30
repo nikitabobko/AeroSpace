@@ -28,6 +28,7 @@ enum AxPermissionStatus: Equatable {
     let focus = globalFocus
     TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
         sortedMonitors
+        .lazy
         .map {
             let hasFullscreenWindows = $0.visibleWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
             let visibleWorkspaceName = hasFullscreenWindows ? "[\($0.visibleWorkspace.name)]" : $0.visibleWorkspace.name

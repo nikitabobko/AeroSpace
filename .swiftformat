@@ -30,12 +30,19 @@
 --enable linebreakAtEndOfFile
 --enable linebreaks
 --enable numberFormatting
+--enable preferContains
 --enable preferCountWhere
 --enable preferFinalClasses
+--enable preferFirstWhere
+--enable preferFlatMap
+--enable preferLazyMap
+--enable preferMinOverSorted
+--enable preferSwiftStringAPI
 --enable redundantAsync
 --enable redundantBackticks
 --enable redundantBreak
 --enable redundantClosure
+--enable redundantEmptyView
 --enable redundantEquatable
 --enable redundantFileprivate
 --enable redundantGet
@@ -44,6 +51,7 @@
 --enable redundantMemberwiseInit
 --enable redundantObjc
 --enable redundantOptionalBinding
+--enable redundantSwiftUIGroup
 --enable redundantThrows
 --enable redundantTypedThrows
 --enable redundantVoidReturnType
