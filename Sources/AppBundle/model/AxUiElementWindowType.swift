@@ -125,7 +125,7 @@ extension AxUiElementMock {
             return false
         }
 
-        if id == .iterm2 && fullscreenButton == nil {
+        if id == .iterm2 && fullscreenButton == nil && get(Ax.identifierAttr) != "mainPreferencesWindow" {
             return false
         }
 
