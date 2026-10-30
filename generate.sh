@@ -2,8 +2,8 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-# The main version. Propagated even to old Xcode
-SWIFT_TOOLCHAIN_VERSION=6.4.0
+# The main version. Propagated even to Xcode
+SWIFT_TOOLCHAIN_VERSION=6.4.2
 # Sets which SwiftPM loads the manifest: swift build from swiftly's toolchain, or the SwiftPM built into Xcode when xcodebuild resolves.
 # Sets which PackageDescription APIs the manifest can use.
 # This version depends on Xcode/macOS version.

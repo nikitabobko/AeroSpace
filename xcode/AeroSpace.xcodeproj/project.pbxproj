@@ -232,7 +232,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6;
-				TOOLCHAINS = org.swift.640202609131a;
+				TOOLCHAINS = org.swift.642202610261a;
 			};
 			name = Debug;
 		};
@@ -309,7 +309,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6;
-				TOOLCHAINS = org.swift.640202609131a;
+				TOOLCHAINS = org.swift.642202610261a;
 			};
 			name = Release;
 		};
