@@ -2,7 +2,19 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
+# The main version. Propagated even to old Xcode
+SWIFT_TOOLCHAIN_VERSION=6.4.0
+# Sets which SwiftPM loads the manifest: swift build from swiftly's toolchain, or the SwiftPM built into Xcode when xcodebuild resolves.
+# Sets which PackageDescription APIs the manifest can use.
+# This version depends on Xcode/macOS version.
+# Unfortunately, Xcode doesn't use SwiftPM from the toolchain.
+SWIFT_PACKAGE_MANAGER_MANIFEST_FORMAT=6.2
+# Langauge mode. Only the major version counts
+SWIFT_LANGAUGE_VERSION=6
+
+export XCODEGEN_SWIFT_VERSION=$SWIFT_LANGAUGE_VERSION
 export XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY="aerospace-codesign-certificate"
+
 build_version="0.0.0-SNAPSHOT"
 generate_xcodeproj=1
 generate_cmd_help=1
@@ -18,8 +30,9 @@ while test $# -gt 0; do
     esac
 done
 
-export XCODEGEN_SWIFT_LANGUAGE_VERSION=6.2
-sed -i '' "1s|.*|// swift-tools-version: ${XCODEGEN_SWIFT_LANGUAGE_VERSION}|" Package.swift
+echo $SWIFT_TOOLCHAIN_VERSION > ./.swift-version
+
+sed -i '' "1s|.*|// swift-tools-version: ${SWIFT_PACKAGE_MANAGER_MANIFEST_FORMAT}|" Package.swift
 
 if test $generate_cmd_help = 1; then
     # It takes 300ms for the script to complete

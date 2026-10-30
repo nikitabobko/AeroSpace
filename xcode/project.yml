@@ -11,10 +11,11 @@ configs:
   Debug: debug
   Release: release
 
+# https://developer.apple.com/documentation/xcode/build-settings-reference
 settings:
   base:
     TOOLCHAINS: ${XCODEGEN_TOOLCHAINS}
-    SWIFT_VERSION: ${XCODEGEN_SWIFT_LANGUAGE_VERSION}
+    SWIFT_VERSION: ${XCODEGEN_SWIFT_VERSION}
     GENERATE_INFOPLIST_FILE: YES
     MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
     # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
@@ -35,7 +36,6 @@ targets:
     dependencies:
       - package: AeroSpacePackage
         product: AppBundle
-    # https://developer.apple.com/documentation/xcode/build-settings-reference
     settings:
       configs:
         Debug:
