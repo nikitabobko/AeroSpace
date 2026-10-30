@@ -1,5 +1,5 @@
 # https://github.com/nicklockwood/SwiftFormat/blob/main/Rules.md
---exclude periphery
+--exclude .*
 
 --indentcase true
 --patternlet inline
