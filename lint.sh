@@ -12,7 +12,7 @@ fi
 ./script/install-dep.sh --swiftlint
 ./.deps/swiftlint/swiftlint lint --quiet
 
-if sw_vers -productVersion | grep -q "^14"; then # macOS 14
+if sw_vers -productVersion | grep -q "^14"; then # #macos14
     # dyld[6263]: Library not loaded: /usr/lib/swift/libswiftSynchronization.dylib
     # Referenced from: <0A48220F-3DCA-3C6C-A54C-FE6C3B854E23> /Users/runner/work/AeroSpace/AeroSpace/.deps/periphery/dist/periphery-3.6.0.artifactbundle/periphery-3.6.0-macos/bin/periphery (built for macOS 15.0 which is newer than running OS)
     # Reason: tried: '/usr/lib/swift/libswiftSynchronization.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/lib/swift/libswiftSynchronization.dylib' (no such file), '/usr/lib/swift/libswiftSynchronization.dylib' (no such file, not in dyld cache)

@@ -3,7 +3,7 @@ import Common
 
 // Potential alternative implementation
 // https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md
-// (only available since macOS 14)
+// (only available since #macos14)
 final class MacApp: AbstractApp {
     /*conforms*/ let pid: Int32
     /*conforms*/ let rawAppBundleId: String?
