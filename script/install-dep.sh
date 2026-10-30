@@ -94,11 +94,11 @@ fi
 
 if test $all == 1 || test $swiftformat == 1; then
     # https://github.com/nicklockwood/SwiftFormat/releases
-    swiftformat_version=0.60.1
+    swiftformat_version=0.64.4
     lazy-download-zip-and-link-bin \
         swiftformat \
         https://github.com/nicklockwood/SwiftFormat/releases/download/$swiftformat_version/swiftformat.artifactbundle.zip \
-        'cb4738085cf39c08da00b79b4a3683e77458ca12909934d04e5087d8e73f5e43  .deps/swiftformat/dist/zip.zip' \
+        'c2ba19f5f70a1aba089f836ada7960268ec9a68671d61059fec1a565afb50836  .deps/swiftformat/dist/zip.zip' \
         swiftformat.artifactbundle/swiftformat-$swiftformat_version-macos/bin/swiftformat
 fi
 
