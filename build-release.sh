@@ -44,6 +44,13 @@ git checkout .
 cp -r "xcode/.xcode-build/Build/Products/$xcode_configuration/AeroSpace.app" .release
 cp -r "$cli_bin_path/aerospace" .release
 
+# Binary reproducibility: strip non-portable rpaths
+# https://github.com/swiftlang/swift-package-manager/issues/10760
+xcrun objdump --macho --rpaths --no-leading-headers --arch all .release/aerospace | grep -E '^\/(Users|Applications)\/' | sort -u |
+    while IFS= read -r rpath; do
+        install_name_tool -delete_rpath "$rpath" .release/aerospace
+    done
+
 ################
 ### SIGN CLI ###
 ################
