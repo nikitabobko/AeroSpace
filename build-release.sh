@@ -65,6 +65,8 @@ expected_layout=$(cat <<EOF
 .release/AeroSpace.app/Contents/Resources/default-config.toml
 .release/AeroSpace.app/Contents/Resources/AppIcon.icns
 .release/AeroSpace.app/Contents/Resources/Assets.car
+.release/AeroSpace.app/Contents/Frameworks
+.release/AeroSpace.app/Contents/Frameworks/libswiftCompatibilitySpan.dylib
 .release/AeroSpace.app/Contents/Info.plist
 .release/AeroSpace.app/Contents/PkgInfo
 EOF
@@ -90,6 +92,15 @@ check-contains-hash() {
         exit 1
     fi
 }
+
+check-no-rpath-dylibs() {
+    if otool -L "$1" | grep --fixed-string '@rpath/'; then
+        echo "$1 links @rpath dylibs that aren't shipped next to it"
+        exit 1
+    fi
+}
+
+check-no-rpath-dylibs .release/aerospace
 
 check-universal-binary .release/AeroSpace.app/Contents/MacOS/AeroSpace
 check-universal-binary .release/aerospace
