@@ -107,7 +107,32 @@ check-no-rpath-dylibs() {
     fi
 }
 
+check-rpaths() {
+    for arch in x86_64 arm64; do
+        actual_rpaths=$(xcrun objdump --macho --rpaths --no-leading-headers --arch "$arch" "$1")
+        if test "$2" != "$actual_rpaths"; then
+            echo "!!! Expect/Actual rpaths of $1 ($arch) don't match !!!"
+            echo "$actual_rpaths"
+            exit 1
+        fi
+    done
+}
+
 check-no-rpath-dylibs .release/aerospace
+
+expected_app_rpaths=$(cat <<EOF
+/usr/lib/swift
+@executable_path/../Frameworks
+EOF
+)
+check-rpaths .release/AeroSpace.app/Contents/MacOS/AeroSpace "$expected_app_rpaths"
+
+expected_cli_rpaths=$(cat <<EOF
+/usr/lib/swift
+@loader_path
+EOF
+)
+check-rpaths .release/aerospace "$expected_cli_rpaths"
 
 check-universal-binary .release/AeroSpace.app/Contents/MacOS/AeroSpace
 check-universal-binary .release/aerospace
