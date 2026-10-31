@@ -111,7 +111,7 @@ if test $all == 1 || test $periphery == 1; then
 
     if ! test -f "$input_hash_marker"; then
         echo "building periphery from sources"
-        test -d periphery || git clone $periphery_repo $periphery_dir
+        test -d $periphery_dir || git clone $periphery_repo $periphery_dir
         cd $periphery_dir
             git fetch $periphery_repo $periphery_commit
             git checkout -f $periphery_commit
