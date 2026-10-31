@@ -155,6 +155,8 @@ struct FocusCommand: Command {
             tilingParent = workspace.rootTilingContainer
         }
 
+        // AX awaits above can let the window move or close before we unbind it
+        guard window.parent === workspace.floatingWindowsContainer else { continue }
         let data = window.unbindFromParent()
         let floatingWindowData = FloatingWindowData(
             window: window,
