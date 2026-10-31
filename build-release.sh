@@ -118,6 +118,18 @@ check-rpaths() {
     done
 }
 
+check-dylibs() {
+    for arch in x86_64 arm64; do
+        actual_dylibs=$(xcrun objdump --macho --dylibs-used --no-leading-headers --arch "$arch" "$1" |
+            sed -E 's/ \(compatibility version [^)]*, weak\)$/ (weak)/; s/ \(compatibility version [^)]*\)$//')
+        if test "$2" != "$actual_dylibs"; then
+            echo "!!! Expect/Actual dylibs of $1 ($arch) don't match !!!"
+            echo "$actual_dylibs"
+            exit 1
+        fi
+    done
+}
+
 check-no-rpath-dylibs .release/aerospace
 
 expected_app_rpaths=$(cat <<EOF
@@ -133,6 +145,74 @@ expected_cli_rpaths=$(cat <<EOF
 EOF
 )
 check-rpaths .release/aerospace "$expected_cli_rpaths"
+
+expected_app_dylibs=$(cat <<EOF
+	/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation
+	/usr/lib/libobjc.A.dylib
+	/usr/lib/libSystem.B.dylib
+	/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
+	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices
+	/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon
+	/System/Library/Frameworks/Combine.framework/Versions/A/Combine
+	/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio
+	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
+	/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics
+	/System/Library/Frameworks/ServiceManagement.framework/Versions/A/ServiceManagement
+	/System/Library/Frameworks/SwiftUI.framework/Versions/A/SwiftUI
+	/usr/lib/libc++.1.dylib
+	/usr/lib/swift/libswiftCore.dylib
+	/usr/lib/swift/libswiftCoreAudio.dylib (weak)
+	/usr/lib/swift/libswiftCoreFoundation.dylib
+	/usr/lib/swift/libswiftCoreImage.dylib (weak)
+	/usr/lib/swift/libswiftCoreMIDI.dylib (weak)
+	/usr/lib/swift/libswiftDarwin.dylib
+	/usr/lib/swift/libswiftDispatch.dylib
+	/usr/lib/swift/libswiftIOKit.dylib (weak)
+	/usr/lib/swift/libswiftMetal.dylib (weak)
+	/usr/lib/swift/libswiftOSLog.dylib (weak)
+	/usr/lib/swift/libswiftObjectiveC.dylib (weak)
+	/usr/lib/swift/libswiftQuartzCore.dylib (weak)
+	/usr/lib/swift/libswiftSpatial.dylib (weak)
+	/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib (weak)
+	/usr/lib/swift/libswiftXPC.dylib (weak)
+	/usr/lib/swift/libswift_Concurrency.dylib
+	/usr/lib/swift/libswift_StringProcessing.dylib
+	/usr/lib/swift/libswiftos.dylib
+	/usr/lib/swift/libswiftsimd.dylib (weak)
+	/usr/lib/swift/libswiftCoreGraphics.dylib
+	/usr/lib/swift/libswiftNetwork.dylib
+	@rpath/libswiftCompatibilitySpan.dylib
+EOF
+)
+check-dylibs .release/AeroSpace.app/Contents/MacOS/AeroSpace "$expected_app_dylibs"
+
+expected_cli_dylibs=$(cat <<EOF
+	/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation
+	/usr/lib/libobjc.A.dylib
+	/usr/lib/libSystem.B.dylib
+	/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
+	/usr/lib/libc++.1.dylib
+	/usr/lib/swift/libswiftCore.dylib
+	/usr/lib/swift/libswiftCoreFoundation.dylib
+	/usr/lib/swift/libswiftCoreImage.dylib (weak)
+	/usr/lib/swift/libswiftDarwin.dylib
+	/usr/lib/swift/libswiftDispatch.dylib
+	/usr/lib/swift/libswiftIOKit.dylib (weak)
+	/usr/lib/swift/libswiftMetal.dylib (weak)
+	/usr/lib/swift/libswiftOSLog.dylib (weak)
+	/usr/lib/swift/libswiftObjectiveC.dylib (weak)
+	/usr/lib/swift/libswiftQuartzCore.dylib (weak)
+	/usr/lib/swift/libswiftSpatial.dylib (weak)
+	/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib (weak)
+	/usr/lib/swift/libswiftXPC.dylib (weak)
+	/usr/lib/swift/libswift_Concurrency.dylib
+	/usr/lib/swift/libswift_StringProcessing.dylib
+	/usr/lib/swift/libswiftos.dylib (weak)
+	/usr/lib/swift/libswiftsimd.dylib (weak)
+	/usr/lib/swift/libswiftNetwork.dylib
+EOF
+)
+check-dylibs .release/aerospace "$expected_cli_dylibs"
 
 check-universal-binary .release/AeroSpace.app/Contents/MacOS/AeroSpace
 check-universal-binary .release/aerospace
