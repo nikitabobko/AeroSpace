@@ -79,7 +79,17 @@ expected_layout=$(cat <<EOF
 EOF
 )
 
-diff --color <(echo "$expected_layout") <(find .release/AeroSpace.app)
+check-equals() {
+    echo "Checking $1"
+    if test "$2" != "$3"; then
+        echo "ERROR: $1 doesn't match the expected value"
+        echo "Diff:"
+        diff -u --color --label expected --label actual <(echo "$2") <(echo "$3") || true
+        exit 1
+    fi
+}
+
+check-equals ".release/AeroSpace.app layout" "$expected_layout" "$(find .release/AeroSpace.app)"
 
 check-universal-binary() {
     if ! file "$1" | grep --fixed-string -q "Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64"; then
@@ -105,14 +115,14 @@ check-no-rpath-dylibs() {
 
 check-rpaths() {
     for arch in x86_64 arm64; do
-        diff --color <(echo "$2") <(xcrun objdump --macho --rpaths --no-leading-headers --arch "$arch" "$1")
+        check-equals "$1 ($arch) rpaths" "$2" "$(xcrun objdump --macho --rpaths --no-leading-headers --arch "$arch" "$1")"
     done
 }
 
 check-dylibs() {
     for arch in x86_64 arm64; do
-        diff --color <(echo "$2") <(xcrun objdump --macho --dylibs-used --no-leading-headers --arch "$arch" "$1" |
-            sed -E 's/ \(compatibility version [^)]*, weak\)$/ (weak)/; s/ \(compatibility version [^)]*\)$//')
+        check-equals "$1 ($arch) dylibs" "$2" "$(xcrun objdump --macho --dylibs-used --no-leading-headers --arch "$arch" "$1" |
+            sed -E 's/ \(compatibility version [^)]*, weak\)$/ (weak)/; s/ \(compatibility version [^)]*\)$//')"
     done
 }
 
