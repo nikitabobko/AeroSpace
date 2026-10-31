@@ -19,6 +19,12 @@ enum GlobalObserver {
         }
     }
 
+    private static func onFrontmostAppChanged(_: Notification) {
+        Task.startUnstructured { @MainActor in
+            syncHotkeysEnabledState()
+        }
+    }
+
     private static func onHideApp(_ notification: Notification) {
         let notifName = notification.name.rawValue
         Task.startUnstructured { @MainActor in
@@ -48,6 +54,7 @@ enum GlobalObserver {
         let nc = NSWorkspace.shared.notificationCenter
         nc.addObserver(forName: NSWorkspace.didLaunchApplicationNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main, using: onNotif)
+        nc.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main, using: onFrontmostAppChanged)
         nc.addObserver(forName: NSWorkspace.didHideApplicationNotification, object: nil, queue: .main, using: onHideApp)
         nc.addObserver(forName: NSWorkspace.didUnhideApplicationNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main, using: onNotif)
