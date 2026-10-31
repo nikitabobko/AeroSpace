@@ -12,9 +12,12 @@ jobs:
   fast-forward-main:
     name: Fast-forward main
     needs: build
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+    - if: needs.build.result != 'success'
+      run: exit 1
     - uses: actions/checkout@v6
     - run: git push origin HEAD:main
