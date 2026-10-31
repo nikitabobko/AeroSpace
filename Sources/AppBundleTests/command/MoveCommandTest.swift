@@ -9,6 +9,47 @@ final class MoveCommandTest: XCTestCase {
     func testParse() {
         assertNil(parseCommand("move --fail-if-fullscreen left").errorOrNil)
         assertNil(parseCommand("move --fail-if-macos-native-fullscreen --window-id 1 right").errorOrNil)
+        assertNil(parseCommand("move --floating-pixels 25 down").errorOrNil)
+        assertNotNil(parseCommand("move --floating-pixels -1 down").errorOrNil)
+        assertNotNil(parseCommand("move --floating-pixels nope down").errorOrNil)
+    }
+
+    func testMoveFloatingWindowByPixels() async throws {
+        let window = TestWindow.new(
+            id: 1,
+            parent: Workspace.get(byName: name).floatingWindowsContainer,
+            rect: Rect(topLeftX: 100, topLeftY: 200, width: 300, height: 400),
+        )
+        assertTrue(window.focusWindow())
+
+        for command in ["left", "up", "right", "down"] {
+            let result = await parseCommand("move --floating-pixels 25 \(command)").cmdOrDie.run(.defaultEnv, .emptyStdin)
+            assertEquals(result.exitCode.rawValue, 0)
+        }
+
+        let rect = try await window.getAxRect(.cancellable).orDie()
+        assertEquals(rect.topLeftX, 100)
+        assertEquals(rect.topLeftY, 200)
+        assertEquals(rect.width, 300)
+        assertEquals(rect.height, 400)
+    }
+
+    func testMoveFloatingWindowDefaultsToTenPercentOfMonitor() async throws {
+        let window = TestWindow.new(
+            id: 1,
+            parent: Workspace.get(byName: name).floatingWindowsContainer,
+            rect: Rect(topLeftX: 100, topLeftY: 200, width: 300, height: 400),
+        )
+        assertTrue(window.focusWindow())
+
+        let rightResult = await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let downResult = await parseCommand("move down").cmdOrDie.run(.defaultEnv, .emptyStdin)
+
+        assertEquals(rightResult.exitCode.rawValue, 0)
+        assertEquals(downResult.exitCode.rawValue, 0)
+        let rect = try await window.getAxRect(.cancellable).orDie()
+        assertEquals(rect.topLeftX, 292)
+        assertEquals(rect.topLeftY, 308)
     }
 
     func testFailIfFullscreen() async {

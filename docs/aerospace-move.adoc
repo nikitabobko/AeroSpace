@@ -11,7 +11,8 @@ include::util/man-attributes.adoc[]
 // tag::synopsis[]
 aerospace move [-h|--help] [--window-id <window-id>] [--boundaries <boundary>]
                [--boundaries-action <boundary-action>] [--fail-if-fullscreen]
-               [--fail-if-macos-native-fullscreen] (left|down|up|right)
+               [--fail-if-macos-native-fullscreen] [--floating-pixels <pixels>]
+               (left|down|up|right)
 
 // end::synopsis[]
 
@@ -30,6 +31,10 @@ include::./util/conditional-options-header.adoc[]
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
+
+--floating-pixels <pixels>::
+If the window is floating, move it in the specified direction by `<pixels>`. +
+If omitted, the window moves by 10% of the monitor width or height, depending on the direction.
 
 --boundaries <boundary>::
 Defines move boundaries. +
