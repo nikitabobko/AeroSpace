@@ -47,7 +47,7 @@ let package = Package(
         .target(
             name: "Common",
             dependencies: [
-                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "OrderedCollections", package: "swift-collections"),
                 .target(name: "Macros"),
             ],
             swiftSettings: swiftSettings,
@@ -56,7 +56,7 @@ let package = Package(
             name: "AppBundle",
             dependencies: [
                 .product(name: "BasicContainers", package: "swift-collections"),
-                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "OrderedCollections", package: "swift-collections"),
                 .product(name: "HotKey", package: "HotKey"),
                 .product(name: "ISSoundAdditions", package: "ISSoundAdditions"),
                 .product(name: "TOMLDecoder", package: "TOMLDecoder"),
