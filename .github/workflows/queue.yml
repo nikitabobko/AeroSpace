@@ -1,0 +1,20 @@
+name: queue
+
+on:
+  push:
+    branches:
+      - 'q/**' # "q" stands for "queue"
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  fast-forward-main:
+    name: Fast-forward main
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v6
+    - run: git push origin HEAD:main
