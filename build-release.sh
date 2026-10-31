@@ -79,11 +79,7 @@ expected_layout=$(cat <<EOF
 EOF
 )
 
-if test "$expected_layout" != "$(find .release/AeroSpace.app)"; then
-    echo "!!! Expect/Actual layout don't match !!!"
-    find .release/AeroSpace.app
-    exit 1
-fi
+diff --color <(echo "$expected_layout") <(find .release/AeroSpace.app)
 
 check-universal-binary() {
     if ! file "$1" | grep --fixed-string -q "Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64"; then
