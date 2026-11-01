@@ -54,9 +54,16 @@ import Foundation
 private func smartLayoutAtStartup() {
     let workspace = globalFocus.workspace
     let root = workspace.rootTilingContainer
-    switch root.children.count <= 3 {
-        case true: root.layout = .tiles
-        case false: root.layout = .accordion
+    if config.defaultRootContainerLayout == .scrolling {
+        root.layout = .scrolling
+        root.changeOrientation(.h)
+        root.reveal(globalFocus.windowOrNil, preferRightPane: true)
+        return
+    }
+    if root.children.count <= 3 {
+        root.layout = .tiles
+    } else {
+        root.layout = .accordion
     }
 }
 
