@@ -6,7 +6,7 @@ struct ScrollCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
-        let root = focus.workspace.rootTilingContainer
+        let root = globalFocus.workspace.rootTilingContainer
         guard root.layout == .scrolling else {
             return .fail(io.err("scroll command only works when the workspace root container uses the scrolling layout"))
         }

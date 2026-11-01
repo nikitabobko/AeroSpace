@@ -201,7 +201,7 @@ extension TreeNode {
                 return window.lifeStatus.isInhabited ? window : nil
             case .tilingContainer(let container):
                 if container.layout == .tabs {
-                    return container.mostRecentChild?.findLeafWindowRecursive(snappedTo: direction)
+                    return container.mostRecentInhabitedChild?.findInhabitedLeafWindowRecursive(snappedTo: direction)
                 }
                 if direction.orientation == container.orientation {
                     return (direction.isPositive ? container.inhabitedChildren.last : container.inhabitedChildren.first)?

@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import Common
 
 enum TabHeaderMetrics {
     static let height = CGFloat(28)
@@ -39,8 +40,8 @@ final class LayoutContext {
     var tabHeaderSnapshots: [TabHeaderSnapshot] = []
 
     init(_ workspace: Workspace) {
-        let monitor = workspace.workspaceMonitor
-        let monitors = monitorInfos
+        let monitor = workspace.workspaceMonitorInfo
+        let monitors = globalUnsortedMonitorInfos
         self.workspace = workspace
         self.hideCorner = monitor.optimalHideCorner(monitors: monitors)
         self.suppressScrollingPeek = monitor.hasMonitorInRightSpillBand(monitors: monitors)
@@ -79,13 +80,13 @@ final class TabHeaderTitleCache {
         let updatedAt: Date
     }
 
-    private var titles: [UInt32: Entry] = [:]
+    private var titles: [OpaqueWindowId: Entry] = [:]
     private let ttl: TimeInterval = 1
 
     private init() {}
 
     func title(for window: Window, now: Date = .now) async throws -> String {
-        let shouldRefresh = focus.windowOrNil == window
+        let shouldRefresh = globalFocus.windowOrNil == window
         if let cached = titles[window.windowId],
            !shouldRefresh,
            cached.updatedAt.distance(to: now) <= ttl
@@ -104,11 +105,11 @@ final class TabHeaderTitleCache {
         return resolved
     }
 
-    func cachedTitle(for windowId: UInt32) -> String? {
+    func cachedTitle(for windowId: OpaqueWindowId) -> String? {
         titles[windowId]?.title
     }
 
-    func invalidate(windowId: UInt32) {
+    func invalidate(windowId: OpaqueWindowId) {
         titles.removeValue(forKey: windowId)
     }
 
@@ -122,10 +123,10 @@ extension TreeNode {
     func tabHeaderTargetWindow() -> Window? {
         switch nodeCases {
             case .window(let window):
-                return window
+                return window.lifeStatus.isInhabited ? window : nil
             case .tilingContainer:
-                return mostRecentWindowRecursive ?? anyLeafWindowRecursive
-            case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
+                return mostRecentInhabitedChild?.tabHeaderTargetWindow()
+            case .monitor, .workspacesContainer, .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                  .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer, .floatingWindowsContainer:
                 return nil
         }

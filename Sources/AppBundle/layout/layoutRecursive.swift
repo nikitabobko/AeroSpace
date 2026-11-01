@@ -191,6 +191,7 @@ extension TilingContainer {
     @MainActor
     fileprivate func layoutScrolling(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
         clampScrollingIndex()
+        let children = inhabitedChildren
         switch children.count {
             case 0:
                 return
@@ -228,7 +229,7 @@ extension TilingContainer {
         let pageWidth = (viewportWidth - peek) / 2
         // Invalid geometry keeps the original two-page layout. The gap must leave a visible sliver,
         // and each full page must remain wider than both the peek and its padding.
-        guard scrollingIndex + 2 < children.count,
+        guard scrollingIndex + 2 < inhabitedChildren.count,
               !context.suppressScrollingPeek,
               gap >= 0,
               peek > gap / 2,
@@ -239,7 +240,8 @@ extension TilingContainer {
 
     @MainActor
     fileprivate func layoutTabs(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
-        guard let activeChild = mostRecentChild ?? children.first else { return }
+        let children = inhabitedChildren
+        guard let activeChild = mostRecentInhabitedChild else { return }
         let headerHeight = TabHeaderMetrics.height
         let hasVisibleHeader = width >= TabHeaderMetrics.minTabWidth && height > headerHeight + 1
         let headerFrame = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: hasVisibleHeader ? headerHeight : 0)
@@ -324,10 +326,10 @@ extension TreeNode {
                 try await window.hideInCorner(corner)
             case .tilingContainer(let container):
                 container.lastAppliedLayoutPhysicalRect = nil
-                for child in container.children {
+                for child in container.inhabitedChildren {
                     try await child.hideSubtree(in: corner)
                 }
-            case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
+            case .monitor, .workspacesContainer, .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                  .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer, .floatingWindowsContainer:
                 return
         }

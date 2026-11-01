@@ -37,7 +37,7 @@ final class TabsLayoutCommandTest: XCTestCase {
 
         _ = try await workspace.layoutWorkspace()
 
-        let workspaceRect = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+        let workspaceRect = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         let activeRect = (root.mostRecentChild as! TestWindow).lastAppliedLayoutPhysicalRect.orDie()
         let expectedHeaderHeight = TabHeaderMetrics.height
 
@@ -45,6 +45,28 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertEquals(activeRect.width, workspaceRect.width)
         assertEquals(activeRect.height, workspaceRect.height - 1 - expectedHeaderHeight)
         assertNil((root.children[0] as! TestWindow).lastAppliedLayoutPhysicalRect)
+    }
+
+    func testTabsSkipNativeTabTombstones() async throws {
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        root.layout = .tabs
+        let page = TilingContainer.newHTiles(parent: root, adaptiveWeight: 1)
+        let active = TestWindow.new(id: 1, parent: page)
+        let inactive = TestWindow.new(id: 2, parent: page)
+        inactive.lifeStatus = .invisible
+        let dead = TestWindow.new(id: 3, parent: root)
+        dead.lifeStatus = .dead
+
+        let snapshots = try await workspace.layoutWorkspace()
+
+        assertEquals(snapshots.count, 1)
+        assertEquals(snapshots[0].items.count, 1)
+        assertEquals(snapshots[0].items[0].targetWindow, active)
+        assertEquals(snapshots[0].items[0].isActive, true)
+        assertNotNil(active.lastAppliedLayoutPhysicalRect)
+        assertNil(inactive.lastAppliedLayoutPhysicalRect)
+        assertNil(dead.lastAppliedLayoutPhysicalRect)
     }
 
     func testLayoutRestoresWindowsMovedOutsideTheLayout() async throws {
@@ -167,13 +189,13 @@ final class TabsLayoutCommandTest: XCTestCase {
         root.layout = .tabs
 
         await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
-        assertEquals(focus.windowOrNil?.windowId, 2)
+        assertEquals(globalFocus.windowOrNil?.windowId, 2)
 
         await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
-        assertEquals(focus.windowOrNil?.windowId, 3)
+        assertEquals(globalFocus.windowOrNil?.windowId, 3)
 
         await FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
-        assertEquals(focus.windowOrNil?.windowId, 2)
+        assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
     func testMoveReordersTabs() async {
@@ -186,7 +208,7 @@ final class TabsLayoutCommandTest: XCTestCase {
 
         await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .tabs([.window(1), .window(3), .window(2)]))
-        assertEquals(focus.windowOrNil?.windowId, 2)
+        assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
     func testClosingInactiveTabRemovesItFromSnapshot() async throws {
