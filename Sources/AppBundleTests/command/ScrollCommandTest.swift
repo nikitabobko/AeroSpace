@@ -87,7 +87,7 @@ final class ScrollCommandTest: XCTestCase {
         root.layout = .scrolling
         root.scrollingIndex = 1
 
-        let workspaceRect = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+        let workspaceRect = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         let pageWidth = workspaceRect.width / 2
         let expectedHeight = workspaceRect.height - 1
         let windows = root.children.compactMap { $0 as? TestWindow }
@@ -134,8 +134,8 @@ final class ScrollCommandTest: XCTestCase {
 
         _ = try await workspace.layoutWorkspace()
 
-        let workspaceRect = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
-        let rawGap = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor).inner.horizontal.toDouble()
+        let workspaceRect = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
+        let rawGap = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitorInfo).inner.horizontal.toDouble()
         let peek = CGFloat(config.scrollingPeekWidth)
         let pageWidth = (workspaceRect.width - peek) / 2
         let expectedHeight = workspaceRect.height - 1
@@ -170,7 +170,7 @@ final class ScrollCommandTest: XCTestCase {
         let peekRect = windows[3].lastAppliedLayoutPhysicalRect.orDie()
         // The inner gap reduces the visible sliver, while the window also covers the right outer gap.
         assertEquals(workspaceRect.maxX - peekRect.topLeftX, peek - rawGap / 2)
-        assertEquals(workspace.workspaceMonitor.visibleRect.maxX - peekRect.topLeftX, 44)
+        assertEquals(workspace.workspaceMonitorInfo.visibleRect.maxX - peekRect.topLeftX, 44)
         assertEquals(peekRect.maxX - workspaceRect.maxX, pageWidth - peek)
         assertEquals(peekRect.topLeftX - rightRect.maxX, rawGap)
     }
@@ -184,7 +184,7 @@ final class ScrollCommandTest: XCTestCase {
         let third = TestWindow.new(id: 3, parent: root)
         root.scrollingIndex = 0
 
-        let workspaceRect = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+        let workspaceRect = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         let pageWidth = workspaceRect.width / 2
 
         // Values that can't produce a sliver plus two pages disable the peek instead of being capped
@@ -220,7 +220,7 @@ final class ScrollCommandTest: XCTestCase {
         TestWindow.new(id: 1, parent: root)
         let second = TestWindow.new(id: 2, parent: root)
         let third = TestWindow.new(id: 3, parent: root)
-        let viewport = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+        let viewport = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         let largeGap = Int(viewport.width * 0.6)
 
         for (gap, peek, isVisible) in [(-1, 40, false), (79, 40, true), (80, 40, false), (largeGap, largeGap / 2 + 1, false)] {
@@ -248,7 +248,7 @@ final class ScrollCommandTest: XCTestCase {
         let third = TestWindow.new(id: 3, parent: root)
         assertEquals(first.focusWindow(), true)
         _ = try await workspace.layoutWorkspace()
-        let viewport = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+        let viewport = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         XCTAssertGreaterThan(third.lastAppliedLayoutPhysicalRect.orDie().maxX, viewport.maxX)
 
         assertEquals(third.focusWindow(), true)
@@ -275,19 +275,19 @@ final class ScrollCommandTest: XCTestCase {
         let scrollRight = await parseCommand("scroll right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(scrollRight.exitCode.rawValue, 0)
         assertEquals(root.scrollingIndex, 1)
-        assertEquals(focus.windowOrNil?.windowId, 3)
+        assertEquals(globalFocus.windowOrNil?.windowId, 3)
 
         await parseCommand("scroll right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.scrollingIndex, 2)
-        assertEquals(focus.windowOrNil?.windowId, 4)
+        assertEquals(globalFocus.windowOrNil?.windowId, 4)
 
         await parseCommand("scroll right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.scrollingIndex, 2)
-        assertEquals(focus.windowOrNil?.windowId, 4)
+        assertEquals(globalFocus.windowOrNil?.windowId, 4)
 
         await parseCommand("scroll left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.scrollingIndex, 1)
-        assertEquals(focus.windowOrNil?.windowId, 2)
+        assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
     func testMoveCommandKeepsFocusedWindowVisible() async {
@@ -305,7 +305,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(root.layoutDescription, .scrolling([.window(1), .window(2), .window(4), .window(3)]))
         assertEquals(root.scrollingIndex, 2)
-        assertEquals(focus.windowOrNil?.windowId, 3)
+        assertEquals(globalFocus.windowOrNil?.windowId, 3)
     }
 
     func testFocusedWindowAutoRevealsNewestPage() {
@@ -337,6 +337,30 @@ final class ScrollCommandTest: XCTestCase {
 
         w4.closeAxWindow()
         assertEquals(root.scrollingIndex, 1)
+    }
+
+    func testScrollingSkipsNativeTabTombstones() async throws {
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        root.layout = .scrolling
+        config.scrollingPeekWidth = 40
+        let first = TestWindow.new(id: 1, parent: root)
+        let inactive = TestWindow.new(id: 2, parent: root)
+        inactive.lifeStatus = .invisible
+        let second = TestWindow.new(id: 3, parent: root)
+        let third = TestWindow.new(id: 4, parent: root)
+        assertEquals(first.focusWindow(), true)
+
+        let result = await parseCommand("scroll right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(globalFocus.windowOrNil, third)
+        assertEquals(root.scrollingIndex, 1)
+        _ = try await workspace.layoutWorkspace()
+
+        let viewport = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
+        assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().topLeftX, viewport.topLeftX)
+        assertNil(inactive.lastAppliedLayoutPhysicalRect)
+        assertEquals(root.scroll(in: .left), first)
     }
 
     func testResizeAndBalanceSizesFailInScrollingLayout() async {
