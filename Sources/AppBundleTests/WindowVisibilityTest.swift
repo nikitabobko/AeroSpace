@@ -44,7 +44,7 @@ final class WindowVisibilityTest: XCTestCase {
 
         // Explicit user callbacks must still be able to override the default placement.
         config.onWindowDetected = [WindowDetectedCallback(matcher: .command(.empty), rawRun: parseCommand("move-node-to-workspace current").cmdOrDie)]
-        await tryOnWindowDetected(dialog)
+        await runOnWindowDetected(ifConventional: dialog)
         assertEquals(dialog.nodeWorkspace, activeWorkspace)
     }
 
