@@ -21,7 +21,6 @@ EOF
 )
 
 check-equals() {
-    echo "Checking $1"
     if test "$2" != "$3"; then
         echo "ERROR: $1 doesn't match the expected value"
         echo "Diff:"
@@ -66,7 +65,7 @@ check-dylibs() {
             sed -E 's/ \(compatibility version [^)]*, weak\)$/ (weak)/; s/ \(compatibility version [^)]*\)$//' |
             # Allow anything from /usr/lib/swift. Different Xcode versions link slightly different dylibs
             sed -E '\|^./usr/lib/swift/|d' |
-            # Xcode 26 links it weak, Xcode 27 links it strong
+            # Xcode 26 links it weak, Xcode 27 links it strong #macos27
             sed -E 's|^(.@rpath/libswiftCompatibilitySpan\.dylib) \(weak\)$|\1|')"
     done
 }
@@ -119,8 +118,8 @@ check-dylibs .release/aerospace "$expected_cli_dylibs"
 check-universal-binary .release/AeroSpace.app/Contents/MacOS/AeroSpace
 check-universal-binary .release/aerospace
 
-check-contains-hash .release/AeroSpace.app/Contents/MacOS/AeroSpace
-check-contains-hash .release/aerospace
-
 codesign -v .release/AeroSpace.app
 codesign -v .release/aerospace
+
+check-contains-hash .release/AeroSpace.app/Contents/MacOS/AeroSpace
+check-contains-hash .release/aerospace
