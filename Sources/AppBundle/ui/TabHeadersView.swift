@@ -126,7 +126,7 @@ private struct TabHeaderStripView: View {
             guard let token: RunSessionGuard = .isServerEnabled else { return }
             TabHeaderInteractionState.shared.markInteraction()
             try await runLightSession(.menuBarButton, token) {
-                guard focus.windowOrNil != window else { return }
+                guard globalFocus.windowOrNil != window else { return }
                 _ = window.focusWindow()
             }
         }

@@ -23,7 +23,7 @@ final class WindowVisibilityTest: XCTestCase {
         _ = try await workspace.layoutWorkspace()
 
         let rect = try await third.getAxRect(.nonCancellable).orDie()
-        let viewport = workspace.workspaceMonitor.visibleRect
+        let viewport = workspace.workspaceMonitorInfo.visibleRect
         assertEquals(third.isFloating, true)
         XCTAssertGreaterThanOrEqual(rect.minX, viewport.minX)
         XCTAssertLessThanOrEqual(rect.maxX, viewport.maxX)
@@ -40,7 +40,7 @@ final class WindowVisibilityTest: XCTestCase {
         let dialog = TestWindow.new(id: 3, parent: binding.parent)
         assertEquals(dialog.nodeWorkspace, ownerWorkspace)
         assertEquals(dialog.isFloating, true)
-        assertEquals(focus.workspace, activeWorkspace)
+        assertEquals(globalFocus.workspace, activeWorkspace)
 
         // Explicit user callbacks must still be able to override the default placement.
         config.onWindowDetected = [WindowDetectedCallback(matcher: .command(.empty), rawRun: parseCommand("move-node-to-workspace current").cmdOrDie)]
@@ -79,7 +79,7 @@ final class WindowVisibilityTest: XCTestCase {
         let workspace = Workspace.get(byName: name)
         let focusedWindow = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         assertEquals(focusedWindow.focusWindow(), true)
-        let monitorRect = workspace.workspaceMonitor.visibleRect
+        let monitorRect = workspace.workspaceMonitorInfo.visibleRect
         let size = CGSize(width: 600, height: 400)
         let origins = [
             CGPoint(x: monitorRect.minX - size.width + 20, y: monitorRect.minY),
@@ -90,7 +90,7 @@ final class WindowVisibilityTest: XCTestCase {
         ]
         for (index, origin) in origins.enumerated() {
             let dialog = TestWindow.new(
-                id: UInt32(index + 2),
+                id: OpaqueWindowId(UInt64(index + 2)),
                 parent: workspace.floatingWindowsContainer,
                 rect: Rect(topLeftX: origin.x, topLeftY: origin.y, width: size.width, height: size.height),
             )
@@ -103,7 +103,7 @@ final class WindowVisibilityTest: XCTestCase {
             XCTAssertGreaterThanOrEqual(actual.minY, monitorRect.minY)
             XCTAssertLessThanOrEqual(actual.maxX, monitorRect.maxX)
             XCTAssertLessThanOrEqual(actual.maxY, monitorRect.maxY)
-            assertEquals(focus.windowOrNil, focusedWindow)
+            assertEquals(globalFocus.windowOrNil, focusedWindow)
         }
     }
 
@@ -145,7 +145,7 @@ final class WindowVisibilityTest: XCTestCase {
         for window in workspace.allLeafWindowsRecursive {
             assertEquals(window.isHiddenInCorner, false)
             let rect = try await window.getAxRect(.nonCancellable).orDie()
-            assertEquals(workspace.workspaceMonitor.visibleRect.contains(rect.center), true)
+            assertEquals(workspace.workspaceMonitorInfo.visibleRect.contains(rect.center), true)
         }
         assertEquals(root.layout, .scrolling)
         assertEquals(tabs.layout, .tabs)
@@ -173,7 +173,7 @@ final class WindowVisibilityTest: XCTestCase {
 
         _ = try await workspace.layoutWorkspace()
         let hiddenPageSize = try await hiddenPage.getAxSize(.nonCancellable)
-        let corner = workspace.workspaceMonitor.optimalHideCorner(monitors: monitorInfos)
+        let corner = workspace.workspaceMonitorInfo.optimalHideCorner(monitors: globalUnsortedMonitorInfos)
 
         // The workspace hiding pass must preserve the state of already hidden tabs/pages.
         for window in workspace.allLeafWindowsRecursive {
@@ -226,7 +226,7 @@ final class WindowVisibilityTest: XCTestCase {
         XCTAssertNil(parkedPage.lastAppliedLayoutPhysicalRect)
 
         let parkedSize = try await parkedPage.getAxSize(.nonCancellable)
-        let corner = workspace.workspaceMonitor.optimalHideCorner(monitors: monitorInfos)
+        let corner = workspace.workspaceMonitorInfo.optimalHideCorner(monitors: globalUnsortedMonitorInfos)
         for window in workspace.allLeafWindowsRecursive {
             try await window.hideInCorner(corner)
         }
@@ -257,7 +257,7 @@ final class WindowVisibilityTest: XCTestCase {
         for window in workspace.allLeafWindowsRecursive {
             assertEquals(window.isHiddenInCorner, false)
             let rect = try await window.getAxRect(.nonCancellable).orDie()
-            assertEquals(workspace.workspaceMonitor.visibleRect.contains(rect.center), true)
+            assertEquals(workspace.workspaceMonitorInfo.visibleRect.contains(rect.center), true)
         }
     }
 
@@ -313,7 +313,7 @@ final class WindowVisibilityTest: XCTestCase {
         let workspace = Workspace.get(byName: name)
         let original = Rect(topLeftX: 100, topLeftY: 100, width: 700, height: 500)
         let window = TestWindow.new(id: 1, parent: workspace.floatingWindowsContainer, rect: original)
-        let monitorRect = workspace.workspaceMonitor.visibleRect
+        let monitorRect = workspace.workspaceMonitorInfo.visibleRect
 
         try await window.hideInCorner(.bottomLeftCorner)
         let hidden = try await window.getAxRect(.nonCancellable).orDie()

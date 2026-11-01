@@ -162,7 +162,7 @@ private func unbindAndGetBindingDataForNewWindow(_ windowId: OpaqueWindowId, _ m
         windowType,
         workspace,
         window: window,
-        appLastFocusedWindow: macApp.lastNativeFocusedWindowId.flatMap { Window.get(byId: $0) },
+        appLastFocusedWindow: macApp.lastFocusedNativeWindowOpaqueId.flatMap { Window.get(byId: $0) },
     )
 }
 

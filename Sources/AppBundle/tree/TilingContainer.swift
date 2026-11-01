@@ -41,7 +41,7 @@ extension TilingContainer {
     var isRootContainer: Bool { parent is Workspace }
     var isScrollingRoot: Bool { isRootContainer && layout == .scrolling }
 
-    var maxScrollingIndex: Int { max(0, children.count - 2) }
+    var maxScrollingIndex: Int { max(0, inhabitedChildren.count - 2) }
 
     func clampScrollingIndex() {
         scrollingIndex = isScrollingRoot ? min(scrollingIndex, maxScrollingIndex) : 0
@@ -74,11 +74,11 @@ extension TilingContainer {
             case .left:
                 let nextIndex = max(0, scrollingIndex - 1)
                 scrollingIndex = nextIndex
-                return children.getOrNil(atIndex: nextIndex)?.findLeafWindowRecursive(snappedTo: .left)
+                return inhabitedChildren.getOrNil(atIndex: nextIndex)?.findInhabitedLeafWindowRecursive(snappedTo: .left)
             case .right:
                 let nextIndex = min(maxScrollingIndex, scrollingIndex + 1)
                 scrollingIndex = nextIndex
-                return children.getOrNil(atIndex: nextIndex + 1)?.findLeafWindowRecursive(snappedTo: .right)
+                return inhabitedChildren.getOrNil(atIndex: nextIndex + 1)?.findInhabitedLeafWindowRecursive(snappedTo: .right)
             case .up, .down:
                 return nil
         }
@@ -86,7 +86,7 @@ extension TilingContainer {
 
     @MainActor
     private func scrollingPageIndex(for window: Window) -> Int? {
-        window.parentsWithSelf.first(where: { $0.parent === self })?.ownIndex
+        window.parentsWithSelf.first(where: { $0.parent === self })?.ownIndex(in: .inhabitedOnly)
     }
 
     @MainActor

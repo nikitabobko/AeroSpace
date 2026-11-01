@@ -20,7 +20,7 @@ struct BalanceSizesCommand: Command {
     let inhabitedChildren = parent.inhabitedChildren
     let equalWeight: CGFloat? = switch parent.layout {
         case .tiles: CGFloat(inhabitedChildren.sumOfDouble { $0.getWeight(parent.orientation) }).div(inhabitedChildren.count)
-        case .accordion: nil
+        case .accordion, .scrolling, .tabs: nil
     }
     for child in inhabitedChildren {
         switch parent.layout {

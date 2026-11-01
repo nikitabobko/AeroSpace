@@ -57,7 +57,7 @@ private func smartLayoutAtStartup() {
     if config.defaultRootContainerLayout == .scrolling {
         root.layout = .scrolling
         root.changeOrientation(.h)
-        root.reveal(focus.windowOrNil, preferRightPane: true)
+        root.reveal(globalFocus.windowOrNil, preferRightPane: true)
         return
     }
     if root.children.count <= 3 {
