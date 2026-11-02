@@ -79,6 +79,25 @@ final class TreeNodeTest: XCTestCase {
         )
     }
 
+    func testNormalizeContainers_rootSingleContainerChild() {
+        config.enableNormalizationFlattenContainers = true
+        let workspace = Workspace.get(byName: name)
+        var window3: TestWindow!
+        workspace.rootTilingContainer.apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 1, parent: $0)
+                TestWindow.new(id: 2, parent: $0)
+            }
+            window3 = TestWindow.new(id: 3, parent: $0)
+        }
+        window3.unbindFromParent()
+        workspace.normalizeContainers()
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .v_tiles([.window(1), .window(2)]),
+        )
+    }
+
     func testNormalizeContainers_removeEffectivelyEmpty() {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
