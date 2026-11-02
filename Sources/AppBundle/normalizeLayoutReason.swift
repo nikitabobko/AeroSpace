@@ -19,9 +19,10 @@
 }
 
 @MainActor private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) async throws {
-    for window in windows {
-        let isMacosFullscreen = try await window.isMacosFullscreen(.cancellable)
-        let isMacosMinimized = try await (!isMacosFullscreen).andAsync { @MainActor @Sendable in try await window.isMacosMinimized(.cancellable) }
+    let states = try await windows.mapConcurrently { try await $0.getMacosWindowNativeState(.cancellable) }
+    for (window, state) in zip(windows, states) {
+        let isMacosFullscreen = state == .nativeFullscreen
+        let isMacosMinimized = state == .nativeMinimized
         let isMacosWindowOfHiddenApp = !isMacosFullscreen && !isMacosMinimized &&
             !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.nsApp.isHidden
         switch window.layoutReason {
