@@ -1,6 +1,10 @@
 // periphery:ignore:all - Those are utils that can become useful any moment
 
 /// Backported non-Copyable Continuation (more performant and safer than other Continuations) from #macos27 to old macos versions
+///
+/// The API may be backported in the future:
+/// - https://forums.swift.org/t/accepted-se-0528-non-copyable-continuation/86533/5
+/// - https://github.com/swiftlang/swift/pull/93430
 @safe public struct StrictContinuation<Success, Failure: Error>: ~Copyable, Sendable {
     private let raw: UnsafeContinuation<Success, Failure>
 
