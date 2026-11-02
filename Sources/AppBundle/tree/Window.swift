@@ -39,12 +39,21 @@ open class Window: TreeNode, Hashable {
     func getTitle(_ cm: CancellationMode) async throws -> String { die("Not implemented") }
     func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { false }
     func isMacosMinimized(_ cm: CancellationMode) async throws -> Bool { false } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
+    func getMacosNativeState(_ cm: CancellationMode) async throws -> MacosNativeState {
+        if try await isMacosFullscreen(cm) { return MacosNativeState(isFullscreen: true, isMinimized: false) }
+        return MacosNativeState(isFullscreen: false, isMinimized: try await isMacosMinimized(cm))
+    }
     var isHiddenInCorner: Bool { die("Not implemented") }
     @MainActor func nativeFocus() { die("Not implemented") }
     func getAxRect(_ cm: CancellationMode) async throws -> Rect? { die("Not implemented") }
     func getCenter(_ cm: CancellationMode) async throws -> CGPoint? { try await getAxRect(cm)?.center }
 
     func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
+}
+
+struct MacosNativeState: Sendable {
+    let isFullscreen: Bool
+    let isMinimized: Bool
 }
 
 enum LayoutReason: Equatable {

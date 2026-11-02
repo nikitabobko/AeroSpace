@@ -28,10 +28,12 @@ extension TreeNode {
                 try await workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
                 try await workspace.floatingWindowsContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
             case .floatingWindowsContainer(let container):
-                for window in container.children.filterIsInstance(of: Window.self) {
+                let windows = container.children.filterIsInstance(of: Window.self)
+                let rects = try await mapConcurrently(windows) { try await $0.getAxRect(.cancellable) } // Probably not idempotent
+                for (window, windowRect) in zip(windows, rects) {
                     window.lastAppliedLayoutPhysicalRect = nil
                     window.lastAppliedLayoutVirtualRect = nil
-                    try await window.layoutFloatingWindow(context) // todo make it parallel. Get rid of 'try await'
+                    window.layoutFloatingWindow(context, windowRect)
                 }
             case .window(let window):
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
@@ -74,9 +76,8 @@ private struct LayoutContext {
 
 extension Window {
     @MainActor
-    fileprivate func layoutFloatingWindow(_ context: LayoutContext) async throws {
+    fileprivate func layoutFloatingWindow(_ context: LayoutContext, _ windowRect: Rect?) {
         let workspace = context.workspace
-        let windowRect = try await getAxRect(.cancellable) // Probably not idempotent
         let currentMonitor = windowRect?.center.monitorApproximation
         if let currentMonitor, let windowRect, workspace != currentMonitor.visibleWorkspace {
             let windowTopLeftCorner = windowRect.topLeftCorner

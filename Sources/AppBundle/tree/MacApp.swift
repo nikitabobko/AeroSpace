@@ -270,6 +270,13 @@ final class MacApp: AbstractApp {
         }
     }
 
+    func getMacosNativeState(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> MacosNativeState? {
+        try await withWindow(windowId, cm) { window, job in
+            let isFullscreen = window.get(Ax.isFullscreenAttr) == true
+            return MacosNativeState(isFullscreen: isFullscreen, isMinimized: !isFullscreen && window.get(Ax.minimizedAttr) == true)
+        }
+    }
+
     @MainActor func getWindowLevel(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> MacOsWindowLevel? {
         guard let nativeWindowId = windowIdMapping.forward[windowId] else { return nil }
         return try await AppBundle::getWindowLevel(forNativeId: nativeWindowId, cm)
