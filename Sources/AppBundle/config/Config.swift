@@ -49,6 +49,7 @@ struct Config: Withable {
     var persistentWorkspaces: OrderedSet<String> = []
     var execOnWorkspaceChange: [String] = [] // todo deprecate
     var keyMapping = KeyMapping()
+    var keybindingsDisabledForFrontmostApps: [String] = []
     var execConfig: ExecConfig = ExecConfig()
     var focusFollowsMouse: FocusFollowsMouse = FocusFollowsMouse()
 
