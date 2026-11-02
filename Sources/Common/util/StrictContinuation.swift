@@ -1,41 +1,39 @@
 // periphery:ignore:all - Those are utils that can become useful any moment
 
 /// Backported non-Copyable Continuation (more performant and safer than other Continuations) from #macos27 to old macos versions
-public protocol StrictContinuation<Success, Failure>: ~Copyable, Sendable where Success: ~Copyable {
-    associatedtype Success
-    associatedtype Failure: Error
-    consuming func resume(returning value: consuming sending Success)
-    consuming func resume(throwing error: consuming Failure)
+@safe public struct StrictContinuation<Success, Failure: Error>: ~Copyable, Sendable {
+    private let raw: UnsafeContinuation<Success, Failure>
+
+    fileprivate init(_ raw: UnsafeContinuation<Success, Failure>) { unsafe self.raw = raw }
+
+    public consuming func resume(returning value: consuming sending Success) {
+        unsafe raw.resume(returning: value)
+        discard self
+    }
+
+    public consuming func resume(throwing error: consuming Failure) {
+        unsafe raw.resume(throwing: error)
+        discard self
+    }
+
+    deinit { die("StrictContinuation is leaked") }
 }
-
-extension UnsafeContinuation: StrictContinuation {}
-
-@available(macOS 27, *)
-extension Continuation: StrictContinuation {}
 
 public func withStrictContinuation<Success>(
     of: Success.Type = Success.self,
-    _ body: (consuming any StrictContinuation<Success, Never> & ~Copyable) -> Void,
+    _ body: (consuming StrictContinuation<Success, Never>) -> Void,
 ) async -> sending Success {
-    if #available(macOS 27, *) {
-        return await withContinuation { (cont: consuming Continuation<Success, Never>) in body(cont) }
-    } else {
-        return await unsafe withUnsafeContinuation { cont in unsafe body(cont) }
-    }
+    await unsafe withUnsafeContinuation { cont in unsafe body(StrictContinuation(cont)) }
 }
 
 public func withStrictContinuation<Success, Failure: Error>(
     of: Success.Type = Success.self,
     throwing: Failure.Type,
-    _ body: (consuming any StrictContinuation<Success, Failure> & ~Copyable) -> Void,
+    _ body: (consuming StrictContinuation<Success, Failure>) -> Void,
 ) async throws(Failure) -> sending Success {
-    if #available(macOS 27, *) {
-        return try await withContinuation(of: of, throwing: Failure.self) { (cont: consuming Continuation<Success, Failure>) in body(cont) }
-    } else {
-        return try await unsafe withUnsafeThrowingContinuation { cont in unsafe body(cont) }
-    }
+    try await unsafe withUnsafeThrowingContinuation { cont in unsafe body(StrictContinuation(cont)) }
 }
 
-extension StrictContinuation where Success == (), Self: ~Copyable {
+extension StrictContinuation where Success == () {
     public consuming func resume() { resume(returning: ()) }
 }

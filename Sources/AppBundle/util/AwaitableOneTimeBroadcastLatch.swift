@@ -4,7 +4,7 @@ import Foundation
 
 actor AwaitableOneTimeBroadcastLatch {
     private var done = false
-    private var awaiters = UniqueDictionary<UniqueToken, Nullable<any StrictContinuation<(), any Error> & ~Copyable>>()
+    private var awaiters = UniqueDictionary<UniqueToken, Nullable<StrictContinuation<(), any Error>>>()
 
     func await(_ cm: CancellationMode) async throws {
         try checkCancellation(cm)
