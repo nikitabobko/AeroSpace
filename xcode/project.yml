@@ -17,12 +17,13 @@ settings:
     TOOLCHAINS: ${XCODEGEN_TOOLCHAINS}
     SWIFT_VERSION: ${XCODEGEN_SWIFT_VERSION}
     GENERATE_INFOPLIST_FILE: YES
-    MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
+    MARKETING_VERSION: 0.0.0-SNAPSHOT
     # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
     # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
     # Agent apps do not appear in the Dock or in the Force Quit window (cmd-opt-esc)
     INFOPLIST_KEY_LSUIElement: YES
-    CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
+    AEROSPACE_CODE_SIGN_IDENTITY: aerospace-codesign-certificate
+    CODE_SIGN_IDENTITY: $(AEROSPACE_CODE_SIGN_IDENTITY)
 
 targets:
   AeroSpace:
@@ -46,6 +47,7 @@ targets:
           PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
           SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
           GCC_TREAT_WARNINGS_AS_ERRORS: YES
+          OTHER_LDFLAGS: $(inherited) $(AEROSPACE_BUILD_INFO_LDFLAGS)
     entitlements:
       path: ../resources/AeroSpace.entitlements
       properties:

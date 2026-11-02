@@ -21,10 +21,16 @@ done
 
 ./generate.sh
 ./script/check-uncommitted-files.sh
-./generate.sh --build-version "$build_version" --codesign-identity "$codesign_identity" --generate-git-hash
+
+build_info_file="$PWD/.build-info.txt"
+printf '%s\n%s\n%s\n' "$build_version" "$(git rev-parse HEAD)" "$(git rev-parse --short HEAD)" > "$build_info_file"
 
 swift_build_cli=(build -c release --arch arm64 --arch x86_64 --product aerospace)
-swift "${swift_build_cli[@]}" -Xswiftc -warnings-as-errors # CLI
+swift "${swift_build_cli[@]}" -Xswiftc -warnings-as-errors \
+    -Xlinker -sectcreate \
+    -Xlinker __TEXT \
+    -Xlinker __aero_build \
+    -Xlinker "$build_info_file"
 cli_bin_path="$(swift "${swift_build_cli[@]}" --show-bin-path)"
 
 rm -rf .release && mkdir .release
@@ -36,10 +42,11 @@ cd ./xcode
         -scheme AeroSpace \
         -destination "generic/platform=macOS" \
         -configuration "$xcode_configuration" \
-        -derivedDataPath .xcode-build
+        -derivedDataPath .xcode-build \
+        MARKETING_VERSION="$build_version" \
+        AEROSPACE_CODE_SIGN_IDENTITY="$codesign_identity" \
+        AEROSPACE_BUILD_INFO_LDFLAGS="-sectcreate __TEXT __aero_build $build_info_file"
 cd -
-
-git checkout .
 
 cp -r "xcode/.xcode-build/Build/Products/$xcode_configuration/AeroSpace.app" .release
 cp -r "$cli_bin_path/aerospace" .release
