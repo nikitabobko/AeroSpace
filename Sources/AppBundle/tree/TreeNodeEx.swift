@@ -20,6 +20,25 @@ extension TreeNode {
         allLeafWindowsRecursive.filter { $0.lifeStatus.isInhabited }
     }
 
+    private func visitMru(node: TreeNode, result: inout [Window]) {
+        if let node = node as? Window {
+            result.append(node)
+        }
+        let mruList = Array(node._mruChildren)
+        for child in mruList {
+            visitMru(node: child, result: &result)
+        }
+        for child in node.children where !mruList.contains(child) {
+            visitMru(node: child, result: &result)
+        }
+    }
+
+    var allLeafWindowsRecursiveMru: [Window] {
+        var result: [Window] = []
+        visitMru(node: self, result: &result)
+        return result
+    }
+
     func ownIndex(in scope: HabitationScope) -> Int? {
         guard let parent else { return nil }
         return switch scope {

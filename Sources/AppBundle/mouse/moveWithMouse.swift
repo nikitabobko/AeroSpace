@@ -5,6 +5,7 @@ import Common
 private var moveWithMouseTask: Task<(), any Error>? = nil
 
 func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
+    if !isUnitTest && !isLeftMouseButtonDown { return }
     let nativeWindowId = ax.containingNativeWindowId()
     let notif = notif as String
     let pid = ax.pid
@@ -12,9 +13,23 @@ func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableR
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let nativeWindowId,
               let pid,
-              let window = Window.get(byNativeId: nativeWindowId, pid: pid),
-              try await isManipulatedWithMouse(window)
-        else {
+              let window = Window.get(byNativeId: nativeWindowId, pid: pid)
+        else { return }
+        if !isUnitTest && window.isFloating && !window.isHiddenInCorner && globalUnsortedMonitorInfos.count <= 1 {
+            return
+        }
+        guard try await isManipulatedWithMouse(window) else {
+            if let macWindow = window as? MacWindow {
+                if macWindow.isSuppressingMoveResizeNotifications {
+                    return
+                }
+                if macWindow.isFloating && !macWindow.isHiddenInCorner && globalUnsortedMonitorInfos.count <= 1 && (macWindow.nodeWorkspace?.allLeafWindowsRecursive.count ?? 0) <= 1 {
+                    return
+                }
+                if macWindow.isHiddenInCorner {
+                    macWindow.needsCornerRehide = true
+                }
+            }
             scheduleCancellableCompleteRefreshSession(.ax(notif))
             return
         }
@@ -44,7 +59,11 @@ private func moveWithMouse(_ window: Window) async throws { // todo cover with t
 
 @MainActor
 private func moveFloatingWindow(_ window: Window) async throws {
-    guard let targetWorkspace = try await window.getCenter(.cancellable)?.monitorApproximation.visibleWorkspace else { return }
+    guard !window.isHiddenInCorner else { return }
+    guard let currentWorkspace = window.nodeWorkspace, currentWorkspace.isVisible else { return }
+    guard let targetMonitor = try await window.getCenter(.cancellable)?.monitorApproximation else { return }
+    guard targetMonitor.rect.topLeftCorner != currentWorkspace.workspaceMonitorInfo.rect.topLeftCorner else { return }
+    let targetWorkspace = targetMonitor.visibleWorkspace
     guard let parent = window.parent else { return }
     if targetWorkspace != parent {
         window.bindAsFloatingWindow(to: targetWorkspace)

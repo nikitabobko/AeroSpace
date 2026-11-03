@@ -1,4 +1,18 @@
+import AppKit
+import Common
+
 @MainActor func normalizeLayoutReason() async throws {
+    if !isUnitTest {
+        switch refreshSessionEvent {
+            case .startup,
+                 .ax(kAXWindowMiniaturizedNotification),
+                 .ax(kAXWindowDeminiaturizedNotification),
+                 .globalObserver(NSWorkspace.activeSpaceDidChangeNotification.rawValue):
+                break
+            default:
+                return
+        }
+    }
     for workspace in Workspace.all {
         let windows: [Window] = workspace.allLeafWindowsRecursive
         try await _normalizeLayoutReason(workspace: workspace, windows: windows)
@@ -20,10 +34,18 @@
 
 @MainActor private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) async throws {
     for window in windows {
+        if !workspace.isVisible,
+           window.layoutReason == .standard,
+           let macApp = window.app as? MacApp,
+           !macApp.isUserHidden,
+           window.isHiddenInCorner || (macApp.isHiddenByAeroSpace && macApp.nsApp.isHidden)
+        {
+            continue
+        }
         let isMacosFullscreen = try await window.isMacosFullscreen(.cancellable)
         let isMacosMinimized = try await (!isMacosFullscreen).andAsync { @MainActor @Sendable in try await window.isMacosMinimized(.cancellable) }
         let isMacosWindowOfHiddenApp = !isMacosFullscreen && !isMacosMinimized &&
-            !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.nsApp.isHidden
+            !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.isUserHidden
         switch window.layoutReason {
             case .standard:
                 guard let parent = window.windowParentCases else { continue }
