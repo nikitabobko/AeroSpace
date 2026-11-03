@@ -53,5 +53,9 @@ extension Rect {
 
     var size: CGSize { CGSize(width: width, height: height) }
 
+    func widened(by delta: CGFloat) -> Rect {
+        Rect(topLeftX: topLeftX - delta, topLeftY: topLeftY - delta, width: width + 2 * delta, height: height + 2 * delta)
+    }
+
     func getDimension(_ orientation: Orientation) -> CGFloat { orientation == .h ? width : height }
 }
