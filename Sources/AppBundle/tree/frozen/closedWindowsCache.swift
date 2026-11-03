@@ -26,6 +26,11 @@ struct FrozenWorkspace: Sendable {
     let rootTilingNode: FrozenContainer
     let floatingWindows: [FrozenWindow]
     let macosUnconventionalWindows: [FrozenWindow]
+    /// Window ids in the order to replay markAsMostRecentChild (least recent first), see mruReplayOrder.
+    /// Restoring the tree binds the windows in tree order, and every bind marks the window as the most recent one.
+    /// Without the replay the last window of every container becomes its MRU child, and focusing the workspace
+    /// later focuses that window instead of the one that was focused last
+    let mruReplay: [OpaqueWindowId]
 
     @MainActor init(_ workspace: Workspace) {
         name = workspace.name
@@ -34,6 +39,7 @@ struct FrozenWorkspace: Sendable {
         macosUnconventionalWindows =
             workspace.macOsNativeHiddenAppsWindowsContainer.children.map { FrozenWindow($0 as! Window) } +
             workspace.macOsNativeFullscreenWindowsContainer.children.map { FrozenWindow($0 as! Window) }
+        mruReplay = mruReplayOrder(workspace)
     }
 }
 
@@ -75,12 +81,20 @@ struct FrozenWorkspace: Sendable {
             for window in (potentialOrphans - workspace.rootTilingContainer.allLeafWindowsRecursive) {
                 try await window.relayoutWindow(on: workspace, .cancellable, forceTile: true)
             }
+            for id in frozenWorkspace.mruReplay {
+                // Skip windows that weren't restored to this workspace, to keep the MRU of their current workspace
+                if let window = Window.get(byId: id), window.nodeWorkspace == workspace {
+                    window.markAsMostRecentChild()
+                }
+            }
         }
 
         _ = topLeftCornerToMonitorInfo[monitor.topLeftCorner]?
             .singleOrNil()?
             .setVisibleWorkspace(Workspace.get(byName: monitor.visibleWorkspace))
     }
+    // The focus may have changed after the world was frozen. Keep the focused window the most recent one
+    globalFocus.windowOrNil?.markAsMostRecentChild()
     return true
 }
 
