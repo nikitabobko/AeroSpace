@@ -77,6 +77,9 @@ If not specified, the default `<output-format>` is: +
 The following variables can be used inside `<output-format>`:
 
 %{window-id}:: Number. Window unique ID
+%{window-id-native}:: Number. macOS native window ID (`CGWindowID`). Useful for integration with other tools that operate on native window IDs.
+macOS native tabs are separate windows under the hood. AeroSpace treats the whole tab group as a single window with a stable `%{window-id}`, but `%{window-id-native}` changes whenever another tab is brought to the front.
+Different apps implement tabs differently. Apps that use native tabs: Finder.app, Terminal.app. Apps that don't use native tabs: Safari. Third-party apps usually don't use native tabs
 %{window-title}:: String. Window title
 %{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
 %{window-layout}:: String. An alias for `%{window-parent-container-layout}`

@@ -158,6 +158,7 @@ extension FormatVar {
             case (.window(let w), .window(let f)):
                 return switch f {
                     case .windowId: .success(.int(w.window.windowId.rawId))
+                    case .windowIdNative: .success(w.window.macAppUnsafe.nativeWindowId(of: w.window.windowId).map(Primitive.int) ?? .string("NULL-WINDOW-ID"))
                     case .windowIsFullscreen: .success(.bool(w.window.isFullscreen))
                     case .windowTitle: .success(.string(w.title.orDie("Title wasn't prefetched")))
                     case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w.window)
