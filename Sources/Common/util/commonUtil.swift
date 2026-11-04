@@ -122,8 +122,6 @@ public func check(_ condition: Bool, _ message: @autoclosure () -> String = "", 
     }
 }
 
-public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
-
 extension CaseIterable where Self: RawRepresentable, RawValue == String {
     public static var cliArgsCases: [String] { allCases.map(\.rawValue) }
     public static var unionLiteral: String { cliArgsCases.joinedCliArgs }

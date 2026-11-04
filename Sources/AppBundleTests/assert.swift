@@ -1,76 +1,78 @@
 // periphery:ignore:all - Those are utils that can become useful any moment
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
-func assertTrue(_ actual: Bool, file: StaticString = #filePath, line: UInt = #line) {
-    assertEquals(actual, true, file: file, line: line)
+// todo: get rid of these helpers since we migrated to swift-testing?
+
+func assertTrue(_ actual: Bool, sourceLocation: SourceLocation = #_sourceLocation) {
+    assertEquals(actual, true, sourceLocation: sourceLocation)
 }
 
-func assertFalse(_ actual: Bool, file: StaticString = #filePath, line: UInt = #line) {
-    assertEquals(actual, false, file: file, line: line)
+func assertFalse(_ actual: Bool, sourceLocation: SourceLocation = #_sourceLocation) {
+    assertEquals(actual, false, sourceLocation: sourceLocation)
 }
 
 // Because assertEquals default messages are unreadable!
 // periphery:ignore
-func assertNotEquals<T>(_ actual: T, _ expected: T, file: StaticString = #filePath, line: UInt = #line) where T: Equatable {
+func assertNotEquals<T>(_ actual: T, _ expected: T, sourceLocation: SourceLocation = #_sourceLocation) where T: Equatable {
     if actual == expected {
-        failExpectedActual("not \(expected)", actual, file: file, line: line)
+        failExpectedActual("not \(expected)", actual, sourceLocation: sourceLocation)
     }
 }
 
-func assertNil(_ actual: Any?, file: StaticString = #filePath, line: UInt = #line) {
+func assertNil(_ actual: Any?, sourceLocation: SourceLocation = #_sourceLocation) {
     if let actual {
-        failExpectedActual("nil", actual, file: file, line: line)
+        failExpectedActual("nil", actual, sourceLocation: sourceLocation)
     }
 }
 
-func assertNotNil(_ actual: Any?, file: StaticString = #filePath, line: UInt = #line) {
+func assertNotNil(_ actual: Any?, sourceLocation: SourceLocation = #_sourceLocation) {
     if actual == nil {
-        failExpectedActual("not nil", "nil", file: file, line: line)
+        failExpectedActual("not nil", "nil", sourceLocation: sourceLocation)
     }
 }
 
-func assertEquals<T>(_ actual: T, _ expected: T, additionalMsg: String? = nil, file: StaticString = #filePath, line: UInt = #line) where T: Equatable {
+func assertEquals<T>(_ actual: T, _ expected: T, additionalMsg: String? = nil, sourceLocation: SourceLocation = #_sourceLocation) where T: Equatable {
     if actual != expected {
-        failExpectedActual(expected, actual, additionalMsg: additionalMsg, file: file, line: line)
+        failExpectedActual(expected, actual, additionalMsg: additionalMsg, sourceLocation: sourceLocation)
     }
 }
 
 
-func assertSucc<T>(_ actual: Result<T, some Any>, file: StaticString = #filePath, line: UInt = #line) {
+func assertSucc<T>(_ actual: Result<T, some Any>, sourceLocation: SourceLocation = #_sourceLocation) {
     switch actual {
-        case .failure: failExpectedActual("Result.success", actual, file: file, line: line)
+        case .failure: failExpectedActual("Result.success", actual, sourceLocation: sourceLocation)
         case .success: break
     }
 }
 
-func assertSucc<T>(_ actual: Result<T, some Any>, _ expected: T, file: StaticString = #filePath, line: UInt = #line) where T: Equatable {
+func assertSucc<T>(_ actual: Result<T, some Any>, _ expected: T, sourceLocation: SourceLocation = #_sourceLocation) where T: Equatable {
     switch actual {
-        case .failure: failExpectedActual("Result.success", actual, file: file, line: line)
-        case .success(let actual): assertEquals(actual, expected, file: file, line: line)
+        case .failure: failExpectedActual("Result.success", actual, sourceLocation: sourceLocation)
+        case .success(let actual): assertEquals(actual, expected, sourceLocation: sourceLocation)
     }
 }
-func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: StaticString = #filePath, line: UInt = #line) where F: Equatable {
+func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, sourceLocation: SourceLocation = #_sourceLocation) where F: Equatable {
     switch actual {
-        case .success: failExpectedActual("Result.failure", actual, file: file, line: line)
+        case .success: failExpectedActual("Result.failure", actual, sourceLocation: sourceLocation)
         case .failure(let actual):
             if let expected {
-                assertEquals(actual, expected, file: file, line: line)
+                assertEquals(actual, expected, sourceLocation: sourceLocation)
             }
     }
 }
 
-func testParseSingleCommandSucc(_ command: String, _ expected: any CmdArgs, file: StaticString = #filePath, line: UInt = #line) {
+func testParseSingleCommandSucc(_ command: String, _ expected: any CmdArgs, sourceLocation: SourceLocation = #_sourceLocation) {
     let parsed = parseCommand(command)
     switch parsed {
         case .cmd(.cmd(let command)):
             if !command.args.equals(expected) {
-                failExpectedActual(expected, command.args, file: file, line: line)
+                failExpectedActual(expected, command.args, sourceLocation: sourceLocation)
             }
-        case .cmd(let shell): failExpectedActual("Parsed as single Command", "Parsed as shell: \(shell.shellOfCommandsDescription)", file: file, line: line)
-        case .help: failExpectedActual("Parsed successfully", "Parsed as help", file: file, line: line)
-        case .failure(let msg): failExpectedActual("Parsed successfully", "Failed to parse: \(msg.msg)", file: file, line: line)
+        case .cmd(let shell): failExpectedActual("Parsed as single Command", "Parsed as shell: \(shell.shellOfCommandsDescription)", sourceLocation: sourceLocation)
+        case .help: failExpectedActual("Parsed successfully", "Parsed as help", sourceLocation: sourceLocation)
+        case .failure(let msg): failExpectedActual("Parsed successfully", "Failed to parse: \(msg.msg)", sourceLocation: sourceLocation)
     }
 }
 
@@ -78,21 +80,21 @@ func testParseCommandHelp(_ command: String) {
     let parsed = parseCommand(command)
     switch parsed {
         case .help: break
-        default: XCTFail("Expected to parse to help")
+        default: Issue.record(Comment(rawValue: "Expected to parse to help"))
     }
 }
 
-func failExpectedActual(_ expected: Any?, _ actual: Any?, additionalMsg: String? = nil, file: StaticString = #filePath, line: UInt = #line) {
+func failExpectedActual(_ expected: Any?, _ actual: Any?, additionalMsg: String? = nil, sourceLocation: SourceLocation = #_sourceLocation) {
     let additionalMsg = additionalMsg.map { "\n    Additional Message:\n        \($0)" } ?? ""
-    XCTFail(
-        """
-        Assertion failed\(additionalMsg)
-            Expected:
-                \(expected.prettyDescription)
-            Actual:
-                \(actual.prettyDescription)
-        """,
-        file: file,
-        line: line,
+    Issue.record(
+        // todo: drop String: LocalizedError conformance and then you can drop this Comment
+        Comment(rawValue: """
+            Assertion failed\(additionalMsg)
+                Expected:
+                    \(expected.prettyDescription)
+                Actual:
+                    \(actual.prettyDescription)
+            """),
+        sourceLocation: sourceLocation,
     )
 }

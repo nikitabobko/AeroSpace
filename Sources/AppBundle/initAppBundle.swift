@@ -6,6 +6,7 @@ import Foundation
     Task.startUnstructured {
         initTerminationHandler()
         unsafe _isCli = false
+        unsafe _isUnitTest = false
         initServerArgs()
         await waitForAccessibilityPermission_nonCancellable()
         if isDebug {
