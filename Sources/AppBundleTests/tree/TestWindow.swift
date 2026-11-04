@@ -5,6 +5,9 @@ import Common
 final class TestWindow: Window, CustomStringConvertible {
     private var _rect: Rect?
     var isMacosFullscreenForTest = false
+    // In production, getAxRect is a real suspension point (the read is dispatched to the app AX thread), but the mock
+    // returns right away. The hook is reset after the first invocation
+    @MainActor var onNextGetAxRectForTest: (@MainActor () async throws -> ())?
 
     @MainActor
     private init(_ id: OpaqueWindowId, _ parent: NonLeafTreeNodeObject, _ adaptiveWeight: CGFloat, _ rect: Rect?) {
@@ -35,7 +38,11 @@ final class TestWindow: Window, CustomStringConvertible {
     override func getTitle(_ cm: CancellationMode) async throws -> String { description }
 
     @MainActor override func getAxRect(_ cm: CancellationMode) async throws -> Rect? { // todo change to not Optional
-        _rect
+        if let hook = onNextGetAxRectForTest {
+            onNextGetAxRectForTest = nil
+            try await hook()
+        }
+        return _rect
     }
 
     @MainActor override func getAxSize(_ cm: CancellationMode) async throws -> CGSize? {
