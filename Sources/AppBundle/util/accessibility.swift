@@ -186,9 +186,9 @@ enum Ax {
         var setter: @Sendable (T) -> CFTypeRef?
     }
 
-    static let parentWindowRecursive = ReadableAttrImpl<AXUIElement>(
+    static let parentWindowRecursive = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXWindowAttribute,
-        getter: { ($0 as! AXUIElement) },
+        getter: castToAxUiElementMock,
     )
     static let titleAttr = WritableAttrImpl<String>(
         key: kAXTitleAttribute,
