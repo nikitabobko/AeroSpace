@@ -1,0 +1,4 @@
+%{workspace}:: String. Name of the belonging workspace
+%{workspace-is-focused}:: Boolean. `true` if the workspace has focus
+%{workspace-is-visible}:: Boolean. `true` if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup
+%{workspace-root-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`) of the workspace's root container

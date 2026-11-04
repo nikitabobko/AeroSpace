@@ -1,0 +1,4 @@
+%{monitor-id}:: 1-based Number. Sequential number of the belonging monitor
+%{monitor-appkit-nsscreen-screens-id}:: 1-based index of the belonging monitor in `NSScreen.screens` array. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
+%{monitor-name}:: String. Name of the belonging monitor
+%{monitor-is-main}:: Boolean. `true` if the monitor is main.
