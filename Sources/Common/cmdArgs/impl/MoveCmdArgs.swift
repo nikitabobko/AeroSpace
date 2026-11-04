@@ -6,6 +6,7 @@ public struct MoveCmdArgs: CmdArgs {
         help: move_help_generated,
         flags: [
             "--window-id": windowIdSubArgParser(),
+            "--floating-pixels": singleValueSubArgParser(\.floatingPixels, "<pixels>", parseUInt32),
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
             "--fail-if-fullscreen": trueBoolFlag(\.failIfFullscreen),
@@ -15,6 +16,7 @@ public struct MoveCmdArgs: CmdArgs {
     )
 
     public var direction: Lateinit<CardinalDirection> = .uninitialized
+    public var floatingPixels: UInt32? = nil
     public var rawBoundaries: Boundaries? = nil
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
     public var failIfFullscreen: Bool = false
