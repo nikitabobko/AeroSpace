@@ -1,9 +1,12 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Foundation
+import Testing
 
-final class ListModesTest: XCTestCase {
-    func testParseListModesCommand() {
+@MainActor
+@Suite(.serializedGlobally)
+struct ListModesTest {
+    @Test func testParseListModesCommand() {
         testParseSingleCommandSucc("list-modes", ListModesCmdArgs(rawArgs: []))
         testParseSingleCommandSucc("list-modes --current", ListModesCmdArgs(rawArgs: []).with(\.current, true))
         testParseSingleCommandSucc("list-modes --json", ListModesCmdArgs(rawArgs: []).with(\.json, true))
@@ -11,13 +14,13 @@ final class ListModesTest: XCTestCase {
         testParseSingleCommandSucc("list-modes --current --json", ListModesCmdArgs(rawArgs: []).with(\.current, true).with(\.json, true))
     }
 
-    func testParseListModesCommandConflicts() {
+    @Test func testParseListModesCommandConflicts() {
         assertEquals(parseCommand("list-modes --json --count").errorOrNil, "ERROR: Conflicting flags: --count, --json")
         assertEquals(parseCommand("list-modes --current --count").errorOrNil, "ERROR: Conflicting flags: --count, --current")
     }
 
     @MainActor
-    func testListModesOutput() async {
+    @Test func testListModesOutput() async {
         config.modes = [
             "main": Mode(bindings: [:]),
             "service": Mode(bindings: [:]),

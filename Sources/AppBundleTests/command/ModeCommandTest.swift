@@ -1,17 +1,18 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class ModeCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct ModeCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testParse() {
+    @Test func testParse() {
         testParseSingleCommandSucc("mode main", ModeCmdArgs(rawArgs: []).with(\.targetMode, .initialized("main")))
         assertEquals(parseCommand("mode").errorOrNil, "ERROR: Argument '<binding-mode>' is mandatory")
     }
 
-    func testParseDoubleDash() {
+    @Test func testParseDoubleDash() {
         testParseSingleCommandSucc(
             "mode -- main",
             ModeCmdArgs(rawArgs: []).with(\.targetMode, .initialized("main")),

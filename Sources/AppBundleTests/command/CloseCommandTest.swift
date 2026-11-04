@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class CloseCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct CloseCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testSimple() async {
+    @Test func testSimple() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
             TestWindow.new(id: 2, parent: $0)
@@ -21,7 +22,7 @@ final class CloseCommandTest: XCTestCase {
         assertEquals(globalFocus.workspace.rootTilingContainer.children.count, 1)
     }
 
-    func testCloseViaWindowIdFlag() async {
+    @Test func testCloseViaWindowIdFlag() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
             TestWindow.new(id: 2, parent: $0)

@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class SwapCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct SwapCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testSwap_swapWindows_Directional() async {
+    @Test func testSwap_swapWindows_Directional() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
@@ -44,7 +45,7 @@ final class SwapCommandTest: XCTestCase {
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
     }
 
-    func testSwap_swapWindows_DfsRelative() async {
+    @Test func testSwap_swapWindows_DfsRelative() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
@@ -82,7 +83,7 @@ final class SwapCommandTest: XCTestCase {
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
     }
 
-    func testSwap_DfsRelativeSkipsTombstones() async {
+    @Test func testSwap_DfsRelativeSkipsTombstones() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
@@ -120,7 +121,7 @@ final class SwapCommandTest: XCTestCase {
         assertEquals(globalFocus.windowOrNil?.windowId, 1)
     }
 
-    func testSwap_DirectionalWrapping() async {
+    @Test func testSwap_DirectionalWrapping() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
@@ -138,7 +139,7 @@ final class SwapCommandTest: XCTestCase {
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
     }
 
-    func testSwap_DfsRelativeWrapping() async {
+    @Test func testSwap_DfsRelativeWrapping() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
@@ -156,7 +157,7 @@ final class SwapCommandTest: XCTestCase {
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
     }
 
-    func testSwap_SwapFocus() async {
+    @Test func testSwap_SwapFocus() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)

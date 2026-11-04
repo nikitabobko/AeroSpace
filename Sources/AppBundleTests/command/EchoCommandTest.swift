@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class EchoCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct EchoCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testParse() {
+    @Test func testParse() {
         testParseSingleCommandSucc(
             "echo -- foo",
             EchoCmdArgs(rawArgs: []).with(\.args, .initialized([[.literal("foo")]])),
@@ -48,7 +49,7 @@ final class EchoCommandTest: XCTestCase {
         testParseCommandHelp("echo --help")
     }
 
-    func testRunPlainNoWindow() async {
+    @Test func testRunPlainNoWindow() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
         let result = await parseCommand("echo -- foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
@@ -56,7 +57,7 @@ final class EchoCommandTest: XCTestCase {
         assertEquals(result.stdout, ["foo"])
     }
 
-    func testRunMultipleArgs() async {
+    @Test func testRunMultipleArgs() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
         let result = await parseCommand("echo -- foo bar baz").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
@@ -64,7 +65,7 @@ final class EchoCommandTest: XCTestCase {
         assertEquals(result.stdout, ["foo", "bar", "baz"])
     }
 
-    func testRunStderr() async {
+    @Test func testRunStderr() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
         let result = await parseCommand("echo --stderr -- foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
@@ -72,7 +73,7 @@ final class EchoCommandTest: XCTestCase {
         assertEquals(result.stderr, ["foo"])
     }
 
-    func testRunWindowInterpolation() async {
+    @Test func testRunWindowInterpolation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
@@ -82,7 +83,7 @@ final class EchoCommandTest: XCTestCase {
         assertEquals(result.stdout, ["1"])
     }
 
-    func testRunWindowInterpolationNoWindow() async {
+    @Test func testRunWindowInterpolationNoWindow() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
         let result = await parseCommand("echo -- '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
@@ -90,7 +91,7 @@ final class EchoCommandTest: XCTestCase {
         assertEquals(result.stderr, [noWindowIsFocused])
     }
 
-    func testRunWorkspaceInterpolation() async {
+    @Test func testRunWorkspaceInterpolation() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
         let result = await parseCommand("echo -- '%{workspace}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
@@ -98,7 +99,7 @@ final class EchoCommandTest: XCTestCase {
         assertEquals(result.stdout, [name])
     }
 
-    func testRunMixedLiteralAndInterpolation() async {
+    @Test func testRunMixedLiteralAndInterpolation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 42, parent: $0).focusWindow(), true)
         }
@@ -108,7 +109,7 @@ final class EchoCommandTest: XCTestCase {
         assertEquals(result.stdout, ["id: 42"])
     }
 
-    func testRunStderrWithInterpolation() async {
+    @Test func testRunStderrWithInterpolation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 5, parent: $0).focusWindow(), true)
         }

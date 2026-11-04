@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class TestCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct TestCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testParse() {
+    @Test func testParse() {
         testParseSingleCommandSucc(
             "test %{app-bundle-id} = foo",
             TestCmdArgs(rawArgs: [])
@@ -32,7 +33,7 @@ final class TestCommandTest: XCTestCase {
         testParseCommandFail("test %{window-id} = %{invalid}", msg: "ERROR: Right hand side doesn\'t allow interpolation variables", exitCode: 2)
     }
 
-    func testExec() async {
+    @Test func testExec() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
@@ -58,7 +59,7 @@ final class TestCommandTest: XCTestCase {
         )
     }
 
-    func testExecNoWindow() async {
+    @Test func testExecNoWindow() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
 
         assertEquals(
@@ -67,7 +68,7 @@ final class TestCommandTest: XCTestCase {
         )
     }
 
-    func testExecWorkspaceContextSuccess() async {
+    @Test func testExecWorkspaceContextSuccess() async {
         // Exercises the workspace-only branch of `_lhs` where no window is focused
         // and the lhs interpolation variable resolves against the workspace target.
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
@@ -78,7 +79,7 @@ final class TestCommandTest: XCTestCase {
         )
     }
 
-    func testExecBoolEquals() async {
+    @Test func testExecBoolEquals() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
@@ -94,7 +95,7 @@ final class TestCommandTest: XCTestCase {
         )
     }
 
-    func testExecIntEqualsRhsNotInt() async {
+    @Test func testExecIntEqualsRhsNotInt() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
@@ -105,7 +106,7 @@ final class TestCommandTest: XCTestCase {
         )
     }
 
-    func testExecIntMatchesRegexIncompatible() async {
+    @Test func testExecIntMatchesRegexIncompatible() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
@@ -116,7 +117,7 @@ final class TestCommandTest: XCTestCase {
         )
     }
 
-    func testExecStringEquals() async {
+    @Test func testExecStringEquals() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
@@ -132,7 +133,7 @@ final class TestCommandTest: XCTestCase {
         )
     }
 
-    func testExecStringMatchesRegex() async {
+    @Test func testExecStringMatchesRegex() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
@@ -148,7 +149,7 @@ final class TestCommandTest: XCTestCase {
         )
     }
 
-    func testExecStringMatchesRegexInvalidPattern() async {
+    @Test func testExecStringMatchesRegexInvalidPattern() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
@@ -159,7 +160,7 @@ final class TestCommandTest: XCTestCase {
         assertTrue(result.stderr.first?.contains("Can\'t parse \'[\' regex") ?? false)
     }
 
-    func testExecTargetResolutionFailure() async {
+    @Test func testExecTargetResolutionFailure() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
         let env = CmdEnv.defaultEnv.withWindowId(9999)
 
@@ -169,7 +170,7 @@ final class TestCommandTest: XCTestCase {
         )
     }
 
-    func testNotExec() async {
+    @Test func testNotExec() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }

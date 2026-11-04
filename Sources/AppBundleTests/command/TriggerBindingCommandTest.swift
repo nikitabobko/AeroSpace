@@ -1,18 +1,19 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class TriggerBindingCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct TriggerBindingCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testParse() {
+    @Test func testParse() {
         testParseSingleCommandSucc("trigger-binding foo --mode main", TriggerBindingCmdArgs(rawArgs: []).with(\.binding, .initialized("foo")).with(\._mode, "main"))
         testParseCommandFail("trigger-binding foo", msg: "--mode flag is mandatory", exitCode: 2)
         testParseCommandFail("trigger-binding", msg: "ERROR: Argument \'<binding>\' is mandatory", exitCode: 2)
     }
 
-    func testParseDoubleDash() {
+    @Test func testParseDoubleDash() {
         testParseSingleCommandSucc(
             "trigger-binding --mode main -- foo",
             TriggerBindingCmdArgs(rawArgs: []).with(\.binding, .initialized("foo")).with(\._mode, "main"),

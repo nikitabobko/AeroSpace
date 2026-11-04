@@ -1,15 +1,17 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
-final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
-    func testAwaitAfterSignalReturnsImmediately() async throws {
+@MainActor
+@Suite(.serializedGlobally)
+struct AwaitableOneTimeBroadcastLatchTest {
+    @Test func testAwaitAfterSignalReturnsImmediately() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         await latch.signalToAll()
         try await latch.await(.cancellable)
     }
 
-    func testAwaitOnFreshLatchSuspendsUntilSignal() async throws {
+    @Test func testAwaitOnFreshLatchSuspendsUntilSignal() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         let task = Task.startUnstructured { try await latch.await(.cancellable) }
         try await Task.sleep(for: .milliseconds(50))
@@ -18,7 +20,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         try await task.value
     }
 
-    func testSignalReleasesAllPendingAwaiters() async throws {
+    @Test func testSignalReleasesAllPendingAwaiters() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         let count = 20
         let tasks = (0 ..< count).map { _ in Task.startUnstructured { try await latch.await(.cancellable) } }
@@ -27,7 +29,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         for task in tasks { try await task.value }
     }
 
-    func testSignalIsIdempotent() async throws {
+    @Test func testSignalIsIdempotent() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         await latch.signalToAll()
         await latch.signalToAll()
@@ -36,13 +38,13 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         try await latch.await(.cancellable)
     }
 
-    func testSignalWithNoAwaiters() async throws {
+    @Test func testSignalWithNoAwaiters() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         await latch.signalToAll()
         try await latch.await(.cancellable)
     }
 
-    func testCancellingPendingAwaiterThrows() async throws {
+    @Test func testCancellingPendingAwaiterThrows() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         let task = Task.startUnstructured { try await latch.await(.cancellable) }
         try await Task.sleep(for: .milliseconds(50))
@@ -50,7 +52,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         await assertThrowsCancellation(task)
     }
 
-    func testCancellingOneAwaiterDoesNotAffectOthers() async throws {
+    @Test func testCancellingOneAwaiterDoesNotAffectOthers() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         let cancelled = Task.startUnstructured { try await latch.await(.cancellable) }
         let survivors = (0 ..< 5).map { _ in Task.startUnstructured { try await latch.await(.cancellable) } }
@@ -61,7 +63,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         for task in survivors { try await task.value }
     }
 
-    func testAwaitBailsWhenTaskIsAlreadyCancelled() async {
+    @Test func testAwaitBailsWhenTaskIsAlreadyCancelled() async {
         let latch = AwaitableOneTimeBroadcastLatch()
         let task = Task.startUnstructured { () async throws in
             while !Task.isCancelled { await Task.yield() }
@@ -71,7 +73,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         await assertThrowsCancellation(task)
     }
 
-    func testSignalAfterCancellationStillReleasesRemainingAwaiters() async throws {
+    @Test func testSignalAfterCancellationStillReleasesRemainingAwaiters() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         let cancelled = Task.startUnstructured { try await latch.await(.cancellable) }
         let lateJoiner = Task.startUnstructured { try await latch.await(.cancellable) }
@@ -84,14 +86,14 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         try await latch.await(.cancellable)
     }
 
-    private func assertThrowsCancellation<T: Sendable>(_ task: Task<T, any Error>, file: StaticString = #filePath, line: UInt = #line) async {
+    private func assertThrowsCancellation<T: Sendable>(_ task: Task<T, any Error>, sourceLocation: SourceLocation = #_sourceLocation) async {
         do {
             _ = try await task.value
-            failExpectedActual("CancellationError", "no error thrown", file: file, line: line)
+            failExpectedActual("CancellationError", "no error thrown", sourceLocation: sourceLocation)
         } catch is CancellationError {
             // expected
         } catch {
-            failExpectedActual("CancellationError", error, file: file, line: line)
+            failExpectedActual("CancellationError", error, sourceLocation: sourceLocation)
         }
     }
 }
