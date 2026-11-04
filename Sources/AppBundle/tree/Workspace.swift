@@ -64,11 +64,15 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
             _ = get(byName: name) // Make sure that all persistent workspaces are "cached"
         }
         let focus = globalFocus
-        workspaceNameToWorkspace = workspaceNameToWorkspace.filter { (_, workspace: Workspace) in
-            config.persistentWorkspaces.contains(workspace.name) ||
-                !workspace.isEffectivelyEmpty ||
-                workspace.isVisible ||
-                workspace.name == focus.workspace.name
+        let garbage = workspaceNameToWorkspace.values.filter { workspace in
+            !config.persistentWorkspaces.contains(workspace.name) &&
+                workspace.isEffectivelyEmpty &&
+                !workspace.isVisible &&
+                workspace.name != focus.workspace.name
+        }
+        for workspace in garbage {
+            workspaceNameToWorkspace.removeValue(forKey: workspace.name)
+            workspace.unbindFromParent()
         }
     }
 
