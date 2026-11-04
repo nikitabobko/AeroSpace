@@ -1,10 +1,11 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class ParseEnvVariablesTest: XCTestCase {
-    func testInterpolation() {
+@Suite(.serializedGlobally)
+struct ParseEnvVariablesTest {
+    @Test func testInterpolation() {
         testSucInterpolation("echo ${foo}", ["foo": "bar"], expected: "echo bar")
         testSucInterpolation("echo $foo", expected: "echo $foo")
         testSucInterpolation("echo $$foo", expected: "echo $$foo")
@@ -17,7 +18,7 @@ final class ParseEnvVariablesTest: XCTestCase {
         testFailInterpolation("echo ${foo}")
     }
 
-    func testInherit() {
+    @Test func testInherit() {
         let result1 = parseConfig("exec.inherit-env-vars = false")
         assertEquals(result1.errors, [])
         assertEquals(result1.config.execConfig.envVariables, [:])
@@ -27,7 +28,7 @@ final class ParseEnvVariablesTest: XCTestCase {
         assertEquals(result2.config.execConfig.envVariables, testEnv)
     }
 
-    func testAddVars() {
+    @Test func testAddVars() {
         let result = parseConfig(
             """
             [exec.env-vars]
@@ -38,7 +39,7 @@ final class ParseEnvVariablesTest: XCTestCase {
         assertEquals(result.config.execConfig.envVariables, testEnv + ["FOO": "BAR"])
     }
 
-    func testCyclicDep() {
+    @Test func testCyclicDep() {
         let errors = parseConfig(
             """
             [exec.env-vars]
@@ -52,7 +53,7 @@ final class ParseEnvVariablesTest: XCTestCase {
         ])
     }
 
-    func testForbidPwd() {
+    @Test func testForbidPwd() {
         let errors = parseConfig(
             """
             [exec.env-vars]

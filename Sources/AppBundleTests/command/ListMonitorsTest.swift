@@ -1,9 +1,11 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
-final class ListMonitorsTest: XCTestCase {
-    func testParseListMonitorsCommand() {
+@MainActor
+@Suite(.serializedGlobally)
+struct ListMonitorsTest {
+    @Test func testParseListMonitorsCommand() {
         testParseSingleCommandSucc("list-monitors", ListMonitorsCmdArgs(rawArgs: []))
         testParseSingleCommandSucc("list-monitors --focused", ListMonitorsCmdArgs(rawArgs: []).with(\.focused, true))
         testParseSingleCommandSucc("list-monitors --count", ListMonitorsCmdArgs(rawArgs: []).with(\.outputOnlyCount, true))

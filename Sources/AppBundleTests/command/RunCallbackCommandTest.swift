@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class RunCallbackCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct RunCallbackCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testParse() {
+    @Test func testParse() {
         testParseSingleCommandSucc(
             "run-callback on-window-detected",
             RunCallbackCmdArgs(rawArgs: []).with(\.callback, .initialized(.onWindowDetected)),
@@ -33,7 +34,7 @@ final class RunCallbackCommandTest: XCTestCase {
         )
     }
 
-    func testParseFailure() {
+    @Test func testParseFailure() {
         testParseCommandFail("run-callback", msg: "ERROR: Argument '<callback>' is mandatory", exitCode: 2)
         testParseCommandFail(
             "run-callback bogus",

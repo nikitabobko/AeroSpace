@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class FlattenWorkspaceTreeCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct FlattenWorkspaceTreeCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testSimple() async {
+    @Test func testSimple() async {
         let workspace = Workspace.get(byName: name).apply {
             $0.rootTilingContainer.apply {
                 TestWindow.new(id: 1, parent: $0)

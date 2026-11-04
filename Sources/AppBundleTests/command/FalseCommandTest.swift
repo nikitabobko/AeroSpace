@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class FalseCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct FalseCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testParse() {
+    @Test func testParse() {
         testParseSingleCommandSucc("false", FalseCmdArgs(rawArgs: []))
         testParseCommandFail("false foo", msg: "ERROR: Unknown argument 'foo'", exitCode: 2)
 
@@ -14,7 +15,7 @@ final class FalseCommandTest: XCTestCase {
         testParseCommandHelp("false --help")
     }
 
-    func testExitCode() async {
+    @Test func testExitCode() async {
         assertEquals(await parseCommand("false").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 1)
     }
 }

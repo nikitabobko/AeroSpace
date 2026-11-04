@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class ShellRunTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct ShellRunTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testOrFirstSucceeds_shortCircuits() async {
+    @Test func testOrFirstSucceeds_shortCircuits() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = await parseCommand("true || workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
@@ -14,7 +15,7 @@ final class ShellRunTest: XCTestCase {
         assertEquals(globalFocus.workspace.name, "a")
     }
 
-    func testOrFirstFails_runsNext() async {
+    @Test func testOrFirstFails_runsNext() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = await parseCommand("false || workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
@@ -22,12 +23,12 @@ final class ShellRunTest: XCTestCase {
         assertEquals(globalFocus.workspace.name, "b")
     }
 
-    func testOrAllFail_returnsLastExitCode() async {
+    @Test func testOrAllFail_returnsLastExitCode() async {
         let result = await parseCommand("false || false || false").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 1)
     }
 
-    func testOrChainStopsOnFirstSuccess() async {
+    @Test func testOrChainStopsOnFirstSuccess() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = await parseCommand("false || workspace b || workspace c").cmdOrDie.run(.defaultEnv, .emptyStdin)
@@ -35,7 +36,7 @@ final class ShellRunTest: XCTestCase {
         assertEquals(globalFocus.workspace.name, "b")
     }
 
-    func testAndFirstFails_shortCircuits() async {
+    @Test func testAndFirstFails_shortCircuits() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = await parseCommand("false && workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
@@ -43,7 +44,7 @@ final class ShellRunTest: XCTestCase {
         assertEquals(globalFocus.workspace.name, "a")
     }
 
-    func testAndAllSucceed_returnsZero() async {
+    @Test func testAndAllSucceed_returnsZero() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = await parseCommand("true && workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
@@ -51,7 +52,7 @@ final class ShellRunTest: XCTestCase {
         assertEquals(globalFocus.workspace.name, "b")
     }
 
-    func testAndChainStopsOnFirstFailure() async {
+    @Test func testAndChainStopsOnFirstFailure() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = await parseCommand("workspace b && false && workspace c").cmdOrDie.run(.defaultEnv, .emptyStdin)
@@ -59,12 +60,12 @@ final class ShellRunTest: XCTestCase {
         assertEquals(globalFocus.workspace.name, "b")
     }
 
-    func testAndReturnsLastSuccessExitCode() async {
+    @Test func testAndReturnsLastSuccessExitCode() async {
         let result = await parseCommand("true && true && true").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
     }
 
-    func testSeqRunsAllRegardlessOfExitCode() async {
+    @Test func testSeqRunsAllRegardlessOfExitCode() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = await parseCommand("false; workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
@@ -72,7 +73,7 @@ final class ShellRunTest: XCTestCase {
         assertEquals(globalFocus.workspace.name, "b")
     }
 
-    func testSeqReturnsLastCommandExitCode() async {
+    @Test func testSeqReturnsLastCommandExitCode() async {
         let succThenFail = await parseCommand("true; false").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(succThenFail.exitCode.rawValue, 1)
 
@@ -80,13 +81,13 @@ final class ShellRunTest: XCTestCase {
         assertEquals(failThenSucc.exitCode.rawValue, 0)
     }
 
-    func testSeqConcatenatesStdout() async {
+    @Test func testSeqConcatenatesStdout() async {
         let result = await parseCommand("echo -- foo; echo -- bar; echo -- baz").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, ["foo", "bar", "baz"])
     }
 
-    func testPipeForwardsStdoutAsStdin() async {
+    @Test func testPipeForwardsStdoutAsStdin() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = await parseCommand("echo -- a b c | workspace --stdin next").cmdOrDie.run(.defaultEnv, .emptyStdin)
@@ -94,20 +95,20 @@ final class ShellRunTest: XCTestCase {
         assertEquals(globalFocus.workspace.name, "b")
     }
 
-    func testPipeReturnsOnlyLastStdout() async {
+    @Test func testPipeReturnsOnlyLastStdout() async {
         let result = await parseCommand("echo -- foo | echo -- bar").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, ["bar"])
     }
 
-    func testPipeForwardsIntermediateStderr() async {
+    @Test func testPipeForwardsIntermediateStderr() async {
         let result = await parseCommand("echo --stderr -- err1 | echo -- out2").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, ["out2"])
         assertEquals(result.stderr, ["err1"])
     }
 
-    func testPipePipefailReturnsRightmostNonZero() async {
+    @Test func testPipePipefailReturnsRightmostNonZero() async {
         let leftFails = await parseCommand("false | true").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(leftFails.exitCode.rawValue, 1)
 
@@ -118,7 +119,7 @@ final class ShellRunTest: XCTestCase {
         assertEquals(allSucceed.exitCode.rawValue, 0)
     }
 
-    func testPipeForwardsOriginalStdin() async {
+    @Test func testPipeForwardsOriginalStdin() async {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = await parseCommand("workspace --stdin next | echo -- done")

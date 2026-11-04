@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class SplitCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct SplitCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testSplit() async {
+    @Test func testSplit() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
@@ -21,7 +22,7 @@ final class SplitCommandTest: XCTestCase {
         ]))
     }
 
-    func testSplit_onlyTombstoneSiblings_changesOrientationInstead() async {
+    @Test func testSplit_onlyTombstoneSiblings_changesOrientationInstead() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
@@ -31,7 +32,7 @@ final class SplitCommandTest: XCTestCase {
         assertEquals(root.layoutDescription, .v_tiles([.window(1), .window(2)]))
     }
 
-    func testSplitOppositeOrientation() async {
+    @Test func testSplitOppositeOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
@@ -46,7 +47,7 @@ final class SplitCommandTest: XCTestCase {
         ]))
     }
 
-    func testChangeOrientation() async {
+    @Test func testChangeOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
@@ -63,7 +64,7 @@ final class SplitCommandTest: XCTestCase {
         ]))
     }
 
-    func testToggleOrientation() async {
+    @Test func testToggleOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)

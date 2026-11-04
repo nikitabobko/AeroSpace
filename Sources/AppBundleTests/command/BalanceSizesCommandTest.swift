@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class BalanceSizesCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct BalanceSizesCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testBalanceSizesCommand() async {
+    @Test func testBalanceSizesCommand() async {
         let workspace = Workspace.get(byName: name).apply { wsp in
             wsp.rootTilingContainer.apply {
                 TestWindow.new(id: 1, parent: $0).setWeight(wsp.rootTilingContainer.orientation, 1)
@@ -23,7 +24,7 @@ final class BalanceSizesCommandTest: XCTestCase {
         }
     }
 
-    func testBalanceSizesThenResize_behavesLikeResizeAlone() async {
+    @Test func testBalanceSizesThenResize_behavesLikeResizeAlone() async {
         var window1: Window!
         var window2: Window!
         var window3: Window!
@@ -46,7 +47,7 @@ final class BalanceSizesCommandTest: XCTestCase {
         assertEquals(window1.hWeight + window2.hWeight + window3.hWeight, 12)
     }
 
-    func testBalanceSizesSkipsTombstones() async {
+    @Test func testBalanceSizesSkipsTombstones() async {
         var invisibleWindow: Window!
         var invisibleContainer: TilingContainer!
         var invisibleNestedWindow: Window!

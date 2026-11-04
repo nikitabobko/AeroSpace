@@ -1,17 +1,18 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class SummonWorkspaceCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct SummonWorkspaceCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testParse() {
+    @Test func testParse() {
         assertEquals(parseCommand("summon-workspace").errorOrNil, "ERROR: Argument '<workspace>' is mandatory")
         testParseSingleCommandSucc("summon-workspace foo", SummonWorkspaceCmdArgs(rawArgs: []).with(\.target, .initialized(.parse("foo").getOrDie())))
     }
 
-    func testParseDoubleDash() {
+    @Test func testParseDoubleDash() {
         testParseSingleCommandSucc(
             "summon-workspace -- foo",
             SummonWorkspaceCmdArgs(rawArgs: []).with(\.target, .initialized(.parse("foo").getOrDie())),

@@ -1,12 +1,13 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class OnWindowDetectedTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct OnWindowDetectedTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testMatcherCommandReceivesDetectedWindowId() async {
+    @Test func testMatcherCommandReceivesDetectedWindowId() async {
         let workspace = Workspace.get(byName: name)
         let focused = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         let detected = TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
@@ -22,7 +23,7 @@ final class OnWindowDetectedTest: XCTestCase {
         assertEquals(await callback.matches(focused), false)
     }
 
-    func testRunCommandReceivesDetectedWindowIdInEnv() async {
+    @Test func testRunCommandReceivesDetectedWindowIdInEnv() async {
         let workspaceA = Workspace.get(byName: "a")
         let focused = TestWindow.new(id: 1, parent: workspaceA.rootTilingContainer)
         let detected = TestWindow.new(id: 2, parent: workspaceA.rootTilingContainer)

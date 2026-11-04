@@ -1,9 +1,12 @@
 @testable import AppBundle
+import AppKit
 import Common
-import XCTest
+import Testing
 
-final class AxWindowKindTest: XCTestCase {
-    func test() throws {
+@MainActor
+@Suite(.serializedGlobally)
+struct AxWindowKindTest {
+    @Test func test() throws {
         try checkAxDumpsRecursive(projectRoot.appending(path: "./axDumps"))
     }
 }

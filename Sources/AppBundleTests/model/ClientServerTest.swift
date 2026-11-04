@@ -1,9 +1,12 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Foundation
+import Testing
 
-final class ClientServerTest: XCTestCase {
-    func testClientRequestJsonV1_decoding() {
+@MainActor
+@Suite(.serializedGlobally)
+struct ClientServerTest {
+    @Test func testClientRequestJsonV1_decoding() {
         let data = """
             { "command": "deprecated", "args": ["foo", "bar"], "stdin": "stdin" }
             """.data(using: .utf8)!
@@ -13,7 +16,7 @@ final class ClientServerTest: XCTestCase {
         assertSucc(ClientRequest.decodeJson(data), expected)
     }
 
-    func testClientRequestJsonV2_decoding() {
+    @Test func testClientRequestJsonV2_decoding() {
         let data = """
             { "args": ["foo", "bar"], "stdin": "stdin" }
             """.data(using: .utf8)!
@@ -23,7 +26,7 @@ final class ClientServerTest: XCTestCase {
         assertSucc(ClientRequest.decodeJson(data), expected)
     }
 
-    func testClientRequestJsonV3_decoding() {
+    @Test func testClientRequestJsonV3_decoding() {
         let data = """
             { "args": ["foo", "bar"], "stdin": "stdin", "windowId": null, "workspace": null }
             """.data(using: .utf8)!
@@ -31,7 +34,7 @@ final class ClientServerTest: XCTestCase {
         assertSucc(ClientRequest.decodeJson(data), expected)
     }
 
-    func testClientRequestJsonV3_decoding2() {
+    @Test func testClientRequestJsonV3_decoding2() {
         let data = """
             { "args": ["foo", "bar"], "stdin": "stdin", "windowId": 1, "workspace": "foo" }
             """.data(using: .utf8)!
@@ -39,14 +42,14 @@ final class ClientServerTest: XCTestCase {
         assertSucc(ClientRequest.decodeJson(data), expected)
     }
 
-    func testClientRequestJsonV9999_decoding() {
+    @Test func testClientRequestJsonV9999_decoding() {
         let data = """
             { "args": ["foo", "bar"], "stdin": "stdin", "yet another future field": 1 }
             """.data(using: .utf8)!
         assertSucc(ClientRequest.decodeJson(data))
     }
 
-    func testClientRequestJsonCompatibility_encoding() {
+    @Test func testClientRequestJsonCompatibility_encoding() {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         let testData = [
@@ -64,7 +67,7 @@ final class ClientServerTest: XCTestCase {
         }
     }
 
-    func testServerEventEncoding() {
+    @Test func testServerEventEncoding() {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         let testData: [(ServerEvent, String)] = [
@@ -93,7 +96,7 @@ final class ClientServerTest: XCTestCase {
         }
     }
 
-    func testServerEventDecoding() {
+    @Test func testServerEventDecoding() {
         let testData: [(String, ServerEventType)] = [
             (#"{"_event":"focus-changed","windowId":123,"workspace":"1","monitorId":1}"#, .focusChanged),
             (#"{"_event":"focused-monitor-changed","workspace":"2","monitorId":1}"#, .focusedMonitorChanged),

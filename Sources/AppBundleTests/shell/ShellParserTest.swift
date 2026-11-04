@@ -1,9 +1,11 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
-final class ShellParserTest: XCTestCase {
-    func testParser() {
+@MainActor
+@Suite(.serializedGlobally)
+struct ShellParserTest {
+    @Test func testParser() {
         assertSucc("echo foo && bar".lexAndParseShell(), .and(.cmd("echo", "foo"), "bar"))
         assertSucc("foo && bar || baz".lexAndParseShell(), .or(.and("foo", "bar"), "baz"))
         assertSucc("foo || bar && baz".lexAndParseShell(), .or("foo", .and("bar", "baz")))
@@ -29,34 +31,34 @@ final class ShellParserTest: XCTestCase {
         assertSucc(c.lexAndParseShell(), .or(["foo", "bar", "baz", "duh", "qux"]))
     }
 
-    func testParserEmpty() {
+    @Test func testParserEmpty() {
         assertSucc("".lexAndParseShell(), .empty)
         assertSucc("   ".lexAndParseShell(), .empty)
         assertSucc("\t".lexAndParseShell(), .empty)
         assertSucc("# only a comment".lexAndParseShell(), .empty)
     }
 
-    func testParserSingleCommand() {
+    @Test func testParserSingleCommand() {
         assertSucc("foo".lexAndParseShell(), "foo")
         assertSucc("foo bar".lexAndParseShell(), .cmd("foo", "bar"))
         assertSucc("foo bar baz".lexAndParseShell(), .cmd(["foo", "bar", "baz"]))
     }
 
-    func testParserPipe() {
+    @Test func testParserPipe() {
         assertSucc("foo | bar".lexAndParseShell(), .pipe("foo", "bar"))
         assertSucc("a | b | c".lexAndParseShell(), .pipe(["a", "b", "c"]))
         assertSucc("a b | c d".lexAndParseShell(), .pipe(.cmd("a", "b"), .cmd("c", "d")))
     }
 
-    func testParserAndChain() {
+    @Test func testParserAndChain() {
         assertSucc("a && b && c".lexAndParseShell(), .and(["a", "b", "c"]))
     }
 
-    func testParserOrChain() {
+    @Test func testParserOrChain() {
         assertSucc("a || b || c".lexAndParseShell(), .or(["a", "b", "c"]))
     }
 
-    func testParserPrecedence() {
+    @Test func testParserPrecedence() {
         assertSucc("a | b && c".lexAndParseShell(), .and(.pipe("a", "b"), "c"))
         assertSucc("a && b | c".lexAndParseShell(), .and("a", .pipe("b", "c")))
         assertSucc("a | b || c".lexAndParseShell(), .or(.pipe("a", "b"), "c"))
@@ -64,7 +66,7 @@ final class ShellParserTest: XCTestCase {
         assertSucc("a | b && c || d".lexAndParseShell(), .or(.and(.pipe("a", "b"), "c"), "d"))
     }
 
-    func testParserSemicolon() {
+    @Test func testParserSemicolon() {
         assertSucc("foo; bar".lexAndParseShell(), .seq("foo", "bar"))
         assertSucc("a;b".lexAndParseShell(), .seq("a", "b"))
         assertSucc("a;;b".lexAndParseShell(), .seq("a", "b"))
@@ -73,7 +75,7 @@ final class ShellParserTest: XCTestCase {
         assertSucc("a | b; c | d".lexAndParseShell(), .seq(.pipe("a", "b"), .pipe("c", "d")))
     }
 
-    func testParserParens() {
+    @Test func testParserParens() {
         assertSucc("(foo)".lexAndParseShell(), "foo")
         assertSucc("(foo bar)".lexAndParseShell(), .cmd("foo", "bar"))
         assertSucc("((foo))".lexAndParseShell(), "foo")
@@ -83,12 +85,12 @@ final class ShellParserTest: XCTestCase {
         assertSucc("(a || b) && (c || d)".lexAndParseShell(), .and(.or("a", "b"), .or("c", "d")))
     }
 
-    func testParserFailNewlineWithoutSemicolon() {
+    @Test func testParserFailNewlineWithoutSemicolon() {
         assertFail("foo\nbar".lexAndParseShell(), "Line 2 Column 1: Please use explicit semicolon in place of a newline")
         assertSucc("foo bar;\nbaz".lexAndParseShell(), .seq(.cmd("foo", "bar"), "baz"))
     }
 
-    func testParserTrailingOperator() {
+    @Test func testParserTrailingOperator() {
         assertSucc("foo;".lexAndParseShell(), .cmd("foo"))
         assertSucc("foo\n\n".lexAndParseShell(), .cmd("foo"))
         assertSucc("foo\n\n;\n".lexAndParseShell(), .cmd("foo"))
@@ -98,14 +100,14 @@ final class ShellParserTest: XCTestCase {
         assertFail("foo |".lexAndParseShell(), "Line 1 Column 6: Expected at least one word. Got: End of input")
     }
 
-    func testParserFailLeadingOperator() {
+    @Test func testParserFailLeadingOperator() {
         assertFail("&& foo".lexAndParseShell(), "Line 1 Column 1: Expected at least one word. Got: &&")
         assertFail("|| foo".lexAndParseShell(), "Line 1 Column 1: Expected at least one word. Got: ||")
         assertFail("| foo".lexAndParseShell(), "Line 1 Column 1: Expected at least one word. Got: |")
         assertFail(";".lexAndParseShell(), "Line 1 Column 1: Expected at least one word. Got: ;")
     }
 
-    func testParserFailParens() {
+    @Test func testParserFailParens() {
         assertFail("()".lexAndParseShell(), "Line 1 Column 2: Expected at least one word. Got: )")
         assertFail("(foo".lexAndParseShell(), "Line 1 Column 5: Expected ')'. Got: 'End of input'")
         assertFail("foo)".lexAndParseShell(), "Line 1 Column 4: Unexpected token ')'")
@@ -113,7 +115,7 @@ final class ShellParserTest: XCTestCase {
         assertFail("(foo) | bar".lexAndParseShell(), "Line 1 Column 7: Unexpected token '|'")
     }
 
-    func testBuildDescription() {
+    @Test func testBuildDescription() {
         func render(_ shell: Shell<[String]>) -> String { shell.buildDescription { $0.joined(separator: " ") } }
 
         assertEquals(render(.or(.and("a", "b"), "c")), "a && b || c")

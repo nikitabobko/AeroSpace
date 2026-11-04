@@ -1,9 +1,11 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
-final class ListAppsTest: XCTestCase {
-    func testParse() {
+@MainActor
+@Suite(.serializedGlobally)
+struct ListAppsTest {
+    @Test func testParse() {
         assertNotNil(parseCommand("list-apps --macos-native-hidden").cmdOrDie)
         assertNotNil(parseCommand("list-apps --macos-native-hidden no").cmdOrDie)
         assertNotNil(parseCommand("list-apps --format %{app-bundle-id}").cmdOrDie)
