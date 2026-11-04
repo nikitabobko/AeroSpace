@@ -1,8 +1,9 @@
 @testable import AppBundle
+import AppKit
 import Common
 import Foundation
 import HotKey
-import XCTest
+import Testing
 
 let projectRoot: URL = {
     var url = URL(filePath: #filePath).absoluteURL
@@ -12,6 +13,35 @@ let projectRoot: URL = {
     }
     return url
 }()
+
+var name: String { Test.current.orDie().name }
+
+extension Trait where Self == SerializedGloballyTrait {
+    // todo: make tests parallel
+    static var serializedGlobally: Self { SerializedGloballyTrait() }
+}
+
+struct SerializedGloballyTrait: SuiteTrait, TestTrait, TestScoping {
+    var isRecursive: Bool { true }
+
+    @concurrent func provideScope(for test: Test, testCase: Test.Case?, performing function: @concurrent @Sendable () async throws -> Void) async throws {
+        try await runExclusively(function)
+    }
+}
+
+@MainActor private var previousTestCompletion: Task<Void, Never>? = nil
+
+// todo: that's a cool serialization trick AI came up with.
+// - I need to think if I need to serialize refreshing sessions like this
+// - I also need to understand how it relates to AwaitableOneTimeLatch
+@MainActor private func runExclusively(_ body: @concurrent @Sendable () async throws -> Void) async throws {
+    let previous = previousTestCompletion
+    let (completion, completionContinuation) = AsyncStream<Never>.makeStream()
+    previousTestCompletion = Task.startUnstructured { for await _ in completion {} }
+    defer { completionContinuation.finish() }
+    await previous?.value
+    try await body()
+}
 
 @MainActor
 func setUpWorkspacesForTests() {
@@ -53,13 +83,13 @@ extension ParsedCmd {
     var cmdOrDie: T { cmdOrNil ?? dieT("\(self)") }
 }
 
-func testParseCommandFail(_ command: String, msg expectedMsg: String, exitCode expectedExitCode: Int32, file: StaticString = #filePath, line: UInt = #line) {
+func testParseCommandFail(_ command: String, msg expectedMsg: String, exitCode expectedExitCode: Int32, sourceLocation: SourceLocation = #_sourceLocation) {
     let parsed = parseCommand(command)
     switch parsed {
-        case .cmd(let command): XCTFail("\(command) isn't supposed to be parcelable")
+        case .cmd(let command): Issue.record(Comment(rawValue: "\(command) isn't supposed to be parcelable"))
         case .help: die() // todo test help
         case .failure(let failure):
-            assertEquals(failure, .init(expectedMsg, expectedExitCode), file: file, line: line)
+            assertEquals(failure, .init(expectedMsg, expectedExitCode), sourceLocation: sourceLocation)
     }
 }
 

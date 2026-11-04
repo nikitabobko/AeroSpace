@@ -14,6 +14,7 @@ let usage =
 @main
 struct Main {
     static func main() async {
+        unsafe _isUnitTest = false
         let args = CommandLine.arguments.slice(1...) ?? []
 
         if args.isEmpty {
