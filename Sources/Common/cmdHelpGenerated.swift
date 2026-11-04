@@ -63,6 +63,9 @@ let fullscreen_help_generated = """
        OR: fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop]
        OR: fullscreen [-h|--help] off [--window-id <window-id>] [--fail-if-noop]
     """
+let get_tree_help_generated = """
+    USAGE: get_tree [-h|--help]
+    """
 let join_with_help_generated = """
     USAGE: join-with [-h|--help] [--window-id <window-id>] (left|down|up|right)
     """
