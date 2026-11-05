@@ -61,9 +61,13 @@ struct MenuBarStyleButton: View {
             viewModel.experimentalUISettings.displayStyle = style
         } label: {
             Toggle(isOn: .constant(viewModel.experimentalUISettings.displayStyle == style)) {
-                MenuBarLabel(style: style, color: color)
-                    .environmentObject(viewModel)
-                Text(" -  " + style.title)
+                Label {
+                    Text(" -  " + style.title)
+                } icon: {
+                    MenuBarLabel(style: style, color: color)
+                        .environmentObject(viewModel)
+                }
+                .labelStyle(.titleAndIcon)
             }
         }
     }
