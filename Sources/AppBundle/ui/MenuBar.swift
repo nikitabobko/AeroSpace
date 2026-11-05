@@ -4,7 +4,7 @@ import SwiftUI
 
 @MainActor
 public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it be converted to "SwiftUI struct"?
-    MenuBarExtra {
+    MenuBarExtra(isInserted: Binding(get: { viewModel.isMenuBarIconVisible }, set: { if viewModel.isMenuBarIconVisible != $0 { viewModel.isMenuBarIconVisible = $0 } })) {
         let shortIdentification = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)"
         let identification      = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitHash)"
         Text(shortIdentification)
