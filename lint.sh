@@ -18,8 +18,10 @@ if [ "$(uname -m)" = x86_64 ]; then
 else
     ./script/install-dep.sh --periphery
     # Disable superfluous comments detection because it's buggy. todo: report to periphery maintainer
-    ./.deps/periphery/periphery scan --quiet \
-        --strict \
-        --disable-redundant-public-analysis \
-        --no-superfluous-ignore-comments
+    # The prebuilt Periphery binary has library search paths tied to its build machine.
+    DYLD_LIBRARY_PATH="$(swiftly use --print-location)/usr/lib" \
+        ./.deps/periphery/periphery scan --quiet \
+            --strict \
+            --disable-redundant-public-analysis \
+            --no-superfluous-ignore-comments
 fi
