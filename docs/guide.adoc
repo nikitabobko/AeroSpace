@@ -443,6 +443,7 @@ Once you switch back to the workspace, (e.g. by the means of xref:commands.adoc#
 When you quit the AeroSpace or when the AeroSpace detects that it's about to crash, AeroSpace will place all windows back to the visible area of the screen.
 
 AeroSpace shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on what workspace is currently active.
+The icon can be hidden with `show-menu-bar-icon = false` (e.g. if you display workspaces in another bar such as SketchyBar).
 
 The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
 
