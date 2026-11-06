@@ -4,6 +4,7 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case balanceSizes = "balance-sizes"
     case close
     case closeAllWindowsButCurrent = "close-all-windows-but-current"
+    case commandCenter = "command-center"
     case config
     case debugWindows = "debug-windows"
     case dumpWorkspaceTree = "dump-workspace-tree"
@@ -65,6 +66,8 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(CloseCmdArgs.init)
             case .closeAllWindowsButCurrent:
                 result[kind.rawValue] = SubCommandParser(CloseAllWindowsButCurrentCmdArgs.init)
+            case .commandCenter:
+                result[kind.rawValue] = SubCommandParser(CommandCenterCmdArgs.init)
             case .config:
                 result[kind.rawValue] = SubCommandParser(parseConfigCmdArgs)
             case .debugWindows:

@@ -26,6 +26,13 @@ include::aerospace-close-all-windows-but-current.adoc[tags=synopsis]
 include::aerospace-close-all-windows-but-current.adoc[tags=purpose]
 include::aerospace-close-all-windows-but-current.adoc[tags=body]
 
+== command-center
+----
+include::aerospace-command-center.adoc[tags=synopsis]
+----
+include::aerospace-command-center.adoc[tags=purpose]
+include::aerospace-command-center.adoc[tags=body]
+
 == config
 ----
 include::aerospace-config.adoc[tags=synopsis]

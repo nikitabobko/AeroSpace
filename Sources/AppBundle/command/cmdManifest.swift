@@ -14,6 +14,8 @@ extension CmdArgs {
                 command = CloseCommand(args: self as! CloseCmdArgs)
             case .closeAllWindowsButCurrent:
                 command = CloseAllWindowsButCurrentCommand(args: self as! CloseAllWindowsButCurrentCmdArgs)
+            case .commandCenter:
+                command = CommandCenterCommand(args: self as! CommandCenterCmdArgs)
             case .config:
                 command = ConfigCommand(args: self as! ConfigCmdArgs)
             case .debugWindows:

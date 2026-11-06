@@ -282,6 +282,47 @@ exec.env-vars = {
 }
 ----
 
+[#command-center]
+=== Command center
+
+`aerospace command-center` toggles a full-screen overview of all workspaces on all monitors.
+Bind it like any other command:
+
+[source,toml]
+----
+[mode.main.binding]
+alt-tab = 'command-center'
+----
+
+In the overview, click a workspace to focus it, drag windows between workspaces, drag a window onto the edge of another window to insert it there, or drag a window onto the center of another window to put both under a common container.
+Drag a whole workspace tile onto another one to exchange the contents of the two workspaces.
+Minimized windows sit on a shelf at the bottom; drag one onto a workspace to bring it back.
+Press Escape to close the overview and get the focus back.
+
+By default, tiles show the app icon and the window title, which doesn't require any additional permissions.
+
+The overview adapts to https://github.com/FelixKratz/JankyBorders[JankyBorders] when it is running:
+the focused workspace gets a ring in the JankyBorders active color and width, and workspaces visible on other monitors are marked with the JankyBorders inactive color.
+Set `jankyborders = false` to always use the configured colors.
+
+The colors of the overview can be configured in the `[command-center]` table.
+Colors are in `0xAARRGGBB` format (either as a hex integer or as a string).
+
+[source,toml]
+----
+[command-center]
+background-color = 0xcc000000 # Backdrop that covers the monitor
+workspace-color = 0xff1e1e1e  # Workspace tile fill
+hover-color = 0xff262626      # Workspace tile fill under the mouse
+window-color = 0xff2e2e2e     # Window thumbnail fill
+active-color = 0xffe2e2e3     # Focused workspace ring and badge, focused window outline, drop target
+visible-color = 0xff8c8c8c    # Badge of workspaces visible on other monitors
+inactive-color = 0xff3a3a3a   # Badge of other workspaces
+text-color = 0xffe2e2e3       # Workspace names and window titles
+jankyborders = true           # Adopt the JankyBorders colors and width when it is running
+----
+
+
 [#tree]
 == Tree
 

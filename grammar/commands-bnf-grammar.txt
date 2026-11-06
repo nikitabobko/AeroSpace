@@ -14,6 +14,8 @@ aerospace -h;
 
     | close-all-windows-but-current [--quit-if-last-window]
 
+    | command-center
+
     | config [--json | --keys]... --get {{{ aerospace config --major-keys }}} [--json | --keys]...
     | config --major-keys
     | config --all-keys
