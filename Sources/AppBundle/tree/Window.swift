@@ -20,7 +20,8 @@ open class Window: TreeNode, Hashable {
 
     @MainActor static func get(byId windowId: OpaqueWindowId) -> Window? { // todo make non optional
         isUnitTest
-            ? Workspace.all.flatMap { $0.allLeafWindowsRecursive }.first(where: { $0.windowId == windowId })
+            ? (Workspace.all.flatMap { $0.allLeafWindowsRecursive } + macosMinimizedWindowsContainer.children.filterIsInstance(of: Window.self))
+                .first(where: { $0.windowId == windowId })
             : MacWindow.allWindowsMap[windowId]
     }
 
