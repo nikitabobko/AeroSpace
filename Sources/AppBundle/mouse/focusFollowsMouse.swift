@@ -52,14 +52,3 @@ import Common
         }
     }
 }
-
-@concurrent
-private nonisolated func isAxWindowUnderMouse(_ location: CGPoint) async -> Bool? {
-    let systemwide = AXUIElementCreateSystemWide()
-    var element: AXUIElement?
-    if unsafe AXUIElementCopyElementAtPosition(systemwide, Float(location.x), Float(location.y), &element) != .success {
-        return nil
-    }
-    guard let element else { return nil }
-    return element.get(Ax.parentWindowRecursive) != nil || element.get(Ax.roleAttr) == kAXWindowRole
-}
