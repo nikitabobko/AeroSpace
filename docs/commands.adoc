@@ -210,6 +210,13 @@ include::./aerospace-move-mouse.adoc[tags=synopsis]
 include::./aerospace-move-mouse.adoc[tags=purpose]
 include::./aerospace-move-mouse.adoc[tags=body]
 
+== move-node-to-container
+----
+include::aerospace-move-node-to-container.adoc[tags=synopsis]
+----
+include::aerospace-move-node-to-container.adoc[tags=purpose]
+include::aerospace-move-node-to-container.adoc[tags=body]
+
 == move-node-to-monitor
 ----
 include::aerospace-move-node-to-monitor.adoc[tags=synopsis]

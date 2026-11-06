@@ -115,6 +115,10 @@ let mode_help_generated = """
 let move_mouse_help_generated = """
     USAGE: move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
     """
+let move_node_to_container_help_generated = """
+    USAGE: move-node-to-container [-h|--help] [--focus-follows-window] [--window-id <window-id>]
+                                  [--] <workspace-name> <container-path> <index>
+    """
 let move_node_to_monitor_help_generated = """
     USAGE: move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
                                 [--wrap-around] (left|down|up|right|next|prev)

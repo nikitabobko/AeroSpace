@@ -60,6 +60,11 @@ func doubleDashArg<Root: AeroAny>(mandatory: Bool) -> PosArgParser<Root, ()> {
     )
 }
 
+/// A positional `<workspace-name>` argument
+func parseWorkspaceNamePosArg(i: PosArgParserInput) -> ParsedCliArgs<WorkspaceName> {
+    .init(WorkspaceName.parse(i.arg), advanceBy: 1)
+}
+
 func newMandatoryPosArgParser<Root, Value>(
     _ keyPath: SendableWritableKeyPath<Root, Lateinit<Value>>,
     _ parse: @escaping @Sendable (PosArgParserInput) -> ParsedCliArgs<Value>,

@@ -1,0 +1,82 @@
+= aerospace-move-node-to-container(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-move-node-to-container
+// tag::purpose[]
+:manpurpose: Move the focused window to the specified position in the specified tiling container
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace move-node-to-container [-h|--help] [--focus-follows-window] [--window-id <window-id>]
+                                 [--] <workspace-name> <container-path> <index>
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The command complements the directional `move` command.
+`move` moves the window relative to its current position, while `move-node-to-container` puts the window to an absolute position in the tree, possibly on a different workspace.
+Use `aerospace dump-workspace-tree` to discover container paths.
+
+If the window is floating, it becomes tiling.
+
+// =========================================================== Examples
+include::util/conditional-examples-header.adoc[]
+
+Given this layout on workspace `1`
+
+----
+h_tiles (/)
+├── window 1
+├── v_tiles (/1)
+│   ├── window 2
+│   └── window 3
+└── window 4 (focused)
+----
+
+`move-node-to-container 1 /1 1` will result in the following layout
+
+----
+h_tiles (/)
+├── window 1
+└── v_tiles (/1)
+    ├── window 2
+    ├── window 4 (focused)
+    └── window 3
+----
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--focus-follows-window::
+Make sure that the window in question receives focus after moving.
+This flag is a shortcut for manually running `aerospace-workspace`/`aerospace-focus` after `move-node-to-container` successful execution.
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
+
+// =========================================================== Arguments
+include::util/conditional-arguments-header.adoc[]
+
+<workspace-name>:: Specifies the workspace of the target container
+<container-path>::
+Path to the target container in the tree of the workspace.
+`/` is the root container, `/0/1` is the second child of the first child of the root container.
+Paths are printed by `aerospace dump-workspace-tree`
+<index>::
+0-based position among the children of the target container (as `aerospace dump-workspace-tree` reports them).
+The index refers to the children list as it is before the move.
+`<index>` equal to the number of children appends the window to the end
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

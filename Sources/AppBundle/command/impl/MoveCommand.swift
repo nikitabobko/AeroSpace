@@ -95,7 +95,7 @@ struct MoveCommand: Command {
     }
 }
 
-private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
+let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
 
 @MainActor private func moveOut(
     tilingWindow window: Window,

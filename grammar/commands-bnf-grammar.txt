@@ -66,6 +66,8 @@ aerospace -h;
 
     | move-mouse [--fail-if-noop] (monitor-lazy-center|monitor-force-center|window-lazy-center|window-force-center) [--fail-if-noop]
 
+    | move-node-to-container [--focus-follows-window|--window-id <window_id>]... <workspace> <container_path> <number> [--focus-follows-window|--window-id <window_id>]...
+
     | move-node-to-monitor [<move_node_to_monitor1_flag>]... (left|down|up|right|next|prev) [<move_node_to_monitor1_flag>]...
     | move-node-to-monitor [<move_node_to_monitor2_flag>]... <monitor_pattern>... [<move_node_to_monitor2_flag>]...
 
@@ -127,6 +129,7 @@ aerospace -h;
 <mode_id> ::= {{{ aerospace config --get mode --keys }}};
 <workspace> ::= {{{ aerospace list-workspaces --monitor all --empty no }}};
 <number> ::= {{{ true }}};
+<container_path> ::= {{{ true }}};
 <monitor_pattern> ::= {{{ true }}};
 <layouts> ::= h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating;
 

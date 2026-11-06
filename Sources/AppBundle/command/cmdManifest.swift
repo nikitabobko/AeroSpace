@@ -64,6 +64,8 @@ extension CmdArgs {
                 command = MoveCommand(args: self as! MoveCmdArgs)
             case .moveMouse:
                 command = MoveMouseCommand(args: self as! MoveMouseCmdArgs)
+            case .moveNodeToContainer:
+                command = MoveNodeToContainerCommand(args: self as! MoveNodeToContainerCmdArgs)
             case .moveNodeToMonitor:
                 command = MoveNodeToMonitorCommand(args: self as! MoveNodeToMonitorCmdArgs)
             case .moveNodeToWorkspace:
