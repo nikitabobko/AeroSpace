@@ -86,6 +86,8 @@ extension CmdArgs {
                 command = SummonWorkspaceCommand(args: self as! SummonWorkspaceCmdArgs)
             case .swap:
                 command = SwapCommand(args: self as! SwapCmdArgs)
+            case .swapWorkspaces:
+                command = SwapWorkspacesCommand(args: self as! SwapWorkspacesCmdArgs)
             case .test:
                 command = TestCommand(args: self as! TestCmdArgs)
             case .testNot:

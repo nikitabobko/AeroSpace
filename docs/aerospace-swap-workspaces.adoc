@@ -1,0 +1,42 @@
+= aerospace-swap-workspaces(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-swap-workspaces
+// tag::purpose[]
+:manpurpose: Exchange the contents of two workspaces
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace swap-workspaces [-h|--help] [--] <workspace-a> <workspace-b>
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Workspaces are ordered by their names, so a workspace itself can't change its position.
+What can change is what the workspace holds.
+`swap-workspaces` moves everything of `<workspace-a>` to `<workspace-b>` and vice versa: tiling windows together with their layout, floating windows, and macOS fullscreen windows.
+
+The focused workspace stays focused, and shows its new contents.
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// =========================================================== Arguments
+include::util/conditional-arguments-header.adoc[]
+
+<workspace-a>:: Name of the first workspace
+<workspace-b>:: Name of the second workspace
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

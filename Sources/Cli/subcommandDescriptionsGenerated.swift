@@ -40,6 +40,7 @@ let subcommandDescriptions = [
     ["  split", "Split focused window"],
     ["  subscribe", "Subscribe to AeroSpace events and receive notifications via socket"],
     ["  summon-workspace", "Move the requested workspace to the focused monitor."],
+    ["  swap-workspaces", "Exchange the contents of two workspaces"],
     ["  swap", "Swaps the focused window with another window."],
     ["  test-not", "Negative condition evaluation utility"],
     ["  test", "Condition evaluation utility"],

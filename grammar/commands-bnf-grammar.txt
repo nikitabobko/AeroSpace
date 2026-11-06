@@ -93,6 +93,8 @@ aerospace -h;
 
     | true
 
+    | swap-workspaces <workspace> <workspace>
+
     | summon-workspace [--fail-if-noop] <workspace> [--fail-if-noop]
 
     | trigger-binding <binding> --mode <mode_id>

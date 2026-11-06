@@ -161,6 +161,9 @@ let subscribe_help_generated = """
 let summon_workspace_help_generated = """
     USAGE: summon-workspace [-h|--help] [--fail-if-noop] [--] <workspace>
     """
+let swap_workspaces_help_generated = """
+    USAGE: swap-workspaces [-h|--help] [--] <workspace-a> <workspace-b>
+    """
 let swap_help_generated = """
     USAGE: swap [-h|--help] [--window-id <window-id>] [--swap-focus]
                 [--wrap-around] (left|down|up|right|dfs-next|dfs-prev)
