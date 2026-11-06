@@ -7,6 +7,7 @@ let subcommandDescriptions = [
     ["  close", "Close the focused window"],
     ["  config", "Query AeroSpace config options"],
     ["  debug-windows", "Interactive command to record Accessibility API debug information to create bug reports"],
+    ["  dump-workspace-tree", "Print the tree of windows and containers of workspaces in JSON format, including the frame of every window"],
     ["  echo", "Print arguments and interpolation variables to stdout"],
     ["  enable", "Temporarily disable window management"],
     ["  eval", "Send multiple commands to AeroSpace at once"],

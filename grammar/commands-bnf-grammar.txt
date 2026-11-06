@@ -21,6 +21,9 @@ aerospace -h;
 
     | debug-windows [--window-id <window_id>]
 
+    | dump-workspace-tree [<dump_workspace_tree_filter_flag>]...
+    | dump-workspace-tree --all
+
     | echo [--stderr|--window <window_id>]... --
 
     | enable toggle
@@ -141,6 +144,9 @@ aerospace -h;
 <focus_dfs_relative_flag> ::= --boundaries-action <boundaries_action>|--ignore-floating|--wrap-around;
 <boundaries_action> ::= stop|fail|wrap-around-the-workspace|wrap-around-all-monitors;
 <boundary> ::= workspace|all-monitors-outer-frame;
+
+<dump_workspace_tree_filter_flag> ::= --workspace (visible | focused | <workspace>)...
+    | --monitor <monitor_id>...;
 
 <list_windows_filter_flag> ::= --workspace (visible | focused | <workspace>)...
     | --monitor <monitor_id>...

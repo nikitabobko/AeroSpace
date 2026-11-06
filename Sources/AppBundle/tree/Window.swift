@@ -47,6 +47,8 @@ open class Window: TreeNode, Hashable {
     }
 
     var isHiddenInCorner: Bool { die("Not implemented") }
+    /// The rect the floating window gets when it's unhidden from the corner. nil if the window isn't hidden in the corner
+    @MainActor var unhiddenFloatingRect: Rect? { die("Not implemented") }
     @MainActor func nativeFocus() { die("Not implemented") }
     func getAxRect(_ cm: CancellationMode) async throws -> Rect? { die("Not implemented") }
     func getCenter(_ cm: CancellationMode) async throws -> CGPoint? { try await getAxRect(cm)?.center }

@@ -40,6 +40,13 @@ include::aerospace-debug-windows.adoc[tags=synopsis]
 include::aerospace-debug-windows.adoc[tags=purpose]
 include::aerospace-debug-windows.adoc[tags=body]
 
+== dump-workspace-tree
+----
+include::aerospace-dump-workspace-tree.adoc[tags=synopsis]
+----
+include::aerospace-dump-workspace-tree.adoc[tags=purpose]
+include::aerospace-dump-workspace-tree.adoc[tags=body]
+
 == echo
 ----
 include::aerospace-echo.adoc[tags=synopsis]
