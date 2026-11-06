@@ -357,7 +357,7 @@ final class MacApp: AbstractApp {
         bgTabsScheduledForPrune = []
         windowsCount = aliveOrInvisible.count
 
-        nonidempotentNativeTabSwapHeuristic(&aliveOrInvisible)
+        try await nonidempotentNativeTabSwapHeuristic(&aliveOrInvisible)
 
         var aliveOrInvisibleMap: [OpaqueWindowId: WindowLifeStatus] = [:]
         for (id, lifeStatus) in aliveOrInvisible {
@@ -373,13 +373,35 @@ final class MacApp: AbstractApp {
 
     private var bgTabsScheduledForPrune: Set<UInt32> = []
     private var lifeStatusesOfLastRefresh: [UInt32: WindowLifeStatus] = [:]
-    @MainActor private func nonidempotentNativeTabSwapHeuristic(_ aliveOrInvisible: inout [UInt32: WindowLifeStatus]) {
-        let noLongerAlive = lifeStatusesOfLastRefresh.filter { (id, lifeStatus) in lifeStatus == .alive && aliveOrInvisible[id] != .alive }
-        let becameAlive = aliveOrInvisible.filter { (id, lifeStatus) in lifeStatus == .alive && lifeStatusesOfLastRefresh[id] != .alive }
+    @MainActor private func nonidempotentNativeTabSwapHeuristic(_ aliveOrInvisible: inout [UInt32: WindowLifeStatus]) async throws {
+        let previous = lifeStatusesOfLastRefresh
         lifeStatusesOfLastRefresh = aliveOrInvisible
-        if let backgroundTabId = noLongerAlive.singleOrNil()?.key,
-           let frontmostTabId = becameAlive.singleOrNil()?.key
-        {
+        if let (backgroundTabId, frontmostTabId) = nativeTabSwapCandidate(previous: previous, current: aliveOrInvisible) {
+            var excluded: Set<UInt32> = []
+            for id in [backgroundTabId, frontmostTabId] {
+                if let window = windowIdMapping.backward[id].flatMap({ MacWindow.get(byId: $0) }),
+                   window.windowParentCases?.kind == .macosFullscreenWindowsContainer ||
+                   window.windowParentCases?.kind == .macosPopupWindowsContainer
+                {
+                    excluded.insert(id)
+                }
+            }
+            // AXFullScreen can change before normalizeLayoutReason observes it. Do
+            // not confuse fullscreen Space transitions with a native tab switch.
+            if excluded.isEmpty, let thread {
+                excluded = try await thread.runInLoop(.cancellable) { [windows] job in
+                    var fullscreen: Set<UInt32> = []
+                    for id in [backgroundTabId, frontmostTabId] {
+                        try job.checkCancellation()
+                        let ax = windows.threadGuarded[id]?.ax
+                        if ax?.get(Ax.isFullscreenAttr) == true || ax?.get(Ax.subroleAttr) != kAXStandardWindowSubrole {
+                            fullscreen.insert(id)
+                        }
+                    }
+                    return fullscreen
+                }
+            }
+            guard nativeTabSwapCandidate(previous: previous, current: aliveOrInvisible, excluded: excluded) != nil else { return }
             let tabGroupWindowId = getOrRegisterOpaqueWindowId(backgroundTabId)
             windowIdMapping.put(tabGroupWindowId, frontmostTabId)
             aliveOrInvisible[backgroundTabId] = nil
@@ -416,6 +438,20 @@ final class MacApp: AbstractApp {
             try? body(window.ax, job)
         } ?? .cancelled
     }
+}
+
+func nativeTabSwapCandidate(
+    previous: [UInt32: WindowLifeStatus],
+    current: [UInt32: WindowLifeStatus],
+    excluded: Set<UInt32> = [],
+) -> (background: UInt32, foreground: UInt32)? {
+    let noLongerAlive = previous.filter { id, status in status == .alive && current[id] != .alive }
+    let becameAlive = current.filter { id, status in status == .alive && previous[id] != .alive }
+    guard let background = noLongerAlive.singleOrNil()?.key,
+          let foreground = becameAlive.singleOrNil()?.key,
+          !excluded.contains(background), !excluded.contains(foreground)
+    else { return nil }
+    return (background, foreground)
 }
 
 private final class AxWindow {

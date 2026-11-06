@@ -45,6 +45,9 @@ func runHeavyCompleteRefreshSession(
             updateTrayText()
             SecureInputPanel.shared.refresh()
             try await normalizeLayoutReason()
+            // AX refresh and native fullscreen transitions can change habitation.
+            // Derive container state before sizing windows on the new Space.
+            normalizeContainers()
             if shouldLayoutWorkspaces { try await layoutWorkspaces() }
         }
     }
