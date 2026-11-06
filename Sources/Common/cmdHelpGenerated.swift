@@ -10,6 +10,9 @@ let close_all_windows_but_current_help_generated = """
 let close_help_generated = """
     USAGE: close [-h|--help] [--quit-if-last-window] [--window-id <window-id>]
     """
+let command_center_help_generated = """
+    USAGE: command-center [-h|--help]
+    """
 let config_help_generated = """
     USAGE: config [-h|--help] --get <name> [--json] [--keys]
        OR: config [-h|--help] --major-keys
@@ -18,6 +21,10 @@ let config_help_generated = """
     """
 let debug_windows_help_generated = """
     USAGE: debug-windows [-h|--help] [--window-id <window-id>]
+    """
+let dump_workspace_tree_help_generated = """
+    USAGE: dump-workspace-tree [-h|--help] (--all|--workspace <workspace>...|--monitor <monitor>...)
+                               [--workspace <workspace>...] [--monitor <monitor>...]
     """
 let echo_help_generated = """
     USAGE: echo [-h|--help] [--stderr] [--window-id <window-id>] -- <string>...
@@ -111,6 +118,10 @@ let mode_help_generated = """
 let move_mouse_help_generated = """
     USAGE: move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
     """
+let move_node_to_container_help_generated = """
+    USAGE: move-node-to-container [-h|--help] [--focus-follows-window] [--window-id <window-id>]
+                                  [--] <workspace-name> <container-path> <index>
+    """
 let move_node_to_monitor_help_generated = """
     USAGE: move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
                                 [--wrap-around] (left|down|up|right|next|prev)
@@ -152,6 +163,9 @@ let subscribe_help_generated = """
     """
 let summon_workspace_help_generated = """
     USAGE: summon-workspace [-h|--help] [--fail-if-noop] [--] <workspace>
+    """
+let swap_workspaces_help_generated = """
+    USAGE: swap-workspaces [-h|--help] [--] <workspace-a> <workspace-b>
     """
 let swap_help_generated = """
     USAGE: swap [-h|--help] [--window-id <window-id>] [--swap-focus]

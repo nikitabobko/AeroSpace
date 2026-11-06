@@ -4,8 +4,10 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case balanceSizes = "balance-sizes"
     case close
     case closeAllWindowsButCurrent = "close-all-windows-but-current"
+    case commandCenter = "command-center"
     case config
     case debugWindows = "debug-windows"
+    case dumpWorkspaceTree = "dump-workspace-tree"
     case echo
     case enable
     case eval
@@ -31,6 +33,7 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case mode
     case move = "move"
     case moveMouse = "move-mouse"
+    case moveNodeToContainer = "move-node-to-container"
     case moveNodeToMonitor = "move-node-to-monitor"
     case moveNodeToWorkspace = "move-node-to-workspace"
     case moveWorkspaceToMonitor = "move-workspace-to-monitor"
@@ -41,6 +44,7 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case subscribe
     case summonWorkspace = "summon-workspace"
     case swap
+    case swapWorkspaces = "swap-workspaces"
     case test
     case testNot = "test-not"
     case triggerBinding = "trigger-binding"
@@ -62,10 +66,14 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(CloseCmdArgs.init)
             case .closeAllWindowsButCurrent:
                 result[kind.rawValue] = SubCommandParser(CloseAllWindowsButCurrentCmdArgs.init)
+            case .commandCenter:
+                result[kind.rawValue] = SubCommandParser(CommandCenterCmdArgs.init)
             case .config:
                 result[kind.rawValue] = SubCommandParser(parseConfigCmdArgs)
             case .debugWindows:
                 result[kind.rawValue] = SubCommandParser(DebugWindowsCmdArgs.init)
+            case .dumpWorkspaceTree:
+                result[kind.rawValue] = SubCommandParser(parseDumpWorkspaceTreeCmdArgs)
             case .echo:
                 result[kind.rawValue] = SubCommandParser(EchoCmdArgs.init)
             case .enable:
@@ -114,6 +122,8 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result["move-through"] = SubCommandParser(parseMoveCmdArgs)
             case .moveMouse:
                 result[kind.rawValue] = SubCommandParser(parseMoveMouseCmdArgs)
+            case .moveNodeToContainer:
+                result[kind.rawValue] = SubCommandParser(MoveNodeToContainerCmdArgs.init)
             case .moveNodeToMonitor:
                 result[kind.rawValue] = SubCommandParser(parseMoveNodeToMonitorCmdArgs)
             case .moveNodeToWorkspace:
@@ -136,6 +146,8 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(SummonWorkspaceCmdArgs.init)
             case .swap:
                 result[kind.rawValue] = SubCommandParser(parseSwapCmdArgs)
+            case .swapWorkspaces:
+                result[kind.rawValue] = SubCommandParser(SwapWorkspacesCmdArgs.init)
             case .test:
                 result[kind.rawValue] = SubCommandParser(parseTestCmdArgs)
             case .testNot:

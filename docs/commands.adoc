@@ -26,6 +26,13 @@ include::aerospace-close-all-windows-but-current.adoc[tags=synopsis]
 include::aerospace-close-all-windows-but-current.adoc[tags=purpose]
 include::aerospace-close-all-windows-but-current.adoc[tags=body]
 
+== command-center
+----
+include::aerospace-command-center.adoc[tags=synopsis]
+----
+include::aerospace-command-center.adoc[tags=purpose]
+include::aerospace-command-center.adoc[tags=body]
+
 == config
 ----
 include::aerospace-config.adoc[tags=synopsis]
@@ -39,6 +46,13 @@ include::aerospace-debug-windows.adoc[tags=synopsis]
 ----
 include::aerospace-debug-windows.adoc[tags=purpose]
 include::aerospace-debug-windows.adoc[tags=body]
+
+== dump-workspace-tree
+----
+include::aerospace-dump-workspace-tree.adoc[tags=synopsis]
+----
+include::aerospace-dump-workspace-tree.adoc[tags=purpose]
+include::aerospace-dump-workspace-tree.adoc[tags=body]
 
 == echo
 ----
@@ -203,6 +217,13 @@ include::./aerospace-move-mouse.adoc[tags=synopsis]
 include::./aerospace-move-mouse.adoc[tags=purpose]
 include::./aerospace-move-mouse.adoc[tags=body]
 
+== move-node-to-container
+----
+include::aerospace-move-node-to-container.adoc[tags=synopsis]
+----
+include::aerospace-move-node-to-container.adoc[tags=purpose]
+include::aerospace-move-node-to-container.adoc[tags=body]
+
 == move-node-to-monitor
 ----
 include::aerospace-move-node-to-monitor.adoc[tags=synopsis]
@@ -265,6 +286,13 @@ include::aerospace-swap.adoc[tags=synopsis]
 ----
 include::aerospace-swap.adoc[tags=purpose]
 include::aerospace-swap.adoc[tags=body]
+
+== swap-workspaces
+----
+include::aerospace-swap-workspaces.adoc[tags=synopsis]
+----
+include::aerospace-swap-workspaces.adoc[tags=purpose]
+include::aerospace-swap-workspaces.adoc[tags=body]
 
 == test
 ----

@@ -43,6 +43,9 @@ final class TestWindow: Window, CustomStringConvertible {
     }
 
     override func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { isMacosFullscreenForTest }
+
+    override var isHiddenInCorner: Bool { false }
+    @MainActor override var unhiddenFloatingRect: Rect? { nil }
 }
 
 extension OpaqueWindowId: ExpressibleByIntegerLiteral {

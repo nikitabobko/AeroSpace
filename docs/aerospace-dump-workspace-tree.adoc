@@ -1,0 +1,89 @@
+= aerospace-dump-workspace-tree(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-dump-workspace-tree
+// tag::purpose[]
+:manpurpose: Print the tree of windows and containers of workspaces in JSON format, including the frame of every window
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace dump-workspace-tree [-h|--help] (--all|--workspace <workspace>...|--monitor <monitor>...)
+                              [--workspace <workspace>...] [--monitor <monitor>...]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Unlike `list-windows`, the command preserves the structure of the tree: containers, their layouts and the order of their children.
+The frames are reported as they are laid out by AeroSpace, even for invisible workspaces (whose windows are physically hidden in a corner of the monitor).
+macOS fullscreen windows, minimized windows and windows of hidden apps have no place in the layout and are not reported.
+
+Every workspace is printed as an object with the following fields:
+
+workspace:: String. Name of the workspace
+workspace-is-focused:: Boolean. `true` if the workspace has focus
+workspace-is-visible:: Boolean. `true` if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup
+workspace-rect:: Rect. The area the tiling tree of the workspace is laid out in (the visible area of the monitor padded by outer gaps)
+monitor-id:: 1-based Number. Sequential number of the belonging monitor. See `aerospace list-monitors` for the rest of the monitor fields
+root:: Node. The root tiling container of the workspace
+floating-windows:: Array of window nodes. Floating windows of the workspace
+
+A node is either a container or a window.
+
+A container node has the following fields:
+
+type:: String. `container`
+path:: String. Path to the container in the tree. `/` is the root container, `/0/1` is the second child of the first child of the root container.
+See `aerospace move-node-to-container` for how to use the path
+layout:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`) of the container
+rect:: Rect. The area the container is laid out in. `null` for the root container of an empty workspace
+children:: Array of nodes. Children of the container in their order
+
+A window node has the following fields:
+
+type:: String. `window`
+path:: String. Path to the window in the tree. Absent for floating windows
+window-id:: Number. Window unique ID
+window-title:: String. Window title
+window-is-fullscreen:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
+app-bundle-id:: String. Application unique identifier. https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
+app-name:: String. Application name
+app-pid:: Number. https://en.wikipedia.org/wiki/Process_identifier[UNIX process identifier]
+rect:: Rect. The frame of the window
+
+A rect is an object with `x`, `y`, `width` and `height` integer fields (points).
+The origin is the top-left corner of the main monitor, and `y` grows downwards (the same coordinate system as the Accessibility API uses).
+
+NOTE: Paths are not stable identifiers.
+They change whenever the tree changes (including the normalization that AeroSpace performs after every command).
+Dump the tree right before using a path.
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/all-monitors-option.adoc[]
+
+--workspace <workspace>...::
+Filter results to only print workspaces that are either of specified workspaces.
+`<workspace>...` is a space-separated list of workspace names.
++
+Possible values: +
++
+. Workspace name
+. `focused` is a special workspace name that represents the focused workspace
+. `visible` is a special workspace name that represents all currently visible workspaces (In multi-monitor setup, there are multiple visible workspaces)
+
+include::util/monitor-option.adoc[]
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

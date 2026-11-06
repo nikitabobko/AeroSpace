@@ -187,4 +187,18 @@ struct MoveNodeToWorkspaceCommandTest {
         assertTrue(Workspace.get(byName: "a").isEffectivelyEmpty)
         assertEquals((Workspace.get(byName: "x").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
+
+    @Test func testMoveMinimizedWindowToWorkspace() async {
+        let a = Workspace.get(byName: "a")
+        a.rootTilingContainer.apply {
+            _ = TestWindow.new(id: 1, parent: $0).focusWindow()
+        }
+        let minimized = TestWindow.new(id: 2, parent: macosMinimizedWindowsContainer)
+        assertEquals(Window.get(byId: 2)?.windowId, minimized.windowId)
+
+        let result = await parseCommand("move-node-to-workspace --window-id 2 a").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.stderr, [])
+        assertEquals(a.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2)]))
+        assertTrue(macosMinimizedWindowsContainer.children.isEmpty)
+    }
 }

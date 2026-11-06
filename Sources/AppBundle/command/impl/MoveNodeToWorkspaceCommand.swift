@@ -37,6 +37,12 @@ func moveWindowToWorkspace(_ window: Window, _ targetWorkspace: Workspace, _ io:
                 .succ(io.err("Window '\(window.windowId)' already belongs to workspace '\(targetWorkspace.name)'. Tip: use --fail-if-noop to exit with non-zero code"))
         }
     }
+    if case .macosMinimizedWindowsContainer = window.windowParentCases {
+        // Unminimizing is asynchronous. The window keeps its macOS layout reason, so that normalizeLayoutReason completes
+        // the transition (tiling or floating, as the window was before it got minimized) on the target workspace once
+        // macOS reports the window as unminimized, instead of bouncing it back to the minimized container
+        (window as? MacWindow)?.setNativeMinimized(false)
+    }
     let targetContainer: NonLeafTreeNodeObject = window.isFloating
         ? targetWorkspace.floatingWindowsContainer
         : targetWorkspace.rootTilingContainer

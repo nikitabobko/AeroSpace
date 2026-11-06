@@ -42,9 +42,13 @@ extension Window {
     func toLiveFocusOrReportError(_ io: CmdIo) -> LiveFocus? {
         if let result = toLiveFocusOrNil() {
             return result
-        } else {
-            io.err("Window \(windowId) doesn't belong to any monitor. And thus can't even define a focused workspace")
-            return nil
         }
+        // Minimized windows belong to no workspace and no monitor. As a command target they count as being on the
+        // focused workspace, so that they can be moved out of the minimized state (e.g. move-node-to-workspace)
+        if case .macosMinimizedWindowsContainer = windowParentCases {
+            return LiveFocus(windowOrNil: self, workspace: globalFocus.workspace)
+        }
+        io.err("Window \(windowId) doesn't belong to any monitor. And thus can't even define a focused workspace")
+        return nil
     }
 }

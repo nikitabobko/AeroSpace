@@ -14,10 +14,14 @@ extension CmdArgs {
                 command = CloseCommand(args: self as! CloseCmdArgs)
             case .closeAllWindowsButCurrent:
                 command = CloseAllWindowsButCurrentCommand(args: self as! CloseAllWindowsButCurrentCmdArgs)
+            case .commandCenter:
+                command = CommandCenterCommand(args: self as! CommandCenterCmdArgs)
             case .config:
                 command = ConfigCommand(args: self as! ConfigCmdArgs)
             case .debugWindows:
                 command = DebugWindowsCommand(args: self as! DebugWindowsCmdArgs)
+            case .dumpWorkspaceTree:
+                command = DumpWorkspaceTreeCommand(args: self as! DumpWorkspaceTreeCmdArgs)
             case .echo:
                 command = EchoCommand(args: self as! EchoCmdArgs)
             case .enable:
@@ -62,6 +66,8 @@ extension CmdArgs {
                 command = MoveCommand(args: self as! MoveCmdArgs)
             case .moveMouse:
                 command = MoveMouseCommand(args: self as! MoveMouseCmdArgs)
+            case .moveNodeToContainer:
+                command = MoveNodeToContainerCommand(args: self as! MoveNodeToContainerCmdArgs)
             case .moveNodeToMonitor:
                 command = MoveNodeToMonitorCommand(args: self as! MoveNodeToMonitorCmdArgs)
             case .moveNodeToWorkspace:
@@ -82,6 +88,8 @@ extension CmdArgs {
                 command = SummonWorkspaceCommand(args: self as! SummonWorkspaceCmdArgs)
             case .swap:
                 command = SwapCommand(args: self as! SwapCmdArgs)
+            case .swapWorkspaces:
+                command = SwapWorkspacesCommand(args: self as! SwapWorkspacesCmdArgs)
             case .test:
                 command = TestCommand(args: self as! TestCmdArgs)
             case .testNot:

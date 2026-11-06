@@ -1,0 +1,52 @@
+= aerospace-command-center(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-command-center
+// tag::purpose[]
+:manpurpose: Toggle the command center: a full-screen overview of all workspaces on all monitors
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace command-center [-h|--help]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The command center shows every workspace as a tile that reflects the real layout of the workspace, including workspaces that are not visible.
+Every tile is drawn from the tree, the same way `aerospace dump-workspace-tree` reports it.
+A badge above the tile carries the workspace name; the focused workspace is ringed.
+
+Windows that have no place in a layout are drawn as chips with the app icon: macOS fullscreen windows and windows of hidden apps in the bottom left corner of their workspace tile, minimized windows (which belong to no workspace) on the shelf at the bottom of the monitor.
+
+Gestures:
+
+* Click a workspace to focus it (same as `aerospace workspace <workspace-name>`). The command center closes.
+* Drag a window onto the empty area of another workspace to move it there (same as `aerospace move-node-to-workspace`).
+* Drag a window onto the edge of another window to insert it before or after that window (same as `aerospace move-node-to-container`).
+* Drag a window onto the center of another window to put both windows under a common container (same as `aerospace join-with`).
+* Drag a workspace tile (by its badge or its empty area) onto another tile to exchange the contents of the two workspaces (same as `aerospace swap-workspaces`).
+* Drag a chip onto a workspace to put the window there (same as `aerospace move-node-to-workspace`). A minimized window gets unminimized.
+* Press Escape or click outside of the tiles to close the command center. The focus is restored to where it was.
+
+The command center is a view of the existing tree. Every gesture maps to a command that already exists, and nothing about tiling changes if you never open it.
+
+Colors of the command center can be configured in the `[command-center]` table of the config.
+When https://github.com/FelixKratz/JankyBorders[JankyBorders] is running, its colors are adopted.
+See xref:guide.adoc#command-center[the guide] for details.
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

@@ -4,13 +4,36 @@ import Common
 extension Workspace {
     @MainActor
     func layoutWorkspace() async throws { // todo revisit API
+        try await layoutWorkspace(LayoutContext(self, measurement: nil))
+    }
+
+    /// Dry run of ``layoutWorkspace()``.
+    /// It computes the rects that the layout would apply to the tree, but it doesn't touch the AX API and it
+    /// doesn't mutate the tree. Works for invisible workspaces too
+    @MainActor
+    func measureLayout() async throws -> LayoutMeasurement {
+        let measurement = LayoutMeasurement()
+        try await layoutWorkspace(LayoutContext(self, measurement: measurement))
+        return measurement
+    }
+
+    @MainActor
+    private func layoutWorkspace(_ context: LayoutContext) async throws {
         if isEffectivelyEmpty { return }
         let rect = workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in monitors horizontal configuration. ¯\_(ツ)_/¯
-        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self))
+        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, context)
     }
+}
+
+/// Rects that ``Workspace/layoutWorkspace()`` would apply to the nodes of the tree. See ``Workspace/measureLayout()``
+final class LayoutMeasurement {
+    private var rects: [ObjectIdentifier: Rect] = [:]
+
+    func rect(of node: TreeNode) -> Rect? { rects[ObjectIdentifier(node)] }
+    fileprivate func put(_ node: TreeNode, _ rect: Rect) { rects[ObjectIdentifier(node)] = rect }
 }
 
 extension TreeNode {
@@ -23,11 +46,16 @@ extension TreeNode {
                     .layoutRecursive(point, width: width, height: height, virtual: virtual, context)
             case .workspacesContainer: die()
             case .workspace(let workspace):
-                lastAppliedLayoutPhysicalRect = physicalRect
-                lastAppliedLayoutVirtualRect = virtual
+                if let measurement = context.measurement {
+                    measurement.put(self, physicalRect)
+                } else {
+                    lastAppliedLayoutPhysicalRect = physicalRect
+                    lastAppliedLayoutVirtualRect = virtual
+                }
                 try await workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
                 try await workspace.floatingWindowsContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
             case .floatingWindowsContainer(let container):
+                if context.measurement != nil { return } // Floating windows are not laid out by the tree
                 let windows = container.children.filterIsInstance(of: Window.self)
                 // todo make it parallel among different workspaces. Get rid of 'try await'
                 let rects = try await windows.mapConcurrently { try await $0.getAxRect(.cancellable) } // Probably not idempotent
@@ -37,9 +65,12 @@ extension TreeNode {
                     window.layoutFloatingWindow(context, windowRect)
                 }
             case .window(let window):
-                if window.windowId != currentlyManipulatedWithMouseWindowId {
+                let isFullscreen = window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive
+                if let measurement = context.measurement {
+                    measurement.put(self, isFullscreen ? window.fullscreenRect(context) : physicalRect)
+                } else if window.windowId != currentlyManipulatedWithMouseWindowId {
                     lastAppliedLayoutVirtualRect = virtual
-                    if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive {
+                    if isFullscreen {
                         lastAppliedLayoutPhysicalRect = nil
                         window.layoutFullscreen(context)
                     } else {
@@ -49,8 +80,12 @@ extension TreeNode {
                     }
                 }
             case .tilingContainer(let container):
-                lastAppliedLayoutPhysicalRect = physicalRect
-                lastAppliedLayoutVirtualRect = virtual
+                if let measurement = context.measurement {
+                    measurement.put(self, physicalRect)
+                } else {
+                    lastAppliedLayoutPhysicalRect = physicalRect
+                    lastAppliedLayoutVirtualRect = virtual
+                }
                 switch container.layout {
                     case .tiles:
                         try await container.layoutTiles(point, width: width, height: height, virtual: virtual, context)
@@ -67,11 +102,14 @@ extension TreeNode {
 private struct LayoutContext {
     let workspace: Workspace
     let resolvedGaps: ResolvedGaps
+    /// nil means that the layout is applied. Otherwise, the layout is only measured (dry run)
+    let measurement: LayoutMeasurement?
 
     @MainActor
-    init(_ workspace: Workspace) {
+    init(_ workspace: Workspace, measurement: LayoutMeasurement?) {
         self.workspace = workspace
         self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitorInfo)
+        self.measurement = measurement
     }
 }
 
@@ -103,10 +141,15 @@ extension Window {
     }
 
     @MainActor
-    fileprivate func layoutFullscreen(_ context: LayoutContext) {
-        let monitorRect = noOuterGapsInFullscreen
+    fileprivate func fullscreenRect(_ context: LayoutContext) -> Rect {
+        noOuterGapsInFullscreen
             ? context.workspace.workspaceMonitorInfo.visibleRect
             : context.workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
+    }
+
+    @MainActor
+    fileprivate func layoutFullscreen(_ context: LayoutContext) {
+        let monitorRect = fullscreenRect(context)
         setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
     }
 }
@@ -124,7 +167,10 @@ extension TilingContainer {
 
         let lastIndex = inhabitedChildren.indices.last
         for (i, child) in inhabitedChildren.enumerated() {
-            child.setWeight(orientation, child.getWeight(orientation) + delta)
+            let weight = child.getWeight(orientation) + delta
+            if context.measurement == nil {
+                child.setWeight(orientation, weight)
+            }
             let rawGap = context.resolvedGaps.inner.get(orientation).toDouble()
             // Gaps. Consider 4 cases:
             // 1. Multiple children. Layout first child
@@ -134,18 +180,18 @@ extension TilingContainer {
             let gap = rawGap - (i == 0 ? rawGap / 2 : 0) - (i == lastIndex ? rawGap / 2 : 0)
             try await child.layoutRecursive(
                 i == 0 ? point : point.addingOffset(orientation, rawGap / 2),
-                width: orientation == .h ? child.hWeight - gap : width,
-                height: orientation == .v ? child.vWeight - gap : height,
+                width: orientation == .h ? weight - gap : width,
+                height: orientation == .v ? weight - gap : height,
                 virtual: Rect(
                     topLeftX: virtualPoint.x,
                     topLeftY: virtualPoint.y,
-                    width: orientation == .h ? child.hWeight : width,
-                    height: orientation == .v ? child.vWeight : height,
+                    width: orientation == .h ? weight : width,
+                    height: orientation == .v ? weight : height,
                 ),
                 context,
             )
-            virtualPoint = orientation == .h ? virtualPoint.addingXOffset(child.hWeight) : virtualPoint.addingYOffset(child.vWeight)
-            point = orientation == .h ? point.addingXOffset(child.hWeight) : point.addingYOffset(child.vWeight)
+            virtualPoint = orientation == .h ? virtualPoint.addingXOffset(weight) : virtualPoint.addingYOffset(weight)
+            point = orientation == .h ? point.addingXOffset(weight) : point.addingYOffset(weight)
         }
     }
 

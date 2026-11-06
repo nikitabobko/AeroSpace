@@ -25,6 +25,8 @@ aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if
 
 `(next|prev)` is identical to `workspace (next|prev)`
 
+A macOS minimized window can be moved by `--window-id`. It gets unminimized and appears on the target workspace.
+
 // =========================================================== Options
 include::./util/conditional-options-header.adoc[]
 
