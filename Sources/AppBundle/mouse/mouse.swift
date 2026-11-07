@@ -12,5 +12,10 @@ func isManipulatedWithMouse(_ window: Window) async throws -> Bool {
         .andAsync { @Sendable @MainActor in try await getNativeFocusedWindow(.cancellable) == window }
 }
 
+@MainActor
+func isOwnFrameAnimationEvent(_ window: Window) -> Bool {
+    !isLeftMouseButtonDown && window.isFrameAnimationInProgress
+}
+
 /// Same motivation as in monitorFrameNormalized
 var mouseLocation: CGPoint { NSEvent.mouseLocation.withYAxisFlipped }
