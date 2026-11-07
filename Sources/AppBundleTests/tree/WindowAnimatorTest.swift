@@ -53,6 +53,11 @@ struct WindowAnimatorTest {
         assertEquals(animationFrame(from: from, to: to, progress: halfway, easing: .linear), Rect(topLeftX: 200, topLeftY: 0, width: 100, height: 100))
     }
 
+    @Test func testTilingFrameDuration() {
+        assertEquals(tilingFrameDurationMs(isFullscreenTransition: true, resizeDurationMs: 150, fullscreenDurationMs: 200), 200)
+        assertEquals(tilingFrameDurationMs(isFullscreenTransition: false, resizeDurationMs: 150, fullscreenDurationMs: 200), 150)
+    }
+
     @Test func testInterpolationEndpointsAreExact() {
         let from = Rect(topLeftX: 0.3, topLeftY: 10.7, width: 100.1, height: 200.9)
         let to = Rect(topLeftX: 1000.123, topLeftY: -33.3, width: 640.7, height: 480.2)

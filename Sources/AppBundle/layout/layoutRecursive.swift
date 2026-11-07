@@ -37,6 +37,7 @@ extension TreeNode {
                     window.layoutFloatingWindow(context, windowRect)
                 }
             case .window(let window):
+                let isFullscreenTransition = window.consumePendingFullscreenTransition()
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
                     lastAppliedLayoutVirtualRect = virtual
                     if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive {
@@ -45,7 +46,12 @@ extension TreeNode {
                     } else {
                         lastAppliedLayoutPhysicalRect = physicalRect
                         window.isFullscreen = false
-                        window.setAxFrame(point, CGSize(width: width, height: height))
+                        let duration = tilingFrameDurationMs(
+                            isFullscreenTransition: isFullscreenTransition,
+                            resizeDurationMs: context.resizeDurationMs,
+                            fullscreenDurationMs: context.fullscreenDurationMs,
+                        )
+                        window.setAxFrame(point, CGSize(width: width, height: height), duration: duration)
                     }
                 }
             case .tilingContainer(let container):
@@ -67,17 +73,23 @@ extension TreeNode {
 private struct LayoutContext {
     let workspace: Workspace
     let resolvedGaps: ResolvedGaps
+    let resizeDurationMs: Int
+    let fullscreenDurationMs: Int
 
     @MainActor
     init(_ workspace: Workspace) {
         self.workspace = workspace
         self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitorInfo)
+        let isMouseManipulationInProgress = currentlyManipulatedWithMouseWindowId != nil
+        self.resizeDurationMs = isMouseManipulationInProgress ? 0 : config.animations.resizeDurationMs
+        self.fullscreenDurationMs = isMouseManipulationInProgress ? 0 : config.animations.fullscreenDurationMs
     }
 }
 
 extension Window {
     @MainActor
     fileprivate func layoutFloatingWindow(_ context: LayoutContext, _ windowRect: Rect?) {
+        _ = consumePendingFullscreenTransition()
         let workspace = context.workspace
         let currentMonitor = windowRect?.center.monitorApproximation
         if let currentMonitor, let windowRect, workspace != currentMonitor.visibleWorkspace {
@@ -107,7 +119,7 @@ extension Window {
         let monitorRect = noOuterGapsInFullscreen
             ? context.workspace.workspaceMonitorInfo.visibleRect
             : context.workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
-        setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
+        setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height), duration: context.fullscreenDurationMs)
     }
 }
 

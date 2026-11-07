@@ -10,6 +10,9 @@ func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutabl
     let pid = ax.pid
     Task.startUnstructured { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
+        if let nativeWindowId, let pid, let window = Window.get(byNativeId: nativeWindowId, pid: pid), isOwnFrameAnimationEvent(window) {
+            return
+        }
         guard let nativeWindowId,
               let pid,
               let window = Window.get(byNativeId: nativeWindowId, pid: pid),
@@ -44,6 +47,7 @@ private let adaptiveWeightBeforeResizeWithMouseKey = TreeNodeUserDataKey<CGFloat
 @MainActor
 private func resizeWithMouse(_ window: Window) async throws { // todo cover with tests
     resetClosedWindowsCache()
+    window.cancelFrameAnimation()
     switch window.windowParentCases {
         case nil: return
         case .floatingWindowsContainer, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,

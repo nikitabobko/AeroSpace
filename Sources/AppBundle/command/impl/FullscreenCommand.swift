@@ -26,6 +26,7 @@ struct FullscreenCommand: Command {
             }
         }
         window.isFullscreen = newState
+        window.pendingFullscreenTransition = true
         window.noOuterGapsInFullscreen = args.noOuterGaps
 
         // Focus on its own workspace

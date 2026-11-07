@@ -138,6 +138,7 @@ final class MacWindow: Window {
     @MainActor
     func hideInCorner(_ corner: OptimalHideCorner) async throws {
         guard let nodeMonitorInfo else { return }
+        pendingFullscreenTransition = false
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent `hideInCorner` calls
         if !isHiddenInCorner {
             guard let windowRect = try await getAxRect(.cancellable) else { return }
@@ -208,6 +209,12 @@ final class MacWindow: Window {
 
     @MainActor override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?, duration: Int = 0) {
         macApp.setAxFrame(windowId, topLeft, size, FrameAnimation(durationMs: duration, easing: config.animations.easing))
+    }
+
+    @MainActor override var isFrameAnimationInProgress: Bool { macApp.isAnimating(windowId) }
+
+    @MainActor override func cancelFrameAnimation() {
+        macApp.cancelFrameAnimation(windowId)
     }
 
     override func getAxRect(_ cm: CancellationMode) async throws -> Rect? {

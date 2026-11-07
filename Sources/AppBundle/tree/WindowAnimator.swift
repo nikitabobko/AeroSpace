@@ -57,6 +57,10 @@ func animationFrame(from: Rect, to: Rect, progress: Double, easing: Easing) -> R
     progress >= 1 ? to : interpolateFrame(from: from, to: to, progress: easing.apply(progress))
 }
 
+func tilingFrameDurationMs(isFullscreenTransition: Bool, resizeDurationMs: Int, fullscreenDurationMs: Int) -> Int {
+    isFullscreenTransition ? fullscreenDurationMs : resizeDurationMs
+}
+
 enum SetFrameDecision: Equatable {
     case skip
     case instant
