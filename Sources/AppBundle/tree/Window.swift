@@ -51,7 +51,7 @@ open class Window: TreeNode, Hashable {
     func getAxRect(_ cm: CancellationMode) async throws -> Rect? { die("Not implemented") }
     func getCenter(_ cm: CancellationMode) async throws -> CGPoint? { try await getAxRect(cm)?.center }
 
-    func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
+    @MainActor func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?, duration: Int = 0) { die("Not implemented") }
 }
 
 enum MacosWindowNativeState: Sendable {

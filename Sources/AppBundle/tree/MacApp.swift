@@ -16,6 +16,8 @@ final class MacApp: AbstractApp {
     var lastFocusedNativeWindowOpaqueId: OpaqueWindowId? = nil
     private var thread: Thread?
     private var setFrameJobs: [OpaqueWindowId: RunLoopJob] = [:]
+    private var frameRequests: [OpaqueWindowId: FrameRequest] = [:]
+    private let frameAnimator: ThreadGuardedValue<AxFrameAnimator> = .init(AxFrameAnimator())
     // Never pruned: while the screen is locked, AX reports windows as gone, and closedWindowsCache matches
     // the windows re-detected after unlock by their OpaqueWindowId
     // todo: start prunning after we get rid of closedWindowsCache
@@ -78,6 +80,7 @@ final class MacApp: AbstractApp {
                 let appAxSubscriptionsThreadGuarded = app?.appAxSubscriptions
                 let windowsThreadGuarded = app?.windows
                 let axAppThreadGuarded = app?.axApp
+                let frameAnimatorThreadGuarded = app?.frameAnimator
 
                 Task.startUnstructured { @MainActor in
                     allAppsMap[pid] = app
@@ -88,6 +91,7 @@ final class MacApp: AbstractApp {
                     CFRunLoopRun()
 
                     // Destroy AX objects in reverse order of their creation
+                    frameAnimatorThreadGuarded?.destroy()
                     appAxSubscriptionsThreadGuarded?.destroy()
                     windowsThreadGuarded?.destroy()
                     axAppThreadGuarded?.destroy()
@@ -114,7 +118,7 @@ final class MacApp: AbstractApp {
 
     func closeAndUnregisterAxWindow(_ windowId: OpaqueWindowId) {
         if serverArgs.isReadOnly { return }
-        setFrameJobs.removeValue(forKey: windowId)?.cancel()
+        cancelFrameAnimation(windowId)
         guard let nativeWindowId = windowIdMapping.forward[windowId] else { return }
         _ = withWindowAsync(windowId, .cancellable) { [windows] window, job in
             guard let closeButton = window.get(Ax.closeButtonAttr) else { return }
@@ -161,19 +165,79 @@ final class MacApp: AbstractApp {
         }
     }
 
-    func setAxFrame(_ windowId: OpaqueWindowId, _ topLeft: CGPoint?, _ size: CGSize?) {
+    func setAxFrame(_ windowId: OpaqueWindowId, _ topLeft: CGPoint?, _ size: CGSize?, _ animation: FrameAnimation = .instant) {
+        let target = FrameTarget(topLeft: topLeft, size: size)
+        let last = frameRequests[windowId]
+        let isAnimatingToLastTarget = isAnimating(windowId)
+        let decision = decideSetFrame(target, durationMs: animation.durationMs, lastTarget: last?.target, isAnimatingToLastTarget: isAnimatingToLastTarget)
+        if decision == .skip { return }
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp] window, job in
-            try disableAnimations(app: axApp.threadGuarded, job) {
-                try setFrame(window, topLeft, size, job)
-            }
+        guard let nativeWindowId = windowIdMapping.forward[windowId] else {
+            frameRequests.removeValue(forKey: windowId)
+            return
         }
+        switch decision {
+            case .skip, .instant:
+                frameRequests[windowId] = FrameRequest(target: target, completion: nil)
+                setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp, frameAnimator] window, job in
+                    frameAnimator.threadGuarded.stop(nativeWindowId, app: axApp.threadGuarded)
+                    try disableAnimations(app: axApp.threadGuarded, job) {
+                        try setFrame(window, topLeft, size, job)
+                    }
+                    frameAnimator.threadGuarded.recordSent(nativeWindowId, target)
+                }
+            case .animate:
+                let completion = AnimationCompletion()
+                frameRequests[windowId] = FrameRequest(target: target, completion: completion)
+                setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp, frameAnimator] window, job in
+                    defer {
+                        if job.isCancelled { completion.markDone() }
+                    }
+                    let animator = frameAnimator.threadGuarded
+                    let app = axApp.threadGuarded
+                    let wasInterrupted = animator.stop(nativeWindowId, app: app)
+                    let actual = wasInterrupted ? nil : try AppBundle::getAxRect(window: window, job: job)
+                    guard let from = actual ?? animator.lastSentFrame(nativeWindowId) else {
+                        try disableAnimations(app: app, job) {
+                            try setFrame(window, topLeft, size, job)
+                        }
+                        animator.recordSent(nativeWindowId, target)
+                        completion.markDone()
+                        return
+                    }
+                    try job.checkCancellation()
+                    animator.start(
+                        nativeWindowId,
+                        window: window,
+                        app: app,
+                        from: from,
+                        target: target,
+                        animation: animation,
+                        job: job,
+                        completion: completion,
+                    ) {
+                        Timer(timeInterval: Double(animationFrameIntervalMs) / 1000, repeats: true) { [axApp, frameAnimator] _ in
+                            frameAnimator.threadGuarded.tick(nativeWindowId, app: axApp.threadGuarded)
+                        }
+                    }
+                }
+        }
+    }
+
+    func isAnimating(_ windowId: OpaqueWindowId) -> Bool {
+        frameRequests[windowId]?.completion.map { !$0.isDone } == true && setFrameJobs[windowId]?.isCancelled == false
+    }
+
+    func cancelFrameAnimation(_ windowId: OpaqueWindowId) {
+        setFrameJobs.removeValue(forKey: windowId)?.cancel()
+        frameRequests.removeValue(forKey: windowId)
     }
 
     func setAxFrameForTermination(_ windowId: OpaqueWindowId, _ topLeft: CGPoint?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         let semaphore = DispatchSemaphore(value: 0)
-        let job = withWindowAsync(windowId, .nonCancellable) { [axApp] window, job in
+        let job = withWindowAsync(windowId, .nonCancellable) { [axApp, frameAnimator] window, job in
+            frameAnimator.threadGuarded.stopAll(app: axApp.threadGuarded)
             try? disableAnimations(app: axApp.threadGuarded, job) {
                 try setFrame(window, topLeft, size, job)
             }
@@ -227,14 +291,14 @@ final class MacApp: AbstractApp {
     }
 
     func setNativeFullscreen(_ windowId: OpaqueWindowId, _ value: Bool) {
-        setFrameJobs.removeValue(forKey: windowId)?.cancel()
+        cancelFrameAnimation(windowId)
         setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { window, job in
             window.set(Ax.isFullscreenAttr, value)
         }
     }
 
     func setNativeMinimized(_ windowId: OpaqueWindowId, _ value: Bool) {
-        setFrameJobs.removeValue(forKey: windowId)?.cancel()
+        cancelFrameAnimation(windowId)
         setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { window, job in
             window.set(Ax.minimizedAttr, value)
         }
@@ -333,7 +397,7 @@ final class MacApp: AbstractApp {
         }
         guard let thread else { return [:] }
         var aliveOrInvisible = try await thread
-            .runInLoop(.cancellable) { [nsApp, windows, axApp, bgTabsScheduledForPrune] (job) -> [UInt32: WindowLifeStatus] in
+            .runInLoop(.cancellable) { [nsApp, windows, axApp, bgTabsScheduledForPrune, frameAnimator] (job) -> [UInt32: WindowLifeStatus] in
                 var aliveOrInvisible: [UInt32: AxWindow] = windows.threadGuarded.filter { !bgTabsScheduledForPrune.contains($0.key) }
                 var aliveWindowIds: Set<UInt32> = []
                 // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
@@ -352,6 +416,7 @@ final class MacApp: AbstractApp {
                 }
 
                 windows.threadGuarded = aliveOrInvisible
+                frameAnimator.threadGuarded.prune(keeping: Set(aliveOrInvisible.keys), app: axApp.threadGuarded)
                 return aliveOrInvisible.keys.associate(with: { it in aliveWindowIds.contains(it) ? .alive : .invisible })
             }
         bgTabsScheduledForPrune = []
@@ -363,9 +428,9 @@ final class MacApp: AbstractApp {
         for (id, lifeStatus) in aliveOrInvisible {
             aliveOrInvisibleMap[getOrRegisterOpaqueWindowId(id)] = lifeStatus
         }
-        for windowId in setFrameJobs.keys {
+        for windowId in Set(setFrameJobs.keys).union(frameRequests.keys) {
             if !aliveOrInvisibleMap.keys.contains(windowId) {
-                setFrameJobs.removeValue(forKey: windowId)?.cancel()
+                cancelFrameAnimation(windowId)
             }
         }
         return aliveOrInvisibleMap
@@ -393,6 +458,7 @@ final class MacApp: AbstractApp {
             job.cancel()
         }
         setFrameJobs = [:]
+        frameRequests = [:]
         thread?.runInLoopAsync(job: RunLoopJob(.nonCancellable)) { job in CFRunLoopStop(CFRunLoopGetCurrent()) }
         thread = nil // Disallow all future job submissions
     }
@@ -471,7 +537,7 @@ private func getAxRect(window: AXUIElement, job: RunLoopJob) throws -> Rect? {
     return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
 }
 
-private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob) throws {
+func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob) throws {
     // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
     //                                                        https://github.com/nikitabobko/AeroSpace/issues/335
     if let size { window.set(Ax.sizeAttr, size) }
