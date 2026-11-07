@@ -197,7 +197,7 @@ final class MacApp: AbstractApp {
                     let app = axApp.threadGuarded
                     let wasInterrupted = animator.stop(nativeWindowId, app: app)
                     let actual = wasInterrupted ? nil : try AppBundle::getAxRect(window: window, job: job)
-                    guard let from = actual ?? animator.lastSentFrame(nativeWindowId) else {
+                    guard let current = actual ?? animator.lastSentFrame(nativeWindowId) else {
                         try disableAnimations(app: app, job) {
                             try setFrame(window, topLeft, size, job)
                         }
@@ -205,13 +205,23 @@ final class MacApp: AbstractApp {
                         completion.markDone()
                         return
                     }
+                    var from = current
+                    if let start = animationStartPlacement(startTopLeft: animation.startTopLeft, size: size, wasInterrupted: wasInterrupted) {
+                        try disableAnimations(app: app, job) {
+                            try setFrame(window, start.topLeft, start.size, job)
+                        }
+                        animator.recordSent(nativeWindowId, start)
+                        from = start.resolve(against: current)
+                    }
                     try job.checkCancellation()
+                    let animatedTarget = animation.slideOut.map { FrameTarget(topLeft: $0.exitTopLeft(from: from), size: nil) } ?? target
                     animator.start(
                         nativeWindowId,
                         window: window,
                         app: app,
                         from: from,
-                        target: target,
+                        target: animatedTarget,
+                        finalTarget: animation.slideOut != nil ? target : nil,
                         animation: animation,
                         job: job,
                         completion: completion,
@@ -226,6 +236,10 @@ final class MacApp: AbstractApp {
 
     func isAnimating(_ windowId: OpaqueWindowId) -> Bool {
         frameRequests[windowId]?.completion.map { !$0.isDone } == true && setFrameJobs[windowId]?.isCancelled == false
+    }
+
+    func animatingTargetTopLeft(_ windowId: OpaqueWindowId) -> CGPoint? {
+        isAnimating(windowId) ? frameRequests[windowId]?.target.topLeft : nil
     }
 
     func cancelFrameAnimation(_ windowId: OpaqueWindowId) {

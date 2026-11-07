@@ -136,14 +136,17 @@ final class MacWindow: Window {
 
     // todo it's part of the window layout and should be moved to layoutRecursive.swift
     @MainActor
-    func hideInCorner(_ corner: OptimalHideCorner) async throws {
+    func hideInCorner(_ corner: OptimalHideCorner, slideOut: WorkspaceSlide? = nil) async throws {
         guard let nodeMonitorInfo else { return }
         pendingFullscreenTransition = false
+        let wasHiddenInCorner = isHiddenInCorner
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent `hideInCorner` calls
         if !isHiddenInCorner {
-            guard let windowRect = try await getAxRect(.cancellable) else { return }
+            guard let actualWindowRect = try await getAxRect(.cancellable) else { return }
             // Check for isHiddenInCorner for the second time because of the suspension point above
             if !isHiddenInCorner {
+                let windowRect = macApp.animatingTargetTopLeft(windowId)
+                    .map { actualWindowRect.with(\.topLeftX, $0.x).with(\.topLeftY, $0.y) } ?? actualWindowRect
                 let topLeftCorner = windowRect.topLeftCorner
                 let monitorRect = windowRect.center.monitorApproximation.rect // Similar to layoutFloatingWindow. Non idempotent
                 let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
@@ -168,11 +171,15 @@ final class MacWindow: Window {
                 let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: 1)
                 p = nodeMonitorInfo.visibleRect.bottomRightCorner - onePixelOffset
         }
-        setAxFrame(p, nil)
+        if let slideOut, !wasHiddenInCorner {
+            macApp.setAxFrame(windowId, p, nil, FrameAnimation(durationMs: slideOut.durationMs, easing: config.animations.easing, slideOut: slideOut))
+        } else {
+            setAxFrame(p, nil)
+        }
     }
 
     @MainActor
-    func unhideFromCorner() {
+    func unhideFromCorner(slideIn: WorkspaceSlide? = nil) {
         guard let prevUnhiddenProportionalPositionInsideWorkspaceRect else { return }
         guard let nodeWorkspace else { return } // hiding only makes sense for workspace windows
         guard let parent else { return }
@@ -191,7 +198,7 @@ final class MacWindow: Window {
                 newX = newX.coerce(in: workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
                 newY = newY.coerce(in: workspaceRect.minY ... max(workspaceRect.minY, workspaceRect.maxY - windowHeight))
 
-                setAxFrame(CGPoint(x: newX, y: newY), nil)
+                setAxFrame(CGPoint(x: newX, y: newY), nil, slideIn: slideIn)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
                  .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
         }
@@ -207,8 +214,13 @@ final class MacWindow: Window {
         try await macApp.getAxSize(windowId, cm)
     }
 
-    @MainActor override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?, duration: Int = 0) {
-        macApp.setAxFrame(windowId, topLeft, size, FrameAnimation(durationMs: duration, easing: config.animations.easing))
+    @MainActor override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?, duration: Int = 0, slideIn: WorkspaceSlide? = nil) {
+        let animation = if let slideIn, let topLeft {
+            FrameAnimation(durationMs: slideIn.durationMs, easing: config.animations.easing, startTopLeft: slideIn.entryTopLeft(for: topLeft))
+        } else {
+            FrameAnimation(durationMs: duration, easing: config.animations.easing)
+        }
+        macApp.setAxFrame(windowId, topLeft, size, animation)
     }
 
     @MainActor override var isFrameAnimationInProgress: Bool { macApp.isAnimating(windowId) }

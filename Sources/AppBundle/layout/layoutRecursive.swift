@@ -3,13 +3,13 @@ import Common
 
 extension Workspace {
     @MainActor
-    func layoutWorkspace() async throws { // todo revisit API
+    func layoutWorkspace(slideIn: WorkspaceSlide? = nil) async throws { // todo revisit API
         if isEffectivelyEmpty { return }
         let rect = workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in monitors horizontal configuration. ¯\_(ツ)_/¯
-        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self))
+        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self, slideIn: slideIn))
     }
 }
 
@@ -51,7 +51,7 @@ extension TreeNode {
                             resizeDurationMs: context.resizeDurationMs,
                             fullscreenDurationMs: context.fullscreenDurationMs,
                         )
-                        window.setAxFrame(point, CGSize(width: width, height: height), duration: duration)
+                        window.setAxFrame(point, CGSize(width: width, height: height), duration: duration, slideIn: context.slideIn)
                     }
                 }
             case .tilingContainer(let container):
@@ -75,10 +75,12 @@ private struct LayoutContext {
     let resolvedGaps: ResolvedGaps
     let resizeDurationMs: Int
     let fullscreenDurationMs: Int
+    let slideIn: WorkspaceSlide?
 
     @MainActor
-    init(_ workspace: Workspace) {
+    init(_ workspace: Workspace, slideIn: WorkspaceSlide?) {
         self.workspace = workspace
+        self.slideIn = slideIn
         self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitorInfo)
         let isMouseManipulationInProgress = currentlyManipulatedWithMouseWindowId != nil
         self.resizeDurationMs = isMouseManipulationInProgress ? 0 : config.animations.resizeDurationMs
@@ -92,7 +94,7 @@ extension Window {
         _ = consumePendingFullscreenTransition()
         let workspace = context.workspace
         let currentMonitor = windowRect?.center.monitorApproximation
-        if let currentMonitor, let windowRect, workspace != currentMonitor.visibleWorkspace {
+        if !isFrameAnimationInProgress, let currentMonitor, let windowRect, workspace != currentMonitor.visibleWorkspace {
             let windowTopLeftCorner = windowRect.topLeftCorner
             let xProportion = (windowTopLeftCorner.x - currentMonitor.visibleRect.topLeftX) / currentMonitor.visibleRect.width
             let yProportion = (windowTopLeftCorner.y - currentMonitor.visibleRect.topLeftY) / currentMonitor.visibleRect.height
@@ -119,7 +121,12 @@ extension Window {
         let monitorRect = noOuterGapsInFullscreen
             ? context.workspace.workspaceMonitorInfo.visibleRect
             : context.workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
-        setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height), duration: context.fullscreenDurationMs)
+        setAxFrame(
+            monitorRect.topLeftCorner,
+            CGSize(width: monitorRect.width, height: monitorRect.height),
+            duration: context.fullscreenDurationMs,
+            slideIn: context.slideIn,
+        )
     }
 }
 

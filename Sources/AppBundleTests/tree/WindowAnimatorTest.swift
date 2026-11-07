@@ -53,6 +53,14 @@ struct WindowAnimatorTest {
         assertEquals(animationFrame(from: from, to: to, progress: halfway, easing: .linear), Rect(topLeftX: 200, topLeftY: 0, width: 100, height: 100))
     }
 
+    @Test func testStartPlacementIsSkippedWhenInterrupted() {
+        let start = CGPoint(x: 1500, y: 20)
+        let size = CGSize(width: 300, height: 200)
+        assertEquals(animationStartPlacement(startTopLeft: start, size: size, wasInterrupted: false), FrameTarget(topLeft: start, size: size))
+        assertNil(animationStartPlacement(startTopLeft: start, size: size, wasInterrupted: true))
+        assertNil(animationStartPlacement(startTopLeft: nil, size: size, wasInterrupted: false))
+    }
+
     @Test func testTilingFrameDuration() {
         assertEquals(tilingFrameDurationMs(isFullscreenTransition: true, resizeDurationMs: 150, fullscreenDurationMs: 200), 200)
         assertEquals(tilingFrameDurationMs(isFullscreenTransition: false, resizeDurationMs: 150, fullscreenDurationMs: 200), 150)
