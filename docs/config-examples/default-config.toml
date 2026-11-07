@@ -80,6 +80,19 @@ gaps.outer.bottom =     0
 gaps.outer.top =        0
 gaps.outer.right =      0
 
+# Window animations. Durations are in milliseconds (0-1000), 0 disables the animation
+# See: https://nikitabobko.github.io/AeroSpace/guide#animations
+# Fallback value (if you omit the table): all durations = 0, easing = 'ease-out'
+[animations]
+# Tiling windows when sizes or layout change (resize, balance-sizes, layout, move)
+resize-duration-ms = 0
+# Entering and leaving the AeroSpace 'fullscreen' command
+fullscreen-duration-ms = 0
+# Horizontal slide when the visible workspace on a monitor changes
+workspace-slide-duration-ms = 0
+# Possible values: linear|ease-out|ease-in-out
+easing = 'ease-out'
+
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # 'main' binding mode must be always presented
