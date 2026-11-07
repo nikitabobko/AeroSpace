@@ -456,4 +456,46 @@ struct NativeFullscreenRestoreTest {
         #expect(abs(browser.parent!.getWeight(.h) - columnWeights[0]) < 0.001)
         #expect(abs(upperRight.parent!.getWeight(.h) - columnWeights[1]) < 0.001)
     }
+
+    @Test func testLateVisibilityChangeDoesNotChangeRestoredSplitHeights() async throws {
+        config.enableNormalizationFlattenContainers = true
+        config.enableNormalizationOppositeOrientationForNestedContainers = true
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        let left = TilingContainer.newVTiles(parent: root, adaptiveWeight: 1100)
+        let browser = TestWindow.new(id: 1, parent: left, adaptiveWeight: 900)
+        let terminal = TestWindow.new(id: 2, parent: left, adaptiveWeight: 150)
+        let right = TilingContainer.newVTiles(parent: root, adaptiveWeight: 600)
+        TestWindow.new(id: 3, parent: right)
+        TestWindow.new(id: 4, parent: right)
+        try await workspace.layoutWorkspace()
+        let browserHeight = browser.getWeight(.v)
+        let terminalHeight = terminal.getWeight(.v)
+        let widths = [left.getWeight(.h), right.getWeight(.h)]
+
+        func frame() async throws {
+            try await normalizeLayoutReason()
+            workspace.normalizeContainers()
+            try await settleNativeFullscreenRestorations()
+            try await workspace.layoutWorkspace()
+        }
+
+        browser.isMacosFullscreenForTest = true
+        try await frame()
+        browser.isMacosFullscreenForTest = false
+        try await frame()
+        #expect(abs(browser.getWeight(.v) - browserHeight) < 0.001)
+        #expect(abs(terminal.getWeight(.v) - terminalHeight) < 0.001)
+
+        // The layout is initially correct. A later Space visibility update makes
+        // the left container horizontal, then vertical again on the next frame.
+        terminal.lifeStatus = .invisible
+        try await frame()
+        terminal.lifeStatus = .alive
+        try await frame()
+        #expect(abs(browser.getWeight(.v) - browserHeight) < 0.001)
+        #expect(abs(terminal.getWeight(.v) - terminalHeight) < 0.001)
+        #expect(abs(browser.parent!.getWeight(.h) - widths[0]) < 0.001)
+        #expect(abs(right.getWeight(.h) - widths[1]) < 0.001)
+    }
 }

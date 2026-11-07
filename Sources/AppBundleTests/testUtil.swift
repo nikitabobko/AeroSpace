@@ -45,6 +45,7 @@ struct SerializedGloballyTrait: SuiteTrait, TestTrait, TestScoping {
 
 @MainActor
 func setUpWorkspacesForTests() {
+    invalidateNativeFullscreenSettling()
     config = defaultConfig
     configUrl = defaultConfigUrl
     config.enableNormalizationFlattenContainers = false // Make layout tests more predictable

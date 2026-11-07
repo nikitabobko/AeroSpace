@@ -4,6 +4,22 @@ import Common
 private let nativeFullscreenRestorePointKey = TreeNodeUserDataKey<NativeFullscreenRestorePoint>(key: "nativeFullscreenRestorePoint")
 private let nativeFullscreenRestoreRetryKey = TreeNodeUserDataKey<Task<Void, Never>>(key: "nativeFullscreenRestoreRetry")
 
+@MainActor func requestNativeFullscreenRefresh(for window: Window) {
+    guard !isUnitTest, window.getUserData(key: nativeFullscreenRestoreRetryKey) == nil else { return }
+    let retry = Task.startUnstructured { @MainActor [weak window] in
+        do { try await Task.sleep(for: .milliseconds(100)) } catch { return }
+        guard !Task.isCancelled, let window else { return }
+        window.cleanUserData(key: nativeFullscreenRestoreRetryKey)
+        guard window.getUserData(key: nativeFullscreenRestorePointKey) != nil || hasNativeFullscreenSettling(window) else { return }
+        scheduleCancellableCompleteRefreshSession(.globalObserver("nativeFullscreenRestore"))
+    }
+    window.putUserData(key: nativeFullscreenRestoreRetryKey, data: retry)
+}
+
+@MainActor func cancelNativeFullscreenRefresh(for window: Window) {
+    window.cleanUserData(key: nativeFullscreenRestoreRetryKey)?.cancel()
+}
+
 // Keep fullscreen windows detached. Only restore a saved branch if the current tree can
 // be explained by removing the window, normalizing containers, and applying layout.
 // Unaffected subtrees are opaque anchors: edits inside them must survive restoration.
@@ -29,16 +45,7 @@ private struct NativeFullscreenRestorePoint {
         let started = firstExitAttempt ?? .now
         firstExitAttempt = started
         guard started.duration(to: .now) < .seconds(3) else { return false }
-        if !isUnitTest, window.getUserData(key: nativeFullscreenRestoreRetryKey) == nil {
-            let retry = Task.startUnstructured { @MainActor [weak window] in
-                do { try await Task.sleep(for: .milliseconds(100)) } catch { return }
-                guard let window else { return }
-                window.cleanUserData(key: nativeFullscreenRestoreRetryKey)
-                guard window.getUserData(key: nativeFullscreenRestorePointKey) != nil else { return }
-                scheduleCancellableCompleteRefreshSession(.globalObserver("nativeFullscreenRestore"))
-            }
-            window.putUserData(key: nativeFullscreenRestoreRetryKey, data: retry)
-        }
+        requestNativeFullscreenRefresh(for: window)
         return true
     }
 
@@ -56,6 +63,19 @@ private struct NativeFullscreenRestorePoint {
             if expected.matches() {
                 root.restore(to: workspace, index: INDEX_BIND_LAST, window: window, binding: binding)
                 window.markAsMostRecentChild()
+                if let split = root.subtree(rootedAt: binding.parent), split.layout == .tiles,
+                   let parent = window.parent as? TilingContainer
+                {
+                    var children = split.children.map(\.node)
+                    var weights = split.children.map(\.weight)
+                    children.insert(window, at: binding.index)
+                    weights.insert(binding.adaptiveWeight, at: binding.index)
+                    beginNativeFullscreenSettling(
+                        window: window, parent: parent, children: children, weights: weights,
+                        visibleWindows: split.previouslyVisibleWindows + [window],
+                        deadline: (firstExitAttempt ?? .now).advanced(by: .seconds(3)),
+                    )
+                }
                 return true
             }
             expected = expected.normalized(isRoot: true, flatten: flatten).orDie()
@@ -85,6 +105,16 @@ private struct FullscreenRestoreTree {
     }
 
     var containerCount: Int { (orientation == nil ? 0 : 1) + children.reduce(0) { $0 + $1.containerCount } }
+
+    func subtree(rootedAt target: TreeNode) -> FullscreenRestoreTree? {
+        if node === target { return self }
+        return children.lazy.compactMap { $0.subtree(rootedAt: target) }.first
+    }
+
+    var previouslyVisibleWindows: [Window] {
+        if let window = node as? Window { return wasInhabited ? [window] : [] }
+        return children.flatMap(\.previouslyVisibleWindows)
+    }
 
     @MainActor var hasTemporarilyInvisibleWindows: Bool {
         if let window = node as? Window {
@@ -176,6 +206,8 @@ private struct FullscreenRestoreTree {
 }
 
 @MainActor func enterMacOsNativeFullscreen(window: Window, workspace: Workspace) {
+    endNativeFullscreenSettling(window)
+    cancelNativeFullscreenRefresh(for: window)
     guard let parent = window.windowParentCases, parent.kind != .macosFullscreenWindowsContainer else { return }
     window.layoutReason = .macos(prevParentKind: parent.kind)
     let binding = window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST).orDie()
@@ -246,7 +278,7 @@ private struct FullscreenRestoreTree {
         window.putUserData(key: nativeFullscreenRestorePointKey, data: point)
         return
     }
-    window.cleanUserData(key: nativeFullscreenRestoreRetryKey)?.cancel()
+    cancelNativeFullscreenRefresh(for: window)
     window.layoutReason = .standard
     if window.cleanUserData(key: nativeFullscreenRestorePointKey)?.restore(window: window, workspace: workspace) == true {
         return

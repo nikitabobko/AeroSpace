@@ -48,6 +48,7 @@ func runHeavyCompleteRefreshSession(
             // AX refresh and native fullscreen transitions can change habitation.
             // Derive container state before sizing windows on the new Space.
             normalizeContainers()
+            try await settleNativeFullscreenRestorations()
             if shouldLayoutWorkspaces { try await layoutWorkspaces() }
         }
     }
