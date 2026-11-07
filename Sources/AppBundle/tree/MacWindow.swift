@@ -75,7 +75,7 @@ final class MacWindow: Window {
         try await macApp.getWindowLevel(windowId, cm)
     }
 
-    func setNativeFullscreen(_ value: Bool) {
+    override func setNativeFullscreen(_ value: Bool) {
         macApp.setNativeFullscreen(windowId, value)
     }
 

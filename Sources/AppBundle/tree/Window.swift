@@ -39,6 +39,7 @@ open class Window: TreeNode, Hashable {
     func getTitle(_ cm: CancellationMode) async throws -> String { die("Not implemented") }
 
     func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { false }
+    func setNativeFullscreen(_ value: Bool) { die("Not implemented") }
     func isMacosMinimized(_ cm: CancellationMode) async throws -> Bool { false }
     func getMacosWindowNativeState(_ cm: CancellationMode) async throws -> MacosWindowNativeState {
         if try await isMacosFullscreen(cm) { return .nativeFullscreen }

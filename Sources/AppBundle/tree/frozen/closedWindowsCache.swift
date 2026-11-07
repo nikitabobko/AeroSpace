@@ -121,5 +121,6 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
 // That's why we have to reset the cache every time layout changes. The layout can only be changed by running commands
 // and with mouse manipulations
 @MainActor func resetClosedWindowsCache() {
+    invalidateNativeFullscreenSettling()
     closedWindowsCache = FrozenWorld(monitors: [], windowIds: [])
 }
