@@ -164,6 +164,8 @@ final class MacApp: AbstractApp {
     func setAxFrame(_ windowId: OpaqueWindowId, _ topLeft: CGPoint?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp] window, job in
+            // Writes are expensive and trigger kAXMoved/kAXResized, which schedule yet another refresh
+            if isFrameAlreadyApplied(window, topLeft, size) { return }
             try disableAnimations(app: axApp.threadGuarded, job) {
                 try setFrame(window, topLeft, size, job)
             }
@@ -469,6 +471,18 @@ private func getAxRect(window: AXUIElement, job: RunLoopJob) throws -> Rect? {
     try job.checkCancellation()
     guard let size = window.get(Ax.sizeAttr) else { return nil }
     return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
+}
+
+private func isFrameAlreadyApplied(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?) -> Bool {
+    // AX frames are integral, while layout may produce fractional values
+    func isClose(_ a: CGFloat, _ b: CGFloat) -> Bool { abs(a - b) < 1 }
+    if let topLeft {
+        guard let cur = window.get(Ax.topLeftCornerAttr), isClose(cur.x, topLeft.x), isClose(cur.y, topLeft.y) else { return false }
+    }
+    if let size {
+        guard let cur = window.get(Ax.sizeAttr), isClose(cur.width, size.width), isClose(cur.height, size.height) else { return false }
+    }
+    return true
 }
 
 private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob) throws {
