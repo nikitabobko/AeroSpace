@@ -414,6 +414,37 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 
 Unless you're hardcore i3 user who knows what they are doing, it's recommended to keep the normalizations enabled.
 
+[#master-stack]
+=== Master-stack layout
+
+AeroSpace can optionally reshape every horizontal tiles workspace into a dwm-like
+master-stack layout: the first `master-stack-master-count` windows are placed in
+the left column, and all the remaining windows are stacked vertically in the
+right column.
+
+[source,toml]
+----
+enable-normalization-master-stack = true
+master-stack-master-count = 1
+master-stack-master-width-percent = 50
+----
+
+Three windows with the default settings are arranged like this:
+
+----
+h_tiles (root node)
+├── window 1                                (master, 50% width)
+└── v_tiles                                 (stack, 50% width)
+    ├── window 2
+    └── window 3
+----
+
+The normalization is idempotent: manual resizing of the master column isn't
+reset while the tree shape stays the same. It applies only to horizontal tiles
+workspaces; accordion workspaces are left untouched. `master-stack-master-count`
+must be at least 1 and `master-stack-master-width-percent` must be in the
+`[10, 90]` range.
+
 [#floating-windows]
 === Floating windows
 

@@ -21,6 +21,15 @@ auto-reload-config = false
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
+# Opt-in dwm-like master-stack layout. See:
+# https://nikitabobko.github.io/AeroSpace/guide#master-stack
+# The first 'master-stack-master-count' windows are placed in the left column,
+# the remaining windows are stacked vertically in the right column.
+enable-normalization-master-stack = false
+master-stack-master-count = 1
+# Width of the master column in percent (10...90)
+master-stack-master-width-percent = 50
+
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
