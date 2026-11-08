@@ -34,6 +34,12 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
+# Declarative layout for particular workspaces. See: https://nikitabobko.github.io/AeroSpace/guide#declarative-workspace-layout
+# The layout is applied as a normalization on every layout pass
+# [workspace-layout]
+# '1' = 'h_tiles[1@0.6, v_tiles[others]]' # dwm-like master-stack: one master window on the left, the rest stacked on the right
+# '2' = 'h_tiles[others]'                 # plain columns
+
 # Mouse follows focus when focused monitor changes
 # Drop it from your config, if you don't like this behavior
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
