@@ -138,6 +138,9 @@ private let configParser: [String: any ParserProtocol<Config>] = [
 
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, parseBool),
     "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, parseBool),
+    "enable-normalization-master-stack": Parser(\.enableNormalizationMasterStack, parseBool),
+    "master-stack-master-count": Parser(\.masterStackMasterCount, parseMasterStackMasterCount),
+    "master-stack-master-width-percent": Parser(\.masterStackMasterWidthPercent, parseMasterStackMasterWidthPercent),
 
     "default-root-container-layout": Parser(\.defaultRootContainerLayout, parseLayout),
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
@@ -328,6 +331,22 @@ func parseConfigVersion(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> Res
 
 func parseInt(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<Int> {
     raw.asIntOrNil.toResult(expectedActualTypeDiagnostic(expected: .int, actual: raw.tomlType, backtrace))
+}
+
+func parseMasterStackMasterCount(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<Int> {
+    parseInt(raw, backtrace).flatMap { value in
+        value >= 1
+            ? .success(value)
+            : .failure(.init(backtrace, "master-stack-master-count must be >= 1"))
+    }
+}
+
+func parseMasterStackMasterWidthPercent(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<Int> {
+    parseInt(raw, backtrace).flatMap { value in
+        (10 ... 90).contains(value)
+            ? .success(value)
+            : .failure(.init(backtrace, "master-stack-master-width-percent must be in [10, 90] range"))
+    }
 }
 
 func parseString(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<String> {

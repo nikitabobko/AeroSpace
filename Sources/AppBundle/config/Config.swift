@@ -46,6 +46,9 @@ struct Config: Withable {
     var automaticallyUnhideMacosHiddenApps: Bool = false
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
+    var enableNormalizationMasterStack: Bool = false
+    var masterStackMasterCount: Int = 1
+    var masterStackMasterWidthPercent: Int = 50
     var persistentWorkspaces: OrderedSet<String> = []
     var execOnWorkspaceChange: [String] = [] // todo deprecate
     var keyMapping = KeyMapping()

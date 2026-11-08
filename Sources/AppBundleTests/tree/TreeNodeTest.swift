@@ -125,4 +125,126 @@ struct TreeNodeTest {
         workspace.normalizeContainers()
         #expect(workspace.rootTilingContainer.children.singleOrNil() is TestWindow)
     }
+
+    @Test func testNormalizeMasterStack_disabledByDefault() {
+        let workspace = Workspace.get(byName: name)
+        for id in 0 ..< 3 {
+            TestWindow.new(id: .init(UInt64(id)), parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            .h_tiles([.window(0), .window(1), .window(2)]),
+            workspace.rootTilingContainer.layoutDescription,
+        )
+    }
+
+    @Test func testNormalizeMasterStack_singleWindowIsUnchanged() {
+        config.enableNormalizationMasterStack = true
+        let workspace = Workspace.get(byName: name)
+        TestWindow.new(id: 0, parent: workspace.rootTilingContainer)
+        workspace.normalizeContainers()
+        assertEquals(.h_tiles([.window(0)]), workspace.rootTilingContainer.layoutDescription)
+    }
+
+    @Test func testNormalizeMasterStack_masterAndStack() {
+        config.enableNormalizationMasterStack = true
+        let workspace = Workspace.get(byName: name)
+        for id in 0 ..< 3 {
+            TestWindow.new(id: .init(UInt64(id)), parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            .h_tiles([
+                .window(0),
+                .v_tiles([.window(1), .window(2)]),
+            ]),
+            workspace.rootTilingContainer.layoutDescription,
+        )
+    }
+
+    @Test func testNormalizeMasterStack_severalMasters() {
+        config.enableNormalizationMasterStack = true
+        config.masterStackMasterCount = 2
+        let workspace = Workspace.get(byName: name)
+        for id in 0 ..< 3 {
+            TestWindow.new(id: .init(UInt64(id)), parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            .h_tiles([
+                .v_tiles([.window(0), .window(1)]),
+                .window(2),
+            ]),
+            workspace.rootTilingContainer.layoutDescription,
+        )
+    }
+
+    @Test func testNormalizeMasterStack_isIdempotentAndPreservesWeights() {
+        config.enableNormalizationMasterStack = true
+        let workspace = Workspace.get(byName: name)
+        for id in 0 ..< 3 {
+            TestWindow.new(id: .init(UInt64(id)), parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        let masterColumn = root.children[0]
+        assertEquals(0.5, masterColumn.getWeight(.h))
+
+        masterColumn.setWeight(.h, 0.7)
+        workspace.normalizeContainers()
+        assertEquals(
+            .h_tiles([
+                .window(0),
+                .v_tiles([.window(1), .window(2)]),
+            ]),
+            root.layoutDescription,
+        )
+        assertEquals(0.7, masterColumn.getWeight(.h))
+    }
+
+    @Test func testNormalizeMasterStack_masterWidthPercent() {
+        config.enableNormalizationMasterStack = true
+        config.masterStackMasterWidthPercent = 75
+        let workspace = Workspace.get(byName: name)
+        // Two windows already have the desired shape, so the width is applied
+        // only when the normalization actually reshapes the workspace.
+        for id in 0 ..< 3 {
+            TestWindow.new(id: .init(UInt64(id)), parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        assertEquals(0.75, root.children[0].getWeight(.h))
+        assertEquals(0.25, root.children[1].getWeight(.h))
+    }
+
+    @Test func testNormalizeMasterStack_worksWithEnabledFlattenNormalization() {
+        config.enableNormalizationMasterStack = true
+        config.enableNormalizationFlattenContainers = true
+        let workspace = Workspace.get(byName: name)
+        for id in 0 ..< 4 {
+            TestWindow.new(id: .init(UInt64(id)), parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            .h_tiles([
+                .window(0),
+                .v_tiles([.window(1), .window(2), .window(3)]),
+            ]),
+            workspace.rootTilingContainer.layoutDescription,
+        )
+    }
+
+    @Test func testNormalizeMasterStack_skipsAccordionWorkspaces() {
+        config.enableNormalizationMasterStack = true
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.layout = .accordion
+        for id in 0 ..< 3 {
+            TestWindow.new(id: .init(UInt64(id)), parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            .h_accordion([.window(0), .window(1), .window(2)]),
+            workspace.rootTilingContainer.layoutDescription,
+        )
+    }
 }
