@@ -1,0 +1,245 @@
+@testable import AppBundle
+import Common
+import Testing
+
+@MainActor
+@Suite(.serializedGlobally)
+struct LayoutSkeletonTest {
+    init() { setUpWorkspacesForTests() }
+
+    @Test func testParse_masterStack() {
+        assertEquals(
+            parse("h_tiles[1@0.6, v_tiles[others]]"),
+            LayoutSkeleton(root: .init(
+                orientation: .h,
+                children: [
+                    .placeholder(1, weight: 0.6),
+                    .container(.init(orientation: .v, children: [.others()])),
+                ],
+            )),
+        )
+    }
+
+    @Test func testParse_weights() {
+        let skeleton = parse("h_tiles[v_tiles[1, 2]@0.6, v_tiles[others]]")
+        assertEquals(skeleton.root.children.first?.containerWeight, 0.6)
+        assertEquals(skeleton.root.children.last?.containerWeight, nil)
+    }
+
+    @Test func testParse_whitespaceAndNewlines() {
+        let skeleton = parse("""
+            h_tiles [
+              1 @ 0.6,
+              v_tiles [ others ]
+            ]
+            """)
+        assertEquals(skeleton.root.orientation, .h)
+        assertEquals(skeleton.root.placeholdersSorted, [1])
+    }
+
+    @Test func testParse_errors() {
+        assertParseError("h_tiles[1]", "must appear exactly once")
+        assertParseError("h_tiles[others, others]", "must appear exactly once")
+        assertParseError("h_tiles[1, 1, others]", "Duplicate placeholder 1")
+        assertParseError("h_tiles[0, others]", "start from 1")
+        assertParseError("columns[others]", "Expected 'h_tiles' or 'v_tiles'")
+        assertParseError("h_tiles[", "Unexpected end of input")
+        assertParseError("h_tiles[1, others] v_tiles[others]", "trailing characters")
+        assertParseError("h_tiles[1@0, others]", "Weight must be a positive number")
+    }
+
+    private func assertParseError(_ source: String, _ expectedSubstring: String, sourceLocation: SourceLocation = #_sourceLocation) {
+        switch LayoutSkeleton.parse(source) {
+            case .success(let skeleton):
+                Issue.record("Expected a parse error. Got: \(skeleton)", sourceLocation: sourceLocation)
+            case .failure(let error):
+                if !error.description.contains(expectedSubstring) {
+                    Issue.record("Expected '\(expectedSubstring)' in '\(error.description)'", sourceLocation: sourceLocation)
+                }
+        }
+    }
+
+    // MARK: - Config
+
+    @Test func testConfig_parsing() {
+        let result = parseConfig("""
+            [workspace-layout]
+            '1' = 'h_tiles[1@0.6, v_tiles[others]]'
+            '2' = 'h_tiles[others]'
+            """)
+        assertEquals(result.errors, [])
+        assertEquals(result.config.workspaceLayout.keys.sorted(), ["1", "2"])
+        assertEquals(result.config.workspaceLayout["1"]?.root.orientation, .h)
+    }
+
+    @Test func testConfig_errorIsReported() {
+        let result = parseConfig("""
+            [workspace-layout]
+            '1' = 'h_tiles[1]'
+            """)
+        assertEquals(result.errors.count, 1)
+        assertEquals(result.config.workspaceLayout, [:])
+    }
+
+    // MARK: - Normalization
+
+    @Test func testNormalize_masterStack() {
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.6, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([.window(0), .v_tiles([.window(1), .window(2)])]),
+        )
+        assertEquals(root.children[0].getWeight(.h), 0.6)
+        assertEquals(root.children[1].getWeight(.h), 0.4)
+    }
+
+    @Test func testNormalize_twoMasters() {
+        config.workspaceLayout = [name: skeleton("h_tiles[v_tiles[1, 2]@0.6, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(4) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_tiles([.v_tiles([.window(0), .window(1)]), .v_tiles([.window(2), .window(3)])]),
+        )
+    }
+
+    @Test func testNormalize_othersPrimary() {
+        config.workspaceLayout = [name: skeleton("h_tiles[v_tiles[others], 1]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_tiles([.v_tiles([.window(1), .window(2)]), .window(0)]),
+        )
+    }
+
+    @Test func testNormalize_columns() {
+        config.workspaceLayout = [name: skeleton("h_tiles[others]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_tiles([.window(0), .window(1), .window(2)]),
+        )
+    }
+
+    @Test func testNormalize_unfilledPlaceholdersCollapse() {
+        config.workspaceLayout = [name: skeleton("v_tiles[1, 2, h_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        TestWindow.new(id: 0, parent: workspace.rootTilingContainer)
+        TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
+        workspace.normalizeContainers()
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .v_tiles([.window(0), .window(1)]),
+        )
+    }
+
+    @Test func testNormalize_worksWithFlattenNormalizationEnabled() {
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.6, v_tiles[others]]")]
+        config.enableNormalizationFlattenContainers = true
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_tiles([.window(0), .v_tiles([.window(1), .window(2)])]),
+        )
+        workspace.normalizeContainers() // Idempotent under flatten normalization
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_tiles([.window(0), .v_tiles([.window(1), .window(2)])]),
+        )
+    }
+
+    @Test func testNormalize_isIdempotentAndPreservesManualResize() {
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.6, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        let stack = root.children[1]
+        stack.setWeight(.h, 0.3)
+
+        workspace.normalizeContainers()
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([.window(0), .v_tiles([.window(1), .window(2)])]),
+        )
+        assertEquals(stack.getWeight(.h), 0.3)
+    }
+
+    @Test func testNormalize_doesntAffectOtherWorkspaces() {
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.6, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        let otherWorkspace = Workspace.get(byName: "\(name)_other")
+        for id in uids(3, offset: 3) {
+            TestWindow.new(id: id, parent: otherWorkspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        otherWorkspace.normalizeContainers()
+        assertEquals(
+            otherWorkspace.rootTilingContainer.layoutDescription,
+            .h_tiles([.window(3), .window(4), .window(5)]),
+        )
+    }
+
+    @Test func testNormalize_skipsAccordion() {
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.6, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.layout = .accordion
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_accordion([.window(0), .window(1), .window(2)]),
+        )
+    }
+
+    private func skeleton(_ source: String) -> LayoutSkeleton { parse(source) }
+
+    private func parse(_ source: String) -> LayoutSkeleton {
+        switch LayoutSkeleton.parse(source) {
+            case .success(let skeleton): return skeleton
+            case .failure(let error): fatalError("Can't parse '\(source)': \(error.description)")
+        }
+    }
+
+    private func uids(_ count: UInt64, offset: UInt64 = 0) -> [OpaqueWindowId] {
+        (offset ..< offset + count).map { OpaqueWindowId($0) }
+    }
+}
+
+extension LayoutSkeleton.Node {
+    fileprivate var containerWeight: Double? {
+        switch self {
+            case .container(let container): container.weight
+            case .placeholder(_, let weight): weight
+            case .others(let weight): weight
+        }
+    }
+}
