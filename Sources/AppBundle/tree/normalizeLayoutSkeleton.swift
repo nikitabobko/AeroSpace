@@ -7,6 +7,11 @@ struct ResolvedLayoutSkeleton {
     let children: [ResolvedLayoutNode]
 }
 
+struct ResolvedLayoutRect {
+    let width: CGFloat
+    let height: CGFloat
+}
+
 struct ResolvedLayoutNode {
     let kind: Kind
     let weight: CGFloat? // nil means "no explicit weight". Resolved siblings always get a concrete weight
@@ -98,7 +103,8 @@ extension TilingContainer {
         guard !windows.isEmpty, let resolved = skeleton.resolve(windows: windows) else { return }
         forceOrientation(resolved.orientation)
         guard !matchesResolved(resolved.children) else { return }
-        rebuildResolved(resolved.children)
+        let rect = nodeWorkspace.orDie().workspaceMonitorInfo.visibleRectPaddedByOuterGaps
+        rebuildResolved(resolved.children, in: ResolvedLayoutRect(width: rect.width, height: rect.height))
     }
 
     @MainActor private func tilingWindowsInVisualOrder() -> [Window] {
@@ -129,24 +135,32 @@ extension TilingContainer {
         return true
     }
 
-    @MainActor private func rebuildResolved(_ nodes: [ResolvedLayoutNode]) {
+    @MainActor private func rebuildResolved(_ nodes: [ResolvedLayoutNode], in rect: ResolvedLayoutRect) {
         let mostRecentWindow = mostRecentWindowRecursive
         let oldChildren = children
         for child in oldChildren {
             child.unbindFromParent()
         }
-        bindResolved(nodes)
+        bindResolved(nodes, in: rect)
         mostRecentWindow?.markAsMostRecentChild()
     }
 
-    @MainActor private func bindResolved(_ nodes: [ResolvedLayoutNode]) {
+    /// Weights are pixels of the parent's axis, not fractions. `layoutTiles` normalizes the weights by adding an equal
+    /// delta to each child, so fractions would be flattened to an equal split on the first layout pass
+    @MainActor private func bindResolved(_ nodes: [ResolvedLayoutNode], in rect: ResolvedLayoutRect) {
+        let axisLength = orientation == .h ? rect.width : rect.height
         for node in nodes {
+            let share = node.weight ?? 1
+            let weight = share * axisLength
             switch node.kind {
                 case .window(let window):
-                    window.bind(to: self, adaptiveWeight: node.weight ?? 1, index: INDEX_BIND_LAST)
+                    window.bind(to: self, adaptiveWeight: weight, index: INDEX_BIND_LAST)
                 case .container(let orientation, let children):
-                    let container = TilingContainer(parent: self, adaptiveWeight: node.weight ?? 1, orientation, .tiles, index: INDEX_BIND_LAST)
-                    container.bindResolved(children)
+                    let container = TilingContainer(parent: self, adaptiveWeight: weight, orientation, .tiles, index: INDEX_BIND_LAST)
+                    let childRect = self.orientation == .h
+                        ? ResolvedLayoutRect(width: rect.width * share, height: rect.height)
+                        : ResolvedLayoutRect(width: rect.width, height: rect.height * share)
+                    container.bindResolved(children, in: childRect)
             }
         }
     }

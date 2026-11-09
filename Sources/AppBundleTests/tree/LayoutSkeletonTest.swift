@@ -1,5 +1,6 @@
 @testable import AppBundle
 import Common
+import CoreGraphics
 import Testing
 
 @MainActor
@@ -150,8 +151,36 @@ struct LayoutSkeletonTest {
             root.layoutDescription,
             .h_tiles([.window(0), .v_tiles([.window(1), .window(2)])]),
         )
-        assertEquals(root.children[0].getWeight(.h), 0.6)
-        assertEquals(root.children[1].getWeight(.h), 0.4)
+        assertShare(root.children[0], of: root.children, 0.6)
+        assertShare(root.children[1], of: root.children, 0.4)
+    }
+
+    @Test func testNormalize_weightsArePixelsNotFractions() {
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.55, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        let width = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps.width
+        assertApproximatelyEqual(root.children[0].getWeight(.h), 0.55 * width)
+        assertApproximatelyEqual(root.children[1].getWeight(.h), 0.45 * width)
+    }
+
+    @Test func testNormalize_nestedWeightsUseTheParentAxis() {
+        config.workspaceLayout = [name: skeleton("h_tiles[v_tiles[1, 2]@0.6, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(4) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        let height = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps.height
+        let masterColumn = root.children[0]
+        assertApproximatelyEqual(masterColumn.getWeight(.h), 0.6 * workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps.width)
+        assertEquals(masterColumn.children.count, 2)
+        assertApproximatelyEqual(masterColumn.children[0].getWeight(.v), 0.5 * height)
     }
 
     @Test func testNormalize_twoMasters() {
@@ -273,6 +302,30 @@ struct LayoutSkeletonTest {
             workspace.rootTilingContainer.layoutDescription,
             .h_accordion([.window(0), .window(1), .window(2)]),
         )
+    }
+
+    private func assertShare(
+        _ node: TreeNode,
+        of siblings: [TreeNode],
+        _ expected: CGFloat,
+        orientation: Orientation = .h,
+        sourceLocation: SourceLocation = #_sourceLocation,
+    ) {
+        let total = siblings.reduce(0) { $0 + $1.getWeight(orientation) }
+        let actual = total != 0 ? node.getWeight(orientation) / total : 0
+        if abs(actual - expected) > 0.001 {
+            Issue.record("Expected share \(expected), got \(actual)", sourceLocation: sourceLocation)
+        }
+    }
+
+    private func assertApproximatelyEqual(
+        _ actual: CGFloat,
+        _ expected: CGFloat,
+        sourceLocation: SourceLocation = #_sourceLocation,
+    ) {
+        if abs(actual - expected) > 0.001 {
+            Issue.record("Expected \(expected), got \(actual)", sourceLocation: sourceLocation)
+        }
     }
 
     private func skeleton(_ source: String) -> LayoutSkeleton { parse(source) }
