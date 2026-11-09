@@ -37,8 +37,13 @@ default-root-container-orientation = 'auto'
 # Declarative layout for particular workspaces. See: https://nikitabobko.github.io/AeroSpace/guide#declarative-workspace-layout
 # The layout is applied as a normalization on every layout pass
 # [workspace-layout]
-# '1' = 'h_tiles[1@0.6, v_tiles[others]]' # dwm-like master-stack: one master window on the left, the rest stacked on the right
-# '2' = 'h_tiles[others]'                 # plain columns
+# '1' = '''
+# h_tiles
+#   1 @0.55       # dwm-like master-stack: one master window on the left, the rest stacked on the right
+#   v_tiles
+#     others
+# '''
+# '2' = 'h_tiles[others]' # plain columns (inline shorthand)
 
 # Mouse follows focus when focused monitor changes
 # Drop it from your config, if you don't like this behavior

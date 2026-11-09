@@ -20,6 +20,47 @@ struct LayoutSkeletonTest {
         )
     }
 
+    @Test func testParse_indentedSyntax() {
+        let skeleton = parse("""
+            h_tiles
+              1 @0.55
+              v_tiles
+                others
+            """)
+        assertEquals(
+            skeleton,
+            LayoutSkeleton(root: .init(
+                orientation: .h,
+                children: [
+                    .placeholder(1, weight: 0.55),
+                    .container(.init(orientation: .v, children: [.others()])),
+                ],
+            )),
+        )
+    }
+
+    @Test func testParse_indentedSyntax_ignoresBlankLines() {
+        let skeleton = parse("""
+            h_tiles
+
+              1
+
+              v_tiles
+                others
+
+            """)
+        assertEquals(skeleton.root.children.count, 2)
+    }
+
+    @Test func testParse_indentedSyntax_errors() {
+        assertParseError("h_tiles\n  1\n    2\n  others", "Inconsistent indentation")
+        assertParseError("h_tiles\n\t1\n\tothers", "Tabs aren't allowed")
+        assertParseError("h_tiles", "must contain at least one child")
+        assertParseError("h_tiles\n  1", "must appear exactly once")
+        assertParseError("h_tiles\n  1 @0.6\n  2 @0.5\n  others", "sum to less than 1")
+        assertParseError("h_tiles\n  1 @0\n  others", "Weight must be a positive number")
+    }
+
     @Test func testParse_weights() {
         let skeleton = parse("h_tiles[v_tiles[1, 2]@0.6, v_tiles[others]]")
         assertEquals(skeleton.root.children.first?.containerWeight, 0.6)
@@ -70,6 +111,20 @@ struct LayoutSkeletonTest {
         assertEquals(result.errors, [])
         assertEquals(result.config.workspaceLayout.keys.sorted(), ["1", "2"])
         assertEquals(result.config.workspaceLayout["1"]?.root.orientation, .h)
+    }
+
+    @Test func testConfig_indentedSyntax() {
+        let result = parseConfig("""
+            [workspace-layout]
+            '1' = '''
+            h_tiles
+              1 @0.55
+              v_tiles
+                others
+            '''
+            """)
+        assertEquals(result.errors, [])
+        assertEquals(result.config.workspaceLayout["1"]?.root.placeholdersSorted, [1])
     }
 
     @Test func testConfig_errorIsReported() {

@@ -424,7 +424,12 @@ the result on every layout pass, so the workspace keeps the declared shape no ma
 [source,toml]
 ----
 [workspace-layout]
-'1' = 'h_tiles[1@0.6, v_tiles[others]]'
+'1' = '''
+h_tiles
+  1 @0.6
+  v_tiles
+    others
+'''
 ----
 
 - `h_tiles[...]` and `v_tiles[...]` are containers with a horizontal or vertical orientation
@@ -443,17 +448,40 @@ Examples:
 [source,toml]
 ----
 [workspace-layout]
-# dwm-like master-stack: 1 master window on the left (60% of the width), the rest stacked on the right
-'1' = 'h_tiles[1@0.6, v_tiles[others]]'
+# dwm-like master-stack: 1 master window on the left (55% of the width), the rest stacked on the right
+'1' = '''
+h_tiles
+  1 @0.55
+  v_tiles
+    others
+'''
 
 # two master windows on the left, the rest stacked on the right
-'2' = 'h_tiles[v_tiles[1, 2]@0.6, v_tiles[others]]'
-
-# i3-like columns: all windows side by side
-'3' = 'h_tiles[others]'
+'2' = '''
+h_tiles
+  v_tiles @0.6
+    1
+    2
+  v_tiles
+    others
+'''
 
 # the master placeholder is on the right
-'4' = 'h_tiles[v_tiles[others], 1]'
+'3' = '''
+h_tiles
+  v_tiles
+    others
+  1
+'''
+----
+
+For one-line layouts there is a shorthand with brackets. The two declarations below are equivalent:
+
+[source,toml]
+----
+[workspace-layout]
+'1' = 'h_tiles[1@0.55, v_tiles[others]]'
+'2' = 'h_tiles[others]' # i3-like columns: all windows side by side
 ----
 
 

@@ -79,13 +79,13 @@ extension LayoutSkeleton {
         guard weights.contains(where: { $0 == nil }) else {
             return weights.map { $0 ?? 1 } // Every sibling has an explicit weight. Weights are relative
         }
-        let specifiedSum = weights.compactMap { $0 }.reduce(0, +)
-        if specifiedSum < 1 {
-            let share = (1 - specifiedSum) / CGFloat(weights.count(where: { $0 == nil }))
-            return weights.map { $0 ?? share }
+        let unspecifiedCount = weights.count(where: { $0 == nil })
+        if unspecifiedCount == 0 {
+            return weights.map { $0 ?? 1 } // All the siblings have an explicit weight. Weights are relative
         }
-        let total = specifiedSum + CGFloat(weights.count(where: { $0 == nil }))
-        return weights.map { ($0 ?? 1) / total }
+        let specifiedSum = weights.compactMap { $0 }.reduce(0, +)
+        let share = (1 - specifiedSum) / CGFloat(unspecifiedCount)
+        return weights.map { $0 ?? share }
     }
 }
 
