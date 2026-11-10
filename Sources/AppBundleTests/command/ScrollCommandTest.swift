@@ -1,18 +1,20 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Foundation
+import Testing
 
 @MainActor
-final class ScrollCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct ScrollCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testParse() {
+    @Test func testParse() {
         testParseSingleCommandSucc("scroll left", ScrollCmdArgs(rawArgs: [], direction: .left))
         testParseSingleCommandSucc("scroll right", ScrollCmdArgs(rawArgs: [], direction: .right))
         testParseSingleCommandSucc("layout scrolling", LayoutCmdArgs(rawArgs: [], toggleBetween: [.scrolling]))
     }
 
-    func testSwitchRootToScrolling() async {
+    @Test func testSwitchRootToScrolling() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
@@ -25,7 +27,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(root.scrollingIndex, 0)
     }
 
-    func testRejectNestedScrolling() async {
+    @Test func testRejectNestedScrolling() async {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
@@ -38,7 +40,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(result.stderr, ["The 'scrolling' layout is only supported for workspace root containers"])
     }
 
-    func testJoiningLastTwoPagesPreservesScrollingRootDuringNormalization() async {
+    @Test func testJoiningLastTwoPagesPreservesScrollingRootDuringNormalization() async {
         config.enableNormalizationFlattenContainers = true
         config.enableNormalizationOppositeOrientationForNestedContainers = true
         let workspace = Workspace.get(byName: name)
@@ -60,7 +62,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(root.layoutDescription, .scrolling([.window(1)]))
     }
 
-    func testClosingLastOtherPagePreservesTabbedScrollingPage() {
+    @Test func testClosingLastOtherPagePreservesTabbedScrollingPage() {
         config.enableNormalizationFlattenContainers = true
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
@@ -77,7 +79,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(root.layoutDescription, .scrolling([.tabs([.window(1), .window(2)])]))
     }
 
-    func testScrollingLayoutGeometry() async throws {
+    @Test func testScrollingLayoutGeometry() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
@@ -100,7 +102,7 @@ final class ScrollCommandTest: XCTestCase {
 
             // Off-screen pages must be hidden, otherwise their negative/overflow
             // physicalX bleeds onto adjacent monitors.
-            XCTAssertNil(windows[0].lastAppliedLayoutPhysicalRect)
+            assertNil(windows[0].lastAppliedLayoutPhysicalRect)
             assertEquals(windows[0].isHiddenInCorner, true)
 
             let rect2 = windows[1].lastAppliedLayoutPhysicalRect.orDie("window 2 should be laid out")
@@ -117,7 +119,7 @@ final class ScrollCommandTest: XCTestCase {
         }
     }
 
-    func testScrollingLayoutPeeksAtTheNextPage() async throws {
+    @Test func testScrollingLayoutPeeksAtTheNextPage() async throws {
         config.scrollingPeekWidth = 40
         config.gaps.inner.horizontal = .constant(16)
         config.gaps.outer.right = .constant(12)
@@ -145,7 +147,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(2 * pageWidth + peek, workspaceRect.width)
 
         for index in [0, 4] {
-            XCTAssertNil(windows[index].lastAppliedLayoutPhysicalRect)
+            assertNil(windows[index].lastAppliedLayoutPhysicalRect)
             assertEquals(windows[index].isHiddenInCorner, true)
         }
 
@@ -175,7 +177,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(peekRect.topLeftX - rightRect.maxX, rawGap)
     }
 
-    func testScrollingLayoutPeekFallsBackToTwoPages() async throws {
+    @Test func testScrollingLayoutPeekFallsBackToTwoPages() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
         root.layout = .scrolling
@@ -199,7 +201,7 @@ final class ScrollCommandTest: XCTestCase {
             assertEquals(first.isHiddenInCorner, false)
             assertEquals(second.isHiddenInCorner, false)
             assertEquals(third.isHiddenInCorner, true)
-            XCTAssertNil(third.lastAppliedLayoutPhysicalRect)
+            assertNil(third.lastAppliedLayoutPhysicalRect)
         }
 
         // A valid peek still reserves nothing when there is no next page to peek at
@@ -213,7 +215,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().maxX, workspaceRect.maxX)
     }
 
-    func testScrollingPeekFallsBackWhenGapsLeaveNoRoom() async throws {
+    @Test func testScrollingPeekFallsBackWhenGapsLeaveNoRoom() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
         root.layout = .scrolling
@@ -232,13 +234,13 @@ final class ScrollCommandTest: XCTestCase {
             if isVisible {
                 assertEquals(third.lastAppliedLayoutPhysicalRect.orDie().topLeftX, viewport.maxX - 0.5)
             } else {
-                XCTAssertNil(third.lastAppliedLayoutPhysicalRect)
+                assertNil(third.lastAppliedLayoutPhysicalRect)
                 assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().maxX, viewport.maxX)
             }
         }
     }
 
-    func testFocusingPeekPageFullyRevealsIt() async throws {
+    @Test func testFocusingPeekPageFullyRevealsIt() async throws {
         config.scrollingPeekWidth = 40
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
@@ -249,7 +251,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(first.focusWindow(), true)
         _ = try await workspace.layoutWorkspace()
         let viewport = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
-        XCTAssertGreaterThan(third.lastAppliedLayoutPhysicalRect.orDie().maxX, viewport.maxX)
+        #expect(third.lastAppliedLayoutPhysicalRect.orDie().maxX > viewport.maxX)
 
         assertEquals(third.focusWindow(), true)
         _ = try await workspace.layoutWorkspace()
@@ -261,7 +263,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(rect.width, viewport.width / 2)
     }
 
-    func testScrollCommandsMoveViewportAndFocus() async {
+    @Test func testScrollCommandsMoveViewportAndFocus() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             TestWindow.new(id: 2, parent: $0)
@@ -290,7 +292,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
-    func testMoveCommandKeepsFocusedWindowVisible() async {
+    @Test func testMoveCommandKeepsFocusedWindowVisible() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             TestWindow.new(id: 2, parent: $0)
@@ -308,7 +310,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(globalFocus.windowOrNil?.windowId, 3)
     }
 
-    func testFocusedWindowAutoRevealsNewestPage() {
+    @Test func testFocusedWindowAutoRevealsNewestPage() {
         let root = Workspace.get(byName: name).rootTilingContainer
         root.layout = .scrolling
 
@@ -325,7 +327,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(root.scrollingIndex, 2)
     }
 
-    func testClosingClampsScrollingIndex() {
+    @Test func testClosingClampsScrollingIndex() {
         let root = Workspace.get(byName: name).rootTilingContainer
         root.layout = .scrolling
         let w1 = TestWindow.new(id: 1, parent: root)
@@ -339,7 +341,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(root.scrollingIndex, 1)
     }
 
-    func testScrollingSkipsNativeTabTombstones() async throws {
+    @Test func testScrollingSkipsNativeTabTombstones() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
         root.layout = .scrolling
@@ -363,7 +365,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(root.scroll(in: .left), first)
     }
 
-    func testResizeAndBalanceSizesFailInScrollingLayout() async {
+    @Test func testResizeAndBalanceSizesFailInScrollingLayout() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
@@ -379,7 +381,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(balanceResult.stderr, ["balance-sizes command doesn't support the scrolling layout"])
     }
 
-    func testWindowLayoutFormattingReportsScrolling() {
+    @Test func testWindowLayoutFormattingReportsScrolling() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             let nested = TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1)
             TestWindow.new(id: 1, parent: nested)

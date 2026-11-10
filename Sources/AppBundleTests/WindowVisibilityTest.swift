@@ -1,12 +1,14 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Foundation
+import Testing
 
 @MainActor
-final class WindowVisibilityTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct WindowVisibilityTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testPeekPageRestoresWhenMadeFloating() async throws {
+    @Test func testPeekPageRestoresWhenMadeFloating() async throws {
         config.scrollingPeekWidth = 40
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
@@ -25,12 +27,12 @@ final class WindowVisibilityTest: XCTestCase {
         let rect = try await third.getAxRect(.nonCancellable).orDie()
         let viewport = workspace.workspaceMonitorInfo.visibleRect
         assertEquals(third.isFloating, true)
-        XCTAssertGreaterThanOrEqual(rect.minX, viewport.minX)
-        XCTAssertLessThanOrEqual(rect.maxX, viewport.maxX)
+        #expect(rect.minX >= viewport.minX)
+        #expect(rect.maxX <= viewport.maxX)
         assertEquals(viewport.contains(rect.center), true)
     }
 
-    func testNewDialogFollowsAppWindowOnAnotherWorkspace() async {
+    @Test func testNewDialogFollowsAppWindowOnAnotherWorkspace() async {
         let ownerWorkspace = Workspace.get(byName: "owner")
         let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)
         let activeWorkspace = Workspace.get(byName: "current")
@@ -48,13 +50,13 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(dialog.nodeWorkspace, activeWorkspace)
     }
 
-    func testDialogWithoutKnownOwnerUsesCurrentWorkspace() {
+    @Test func testDialogWithoutKnownOwnerUsesCurrentWorkspace() {
         let workspace = Workspace.get(byName: name)
         let binding = unbindAndGetBindingDataForNewWindow(.dialog, workspace, window: nil, appLastFocusedWindow: nil)
         assertEquals(binding.parent, workspace.floatingWindowsContainer)
     }
 
-    func testDialogRelayoutKeepsExplicitTargetWorkspace() {
+    @Test func testDialogRelayoutKeepsExplicitTargetWorkspace() {
         let ownerWorkspace = Workspace.get(byName: "owner")
         let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)
         let dialog = TestWindow.new(id: 2, parent: ownerWorkspace.floatingWindowsContainer)
@@ -65,7 +67,7 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(binding.parent, targetWorkspace.floatingWindowsContainer)
     }
 
-    func testNewRegularWindowStillUsesCurrentWorkspace() {
+    @Test func testNewRegularWindowStillUsesCurrentWorkspace() {
         let ownerWorkspace = Workspace.get(byName: "owner")
         let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)
         let workspace = Workspace.get(byName: name)
@@ -75,7 +77,7 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(binding.parent, workspace.rootTilingContainer)
     }
 
-    func testOffscreenFloatingDialogsOnActiveWorkspaceAreRecoveredWithoutTakingFocus() async throws {
+    @Test func testOffscreenFloatingDialogsOnActiveWorkspaceAreRecoveredWithoutTakingFocus() async throws {
         let workspace = Workspace.get(byName: name)
         let focusedWindow = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         assertEquals(focusedWindow.focusWindow(), true)
@@ -99,15 +101,15 @@ final class WindowVisibilityTest: XCTestCase {
 
             let actual = try await dialog.getAxRect(.nonCancellable).orDie()
             assertEquals(actual.size, size)
-            XCTAssertGreaterThanOrEqual(actual.minX, monitorRect.minX)
-            XCTAssertGreaterThanOrEqual(actual.minY, monitorRect.minY)
-            XCTAssertLessThanOrEqual(actual.maxX, monitorRect.maxX)
-            XCTAssertLessThanOrEqual(actual.maxY, monitorRect.maxY)
+            #expect(actual.minX >= monitorRect.minX)
+            #expect(actual.minY >= monitorRect.minY)
+            #expect(actual.maxX <= monitorRect.maxX)
+            #expect(actual.maxY <= monitorRect.maxY)
             assertEquals(globalFocus.windowOrNil, focusedWindow)
         }
     }
 
-    func testFloatingWindowWithVisibleCenterKeepsItsPosition() async throws {
+    @Test func testFloatingWindowWithVisibleCenterKeepsItsPosition() async throws {
         let workspace = Workspace.get(byName: name)
         assertEquals(workspace.focusWorkspace(), true)
         let original = Rect(topLeftX: -20, topLeftY: 100, width: 600, height: 400)
@@ -120,7 +122,7 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(actual.size, original.size)
     }
 
-    func testDisablingRestoresHiddenPagesAndTabsAndPreservesTheirLayouts() async throws {
+    @Test func testDisablingRestoresHiddenPagesAndTabsAndPreservesTheirLayouts() async throws {
         let wasEnabled = TrayMenuModel.shared.isEnabled
         defer { TrayMenuModel.shared.isEnabled = wasEnabled }
         TrayMenuModel.shared.isEnabled = true
@@ -160,7 +162,7 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(activeTab.isHiddenInCorner, false)
     }
 
-    func testScrollingWindowsStayHiddenAcrossWorkspaceSwitches() async throws {
+    @Test func testScrollingWindowsStayHiddenAcrossWorkspaceSwitches() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
         root.layout = .scrolling
@@ -201,7 +203,7 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(hiddenPage.isHiddenInCorner, true)
     }
 
-    func testPeekPageIsLaidOutInsteadOfHiddenAndStillRestores() async throws {
+    @Test func testPeekPageIsLaidOutInsteadOfHiddenAndStillRestores() async throws {
         config.scrollingPeekWidth = 40
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
@@ -223,7 +225,7 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(rightPage.isHiddenInCorner, false)
         assertEquals(peekPage.isHiddenInCorner, false)
         assertEquals(parkedPage.isHiddenInCorner, true)
-        XCTAssertNil(parkedPage.lastAppliedLayoutPhysicalRect)
+        assertNil(parkedPage.lastAppliedLayoutPhysicalRect)
 
         let parkedSize = try await parkedPage.getAxSize(.nonCancellable)
         let corner = workspace.workspaceMonitorInfo.optimalHideCorner(monitors: globalUnsortedMonitorInfos)
@@ -247,7 +249,7 @@ final class WindowVisibilityTest: XCTestCase {
         root.scrollingIndex = 0
         _ = try await workspace.layoutWorkspace()
         assertEquals(parkedPage.isHiddenInCorner, true)
-        XCTAssertNil(parkedPage.lastAppliedLayoutPhysicalRect)
+        assertNil(parkedPage.lastAppliedLayoutPhysicalRect)
 
         // Disabling the window manager must restore every page, peeking or parked, onto the monitor
         let wasEnabled = TrayMenuModel.shared.isEnabled
@@ -261,7 +263,7 @@ final class WindowVisibilityTest: XCTestCase {
         }
     }
 
-    func testRightSpillBandSuppressesScrollingPeek() {
+    @Test func testRightSpillBandSuppressesScrollingPeek() {
         let monitor = mainMonitorInfo
         let rect = monitor.rect
         func at(x: CGFloat, y: CGFloat) -> VisibilityTestMonitor {
@@ -289,7 +291,7 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor, belowRight]), false)
     }
 
-    func testHiddenTabRestoresWhenMadeFloating() async throws {
+    @Test func testHiddenTabRestoresWhenMadeFloating() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
         let original = Rect(topLeftX: 100, topLeftY: 100, width: 600, height: 400)
@@ -309,7 +311,7 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(actual.size, original.size)
     }
 
-    func testHidingUsesActualWindowSizeAndPreservesFloatingPosition() async throws {
+    @Test func testHidingUsesActualWindowSizeAndPreservesFloatingPosition() async throws {
         let workspace = Workspace.get(byName: name)
         let original = Rect(topLeftX: 100, topLeftY: 100, width: 700, height: 500)
         let window = TestWindow.new(id: 1, parent: workspace.floatingWindowsContainer, rect: original)
@@ -327,7 +329,7 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(restored.size, original.size)
     }
 
-    func testHideCornerAvoidsAdjacentDisplays() {
+    @Test func testHideCornerAvoidsAdjacentDisplays() {
         let monitor = mainMonitorInfo
         let right = VisibilityTestMonitor(rect: Rect(topLeftX: monitor.rect.maxX, topLeftY: 0, width: 1920, height: 1080))
         let left = VisibilityTestMonitor(rect: Rect(topLeftX: -1920, topLeftY: 0, width: 1920, height: 1080))
