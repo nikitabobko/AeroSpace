@@ -26,7 +26,6 @@ let package = Package(
         .package(url: "https://github.com/dduan/TOMLDecoder", exact: "0.4.5"),
         .package(url: "https://github.com/apple/swift-collections.git", exact: "1.6.0", traits: ["UnstableHashedContainers"]),
         .package(url: "https://github.com/soffes/HotKey.git", exact: "0.2.1"),
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", exact: "604.0.0"),
     ],
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
@@ -37,13 +36,7 @@ let package = Package(
             path: "Sources/PrivateApi",
             publicHeadersPath: "include",
         ),
-        .macro(
-            name: "Macros",
-            dependencies: [
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-            ],
-        ),
+        .macro(name: "Macros"),
         .target(
             name: "Common",
             dependencies: [
