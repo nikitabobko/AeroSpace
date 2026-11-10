@@ -15,27 +15,23 @@ extension NWConnection {
     }
 
     public func initConnection() async -> ((), error: InitConnectionError?) {
-        let error1 = await withCheckedContinuation { cont in
-            let isDone = IsDone()
-            stateUpdateHandler = { state in
-                Task.startUnstructured {
-                    let error: NWError?
-                    switch state {
-                        case .cancelled, .preparing, .setup: return
-                        case .ready: error = nil
-                        case .failed(let e), .waiting(let e): error = e
-                        @unknown default: die("Unknown NWConnection.State: \(state)")
-                    }
-                    // Make sure to resume continuation only once
-                    if await isDone.markAsDone().wasAlreadyDone {
-                        return
-                    }
-                    self.stateUpdateHandler = nil
-                    cont.resume(returning: error.map(InitConnectionError.nwError))
-                }
+        let (stream, cont) =
+            AsyncStream.makeStream(of: InitConnectionError.self, bufferingPolicy: .bufferingOldest(1))
+        stateUpdateHandler = { state in
+            let error: NWError?
+            switch state {
+                case .cancelled, .preparing, .setup: return
+                case .ready: error = nil
+                case .failed(let e), .waiting(let e): error = e
+                @unknown default: die("Unknown NWConnection.State: \(state)")
             }
-            start(queue: .global())
+            self.stateUpdateHandler = nil
+            if let error { cont.yield(InitConnectionError.nwError(error)) }
+            cont.finish()
         }
+        start(queue: .global())
+
+        let error1: InitConnectionError? = await stream.first()
         if error1 != nil { return ((), error1) }
 
         let error2 = await writeUInt32(SOCKET_PROTOCOL_VERSION).error
@@ -112,15 +108,5 @@ extension NWConnection {
             case .failure(let e):
                 return .failure(e)
         }
-    }
-}
-
-private actor IsDone {
-    private var isDone: Bool = false
-
-    func markAsDone() -> (wasAlreadyDone: Bool, ()) {
-        let old = isDone
-        isDone = true
-        return (old, ())
     }
 }

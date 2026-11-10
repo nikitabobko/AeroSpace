@@ -36,7 +36,7 @@ struct SerializedGloballyTrait: SuiteTrait, TestTrait, TestScoping {
 // - I also need to understand how it relates to AwaitableOneTimeLatch
 @MainActor private func runExclusively(_ body: @concurrent @Sendable () async throws -> Void) async throws {
     let previous = previousTestCompletion
-    let (completion, completionContinuation) = AsyncStream<Never>.makeStream()
+    let (completion, completionContinuation) = AsyncStream.makeStream(of: Never.self)
     previousTestCompletion = Task.startUnstructured { for await _ in completion {} }
     defer { completionContinuation.finish() }
     await previous?.value
