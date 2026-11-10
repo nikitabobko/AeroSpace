@@ -36,7 +36,8 @@ build-site() {
             "${adoc_site_args[@]}" \
             ./guide.adoc \
             ./commands.adoc \
-            ./goodies.adoc
+            ./goodies.adoc \
+            ./tutorial.adoc
         cp goodies.html goodness.html # backwards compatibility
         rm -rf ./*.adoc
     cd - > /dev/null

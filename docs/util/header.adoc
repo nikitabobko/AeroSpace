@@ -8,4 +8,5 @@ image:assets/icon.png[300,300,float="right"]
 * xref:guide.adoc[AeroSpace Guide]
 * xref:commands.adoc[AeroSpace Commands]
 * xref:goodies.adoc[AeroSpace Goodies]
+* xref:tutorial.adoc[AeroSpace Tree Tutorial] (interactive)
 ====
