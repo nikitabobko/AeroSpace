@@ -5,17 +5,26 @@ import Common
 final class TestWindow: Window, CustomStringConvertible {
     private var _rect: Rect?
     var isMacosFullscreenForTest = false
+    private var customTitle: String?
 
     @MainActor
-    private init(_ id: OpaqueWindowId, _ parent: NonLeafTreeNodeObject, _ adaptiveWeight: CGFloat, _ rect: Rect?) {
-        _rect = rect
-        super.init(id: id, TestApp.shared, lastFloatingSize: nil, parent: parent, adaptiveWeight: adaptiveWeight, index: INDEX_BIND_LAST)
+    private init(_ id: OpaqueWindowId, _ app: any AbstractApp, _ parent: NonLeafTreeNodeObject, _ adaptiveWeight: CGFloat, _ rect: Rect?, _ customTitle: String?) {
+        _rect = rect ?? Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100)
+        self.customTitle = customTitle
+        super.init(id: id, app, lastFloatingSize: nil, parent: parent, adaptiveWeight: adaptiveWeight, index: INDEX_BIND_LAST)
     }
 
     @discardableResult
     @MainActor
-    static func new(id: OpaqueWindowId, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat = 1, rect: Rect? = nil) -> TestWindow {
-        let wi = TestWindow(id, parent, adaptiveWeight, rect)
+    static func new(
+        id: OpaqueWindowId,
+        parent: NonLeafTreeNodeObject,
+        adaptiveWeight: CGFloat = 1,
+        rect: Rect? = nil,
+        title: String? = nil,
+        app: any AbstractApp = TestApp.shared,
+    ) -> TestWindow {
+        let wi = TestWindow(id, app, parent, adaptiveWeight, rect, title)
         TestApp.shared._windows.append(wi)
         return wi
     }
@@ -29,10 +38,15 @@ final class TestWindow: Window, CustomStringConvertible {
     }
 
     override func closeAxWindow() {
+        TabHeaderTitleCache.shared.invalidate(windowId: windowId)
         unbindFromParent()
     }
 
-    override func getTitle(_ cm: CancellationMode) async throws -> String { description }
+    override func getTitle(_ cm: CancellationMode) async throws -> String { customTitle ?? description }
+
+    func setTitleForTests(_ newTitle: String?) {
+        customTitle = newTitle
+    }
 
     @MainActor override func getAxRect(_ cm: CancellationMode) async throws -> Rect? { // todo change to not Optional
         _rect
@@ -43,6 +57,13 @@ final class TestWindow: Window, CustomStringConvertible {
     }
 
     override func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { isMacosFullscreenForTest }
+
+    override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) {
+        guard let topLeft = topLeft ?? _rect?.topLeftCorner,
+              let size = size ?? _rect?.size
+        else { return }
+        _rect = Rect(topLeftX: topLeft.x, topLeftY: topLeft.y, width: size.width, height: size.height)
+    }
 }
 
 extension OpaqueWindowId: ExpressibleByIntegerLiteral {

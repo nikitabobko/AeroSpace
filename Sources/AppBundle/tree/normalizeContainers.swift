@@ -19,7 +19,7 @@ extension TilingContainer {
     ///       Is it O(n^2) complexity?
     @MainActor fileprivate func unbindEmptyAndFlattenContainersRecursive() {
         if isRootContainer { // Special logic for root node to keep it always bound
-            if let child = children.singleOrNil() as? TilingContainer, config.enableNormalizationFlattenContainers {
+            if let child = children.singleOrNil() as? TilingContainer, config.enableNormalizationFlattenContainers && !isScrollingRoot {
                 child.unbindFromParent()
                 for grandChild in child.children {
                     let data = grandChild.unbindFromParent()
