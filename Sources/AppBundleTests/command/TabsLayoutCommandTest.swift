@@ -1,19 +1,21 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Foundation
+import Testing
 
 @MainActor
-final class TabsLayoutCommandTest: XCTestCase {
-    override func setUp() async throws {
+@Suite(.serializedGlobally)
+struct TabsLayoutCommandTest {
+    init() {
         setUpWorkspacesForTests()
         TabHeaderTitleCache.shared.invalidateAll()
     }
 
-    func testParse() {
+    @Test func testParse() {
         testParseSingleCommandSucc("layout tabs", LayoutCmdArgs(rawArgs: [], toggleBetween: [.tabs]))
     }
 
-    func testSwitchContainerToTabs() async {
+    @Test func testSwitchContainerToTabs() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
@@ -25,7 +27,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertEquals(root.layoutDescription, .tabs([.window(1), .window(2)]))
     }
 
-    func testTabsLayoutGeometryKeepsOnlyMostRecentChildVisible() async throws {
+    @Test func testTabsLayoutGeometryKeepsOnlyMostRecentChildVisible() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
@@ -47,7 +49,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertNil((root.children[0] as! TestWindow).lastAppliedLayoutPhysicalRect)
     }
 
-    func testTabsSkipNativeTabTombstones() async throws {
+    @Test func testTabsSkipNativeTabTombstones() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
         root.layout = .tabs
@@ -69,7 +71,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertNil(dead.lastAppliedLayoutPhysicalRect)
     }
 
-    func testLayoutRestoresWindowsMovedOutsideTheLayout() async throws {
+    @Test func testLayoutRestoresWindowsMovedOutsideTheLayout() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
@@ -97,7 +99,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         }
     }
 
-    func testLayoutWorkspaceReturnsTabHeaderSnapshot() async throws {
+    @Test func testLayoutWorkspaceReturnsTabHeaderSnapshot() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0, title: "Safari")
@@ -125,7 +127,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         }
     }
 
-    func testTabHeaderTitleFallbacks() async throws {
+    @Test func testTabHeaderTitleFallbacks() async throws {
         let workspace = Workspace.get(byName: name)
         let appWithoutName = TestNamelessApp()
         let root = workspace.rootTilingContainer.apply {
@@ -138,7 +140,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertEquals(snapshots.singleOrNil()?.items.map(\.title), [TestApp.shared.name.orDie(), "Window 2"])
     }
 
-    func testTabHeaderInteractionSuppressionWindow() {
+    @Test func testTabHeaderInteractionSuppressionWindow() {
         let state = TabHeaderInteractionState.shared
         state.markInteraction()
 
@@ -146,14 +148,14 @@ final class TabsLayoutCommandTest: XCTestCase {
         assert(!state.consumePendingGlobalMouseRefreshSuppression(now: .now))
     }
 
-    func testTabHeaderInteractionSuppressionExpires() {
+    @Test func testTabHeaderInteractionSuppressionExpires() {
         let state = TabHeaderInteractionState.shared
         state.markInteraction()
 
         assert(!state.consumePendingGlobalMouseRefreshSuppression(now: .now.addingTimeInterval(1)))
     }
 
-    func testCloseInvalidatesCachedTabTitle() async throws {
+    @Test func testCloseInvalidatesCachedTabTitle() async throws {
         let workspace = Workspace.get(byName: name)
         let window = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0, title: "Safari")
@@ -166,7 +168,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertNil(TabHeaderTitleCache.shared.cachedTitle(for: 1))
     }
 
-    func testTabTitleCacheRefreshesAfterExpiration() async throws {
+    @Test func testTabTitleCacheRefreshesAfterExpiration() async throws {
         let workspace = Workspace.get(byName: name)
         let window = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0, title: "Safari")
@@ -180,7 +182,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertEquals(second, "Safari 2")
     }
 
-    func testFocusMovesBetweenTabs() async {
+    @Test func testFocusMovesBetweenTabs() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
@@ -198,7 +200,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
-    func testMoveReordersTabs() async {
+    @Test func testMoveReordersTabs() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
@@ -211,7 +213,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
-    func testClosingInactiveTabRemovesItFromSnapshot() async throws {
+    @Test func testClosingInactiveTabRemovesItFromSnapshot() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0, title: "Safari").focusWindow(), true)
@@ -228,7 +230,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertEquals(snapshots[0].items.first(where: \.isActive)?.targetWindow.windowId, 2)
     }
 
-    func testClosingActiveTabPromotesAnotherTab() async throws {
+    @Test func testClosingActiveTabPromotesAnotherTab() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0, title: "Safari")
@@ -247,7 +249,7 @@ final class TabsLayoutCommandTest: XCTestCase {
         assert(items.contains(where: { $0.isActive && $0.targetWindow.windowId != 2 }))
     }
 
-    func testClosingLastTabRemovesHeaderSnapshot() async throws {
+    @Test func testClosingLastTabRemovesHeaderSnapshot() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0, title: "Safari")

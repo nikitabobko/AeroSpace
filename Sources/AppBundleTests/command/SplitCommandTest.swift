@@ -81,7 +81,7 @@ struct SplitCommandTest {
         ]))
     }
 
-    func testSplitVerticalFailsInScrollingLayout() async {
+    @Test func testSplitVerticalFailsInScrollingLayout() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
