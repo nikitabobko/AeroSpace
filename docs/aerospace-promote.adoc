@@ -1,0 +1,51 @@
+= aerospace-promote(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-promote
+// tag::purpose[]
+:manpurpose: Make the focused window the master of its workspace
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace promote [-h|--help] [--workspace <workspace>]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The master is the first window in the visual order of the workspace, i.e. the
+window that occupies placeholder `1` of the layout skeleton:
+
+[source,toml]
+----
+[workspace-layout]
+i = '''
+h_tiles
+  1 @0.55
+  v_tiles
+    others
+'''
+----
+
+The command swaps the focused window with the current master. The promoted
+window keeps the master slot until the set of windows changes, because the
+skeleton is rebuilt from the visual order of the windows.
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--workspace <workspace>::
+include::./util/workspace-flag-desc.adoc[]
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

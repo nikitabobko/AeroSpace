@@ -224,6 +224,13 @@ include::aerospace-move-workspace-to-monitor.adoc[tags=synopsis]
 include::aerospace-move-workspace-to-monitor.adoc[tags=purpose]
 include::aerospace-move-workspace-to-monitor.adoc[tags=body]
 
+== promote
+----
+include::aerospace-promote.adoc[tags=synopsis]
+----
+include::aerospace-promote.adoc[tags=purpose]
+include::aerospace-promote.adoc[tags=body]
+
 == reload-config
 ----
 include::aerospace-reload-config.adoc[tags=synopsis]
