@@ -25,3 +25,8 @@ swift-collections is used for more advanced Swift collections.
 [ISSoundAdditions GitHub link](https://github.com/InerziaSoft/ISSoundAdditions).
 [ISSoundAdditions MIT license](./third-party-license/LICENSE-ISSoundAdditions.txt).
 ISSoundAdditions is used as a convenient API to change system volume.
+
+**swift-syntax**
+[swift-syntax GitHub link](https://github.com/swiftlang/swift-syntax).
+[swift-syntax Apache 2.0 license](./third-party-license/LICENSE-swift-syntax.txt).
+The compiler plugin protocol implementation in Sources/Macros is based on swift-syntax's PluginMessages.swift.
