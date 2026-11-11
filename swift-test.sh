@@ -12,13 +12,16 @@ if swift test --event-stream-output-path "$events" --event-stream-version 0 |
 then
     echo "✅ Swift tests have passed successfully"
 else
-    # Swift Testing console output only prints file names. Print full paths for vim
-    jq -r '
-        .payload
-        | select(.kind == "issueRecorded" and (.issue.isKnown | not))
-        | .issue.sourceLocation as $loc
-        | "\($loc._filePath):\($loc.line):\($loc.column): error: \(.testID | split("/")[0:2] | join("/")): \(.messages | map(.text) | join("\n"))"
-    ' "$events"
+    # The events file is absent if the build fails
+    if test -f "$events"; then
+        # Swift Testing console output only prints file names. Print full paths for vim
+        jq -r '
+            .payload
+            | select(.kind == "issueRecorded" and (.issue.isKnown | not))
+            | .issue.sourceLocation as $loc
+            | "\($loc._filePath):\($loc.line):\($loc.column): error: \(.testID | split("/")[0:2] | join("/")): \(.messages | map(.text) | join("\n"))"
+        ' "$events"
+    fi
     echo "❌ Swift tests have failed"
     exit 1
 fi
