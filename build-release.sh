@@ -36,12 +36,12 @@ app_log=$PWD/.release/build-app.log
 echo "$app_log"
 echo "$cli_log"
 
-./script/build-cli.sh \
+./script/build-release-cli.sh \
     --build-info-file "$build_info_file" \
     --codesign-identity "$codesign_identity" > "$cli_log" 2>&1 &
 build_cli_pid=$!
 
-./script/build-app.sh \
+./script/build-release-app.sh \
     --build-info-file "$build_info_file" \
     --build-version "$build_version" \
     --codesign-identity "$codesign_identity" > "$app_log" 2>&1 &
