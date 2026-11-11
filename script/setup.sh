@@ -28,7 +28,7 @@ add-swift-to-bin() {
         # Without the explicit opt-out, piped output (e.g. \`./build-debug.sh | tee\`) contains escape sequences
         # This is a Swift 6.4 bug. I am just too lazy to report it.
         # I expect that this bug will be fixed in some time without my report anyway
-        >> "$file" /bin/echo "if ! /bin/test -t 1; then export NO_COLOR=1; fi"
+        >> "$file" /bin/echo "export NO_COLOR=1"
         >> "$file" /bin/echo "exec '$(/usr/bin/which swiftly)' run swift \"\$@\""
     else
         echo "ERROR: swiftly is not installed." > /dev/stderr
