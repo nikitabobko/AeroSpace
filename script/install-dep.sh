@@ -22,7 +22,7 @@ while test $# -gt 0; do
     esac
 done
 
-get-marker() { echo ".deps/markers/$1/$(echo "$@" | shasum | awk '{print $1}').marker"; }
+get-marker() { echo ".deps/markers/$1/$(echo "$@" | shasum -a 256 | awk '{print $1}').marker"; }
 
 create-marker() {
     dir="$(dirname "$1")"
