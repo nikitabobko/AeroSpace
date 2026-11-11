@@ -14,7 +14,7 @@ done
 
 if test -z "$build_info_file"; then echo "--build-info-file is mandatory" > /dev/stderr; exit 1; fi
 
-export AEROSPACE_WARNINGS_AS_ERRORS=1
+export SWIFTPM_WARNINGS_AS_RRORS=1
 swift_build_cli=(build -c release --arch arm64 --arch x86_64 --product aerospace)
 swift "${swift_build_cli[@]}" \
     -Xlinker -sectcreate \

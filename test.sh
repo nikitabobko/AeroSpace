@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-export AEROSPACE_WARNINGS_AS_ERRORS=1
+export SWIFTPM_WARNINGS_AS_RRORS=1
 ./build-debug.sh
 ./swift-test.sh
 

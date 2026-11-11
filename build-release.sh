@@ -13,7 +13,7 @@ while test $# -gt 0; do
 done
 
 source ./versions.sh
-export AEROSPACE_MACOS_MIN_DEPLOYMENT_TARGET=$MACOS_MIN_DEPLOYMENT_TARGET
+export SWIFTPM_MACOS_MIN_DEPLOYMENT_TARGET=$MACOS_MIN_DEPLOYMENT_TARGET
 
 #############
 ### BUILD ###

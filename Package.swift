@@ -10,17 +10,17 @@ var swiftSettings: [SwiftSetting] = [
 ]
 
 let env = ProcessInfo.processInfo.environment
-if env["AEROSPACE_WARNINGS_AS_ERRORS"] != nil {
+if env["SWIFTPM_WARNINGS_AS_RRORS"] != nil {
     swiftSettings.append(.treatAllWarnings(as: .error))
 }
-if let ms = env["AEROSPACE_WARN_LONG_FUNCTION_BODIES_MS"] {
+if let ms = env["SWIFTPM_WARN_LONG_FUNCTION_BODIES_MS"] {
     swiftSettings.append(.unsafeFlags(["-Xfrontend", "-warn-long-function-bodies=\(ms)"]))
 }
-if let ms = env["AEROSPACE_WARN_LONG_EXPRESSION_TYPE_CHECKING_MS"] {
+if let ms = env["SWIFTPM_WARN_LONG_EXPRESSION_TYPE_CHECKING_MS"] {
     swiftSettings.append(.unsafeFlags(["-Xfrontend", "-warn-long-expression-type-checking=\(ms)"]))
 }
 
-let _targetMacosVersion: Int = env["AEROSPACE_MACOS_MIN_DEPLOYMENT_TARGET"].flatMap(Int.init)
+let _targetMacosVersion: Int = env["SWIFTPM_MACOS_MIN_DEPLOYMENT_TARGET"].flatMap(Int.init)
     ?? ProcessInfo.processInfo.operatingSystemVersion.majorVersion
 let targetMacosVersion: SupportedPlatform.MacOSVersion =
     switch _targetMacosVersion {
