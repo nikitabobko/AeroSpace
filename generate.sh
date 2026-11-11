@@ -33,25 +33,7 @@ if test $generate_cmd_help = 1; then
     ./script/generate-cmd-help.sh
 fi
 
-entries() {
-    for file in docs/aerospace-*.adoc; do
-        if grep -q 'exec-and-forget' <<< "$file"; then
-            continue
-        fi
-        subcommand=$(basename "$file" | sed 's/^aerospace-//' | sed 's/\.adoc$//')
-        desc="$(grep :manpurpose: "$file" | sed -E 's/:manpurpose: //')"
-        echo "    [\"  $subcommand\", \"$desc\"],"
-    done
-}
-
-cat <<EOF > ./Sources/Cli/subcommandDescriptionsGenerated.swift
-// FILE IS GENERATED FROM docs/aerospace-*.adoc files
-// TO REGENERATE THE FILE RUN generate.sh
-
-let subcommandDescriptions = [
-$(entries)
-]
-EOF
+./script/generate-subcommand-descriptions.sh
 
 if test $generate_xcodeproj = 1; then
     export XCODEGEN_DEPLOYMENT_TARGET=$MACOS_MIN_DEPLOYMENT_TARGET
