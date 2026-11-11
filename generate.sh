@@ -13,9 +13,6 @@ SWIFT_PACKAGE_MANAGER_MANIFEST_FORMAT=6.2
 SWIFT_LANGAUGE_VERSION=6
 MACOS_MIN_DEPLOYMENT_TARGET=13
 
-export XCODEGEN_DEPLOYMENT_TARGET=$MACOS_MIN_DEPLOYMENT_TARGET
-export XCODEGEN_SWIFT_VERSION=$SWIFT_LANGAUGE_VERSION
-
 generate_xcodeproj=1
 generate_cmd_help=1
 while test $# -gt 0; do
@@ -57,6 +54,9 @@ $(entries)
 EOF
 
 if test $generate_xcodeproj = 1; then
+    export XCODEGEN_DEPLOYMENT_TARGET=$MACOS_MIN_DEPLOYMENT_TARGET
+    export XCODEGEN_SWIFT_VERSION=$SWIFT_LANGAUGE_VERSION
+
     ./script/install-dep.sh --xcodegen
     cd xcode
 
