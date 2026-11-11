@@ -23,7 +23,6 @@ If you struggle to build AeroSpace locally, you can also refer to [builds in Git
 4.  If you want to build man pages, install Ruby >= 3.0. I recommend using [rbenv](https://github.com/rbenv/rbenv).
     -   `rbenv install 3.3.4` (or whatever 3.x version)
     -   Install asciidoctor using Ruby `bundler`. `cd AeroSpace && bundler install`
-5.  Install optional `xcbeautify` to make Xcode build logs readable. `brew install xcbeautify`
 
 ## 2. Create codesign certificate
 
