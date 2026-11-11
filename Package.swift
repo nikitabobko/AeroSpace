@@ -1,4 +1,4 @@
-// swift-tools-version: 6.4
+// swift-tools-version: 6.2
 
 import CompilerPluginSupport
 import PackageDescription
@@ -20,23 +20,14 @@ if let ms = env["SWIFTPM_WARN_LONG_EXPRESSION_TYPE_CHECKING_MS"] {
     swiftSettings.append(.unsafeFlags(["-Xfrontend", "-warn-long-expression-type-checking=\(ms)"]))
 }
 
-let _targetMacosVersion: Int = env["SWIFTPM_MACOS_MIN_DEPLOYMENT_TARGET"].flatMap(Int.init)
+let targetMacosVersion: Int = env["SWIFTPM_MACOS_MIN_DEPLOYMENT_TARGET"].flatMap(Int.init)
     ?? ProcessInfo.processInfo.operatingSystemVersion.majorVersion
-let targetMacosVersion: SupportedPlatform.MacOSVersion =
-    switch _targetMacosVersion {
-        case 13: .v13
-        case 14: .v14
-        case 15: .v15
-        case 26: .v26
-        case 27: .v27
-        default: fatalError("Unsupported macOS deployment target \(_targetMacosVersion)")
-    }
 
 let package = Package(
     name: "AeroSpacePackage",
     // Runtime support for parameterized protocol types is only available in macOS 13.0.0 or newer
     // And it specifies deploymentTarget for CLI
-    platforms: [.macOS(targetMacosVersion)],
+    platforms: [.macOS("\(targetMacosVersion).0")],
     // Products define the executables and libraries a package produces, making them visible to other packages.
     products: [
         .executable(name: "aerospace", targets: ["Cli"]),
