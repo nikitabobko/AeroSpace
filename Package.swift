@@ -10,7 +10,7 @@ var swiftSettings: [SwiftSetting] = [
 ]
 
 let env = ProcessInfo.processInfo.environment
-if env["SWIFTPM_WARNINGS_AS_RRORS"] != nil {
+if env["SWIFTPM_WARNINGS_AS_ERRORS"] != nil {
     swiftSettings.append(.treatAllWarnings(as: .error))
 }
 if let ms = env["SWIFTPM_WARN_LONG_FUNCTION_BODIES_MS"] {

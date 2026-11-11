@@ -15,7 +15,7 @@ on:
 env:
   AEROSPACE_VERBOSE_BUILD: 1
   # Consistent compilation everywhere -> faster compilation
-  SWIFTPM_WARNINGS_AS_RRORS: 1
+  SWIFTPM_WARNINGS_AS_ERRORS: 1
 
 jobs:
 
