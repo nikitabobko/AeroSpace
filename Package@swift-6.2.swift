@@ -1,0 +1,114 @@
+// swift-tools-version: 6.2
+
+import CompilerPluginSupport
+import PackageDescription
+import Foundation
+
+var swiftSettings: [SwiftSetting] = [
+    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+    .strictMemorySafety(),
+]
+
+let env = ProcessInfo.processInfo.environment
+if env["AEROSPACE_WARNINGS_AS_ERRORS"] != nil {
+    swiftSettings.append(.treatAllWarnings(as: .error))
+}
+if let ms = env["AEROSPACE_WARN_LONG_FUNCTION_BODIES_MS"] {
+    swiftSettings.append(.unsafeFlags(["-Xfrontend", "-warn-long-function-bodies=\(ms)"]))
+}
+if let ms = env["AEROSPACE_WARN_LONG_EXPRESSION_TYPE_CHECKING_MS"] {
+    swiftSettings.append(.unsafeFlags(["-Xfrontend", "-warn-long-expression-type-checking=\(ms)"]))
+}
+
+let _targetMacosVersion: Int = env["AEROSPACE_MACOS_MIN_DEPLOYMENT_TARGET"].flatMap(Int.init)
+    ?? ProcessInfo.processInfo.operatingSystemVersion.majorVersion
+let targetMacosVersion: SupportedPlatform.MacOSVersion =
+    switch _targetMacosVersion {
+        case 13: .v13
+        case 14: .v14
+        case 15: .v15
+        case 26: .v26
+        default: fatalError("Unsupported macOS deployment target \(_targetMacosVersion)")
+    }
+
+let package = Package(
+    name: "AeroSpacePackage",
+    // Runtime support for parameterized protocol types is only available in macOS 13.0.0 or newer
+    // And it specifies deploymentTarget for CLI
+    platforms: [.macOS(targetMacosVersion)],
+    // Products define the executables and libraries a package produces, making them visible to other packages.
+    products: [
+        .executable(name: "aerospace", targets: ["Cli"]),
+        // Don't use this build for release, use xcode instead
+        .executable(name: "AeroSpaceApp", targets: ["AeroSpaceApp"]),
+        // We only need to expose this as a product for xcode
+        .library(name: "AppBundle", targets: ["AppBundle"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/InerziaSoft/ISSoundAdditions.git", exact: "2.0.1"),
+        .package(url: "https://github.com/dduan/TOMLDecoder", exact: "0.4.5"),
+        .package(url: "https://github.com/apple/swift-collections.git", exact: "1.6.0", traits: ["UnstableHashedContainers"]),
+        .package(url: "https://github.com/soffes/HotKey.git", exact: "0.2.1"),
+    ],
+    // Targets are the basic building blocks of a package, defining a module or a test suite.
+    // Targets can depend on other targets in this package and products from dependencies.
+    targets: [
+        // Exposes the private _AXUIElementGetWindow function to swift
+        .target(
+            name: "PrivateApi",
+            path: "Sources/PrivateApi",
+            publicHeadersPath: "include",
+            swiftSettings: swiftSettings,
+        ),
+        .macro(
+            name: "Macros",
+            swiftSettings: swiftSettings,
+        ),
+        .target(
+            name: "Common",
+            dependencies: [
+                .product(name: "OrderedCollections", package: "swift-collections"),
+                .target(name: "Macros"),
+            ],
+            swiftSettings: swiftSettings,
+        ),
+        .target(
+            name: "AppBundle",
+            dependencies: [
+                .product(name: "BasicContainers", package: "swift-collections"),
+                .product(name: "OrderedCollections", package: "swift-collections"),
+                .product(name: "HotKey", package: "HotKey"),
+                .product(name: "ISSoundAdditions", package: "ISSoundAdditions"),
+                .product(name: "TOMLDecoder", package: "TOMLDecoder"),
+                .target(name: "Common"),
+                .target(name: "Macros"),
+                .target(name: "PrivateApi"),
+            ],
+            swiftSettings: swiftSettings,
+        ),
+        .executableTarget(
+            name: "AeroSpaceApp",
+            dependencies: [
+                .target(name: "AppBundle"),
+                .target(name: "Macros"),
+            ],
+            swiftSettings: swiftSettings,
+        ),
+        .executableTarget(
+            name: "Cli",
+            dependencies: [
+                .target(name: "Common"),
+                .target(name: "Macros"),
+            ],
+            swiftSettings: swiftSettings,
+        ),
+        .testTarget(
+            name: "AppBundleTests",
+            dependencies: [
+                .target(name: "AppBundle"),
+                .target(name: "Macros"),
+            ],
+            swiftSettings: swiftSettings,
+        ),
+    ],
+)

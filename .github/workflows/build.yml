@@ -24,8 +24,8 @@ jobs:
       fail-fast: false
       matrix:
         # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories
-        # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md
-        # https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md (Max installed Xcode is 26.3)
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md (Max installed Xcode is 26.6)
         # https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md
         #
         # Xcode versions:

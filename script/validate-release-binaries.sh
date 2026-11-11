@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 cd "$(dirname "$0")/.."
 source ./script/setup.sh
+source ./versions.sh
 
 expected_layout=$(cat <<EOF
 .release/AeroSpace.app
@@ -70,6 +71,13 @@ check-dylibs() {
     done
 }
 
+check-deployment-target() {
+    for arch in x86_64 arm64; do
+        check-equals "$1 ($arch) deployment target" "$MACOS_MIN_DEPLOYMENT_TARGET.0" \
+            "$(xcrun vtool -arch "$arch" -show-build "$1" | awk '$1 == "minos" { print $2 }')"
+    done
+}
+
 check-no-rpath-dylibs .release/aerospace
 
 expected_app_rpaths=$(cat <<EOF
@@ -117,6 +125,9 @@ check-dylibs .release/aerospace "$expected_cli_dylibs"
 
 check-universal-binary .release/AeroSpace.app/Contents/MacOS/AeroSpace
 check-universal-binary .release/aerospace
+
+check-deployment-target .release/AeroSpace.app/Contents/MacOS/AeroSpace
+check-deployment-target .release/aerospace
 
 codesign -v .release/AeroSpace.app
 codesign -v .release/aerospace
