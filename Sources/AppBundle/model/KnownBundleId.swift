@@ -11,6 +11,7 @@ enum KnownBundleId: String, Equatable {
     case finder = "com.apple.finder"
     case ghostty = "com.mitchellh.ghostty"
     case gimp = "org.gimp.gimp-2.10"
+    case helium = "net.imput.helium"
     case iphonesimulator = "com.apple.iphonesimulator"
     case iterm2 = "com.googlecode.iterm2"
     case kitty = "net.kovidgoyal.kitty"

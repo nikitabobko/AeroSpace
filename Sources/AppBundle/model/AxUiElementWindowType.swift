@@ -75,6 +75,8 @@ extension AxUiElementMock {
             // Chrome reactivating the fullscreen button
             // todo: consider checking for fullscreen cirteria periodically (downside: will affect performance)
             id != .chrome &&
+            // Modal sheets disable Helium's parent close button; keep those parents floating.
+            (id != .helium || get(Ax.closeButtonAttr)?.get(Ax.enabledAttr) != true) &&
 
             id != .activityMonitor && // Activity Monitor doesn't show fullscreen button
 
