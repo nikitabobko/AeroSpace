@@ -57,6 +57,7 @@ struct Config: Withable {
     var onFocusedMonitorChanged: Shell<any Command> = .empty
 
     var gaps: Gaps = .zero
+    var animations: AnimationsConfig = AnimationsConfig()
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]
     var modes: [String: Mode] = [:]
     var onWindowDetected: [WindowDetectedCallback] = []
