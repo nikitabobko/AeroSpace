@@ -34,7 +34,7 @@ extension WorkspacesContainer {
 }
 
 // todo accepting point parameter looks suboptimal
-@MainActor private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
+@MainActor private func getStubWorkspace(forPoint point: Point) -> Workspace {
     let container = point.monitorApproximation.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
     if let prev = container.prevVisibleWorkspaceName.map({ Workspace.get(byName: $0) }),
        !prev.isVisible && prev.workspaceMonitorInfo.rect.topLeftCorner == point && prev.forceAssignedMonitorInfo == nil
@@ -50,7 +50,7 @@ extension WorkspacesContainer {
         .orDie("Can't create empty workspace")
 }
 
-@MainActor private func isValidAssignment(workspace: Workspace, point: CGPoint) -> Bool {
+@MainActor private func isValidAssignment(workspace: Workspace, point: Point) -> Bool {
     switch workspace.forceAssignedMonitorInfo {
         case let forceAssigned? where forceAssigned.rect.topLeftCorner != point: false
         default: true

@@ -20,7 +20,7 @@ import Common
     // Interestingly, this callback seems to not fire when the mouse is down which is good,
     // because this is how I want it to work for windows/tabs/files dragging
     focusFollowsMouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: .mouseMoved) { @MainActor event in
-        let location = event.locationInWindow.withYAxisFlipped
+        let location = event.locationInWindow.asMyPoint.withYAxisFlipped
         focusFollowsTask?.cancel()
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         focusFollowsTask = Task.startUnstructured { @MainActor in
@@ -54,7 +54,7 @@ import Common
 }
 
 @concurrent
-private nonisolated func isAxWindowUnderMouse(_ location: CGPoint) async -> Bool? {
+private nonisolated func isAxWindowUnderMouse(_ location: Point) async -> Bool? {
     let systemwide = AXUIElementCreateSystemWide()
     var element: AXUIElement?
     if unsafe AXUIElementCopyElementAtPosition(systemwide, Float(location.x), Float(location.y), &element) != .success {

@@ -3,7 +3,7 @@ import Common
 
 final class MacWindow: Window {
     let macApp: MacApp
-    private var prevUnhiddenProportionalPositionInsideWorkspaceRect: CGPoint?
+    private var prevUnhiddenProportionalPositionInsideWorkspaceRect: Point?
 
     @MainActor private init(
         _ id: OpaqueWindowId,
@@ -147,24 +147,24 @@ final class MacWindow: Window {
                 let monitorRect = windowRect.center.monitorApproximation.rect // Similar to layoutFloatingWindow. Non idempotent
                 let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
                 prevUnhiddenProportionalPositionInsideWorkspaceRect =
-                    CGPoint(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
+                    Point(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
                 if isFloating {
                     lastFloatingSize = windowRect.size
                 }
             }
         }
-        let p: CGPoint
+        let p: Point
         switch corner {
             case .bottomLeftCorner:
                 guard let s = try await getAxSize(.cancellable) else { fallthrough }
                 // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
                 // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
-                let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: -1)
-                p = nodeMonitorInfo.visibleRect.bottomLeftCorner + onePixelOffset + CGPoint(x: -s.width, y: 0)
+                let onePixelOffset = macApp.appId == .zoom ? .zero : Point(x: 1, y: -1)
+                p = nodeMonitorInfo.visibleRect.bottomLeftCorner + onePixelOffset + Point(x: -s.width, y: 0)
             case .bottomRightCorner:
                 // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
                 // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
-                let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: 1)
+                let onePixelOffset = macApp.appId == .zoom ? .zero : Point(x: 1, y: 1)
                 p = nodeMonitorInfo.visibleRect.bottomRightCorner - onePixelOffset
         }
         setAxFrame(p, nil)
@@ -190,7 +190,7 @@ final class MacWindow: Window {
                 newX = newX.coerce(in: workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
                 newY = newY.coerce(in: workspaceRect.minY ... max(workspaceRect.minY, workspaceRect.maxY - windowHeight))
 
-                setAxFrame(CGPoint(x: newX, y: newY), nil)
+                setAxFrame(Point(x: newX, y: newY), nil)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
                  .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
         }
@@ -206,7 +206,7 @@ final class MacWindow: Window {
         try await macApp.getAxSize(windowId, cm)
     }
 
-    override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) {
+    override func setAxFrame(_ topLeft: Point?, _ size: CGSize?) {
         macApp.setAxFrame(windowId, topLeft, size)
     }
 

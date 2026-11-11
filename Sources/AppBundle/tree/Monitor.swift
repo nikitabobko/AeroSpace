@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-@MainActor private var pointToMonitor: [CGPoint: Monitor] = [:]
+@MainActor private var pointToMonitor: [Point: Monitor] = [:]
 
 final class Monitor: TreeNode, NonLeafTreeNodeObject {
     fileprivate var _info: MonitorInfo
@@ -29,8 +29,8 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
     var oldPointToMonitor = pointToMonitor
     pointToMonitor = [:]
 
-    var newPointToClosestOldPoint = [CGPoint: CGPoint]()
-    var oldPointToClosestNewPoint = [CGPoint: CGPoint]()
+    var newPointToClosestOldPoint = [Point: Point]()
+    var oldPointToClosestNewPoint = [Point: Point]()
 
     for point in newMonitorPoints.keys {
         newPointToClosestOldPoint[point] = oldPointToMonitor.keys.minBy { ($0 - point).vectorLength }
@@ -50,7 +50,7 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
     var monitors = oldPointToMonitor.values.sortedBy { $0.info.rect.topLeftCorner.vectorLength } // [Monitor]
     let monitorInfos = newMonitorPoints.values.sortedBy { $0.rect.topLeftCorner.vectorLength } // [MonitorInfo]
 
-    let mainMonitor = pointToMonitor[CGPoint(x: 0, y: 0)] ?? pointToMonitor.first?.value
+    let mainMonitor = pointToMonitor[Point(x: 0, y: 0)] ?? pointToMonitor.first?.value
     while monitors.count > monitorInfos.count, let mainMonitor {
         let monitor = monitors.removeLast()
         for child in monitor.children {

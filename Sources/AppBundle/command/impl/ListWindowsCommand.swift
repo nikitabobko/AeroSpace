@@ -27,7 +27,7 @@ struct ListWindowsCommand: Command {
                     }
                     .toSet()
             if !args.filteringFlags.monitors.isEmpty {
-                let monitors: Set<CGPoint> = args.filteringFlags.monitors.resolveMonitors(io)
+                let monitors: Set<Point> = args.filteringFlags.monitors.resolveMonitors(io)
                 if monitors.isEmpty { return .fail }
                 workspaces = workspaces.filter { monitors.contains($0.workspaceMonitorInfo.rect.topLeftCorner) }
             }

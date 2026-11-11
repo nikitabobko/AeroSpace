@@ -8,8 +8,8 @@ extension CGRect {
     }
 }
 
-extension CGPoint {
-    var withYAxisFlipped: CGPoint {
+extension Point {
+    var withYAxisFlipped: Point {
         consuming get {
             self.y = mainMonitorInfo.height - self.y
             return self

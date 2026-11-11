@@ -160,21 +160,21 @@ private func layoutWorkspaces() async throws {
         return
     }
     let monitors = globalUnsortedMonitorInfos
-    var monitorToOptimalHideCorner: [CGPoint: OptimalHideCorner] = [:]
+    var monitorToOptimalHideCorner: [Point: OptimalHideCorner] = [:]
     for monitor in monitors {
         let xOff = monitor.width * 0.1
         let yOff = monitor.height * 0.1
         // brc = bottomRightCorner
-        let brc1 = monitor.rect.bottomRightCorner + CGPoint(x: 2, y: -yOff)
-        let brc2 = monitor.rect.bottomRightCorner + CGPoint(x: -xOff, y: 2)
-        let brc3 = monitor.rect.bottomRightCorner + CGPoint(x: 2, y: 2)
+        let brc1 = monitor.rect.bottomRightCorner + Point(x: 2, y: -yOff)
+        let brc2 = monitor.rect.bottomRightCorner + Point(x: -xOff, y: 2)
+        let brc3 = monitor.rect.bottomRightCorner + Point(x: 2, y: 2)
 
         // blc = bottomLeftCorner
-        let blc1 = monitor.rect.bottomLeftCorner + CGPoint(x: -2, y: -yOff)
-        let blc2 = monitor.rect.bottomLeftCorner + CGPoint(x: xOff, y: 2)
-        let blc3 = monitor.rect.bottomLeftCorner + CGPoint(x: -2, y: 2)
+        let blc1 = monitor.rect.bottomLeftCorner + Point(x: -2, y: -yOff)
+        let blc2 = monitor.rect.bottomLeftCorner + Point(x: xOff, y: 2)
+        let blc3 = monitor.rect.bottomLeftCorner + Point(x: -2, y: 2)
 
-        func contains(_ monitor: MonitorInfo, _ point: CGPoint) -> Int { monitor.rect.contains(point) ? 1 : 0 }
+        func contains(_ monitor: MonitorInfo, _ point: Point) -> Int { monitor.rect.contains(point) ? 1 : 0 }
         let important = 10
 
         let corner: OptimalHideCorner =

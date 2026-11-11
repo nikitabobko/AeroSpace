@@ -161,7 +161,7 @@ final class MacApp: AbstractApp {
         }
     }
 
-    func setAxFrame(_ windowId: OpaqueWindowId, _ topLeft: CGPoint?, _ size: CGSize?) {
+    func setAxFrame(_ windowId: OpaqueWindowId, _ topLeft: Point?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp] window, job in
             try disableAnimations(app: axApp.threadGuarded, job) {
@@ -170,7 +170,7 @@ final class MacApp: AbstractApp {
         }
     }
 
-    func setAxFrameForTermination(_ windowId: OpaqueWindowId, _ topLeft: CGPoint?, _ size: CGSize?) {
+    func setAxFrameForTermination(_ windowId: OpaqueWindowId, _ topLeft: Point?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         let semaphore = DispatchSemaphore(value: 0)
         let job = withWindowAsync(windowId, .nonCancellable) { [axApp] window, job in
@@ -471,7 +471,7 @@ private func getAxRect(window: AXUIElement, job: RunLoopJob) throws -> Rect? {
     return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
 }
 
-private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob) throws {
+private func setFrame(_ window: AXUIElement, _ topLeft: Point?, _ size: CGSize?, _ job: RunLoopJob) throws {
     // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
     //                                                        https://github.com/nikitabobko/AeroSpace/issues/335
     if let size { window.set(Ax.sizeAttr, size) }

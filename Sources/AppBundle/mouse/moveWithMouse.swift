@@ -92,7 +92,7 @@ func swapWindows(mruDominant window1: Window, _ window2: Window) {
     window1.bind(to: binding2.parent, adaptiveWeight: binding2.adaptiveWeight, index: binding2.index)
 }
 
-extension CGPoint {
+extension Point {
     @MainActor
     func findWindowRecursively(
         in tree: TilingContainer,

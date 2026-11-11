@@ -257,15 +257,15 @@ enum Ax {
             return unsafe AXValueCreate(.cgSize, &size) as CFTypeRef
         },
     )
-    static let topLeftCornerAttr = WritableAttrImpl<CGPoint>(
+    static let topLeftCornerAttr = WritableAttrImpl<Point>(
         key: kAXPositionAttribute,
         getter: {
             var raw: CGPoint = .zero
             check(unsafe AXValueGetValue($0 as! AXValue, .cgPoint, &raw))
-            return raw
+            return raw.asMyPoint
         },
         setter: {
-            var size = $0
+            var size = $0.asCGPoint
             return unsafe AXValueCreate(.cgPoint, &size) as CFTypeRef
         },
     )

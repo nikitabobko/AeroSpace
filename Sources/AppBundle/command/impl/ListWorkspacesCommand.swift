@@ -11,7 +11,7 @@ struct ListWorkspacesCommand: Command {
             result = result.filter { $0.isVisible == visible }
         }
         if !args.filteringFlags.onMonitors.isEmpty {
-            let monitors: Set<CGPoint> = args.filteringFlags.onMonitors.resolveMonitors(io)
+            let monitors: Set<Point> = args.filteringFlags.onMonitors.resolveMonitors(io)
             if monitors.isEmpty { return .fail }
             result = result.filter { monitors.contains($0.workspaceMonitorInfo.rect.topLeftCorner) }
         }
@@ -38,8 +38,8 @@ struct ListWorkspacesCommand: Command {
 }
 
 extension [MonitorId] {
-    @MainActor func resolveMonitors(_ io: CmdIo) -> Set<CGPoint> {
-        var requested: Set<CGPoint> = []
+    @MainActor func resolveMonitors(_ io: CmdIo) -> Set<Point> {
+        var requested: Set<Point> = []
         let sortedMonitors = globalSortedMonitorInfos
         for id in self {
             let resolved = id.resolve(io, sortedMonitors: sortedMonitors)

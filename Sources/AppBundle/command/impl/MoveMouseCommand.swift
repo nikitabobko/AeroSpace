@@ -38,11 +38,11 @@ struct MoveMouseCommand: Command {
     }
 }
 
-private func moveMouse(_ io: CmdIo, _ point: CGPoint) -> BinaryExitCode {
+private func moveMouse(_ io: CmdIo, _ point: Point) -> BinaryExitCode {
     let event = CGEvent(
         mouseEventSource: nil,
         mouseType: CGEventType.mouseMoved,
-        mouseCursorPosition: point,
+        mouseCursorPosition: point.asCGPoint,
         mouseButton: CGMouseButton.left,
     )
     switch event {
