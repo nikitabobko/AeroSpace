@@ -86,7 +86,7 @@ struct MessageView: View {
         }
         .textSelection(.enabled)
         .frame(minWidth: 480, maxWidth: 960, minHeight: 200)
-        .onChange(of: model.message) { message in
+        .onChangeCompat(of: model.message) { message in
             if message == nil {
                 self.dismiss()
             }
