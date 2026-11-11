@@ -12,10 +12,10 @@ import Foundation
         return cache[windowId]
     }
     let latch = AwaitableOneTimeBroadcastLatch()
+    defer { await latch.signalToAll() }
     wip = latch
     cache = await computeCache()
     wip = nil
-    await latch.signalToAll()
     return cache[windowId]
 }
 
