@@ -2,9 +2,7 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-# --ignore-cmd-help :
-#   It takes 300ms for cmd-help to generate. It's too long to run in build-debug.sh, that's why we ignore it
-./generate.sh --ignore-xcodeproj --ignore-cmd-help
+./generate.sh --ignore-xcodeproj
 swift build --build-tests "$@"
 bin_path="$(swift build "$@" --show-bin-path)"
 
