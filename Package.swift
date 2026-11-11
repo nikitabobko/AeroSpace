@@ -9,8 +9,15 @@ var swiftSettings: [SwiftSetting] = [
     .strictMemorySafety(),
 ]
 
-if ProcessInfo.processInfo.environment["AEROSPACE_WARNINGS_AS_ERRORS"] != nil {
+let env = ProcessInfo.processInfo.environment
+if env["AEROSPACE_WARNINGS_AS_ERRORS"] != nil {
     swiftSettings.append(.treatAllWarnings(as: .error))
+}
+if let ms = env["AEROSPACE_WARN_LONG_FUNCTION_BODIES_MS"] {
+    swiftSettings.append(.unsafeFlags(["-Xfrontend", "-warn-long-function-bodies=\(ms)"]))
+}
+if let ms = env["AEROSPACE_WARN_LONG_EXPRESSION_TYPE_CHECKING_MS"] {
+    swiftSettings.append(.unsafeFlags(["-Xfrontend", "-warn-long-expression-type-checking=\(ms)"]))
 }
 
 let package = Package(
