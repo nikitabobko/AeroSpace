@@ -44,9 +44,6 @@ jobs:
       - run: ./build-debug.sh
       - run: ./test.sh
 
-  # We build release artifacts only on the latest macOS versions because:
-  # 1. It cuts the build time twice on GH Actions
-  # 2. The latest Xcode version is not available on old macOS, and old Xcode versions bundle too old Swift version
   build-release:
     strategy:
       fail-fast: false
