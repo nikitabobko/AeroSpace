@@ -2,11 +2,16 @@
 
 import CompilerPluginSupport
 import PackageDescription
+import Foundation
 
-let swiftSettings: [SwiftSetting] = [
+var swiftSettings: [SwiftSetting] = [
     .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
     .strictMemorySafety(),
 ]
+
+if ProcessInfo.processInfo.environment["AEROSPACE_WARNINGS_AS_ERRORS"] != nil {
+    swiftSettings.append(.treatAllWarnings(as: .error))
+}
 
 let package = Package(
     name: "AeroSpacePackage",
@@ -35,8 +40,12 @@ let package = Package(
             name: "PrivateApi",
             path: "Sources/PrivateApi",
             publicHeadersPath: "include",
+            swiftSettings: swiftSettings,
         ),
-        .macro(name: "Macros"),
+        .macro(
+            name: "Macros",
+            swiftSettings: swiftSettings,
+        ),
         .target(
             name: "Common",
             dependencies: [

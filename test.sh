@@ -2,7 +2,8 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-./build-debug.sh -Xswiftc -warnings-as-errors
+export AEROSPACE_WARNINGS_AS_ERRORS=1
+./build-debug.sh
 ./swift-test.sh
 
 ./.debug/aerospace -h > /dev/null
