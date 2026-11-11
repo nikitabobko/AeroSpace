@@ -4,6 +4,8 @@ set -u # Treat unset variables and parameters other than the special parameters 
 set -o pipefail # Any command failed in the pipe fails the whole pipe
 
 if ! /bin/test -z "${AEROSPACE_VERBOSE_BUILD:-}"; then
+    # Microseconds are taken as the last 6 chars of EPOCHREALTIME because its decimal separator is locale-dependent
+    PS4='+ \D{%H:%M:%S}.${EPOCHREALTIME: -6} '
     set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 fi
 
