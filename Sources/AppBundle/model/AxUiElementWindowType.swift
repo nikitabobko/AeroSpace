@@ -111,6 +111,13 @@ extension AxUiElementMock {
             return false
         }
 
+        // 1Password shows "Access Requested" (Touch ID authorization) prompts and "Quick Access" at kCGPopUpMenuWindowLevel.
+        // Don't manage them, otherwise on-window-detected moves them to the workspace of 1Password,
+        // and the prompt is not visible on the current workspace
+        if id == ._1password && windowLevel == .unknown(windowLevel: Int(CGWindowLevelForKey(.popUpMenuWindow))) {
+            return false
+        }
+
         // Just don't do anything with "Ghostty Quick Terminal" windows.
         // Its position and size are managed by the Ghostty itself
         // https://github.com/nikitabobko/AeroSpace/issues/103
