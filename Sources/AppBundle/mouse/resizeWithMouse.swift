@@ -20,7 +20,7 @@ func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutabl
         }
         resizeWithMouseTask?.cancel()
         resizeWithMouseTask = Task.startUnstructured {
-            try checkCancellation()
+            try checkCancellation(.cancellable)
             try await runLightSession(.ax(notif), token) {
                 try await resizeWithMouse(window)
             }

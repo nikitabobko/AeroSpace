@@ -56,7 +56,7 @@ final class MacApp: AbstractApp {
         if pid == myPid { return nil }
 
         if let existing = allAppsMap[pid] { return existing }
-        try checkCancellation()
+        try checkCancellation(.cancellable)
         if let wip = wipPids[pid] {
             try await wip.await(.cancellable)
             return allAppsMap[pid]
@@ -298,7 +298,7 @@ final class MacApp: AbstractApp {
         frontmostAppBundleId: String?,
     ) async throws -> [MacApp: [OpaqueWindowId: WindowLifeStatus]] {
         for app in MacApp.allAppsMap.values { // gc dead apps
-            try checkCancellation()
+            try checkCancellation(.cancellable)
             if app.nsApp.isTerminated {
                 await app.destroy()
             }
@@ -314,13 +314,13 @@ final class MacApp: AbstractApp {
             }
             // Register new apps
             for nsApp in NSWorkspace.shared.runningApplications {
-                try checkCancellation()
+                try checkCancellation(.cancellable)
                 if nsApp.activationPolicy == .regular, let app = try await MacApp.getOrRegister(nsApp) {
                     refreshTheApp(app)
                 }
             }
             for app in MacApp.allAppsMap.values {
-                try checkCancellation()
+                try checkCancellation(.cancellable)
                 // "About this Mac" window, TouchID, and a lot of other utility windows
                 // We don't monitor them actively as we do for regular apps, but if a window of one of those utility
                 // apps got focused it will end up in allAppsMap

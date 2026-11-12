@@ -11,7 +11,7 @@ func scheduleCancellableCompleteRefreshSession(
 ) {
     activeRefreshTask?.cancel()
     activeRefreshTask = Task.startUnstructured { @MainActor in
-        try checkCancellation()
+        try checkCancellation(.cancellable)
         await runHeavyCompleteRefreshSession(
             event,
             assumeCancellable: true,

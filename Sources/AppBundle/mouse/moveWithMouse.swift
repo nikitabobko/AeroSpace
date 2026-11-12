@@ -20,7 +20,7 @@ func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableR
         }
         moveWithMouseTask?.cancel()
         moveWithMouseTask = Task.startUnstructured {
-            try checkCancellation()
+            try checkCancellation(.cancellable)
             try await runLightSession(.ax(notif), token) {
                 try await moveWithMouse(window)
             }

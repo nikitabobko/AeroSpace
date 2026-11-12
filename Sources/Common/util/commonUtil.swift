@@ -186,7 +186,7 @@ public func id<T>(_ t: T) -> T { t }
     }
 }
 
-@inlinable public func checkCancellation(_ cm: CancellationMode = .cancellable) throws(CancellationError) {
+@inlinable public func checkCancellation(_ cm: CancellationMode) throws(CancellationError) {
     if cm == .cancellable && Task.isCancelled {
         throw CancellationError()
     }
