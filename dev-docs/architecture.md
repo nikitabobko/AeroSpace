@@ -40,32 +40,92 @@ Each time you run a CLI command:
 
 ## Commands subsystem
 
-todo
-
-../Sources/AppBundle/command/
 ../Sources/Common/cmdArgs/
+../Sources/AppBundle/command/
+../Sources/AppBundle/shell/
+
+Commands are defined twice, on purpose:
+
+- `Common/cmdArgs/impl/<Name>CmdArgs.swift` — CLI-args *parsing*, shared between the CLI client and
+  the server. Every command declares a static `CmdParser` with its flags, positional args, and
+  conflicting options. `CmdKind` (the enum of all commands) lives in `cmdArgsManifest.swift`.
+- `AppBundle/command/impl/<Name>Command.swift` — *execution* on the server side. A command is a
+  struct conforming to the `Command` protocol: `run(_ env: CmdEnv, _ io: CmdIo) async -> ExitCode`.
+  `CmdEnv` carries the target context (focused window/workspace), `CmdIo` carries stdin/stdout/stderr.
+- `AppBundle/shell/Shell.swift` — `Shell<any Command>`, a tree of commands combined with shell
+  operators (`;`, `&&`, `||`, `|`) and `if` conditions. This is what bindings and callbacks store
+  and what `parseCommand` produces.
+
+Every command reaches the server twice: the CLI client parses args (for early errors and `--help`),
+sends them over the socket, and the server parses them again before running.
 
 Command checklist:
+- [ ] `CmdKind` entry in `../Sources/Common/cmdArgs/cmdArgsManifest.swift`
+- [ ] `CmdArgs` parser in `../Sources/Common/cmdArgs/impl/` (flags, positional args, `--window-id`/`--workspace` support where it makes sense)
+- [ ] `Command` implementation in `../Sources/AppBundle/command/impl/`
 - [ ] Documentation in `../docs/aerospace-*` and `../docs/commands.adoc`
   - [ ] Check that site looks alright `./.site/commands.html`
   - [ ] Check that man page looks alright `./.man`
-- [ ] Do `--window-id` and/or `--workspace` flags make sense for the command?
 - [ ] Shell completion `../grammar/commands-bnf-grammar.txt`
+- [ ] Tests in `../Sources/AppBundleTests/command/`
 
 ## TOML Config parse subsystem
 
-todo
-
 ../Sources/AppBundle/config/
+
+- `Config.swift` — the `Config` model plus `defaultConfig`. Config files are *overlays*: keys missing
+  from the user config fall back to the embedded `default-config.toml`.
+- `parseConfig.swift` — the `parseConfig` function. It's a table of per-key `Parser` entries mapping
+  TOML paths (`"on-window-detected"`, `"gaps.inner"`, `[mode.main.binding]`...) to `Config`
+  properties. Parsing is *tolerant*: all errors are accumulated and reported together instead of
+  failing on the first one, and unknown keys are reported but don't prevent loading the rest.
+- `DynamicConfigValue.swift` — values that can be contextual (per-monitor, per-workspace,
+  per-window): a list of `[matcher: value]` pairs plus a fallback value, resolved lazily at use
+  sites (e.g. gaps, `on-window-detected` matchers).
+- `HotkeyBinding.swift` / `Mode.swift` — binding modes (`main` is always present) and per-key
+  `Shell<any Command>` bindings.
+- `ConfigFileWatcher.swift` — debounced file watcher that triggers `reload-config`
+  (`auto-reload-config`).
+- Parsed callbacks (`on-window-detected`, `on-focus-changed`, ...) are stored as `Shell` / matcher
+  structures and later executed by the call sites in `focus.swift` and `tree/MacWindow.swift`.
 
 ## Tree Model subsystem
 
-todo
-
 ../Sources/AppBundle/tree/
+
+The window layout is a single mutable tree of `TreeNode`s:
+
+- `Workspace` — root of a tree, AeroSpace's virtual workspace. At most one `TilingContainer`
+  child plus the container kinds below. Workspace-to-monitor assignment lives here
+  (`screenPointToVisibleWorkspace` / `MonitorInfo.activeWorkspace` in `Workspace.swift`).
+- `TilingContainer` — inner nodes; either `tiles` or `accordion` layout, `h` or `v` orientation.
+  Children are ordered and have `adaptiveWeight`.
+- `Window` — leaves. Abstract; the real implementation is `MacWindow` (talks to macOS AX API via its
+  `MacApp`), tests use `TestWindow`.
+- Non-tiling containers for macOS-specific window states (children of workspaces):
+  `FloatingWindowsContainer`, `MacosMinimizedWindowsContainer`, `MacosHiddenAppsWindowsContainer`,
+  `MacosFullscreenWindowsContainer`, `MacosPopupWindowsContainer`.
+
+Invariants are kept by `normalizeContainers()` (flatten pointless containers, enforce
+opposite-orientation nesting) and guarded by `getChildParentRelation`.
+
+**Known debt.** The tree is a mutable double-linked structure whose invariants are enforced with
+`die()`. That's fragile on @MainActor: async code suspends, focus/workspace notifications interleave,
+and a once-valid invariant can be broken by the time the mutation happens (see #506, #1311).
+The long-term plan is to rewrite it to an immutable single-linked persistent tree, tracked in #1215.
 
 ## Layout subsystem
 
-todo
-
 ../Sources/AppBundle/layout/
+
+- `refresh.swift` — session model. All tree mutations happen inside either:
+  - `runLightSession` (commands, hotkeys): refresh the model snapshot, run the command, refresh
+    again, then `layoutWorkspaces()`.
+  - `runHeavyCompleteRefreshSession` (AX/global observers, config reload, display changes):
+    full garbage collect of dead apps/windows (possibly slow due to AX round-trips — see #1615).
+- `layoutRecursive.swift` — computes window rects from the tree (weights, gaps, accordion) and
+  applies them via `setAxFrame`.
+- `layoutWorkspaces()` (in `refresh.swift`) — workspace switching the i3 way: windows of the visible
+  workspaces are moved into place first; windows of invisible workspaces are then hidden by moving
+  them to the nearest free corner of the screen union (skipping workspaces whose monitor is covered
+  by a single tiling window — #1287).
