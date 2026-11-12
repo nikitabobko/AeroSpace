@@ -49,6 +49,7 @@ struct ReloadConfigResult {
         }
     }
     if parseResult.allowReloadConfig && !args.dryRun {
+        invalidateNativeFullscreenSettling()
         TrayMenuModel.shared.lastReloadConfigContainedWarnings = containsWarnings
         resetHotKeys()
         config = parseResult.config

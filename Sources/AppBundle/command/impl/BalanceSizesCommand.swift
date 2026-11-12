@@ -8,6 +8,7 @@ struct BalanceSizesCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
+        invalidateNativeFullscreenSettling()
         balance(target.workspace.rootTilingContainer)
         return .succ
     }

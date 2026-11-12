@@ -99,6 +99,7 @@ extension Shell where T == any Command {
     @MainActor func run(_ env: CmdEnv, _ io: CmdIo) async -> Int32ExitCode {
         switch self {
             case .cmd(let command):
+                if command.shouldResetClosedWindowsCache { invalidateNativeFullscreenSettling() }
                 let exitCode = Int32ExitCode(rawValue: await command.run(env, io).rawValue)
                 if command.shouldResetClosedWindowsCache { resetClosedWindowsCache() }
                 await refreshModel_nonCancellable()
