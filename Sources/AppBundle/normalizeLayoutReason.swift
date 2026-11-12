@@ -1,3 +1,5 @@
+import Common
+
 @MainActor func normalizeLayoutReason() async throws {
     for workspace in Workspace.all {
         let windows: [Window] = workspace.allLeafWindowsRecursive
@@ -19,7 +21,8 @@
 }
 
 @MainActor private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) async throws {
-    let states = try await windows.mapConcurrently { try await $0.getMacosWindowNativeState(.cancellable) }
+    let cm = CancellationMode.cancellable
+    let states = try await windows.mapConcurrently(cm) { try await $0.getMacosWindowNativeState(cm) }
     for (window, state) in zip(windows, states) {
         let isMacosFullscreen = state == .nativeFullscreen
         let isMacosMinimized = state == .nativeMinimized

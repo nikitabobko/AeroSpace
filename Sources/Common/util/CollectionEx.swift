@@ -8,16 +8,19 @@ extension Collection {
     }
 
     @MainActor public func mapConcurrently<R: Sendable>(
+        _ cm: CancellationMode,
         _ transform: @escaping @Sendable @MainActor (Element) async throws -> R,
     ) async throws -> [R] {
         try await withThrowingTaskGroup(of: (Int, R).self) { group in
             for (index, item) in enumerated() {
+                try checkCancellation(cm)
                 group.addTask { @Sendable @MainActor in (index, try await transform(item)) }
             }
             var result: [R?] = Array(repeating: nil, count: self.count)
             for try await (index, value) in group {
                 result[index] = value
             }
+            try checkCancellation(cm)
             return result.map { $0.orDie() }
         }
     }
