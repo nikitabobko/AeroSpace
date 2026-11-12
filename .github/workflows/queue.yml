@@ -19,7 +19,7 @@ jobs:
     steps:
     - if: needs.build.result != 'success'
       run: exit 1
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7.0.1
       with:
         fetch-depth: 0 # Shallow clone lacks main's tip, so push fails with "fetch first"
     - run: git push origin HEAD:main

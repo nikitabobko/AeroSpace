@@ -36,7 +36,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - run: env # Debug
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - run: ./.github/gh-actions-runner-xcode-select.sh
       - run: brew install bash
       - run: HOMEBREW_DISABLE_LOAD_FORMULA=1 brew update # Needed for swiftly :(
@@ -55,7 +55,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - run: env # Debug
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - run: ./.github/gh-actions-runner-xcode-select.sh
       - run: brew install bash fish
       - run: HOMEBREW_DISABLE_LOAD_FORMULA=1 brew update # Needed for swiftly :(
