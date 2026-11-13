@@ -1,15 +1,16 @@
 @testable import AppBundle
-import XCTest
+import Testing
 
 @MainActor
-final class TrayMenuModelTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct TrayMenuModelTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testFocusedWindowBadgesAreEmptyWithoutFocusedWindow() {
+    @Test func testFocusedWindowBadgesAreEmptyWithoutFocusedWindow() {
         assertEquals(menuBarFocusedWindowBadges(for: nil), [])
     }
 
-    func testFocusedWindowBadgesForFloatingAndStickyWindow() {
+    @Test func testFocusedWindowBadgesForFloatingAndStickyWindow() {
         let workspace = Workspace.get(byName: "a")
         let window = TestWindow.new(id: 1, parent: workspace.floatingWindowsContainer)
         window.isSticky = true
@@ -17,14 +18,14 @@ final class TrayMenuModelTest: XCTestCase {
         assertEquals(menuBarFocusedWindowBadges(for: window), [.floating, .sticky])
     }
 
-    func testFocusedWindowBadgesForTilingWindow() {
+    @Test func testFocusedWindowBadgesForTilingWindow() {
         let workspace = Workspace.get(byName: "a")
         let window = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
 
         assertEquals(menuBarFocusedWindowBadges(for: window), [])
     }
 
-    func testFocusedWindowBadgesForStickyTilingWindow() {
+    @Test func testFocusedWindowBadgesForStickyTilingWindow() {
         let workspace = Workspace.get(byName: "a")
         let window = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         window.isSticky = true
@@ -32,7 +33,7 @@ final class TrayMenuModelTest: XCTestCase {
         assertEquals(menuBarFocusedWindowBadges(for: window), [.sticky])
     }
 
-    func testFocusedWindowBadgeSymbols() {
+    @Test func testFocusedWindowBadgeSymbols() {
         assertEquals(FocusedWindowBadge.floating.systemImageName, "rectangle.fill.on.rectangle.angled.fill")
         assertEquals(FocusedWindowBadge.sticky.systemImageName, "pin.fill")
     }

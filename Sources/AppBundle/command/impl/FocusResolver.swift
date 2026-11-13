@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-// periphery:ignore - The sticky case is used after the sticky-window branch is rebased on this focus projection.
+// periphery:ignore - The sticky case is used after the sticky-window branch is rebased on this globalFocus projection.
 enum FocusCandidateRole: Equatable {
     case tiling
     case floating
@@ -10,15 +10,15 @@ enum FocusCandidateRole: Equatable {
 
 @MainActor
 private struct FocusContext {
-    let windowId: UInt32?
+    let windowId: OpaqueWindowId?
     let workspaceName: String
     let monitorId: Int
 
     static var current: FocusContext {
         FocusContext(
-            windowId: focus.windowOrNil?.windowId,
-            workspaceName: focus.workspace.name,
-            monitorId: focus.workspace.workspaceMonitor.monitorId_oneBased ?? 0,
+            windowId: globalFocus.windowOrNil?.windowId,
+            workspaceName: globalFocus.workspace.name,
+            monitorId: globalFocus.workspace.workspaceMonitorInfo.monitorId_oneBased ?? 0,
         )
     }
 
@@ -120,7 +120,7 @@ struct FocusSnapshot {
     private let target: LiveFocus
     private let initialFocusContext: FocusContext
     private let root: FocusTreeNode
-    private let windows: [UInt32: FocusTreeNode]
+    private let windows: [OpaqueWindowId: FocusTreeNode]
 
     static func capture(target: LiveFocus, includeFloating: Bool) async throws -> FocusSnapshot {
         let initialFocusContext = FocusContext.current
@@ -162,7 +162,7 @@ struct FocusSnapshot {
 
 @MainActor
 private struct FocusTreeBuilder {
-    var windows: [UInt32: FocusTreeNode] = [:]
+    var windows: [OpaqueWindowId: FocusTreeNode] = [:]
     private var nodes: [ObjectIdentifier: FocusTreeNode] = [:]
 
     mutating func copy(container: TilingContainer) -> FocusTreeNode {
@@ -197,7 +197,7 @@ private struct FocusTreeBuilder {
             let virtualParent: FocusTreeNode
             let parentOrientation: Orientation
             let index: Int
-            if let target = center.coerce(in: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps)?
+            if let target = center.coerce(in: workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps)?
                 .findWindowRecursively(in: workspace.rootTilingContainer, virtual: true, fullscreenCoversAll: false),
                 let targetCenter = try await target.getCenter(.nonCancellable),
                 let tilingParent = target.parent as? TilingContainer,
@@ -232,7 +232,7 @@ private struct FocusTreeBuilder {
 @MainActor
 private struct PendingFloatingFocusNode {
     let window: Window
-    let center: CGPoint
+    let center: Point
     let parent: FocusTreeNode
     let parentOrientation: Orientation
     let index: Int

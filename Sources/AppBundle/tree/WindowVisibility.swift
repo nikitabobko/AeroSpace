@@ -3,7 +3,7 @@ import Common
 extension Window {
     @MainActor
     var visualWorkspaceForWindow: Workspace? {
-        stickyWorkspaceOnActiveMonitor ?? nodeWorkspace ?? nodeMonitor?.activeWorkspace
+        stickyWorkspaceOnActiveMonitor ?? nodeWorkspace ?? nodeMonitorInfo?.visibleWorkspace
     }
 
     @MainActor
@@ -22,7 +22,7 @@ extension Window {
               isManagedByAeroSpaceWorkspaceVisibility,
               nodeWorkspace?.isVisible != true
         else { return nil }
-        return nodeMonitor?.activeWorkspace
+        return nodeMonitorInfo?.visibleWorkspace
     }
 
     @MainActor

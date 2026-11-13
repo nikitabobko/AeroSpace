@@ -1,10 +1,11 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
-final class GlobalObserverTest: XCTestCase {
-    @MainActor
-    func testLeftMouseUpOnMenuBarDoesNotFocusClickedMonitor() {
+@MainActor
+@Suite(.serializedGlobally)
+struct GlobalObserverTest {
+    @Test func testLeftMouseUpOnMenuBarDoesNotFocusClickedMonitor() {
         setUpWorkspacesForTests()
         let focused = Workspace.get(byName: "focused")
         let clicked = Workspace.get(byName: "clicked")
@@ -16,14 +17,13 @@ final class GlobalObserverTest: XCTestCase {
         check(monitor.setActiveWorkspace(clicked))
 
         assertNil(workspaceToFocusAfterLeftMouseUp(
-            mouseLocation: CGPoint(x: 100, y: 10),
+            mouseLocation: Point(x: 100, y: 10),
             clickedMonitor: monitor,
             isClickOnDesktop: true,
         ))
     }
 
-    @MainActor
-    func testLeftMouseUpOnVisibleAreaFocusesClickedMonitor() {
+    @Test func testLeftMouseUpOnVisibleAreaFocusesClickedMonitor() {
         setUpWorkspacesForTests()
         let focused = Workspace.get(byName: "focused")
         let clicked = Workspace.get(byName: "clicked")
@@ -35,14 +35,13 @@ final class GlobalObserverTest: XCTestCase {
         check(monitor.setActiveWorkspace(clicked))
 
         assertEquals(workspaceToFocusAfterLeftMouseUp(
-            mouseLocation: CGPoint(x: 100, y: 100),
+            mouseLocation: Point(x: 100, y: 100),
             clickedMonitor: monitor,
             isClickOnDesktop: true,
         ), clicked)
     }
 
-    @MainActor
-    func testLeftMouseUpOnNonDesktopWindowDoesNotFocusClickedMonitor() {
+    @Test func testLeftMouseUpOnNonDesktopWindowDoesNotFocusClickedMonitor() {
         setUpWorkspacesForTests()
         let focused = Workspace.get(byName: "focused")
         let clicked = Workspace.get(byName: "clicked")
@@ -54,33 +53,33 @@ final class GlobalObserverTest: XCTestCase {
         check(monitor.setActiveWorkspace(clicked))
 
         assertNil(workspaceToFocusAfterLeftMouseUp(
-            mouseLocation: CGPoint(x: 100, y: 100),
+            mouseLocation: Point(x: 100, y: 100),
             clickedMonitor: monitor,
             isClickOnDesktop: false,
         ))
     }
 
-    func testClickOnDesktopReturnsFalseWhenNonDesktopWindowContainsMouseLocation() {
+    @Test func testClickOnDesktopReturnsFalseWhenNonDesktopWindowContainsMouseLocation() {
         assertFalse(isClickOnDesktop(
-            mouseLocation: CGPoint(x: 100, y: 100),
+            mouseLocation: Point(x: 100, y: 100),
             windowInfos: [
                 windowInfo(bounds: CGRect(x: 50, y: 50, width: 100, height: 100)),
             ],
         ))
     }
 
-    func testClickOnDesktopReturnsTrueWhenNoNonDesktopWindowContainsMouseLocation() {
+    @Test func testClickOnDesktopReturnsTrueWhenNoNonDesktopWindowContainsMouseLocation() {
         assertTrue(isClickOnDesktop(
-            mouseLocation: CGPoint(x: 100, y: 100),
+            mouseLocation: Point(x: 100, y: 100),
             windowInfos: [
                 windowInfo(bounds: CGRect(x: 200, y: 200, width: 100, height: 100)),
             ],
         ))
     }
 
-    func testClickOnDesktopIgnoresTransparentWindowInfo() {
+    @Test func testClickOnDesktopIgnoresTransparentWindowInfo() {
         assertTrue(isClickOnDesktop(
-            mouseLocation: CGPoint(x: 100, y: 100),
+            mouseLocation: Point(x: 100, y: 100),
             windowInfos: [
                 windowInfo(bounds: CGRect(x: 50, y: 50, width: 100, height: 100), alpha: 0),
             ],

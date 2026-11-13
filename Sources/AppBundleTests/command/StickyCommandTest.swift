@@ -1,48 +1,49 @@
 @testable import AppBundle
 import Common
-import XCTest
+import Testing
 
 @MainActor
-final class StickyCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+@Suite(.serializedGlobally)
+struct StickyCommandTest {
+    init() { setUpWorkspacesForTests() }
 
-    func testParse() {
+    @Test func testParse() {
         testParseSingleCommandSucc("sticky", StickyCmdArgs(rawArgs: []))
-        testParseSingleCommandSucc("sticky on", StickyCmdArgs(rawArgs: []).copy(\.toggle, .on))
-        testParseSingleCommandSucc("sticky off", StickyCmdArgs(rawArgs: []).copy(\.toggle, .off))
-        testParseSingleCommandSucc("sticky --window-id 42 off", StickyCmdArgs(rawArgs: []).copy(\.windowId, 42).copy(\.toggle, .off))
-        testParseSingleCommandSucc("sticky --fail-if-noop on", StickyCmdArgs(rawArgs: []).copy(\.failIfNoop, true).copy(\.toggle, .on))
+        testParseSingleCommandSucc("sticky on", StickyCmdArgs(rawArgs: []).with(\.toggle, .on))
+        testParseSingleCommandSucc("sticky off", StickyCmdArgs(rawArgs: []).with(\.toggle, .off))
+        testParseSingleCommandSucc("sticky --window-id 42 off", StickyCmdArgs(rawArgs: []).with(\.windowId, 42).with(\.toggle, .off))
+        testParseSingleCommandSucc("sticky --fail-if-noop on", StickyCmdArgs(rawArgs: []).with(\.failIfNoop, true).with(\.toggle, .on))
         assertEquals(parseCommand("sticky --fail-if-noop").errorOrNil, "--fail-if-noop requires 'on' or 'off' argument")
     }
 
-    func testToggleOnOffAndNoop() async throws {
+    @Test func testToggleOnOffAndNoop() async {
         var window: TestWindow!
         Workspace.get(byName: "a").rootTilingContainer.apply {
             window = TestWindow.new(id: 1, parent: $0)
         }
         _ = window.focusWindow()
 
-        try await StickyCommand(args: StickyCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
+        await StickyCommand(args: StickyCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
         assertEquals(window.isSticky, true)
 
-        try await StickyCommand(args: StickyCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
+        await StickyCommand(args: StickyCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
         assertEquals(window.isSticky, false)
 
-        try await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(window.isSticky, true)
 
-        let alreadySticky = try await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let alreadySticky = await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(alreadySticky.exitCode.rawValue, 0)
         assertEquals(alreadySticky.stderr, ["Already sticky. Tip: use --fail-if-noop to exit with non-zero code"])
 
-        let failIfNoop = try await parseCommand("sticky --fail-if-noop on").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let failIfNoop = await parseCommand("sticky --fail-if-noop on").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(failIfNoop.exitCode.rawValue, 2)
 
-        try await parseCommand("sticky off").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        await parseCommand("sticky off").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(window.isSticky, false)
     }
 
-    func testWindowId() async throws {
+    @Test func testWindowId() async {
         var window1: TestWindow!
         var window2: TestWindow!
         Workspace.get(byName: "a").rootTilingContainer.apply {
@@ -51,13 +52,13 @@ final class StickyCommandTest: XCTestCase {
         }
         _ = window1.focusWindow()
 
-        try await parseCommand("sticky --window-id 2 on").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        await parseCommand("sticky --window-id 2 on").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
         assertEquals(window1.isSticky, false)
         assertEquals(window2.isSticky, true)
     }
 
-    func testStickyWindowUsesVisibleWorkspaceWhenHomeWorkspaceIsHidden() {
+    @Test func testStickyWindowUsesVisibleWorkspaceWhenHomeWorkspaceIsHidden() {
         let workspaceA = Workspace.get(byName: "a")
         let workspaceB = Workspace.get(byName: "b")
         var window: TestWindow!
@@ -75,7 +76,7 @@ final class StickyCommandTest: XCTestCase {
         assertEquals(windowsVisuallyOnWorkspace(workspaceB), [window])
     }
 
-    func testNonStickyWindowStaysVisuallyOnItsHomeWorkspaceWhenHidden() {
+    @Test func testNonStickyWindowStaysVisuallyOnItsHomeWorkspaceWhenHidden() {
         let workspaceA = Workspace.get(byName: "a")
         let workspaceB = Workspace.get(byName: "b")
         var window: TestWindow!
@@ -90,7 +91,7 @@ final class StickyCommandTest: XCTestCase {
         assertEquals(window.shouldStayVisibleWhenOwningWorkspaceIsHidden, false)
     }
 
-    func testListVisibleAndMonitorWindowsIncludeStickyWindowsWithoutDuplication() async throws {
+    @Test func testListVisibleAndMonitorWindowsIncludeStickyWindowsWithoutDuplication() async {
         let workspaceA = Workspace.get(byName: "a")
         let workspaceB = Workspace.get(byName: "b")
         workspaceA.rootTilingContainer.apply {
@@ -101,27 +102,27 @@ final class StickyCommandTest: XCTestCase {
         }
         check(workspaceB.focusWorkspace())
 
-        let result = try await parseCommand("list-windows --workspace visible --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-windows --workspace visible --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
         assertEquals(result.stdout.toSet(), ["1", "2"])
 
-        let monitorResult = try await parseCommand("list-windows --monitor all --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let monitorResult = await parseCommand("list-windows --monitor all --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
         assertEquals(monitorResult.stdout.toSet(), ["1", "2"])
         assertEquals(monitorResult.stdout.count, 2)
     }
 
-    func testStickyWindowInVisibleHomeWorkspaceIsNotDuplicatedInListWindows() async throws {
+    @Test func testStickyWindowInVisibleHomeWorkspaceIsNotDuplicatedInListWindows() async {
         Workspace.get(byName: "a").rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0).isSticky = true
         }
 
-        let result = try await parseCommand("list-windows --workspace visible --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-windows --workspace visible --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
         assertEquals(result.stdout, ["1"])
     }
 
-    func testWindowIsStickyFormatVar() async throws {
+    @Test func testWindowIsStickyFormatVar() async {
         let workspaceA = Workspace.get(byName: "a")
         workspaceA.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0).isSticky = true
@@ -129,12 +130,12 @@ final class StickyCommandTest: XCTestCase {
         }
         check(workspaceA.focusWorkspace())
 
-        let result = try await parseCommand("list-windows --workspace visible --format '%{window-id} %{window-is-sticky}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-windows --workspace visible --format '%{window-id} %{window-is-sticky}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
         assertEquals(result.stdout.toSet(), ["1 true", "2 false"])
     }
 
-    func testStickyOnAutoFloatsTilingWindow() async throws {
+    @Test func testStickyOnAutoFloatsTilingWindow() async {
         let workspaceA = Workspace.get(byName: "a")
         var window: TestWindow!
         workspaceA.rootTilingContainer.apply {
@@ -144,14 +145,14 @@ final class StickyCommandTest: XCTestCase {
 
         assertTrue(window.isFloating == false)
 
-        try await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
         assertEquals(window.isSticky, true)
         assertTrue(window.isFloating)
         assertEquals(window.nodeWorkspace, workspaceA)
     }
 
-    func testStickyOnPreservesAlreadyFloatingWindow() async throws {
+    @Test func testStickyOnPreservesAlreadyFloatingWindow() async {
         let workspaceA = Workspace.get(byName: "a")
         var window: TestWindow!
         window = TestWindow.new(id: 1, parent: workspaceA.floatingWindowsContainer) // Direct child of workspace = floating
@@ -159,14 +160,14 @@ final class StickyCommandTest: XCTestCase {
 
         assertTrue(window.isFloating)
 
-        try await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
         assertEquals(window.isSticky, true)
         assertTrue(window.isFloating)
         assertEquals(window.nodeWorkspace, workspaceA)
     }
 
-    func testStickyOffDoesNotReTile() async throws {
+    @Test func testStickyOffDoesNotReTile() async {
         let workspaceA = Workspace.get(byName: "a")
         var window: TestWindow!
         workspaceA.rootTilingContainer.apply {
@@ -174,16 +175,16 @@ final class StickyCommandTest: XCTestCase {
         }
         _ = window.focusWindow()
 
-        try await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertTrue(window.isFloating)
 
-        try await parseCommand("sticky off").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        await parseCommand("sticky off").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
         assertEquals(window.isSticky, false)
         assertTrue(window.isFloating) // Still floating, not auto-re-tiled
     }
 
-    func testStickyWindowPositioningOnWorkspaceSwitch() {
+    @Test func testStickyWindowPositioningOnWorkspaceSwitch() {
         let workspaceA = Workspace.get(byName: "a")
         let workspaceB = Workspace.get(byName: "b")
         var window: TestWindow!
@@ -202,7 +203,7 @@ final class StickyCommandTest: XCTestCase {
         assertEquals(windowsVisuallyOnWorkspace(workspaceB).contains(window), true)
     }
 
-    func testMoveNodeToWorkspacePreservesStickyState() async throws {
+    @Test func testMoveNodeToWorkspacePreservesStickyState() async {
         let workspaceA = Workspace.get(byName: "a")
         let workspaceB = Workspace.get(byName: "b")
         var window: TestWindow!
@@ -212,7 +213,7 @@ final class StickyCommandTest: XCTestCase {
         window.isSticky = true
         _ = window.focusWindow()
 
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
+        await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
 
         assertEquals(window.isSticky, true)
         assertEquals(window.nodeWorkspace, workspaceB)
