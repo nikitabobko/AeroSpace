@@ -103,7 +103,7 @@ func isClickOnDesktop(mouseLocation: Point, windowInfos: [NSDictionary]) -> Bool
         guard let boundsDict = windowInfo[kCGWindowBounds] as? NSDictionary,
               let bounds = CGRect(dictionaryRepresentation: boundsDict as CFDictionary)
         else { return false }
-        return bounds.contains(mouseLocation)
+        return bounds.contains(mouseLocation.asCGPoint)
     }
 }
 

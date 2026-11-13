@@ -5,57 +5,44 @@ import Testing
 @MainActor
 @Suite(.serializedGlobally)
 struct GlobalObserverTest {
-    @Test func testLeftMouseUpOnMenuBarDoesNotFocusClickedMonitor() {
+    @Test func testDesktopClickOnOtherWorkspaceFocusesIt() {
         setUpWorkspacesForTests()
         let focused = Workspace.get(byName: "focused")
         let clicked = Workspace.get(byName: "clicked")
-        let monitor = TestMonitor(
-            rect: Rect(topLeftX: 0, topLeftY: 0, width: 1000, height: 800),
-            visibleRect: Rect(topLeftX: 0, topLeftY: 31, width: 1000, height: 769),
-        )
         check(focused.focusWorkspace())
-        check(monitor.setActiveWorkspace(clicked))
-
-        assertNil(workspaceToFocusAfterLeftMouseUp(
-            mouseLocation: Point(x: 100, y: 10),
-            clickedMonitor: monitor,
-            isClickOnDesktop: true,
-        ))
-    }
-
-    @Test func testLeftMouseUpOnVisibleAreaFocusesClickedMonitor() {
-        setUpWorkspacesForTests()
-        let focused = Workspace.get(byName: "focused")
-        let clicked = Workspace.get(byName: "clicked")
-        let monitor = TestMonitor(
-            rect: Rect(topLeftX: 0, topLeftY: 0, width: 1000, height: 800),
-            visibleRect: Rect(topLeftX: 0, topLeftY: 31, width: 1000, height: 769),
-        )
-        check(focused.focusWorkspace())
-        check(monitor.setActiveWorkspace(clicked))
+        check(mainMonitorInfo.setVisibleWorkspace(clicked))
 
         assertEquals(workspaceToFocusAfterLeftMouseUp(
-            mouseLocation: Point(x: 100, y: 100),
-            clickedMonitor: monitor,
+            mouseLocation: mainMonitorInfo.visibleRect.center,
+            clickedMonitor: mainMonitorInfo,
             isClickOnDesktop: true,
         ), clicked)
     }
 
-    @Test func testLeftMouseUpOnNonDesktopWindowDoesNotFocusClickedMonitor() {
+    @Test func testNonDesktopClickDoesNotFocusClickedMonitor() {
         setUpWorkspacesForTests()
         let focused = Workspace.get(byName: "focused")
         let clicked = Workspace.get(byName: "clicked")
-        let monitor = TestMonitor(
-            rect: Rect(topLeftX: 0, topLeftY: 0, width: 1000, height: 800),
-            visibleRect: Rect(topLeftX: 0, topLeftY: 31, width: 1000, height: 769),
-        )
         check(focused.focusWorkspace())
-        check(monitor.setActiveWorkspace(clicked))
+        check(mainMonitorInfo.setVisibleWorkspace(clicked))
 
         assertNil(workspaceToFocusAfterLeftMouseUp(
-            mouseLocation: Point(x: 100, y: 100),
-            clickedMonitor: monitor,
+            mouseLocation: mainMonitorInfo.visibleRect.center,
+            clickedMonitor: mainMonitorInfo,
             isClickOnDesktop: false,
+        ))
+    }
+
+    @Test func testDesktopClickOnFocusedWorkspaceDoesNotFocus() {
+        setUpWorkspacesForTests()
+        let focused = Workspace.get(byName: "focused")
+        check(focused.focusWorkspace())
+        check(mainMonitorInfo.setVisibleWorkspace(focused))
+
+        assertNil(workspaceToFocusAfterLeftMouseUp(
+            mouseLocation: mainMonitorInfo.visibleRect.center,
+            clickedMonitor: mainMonitorInfo,
+            isClickOnDesktop: true,
         ))
     }
 
@@ -85,16 +72,6 @@ struct GlobalObserverTest {
             ],
         ))
     }
-}
-
-private struct TestMonitor: MonitorInfo {
-    let monitorAppKitNsScreenScreensId = 1
-    let name = "Test Monitor"
-    let rect: Rect
-    let visibleRect: Rect
-    let isMain = true
-    var width: CGFloat { rect.width }
-    var height: CGFloat { rect.height }
 }
 
 private func windowInfo(bounds: CGRect, alpha: Double = 1) -> NSDictionary {
