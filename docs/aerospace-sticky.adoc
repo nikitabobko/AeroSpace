@@ -1,0 +1,45 @@
+= aerospace-sticky(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-sticky
+// tag::purpose[]
+:manpurpose: Toggle sticky mode for the focused window
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+
+[verse]
+// tag::synopsis[]
+aerospace sticky [-h|--help] [--window-id <window-id>]
+aerospace sticky [-h|--help] [--window-id <window-id>] [--fail-if-noop] on
+aerospace sticky [-h|--help] [--window-id <window-id>] [--fail-if-noop] off
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+Sticky windows stay visible when their workspace is hidden.
+
+When `sticky on` is called, the window is automatically converted to floating layout. This is by design: a pinned window should not participate in tiling layout, and should float above the active workspace's tiled windows.
+
+`sticky off` clears the sticky flag but does *not* restore tiling layout. To return a window to tiling, use `layout tiling` after `sticky off`.
+
+If the window is minimized, hidden by macOS, or in macOS native fullscreen, macOS native state still takes precedence. `sticky` only affects AeroSpace workspace visibility.
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
+
+*--fail-if-noop*::
+    Exit with non-zero code if the window is already in the requested state.
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

@@ -7,6 +7,7 @@ public final class TrayMenuModel: ObservableObject {
     private init() {}
 
     @Published var trayText: String = ""
+    @Published var focusedWindowBadges: [FocusedWindowBadge] = []
     @Published var trayItems: [TrayItem] = []
     /// Is "layouting" enabled
     @Published var isEnabled: Bool = true
@@ -35,6 +36,7 @@ enum AxPermissionStatus: Equatable {
             return ($0.visibleWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + visibleWorkspaceName
         }
         .joined(separator: " │ ")
+    TrayMenuModel.shared.focusedWindowBadges = menuBarFocusedWindowBadges(for: focus.windowOrNil)
     TrayMenuModel.shared.workspaces = Workspace.all.map {
         let apps = $0.allLeafWindowsRecursive.map { $0.app.name?.takeIf { !$0.isEmpty } }.filterNotNil().toSet()
         let dash = " - "
@@ -71,6 +73,15 @@ enum AxPermissionStatus: Equatable {
     TrayMenuModel.shared.trayItems = items
 }
 
+@MainActor
+func menuBarFocusedWindowBadges(for window: Window?) -> [FocusedWindowBadge] {
+    guard let window else { return [] }
+    return [
+        window.isFloating ? .floating : nil,
+        window.isSticky ? .sticky : nil,
+    ].filterNotNil()
+}
+
 struct WorkspaceViewModel: Hashable {
     let name: String
     let suffix: String
@@ -83,6 +94,27 @@ struct WorkspaceViewModel: Hashable {
 enum TrayItemType: String, Hashable {
     case mode
     case workspace
+}
+
+enum FocusedWindowBadge: Hashable, Identifiable {
+    case floating
+    case sticky
+
+    var id: Self { self }
+
+    var systemImageName: String {
+        switch self {
+            case .floating: "rectangle.fill.on.rectangle.angled.fill"
+            case .sticky: "pin.fill"
+        }
+    }
+
+    var accessibilityLabel: String {
+        switch self {
+            case .floating: "Floating window"
+            case .sticky: "Sticky window"
+        }
+    }
 }
 
 private let validLetters = "A" ... "Z"

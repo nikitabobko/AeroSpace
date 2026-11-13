@@ -252,6 +252,13 @@ include::aerospace-split.adoc[tags=synopsis]
 include::aerospace-split.adoc[tags=purpose]
 include::aerospace-split.adoc[tags=body]
 
+== sticky
+----
+include::aerospace-sticky.adoc[tags=synopsis]
+----
+include::aerospace-sticky.adoc[tags=purpose]
+include::aerospace-sticky.adoc[tags=body]
+
 == subscribe
 ----
 include::aerospace-subscribe.adoc[tags=synopsis]

@@ -297,9 +297,14 @@ final class MacApp: AbstractApp {
     @MainActor static func refreshAllAndGetAliveWindowIds(
         frontmostAppBundleId: String?,
     ) async throws -> [MacApp: [OpaqueWindowId: WindowLifeStatus]] {
+        // `isTerminated` alone is unreliable: a process that exits without AeroSpace being notified
+        // (e.g. force-killed with SIGKILL) keeps isTerminated == false, so its MacApp is never gc'd,
+        // its AxAppThread is never torn down, and the dead app's AX observer source busy-spins the
+        // run loop forever (one full core). Cross-check against the actually-running pids.
+        let runningPids = Set(NSWorkspace.shared.runningApplications.map(\.processIdentifier))
         for app in MacApp.allAppsMap.values { // gc dead apps
             try checkCancellation()
-            if app.nsApp.isTerminated {
+            if app.nsApp.isTerminated || !runningPids.contains(app.pid) {
                 await app.destroy()
             }
         }
