@@ -101,10 +101,10 @@ final class MacWindow: Window {
                 case .tilingContainer, .floatingWindowsContainer, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
                     let deadWindowFocus = deadWindowWorkspace.toLiveFocus()
                     _ = setFocus(to: deadWindowFocus)
-                    // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
-                    if focus.windowOrNil?.app.pid != app.pid {
-                        // Force focus to fix macOS annoyance with focused apps without windows.
-                        //   https://github.com/nikitabobko/AeroSpace/issues/65
+                    if mustNativeFocusAfterWindowDestruction(
+                        focusedAppPid: focus.windowOrNil?.app.pid,
+                        deadWindowAppPid: app.pid,
+                    ) {
                         deadWindowFocus.windowOrNil?.nativeFocus()
                     }
                 case .macosPopupWindowsContainer, // Don't switch back on popup destruction
@@ -317,4 +317,16 @@ extension WindowDetectedCallback {
                 return await command.run(.defaultEnv.withWindowId(window.windowId), .emptyStdin).exitCode.rawValue == 0
         }
     }
+}
+
+/// Decides whether the garbage collection of a destroyed window must natively focus the window that AeroSpace
+/// restores on the dead window's workspace. `focusedAppPid` describes the focus right before the restoration.
+func mustNativeFocusAfterWindowDestruction(
+    focusedAppPid: pid_t?,
+    deadWindowAppPid: pid_t,
+) -> Bool {
+    // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
+    // Force focus to fix macOS annoyance with focused apps without windows.
+    //   https://github.com/nikitabobko/AeroSpace/issues/65
+    focusedAppPid != deadWindowAppPid
 }
