@@ -1,0 +1,13 @@
+{
+  "AXSubrole": "AXDialog",
+  "AXCloseButton": {
+    "AXEnabled": 1
+  },
+  "AXFullScreenButton": null,
+  "Aero.AXApp": {},
+  "Aero.App.appBundleId": "net.imput.helium",
+  "Aero.App.nsApp.activationPolicy": "regular",
+  "Aero.windowLevel": "normalWindow",
+  "Aero.AxUiElementWindowType": "dialog",
+  "Aero.AxUiElementWindowType_isDialogHeuristic": true
+}
