@@ -184,6 +184,7 @@ extension TreeNode {
                 }
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                  .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer,
+                 .monitor, .workspacesContainer,
                  .floatingWindowsContainer:
                 die("Impossible")
         }

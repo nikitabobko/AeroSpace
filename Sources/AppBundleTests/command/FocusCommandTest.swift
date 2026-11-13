@@ -175,13 +175,13 @@ struct FocusCommandTest {
         floating.beforeGetAxRect = {
             axReadStarts += 1
             await firstAxReadStarted.signalToAll()
-            try await allowAxReadToFinish.await()
+            try await allowAxReadToFinish.await(.cancellable)
         }
 
         let first = Task.startUnstructured { @MainActor in
             await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
         }
-        try await firstAxReadStarted.await()
+        try await firstAxReadStarted.await(.cancellable)
 
         let second = Task.startUnstructured { @MainActor in
             await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)

@@ -169,7 +169,7 @@ private struct FocusTreeBuilder {
         let node = FocusTreeNode(container: container)
         nodes[ObjectIdentifier(container)] = node
 
-        for child in container.children {
+        for child in container.inhabitedChildren {
             let copied = switch child.tilingTreeNodeCasesOrDie() {
                 case .window(let window): copy(window: window, role: .tiling)
                 case .tilingContainer(let container): copy(container: container)
@@ -177,7 +177,7 @@ private struct FocusTreeBuilder {
             node.append(copied)
         }
 
-        if let mostRecentChild = container.mostRecentChild {
+        if let mostRecentChild = container.mostRecentInhabitedChild {
             node.setMostRecentChild(nodes[ObjectIdentifier(mostRecentChild)])
         }
         return node
@@ -206,8 +206,8 @@ private struct FocusTreeBuilder {
                 virtualParent = mappedParent
                 parentOrientation = tilingParent.orientation
                 index = center.getProjection(parentOrientation) >= targetCenter.getProjection(parentOrientation)
-                    ? target.ownIndex.orDie() + 1
-                    : target.ownIndex.orDie()
+                    ? target.ownIndex(in: .all).orDie() + 1
+                    : target.ownIndex(in: .all).orDie()
             } else {
                 virtualParent = root
                 parentOrientation = root.orientation.orDie()

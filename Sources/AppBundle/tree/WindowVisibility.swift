@@ -41,11 +41,11 @@ extension Window {
 @MainActor
 func windowsVisuallyOnWorkspace(_ workspace: Workspace) -> [Window] {
     Workspace.all
-        .flatMap(\.allLeafWindowsRecursive)
+        .flatMap(\.allInhabitedLeafWindowsRecursive)
         .filter { $0.isVisuallyOn(workspace: workspace) }
 }
 
 @MainActor
 func windowsInOrVisuallyOnWorkspace(_ workspace: Workspace) -> [Window] {
-    Array((workspace.allLeafWindowsRecursive + windowsVisuallyOnWorkspace(workspace)).toOrderedSet())
+    Array((workspace.allInhabitedLeafWindowsRecursive + windowsVisuallyOnWorkspace(workspace)).toOrderedSet())
 }

@@ -1,4 +1,5 @@
 @testable import AppBundle
+import AppKit
 import Common
 import Testing
 
