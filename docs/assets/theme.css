@@ -1,0 +1,240 @@
+:root {
+  color-scheme: light;
+}
+
+/* Preserve Asciidoctor's default light theme and print styles. */
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --theme-background: #181a1b;
+    --theme-surface: #222629;
+    --theme-raised: #2c3236;
+    --theme-text: #e5e5e5;
+    --theme-muted: #b0b8bf;
+    --theme-border: #48515a;
+    --theme-heading: #f0a08a;
+    --theme-link: #8ab4f8;
+    --theme-link-hover: #b8d3ff;
+    --theme-code-background: #24282c;
+  }
+
+  body {
+    background: var(--theme-background);
+    color: var(--theme-text);
+  }
+
+  a {
+    color: var(--theme-link);
+  }
+
+  a:hover,
+  a:focus {
+    color: var(--theme-link-hover);
+  }
+
+  h1, h2, h3, h4, h5, h6,
+  #toctitle,
+  #content .title,
+  #content :is(h1, h2, h3, h4, h5, h6) > a.link {
+    color: var(--theme-heading);
+  }
+
+  #content :is(h1, h2, h3, h4, h5, h6) > a.link:hover {
+    color: var(--theme-link-hover);
+  }
+
+  #header > h1:first-child,
+  #content > h1:first-child:not([class]),
+  .paragraph.lead > p,
+  #preamble > .sectionbody > [class=paragraph]:first-of-type p,
+  blockquote,
+  blockquote p,
+  .quoteblock blockquote,
+  .quoteblock p,
+  .verseblock pre,
+  table tr th,
+  table tr td,
+  table thead tr th,
+  table thead tr td,
+  table tfoot tr th,
+  table tfoot tr td,
+  tbody tr th p,
+  tfoot tr th p,
+  code,
+  pre,
+  .keyseq,
+  .menuseq,
+  .menuref,
+  #header .details span.email a,
+  #header .details br + span.author::before {
+    color: var(--theme-text);
+  }
+
+  #header .details,
+  .admonitionblock > table td.content,
+  .quoteblock .attribution cite,
+  .verseblock .attribution cite {
+    color: var(--theme-muted);
+  }
+
+  #header > h1:only-child,
+  #header > h1:first-child + #toc,
+  body.toc2 #header > h1:nth-last-child(2),
+  #header .details,
+  #content > h1:first-child:not([class]),
+  #toc,
+  #toc.toc2,
+  #content #toc,
+  .sect1 + .sect1,
+  hr,
+  blockquote,
+  .admonitionblock > table td.content,
+  .quoteblock.excerpt > blockquote,
+  .quoteblock .quoteblock,
+  table,
+  table.tableblock,
+  th.tableblock,
+  td.tableblock,
+  .sidebarblock,
+  .exampleblock > .content {
+    border-color: var(--theme-border);
+  }
+
+  #toc.toc2,
+  #content #toc,
+  .sidebarblock,
+  .exampleblock > .content,
+  table thead,
+  table tfoot,
+  tbody tr th,
+  table tr.even,
+  table tr.alt,
+  table.stripes-all > * > tr,
+  table.stripes-odd > * > tr:nth-of-type(odd),
+  table.stripes-even > * > tr:nth-of-type(even),
+  table.stripes-hover > * > tr:hover {
+    background: var(--theme-surface);
+  }
+
+  table {
+    background: var(--theme-background);
+  }
+
+  .admonitionblock > table,
+  .hdlist > table,
+  .colist > table,
+  table.linenotable {
+    background: none;
+  }
+
+  .exampleblock > .content {
+    box-shadow: none;
+  }
+
+  :not(pre):not([class^=L]) > code,
+  .literalblock pre,
+  .listingblock > .content > pre:not(.highlight),
+  .listingblock > .content > pre[class=highlight],
+  .listingblock > .content > pre[class^="highlight "],
+  pre.pygments {
+    background: var(--theme-code-background);
+  }
+
+  p a > code:hover {
+    color: var(--theme-link-hover);
+  }
+
+  kbd {
+    color: var(--theme-text);
+    background: var(--theme-raised);
+    border-color: var(--theme-border);
+    box-shadow: 0 1px 0 var(--theme-border);
+  }
+
+  .quoteblock blockquote::before {
+    color: var(--theme-heading);
+    text-shadow: none;
+  }
+
+  #footer {
+    background: var(--theme-surface);
+  }
+
+  #footer-text {
+    color: var(--theme-muted);
+  }
+
+  /* Diagrams contain dark text and transparent backgrounds. */
+  .imageblock img {
+    background: #fff;
+  }
+
+  /* Override Pygments' embedded light palette, retaining token emphasis. */
+  pre.pygments [class^="tok-"] {
+    color: inherit;
+  }
+
+  pre.pygments [class^="tok-c"],
+  pre.pygments .tok-go,
+  pre.pygments .tok-w {
+    color: var(--theme-muted);
+  }
+
+  pre.pygments [class^="tok-k"],
+  pre.pygments .tok-ow,
+  pre.pygments .tok-nd {
+    color: #c4a7e7;
+  }
+
+  pre.pygments [class^="tok-s"],
+  pre.pygments .tok-dl,
+  pre.pygments .tok-gi {
+    color: #a6d6a8;
+  }
+
+  pre.pygments [class^="tok-m"],
+  pre.pygments [class^="tok-v"],
+  pre.pygments .tok-il,
+  pre.pygments .tok-no,
+  pre.pygments .tok-nv,
+  pre.pygments .tok-na,
+  pre.pygments .tok-nl,
+  pre.pygments .tok-cp,
+  pre.pygments .tok-se,
+  pre.pygments .tok-si,
+  pre.pygments .tok-sr {
+    color: #f2c38f;
+  }
+
+  pre.pygments .tok-nf,
+  pre.pygments .tok-fm,
+  pre.pygments .tok-nc,
+  pre.pygments .tok-nn,
+  pre.pygments .tok-gh,
+  pre.pygments .tok-gu,
+  pre.pygments .tok-gp {
+    color: var(--theme-link);
+  }
+
+  pre.pygments .tok-nb,
+  pre.pygments .tok-bp,
+  pre.pygments .tok-nt {
+    color: #8ed8de;
+  }
+
+  pre.pygments .tok-gd,
+  pre.pygments .tok-gr,
+  pre.pygments .tok-gt,
+  pre.pygments .tok-ne,
+  pre.pygments .tok-err {
+    color: #ffaaaa;
+  }
+
+  pre.pygments .tok-err {
+    border-color: #ffaaaa;
+  }
+
+  pre.pygments .hll {
+    background: var(--theme-raised);
+  }
+}

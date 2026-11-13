@@ -22,7 +22,7 @@ cp-docs() {
     cp -r ./docs/assets "$1"
     cp -r ./docs/util "$1"
     cp -r ./docs/config-examples "$1"
-    cp ./docs/docinfo-footer.html "$1"
+    cp ./docs/docinfo.html ./docs/docinfo-footer.html "$1"
 }
 
 build-site() {
