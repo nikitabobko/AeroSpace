@@ -243,6 +243,12 @@ include::config-examples/i3-like-config-example.toml[]
 
 link:https://github.com/magicmark/spacelist[Spacelist] is a terminal UI application that provides a searchable interface to view all open windows organized by workspace. You can hit enter on a selected application to switch to that workspace.
 
+[#hangar]
+== Hangar
+
+link:https://github.com/mkarpeta/hangar[Hangar] is a Hammerspoon Spoon that shows all workspaces as tiles, with a thumbnail of how each one looked when you last left it.
+Hold a shortcut to open it, pick a workspace with the arrow keys or its key, and release the modifier to switch, like Cmd+Tab.
+
 [#popular-apps-ids]
 == List of Apple application IDs
 
