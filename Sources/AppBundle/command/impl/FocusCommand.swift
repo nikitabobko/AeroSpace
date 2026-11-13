@@ -15,9 +15,12 @@ struct FocusCommand: Command {
             return .fail
         }
         // todo bug: floating windows break mru
-        let floatingWindows = args.floatingAsTiling ? await makeFloatingWindowsSeenAsTiling(workspace: target.workspace) : []
+        // makeFloatingWindowsSeenAsTiling is pointless for --window-id: the target is resolved directly.
+        // Running it only exposes us to the reentrancy window https://github.com/nikitabobko/AeroSpace/issues/1311
+        let useFloatingAsTiling = if case .windowId = args.target { false } else { args.floatingAsTiling }
+        let floatingWindows = useFloatingAsTiling ? await makeFloatingWindowsSeenAsTiling(workspace: target.workspace) : []
         defer {
-            if args.floatingAsTiling {
+            if useFloatingAsTiling {
                 restoreFloatingWindows(floatingWindows: floatingWindows, workspace: target.workspace)
             }
         }
@@ -128,9 +131,16 @@ struct FocusCommand: Command {
         mruBefore?.markAsMostRecentChild()
     }
     var _floatingWindows: [FloatingWindowData] = []
+    let floatingWindowsContainer = workspace.floatingWindowsContainer
     for window in workspace.floatingWindows {
+        // Light sessions are not serialized, so a concurrent session can unbind the window or bind it
+        // to a tiling container at any of the suspension points below. Re-validate the binding after
+        // every await, otherwise unbindFromParent dies with "is already unbound"
+        // https://github.com/nikitabobko/AeroSpace/issues/1311
+        guard window.parent === floatingWindowsContainer else { continue }
         // todo bug: we shouldn't access ax api here. What if the window was moved but it wasn't committed to ax yet?
         guard let center = try? await window.getCenter(.nonCancellable) else { continue }
+        guard window.parent === floatingWindowsContainer else { continue }
 
         let tilingParent: TilingContainer
         let index: Int
@@ -138,6 +148,7 @@ struct FocusCommand: Command {
             .findWindowRecursively(in: workspace.rootTilingContainer, virtual: true, fullscreenCoversAll: false)
         {
             guard let targetCenter = try? await target.getCenter(.nonCancellable) else { continue }
+            guard window.parent === floatingWindowsContainer else { continue }
             guard let _tilingParent = target.parent as? TilingContainer else { continue }
             tilingParent = _tilingParent
             index = switch tilingParent.layout {
