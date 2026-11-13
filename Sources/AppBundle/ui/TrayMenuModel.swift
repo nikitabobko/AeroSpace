@@ -10,6 +10,7 @@ public final class TrayMenuModel: ObservableObject {
     @Published var trayItems: [TrayItem] = []
     /// Is "layouting" enabled
     @Published var isEnabled: Bool = true
+    @Published var isMenuBarIconVisible: Bool = true
     @Published var workspaces: [WorkspaceViewModel] = []
     @Published var experimentalUISettings: ExperimentalUISettings = ExperimentalUISettings()
     @Published var sponsorshipMessage: String = sponsorshipPrompts.randomElement().orDie()

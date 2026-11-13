@@ -30,6 +30,17 @@ struct ConfigTest {
         assertEquals(result.warnings, [])
     }
 
+    @Test func testShowMenuBarIcon() {
+        assertEquals(defaultConfig.showMenuBarIcon, true)
+        let result = parseConfig(
+            """
+            show-menu-bar-icon = false
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.config.showMenuBarIcon, false)
+    }
+
     @Test func testConfigVersionOutOfBounds() {
         let result = parseConfig(
             """
