@@ -39,6 +39,24 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                         }
                     }
                 }
+                Menu {
+                    ForEach(viewModel.workspaces, id: \.name) { workspace in
+                        Button {
+                            Task.startUnstructured {
+                                try await runLightSession(.menuBarButton, token) {
+                                    var args = MoveNodeToWorkspaceCmdArgs(rawArgs: [])
+                                    args.target = .initialized(.direct(WorkspaceName.parse(workspace.name).getOrDie()))
+                                    _ = await MoveNodeToWorkspaceCommand(args: args).run(.defaultEnv, .emptyStdin)
+                                }
+                            }
+                        } label: {
+                            Text(workspace.name + workspace.suffix).font(.system(.body, design: .monospaced))
+                        }
+                        .disabled(workspace.isFocused)
+                    }
+                } label: {
+                    Text("Move focused window to workspace")
+                }
                 Divider()
             }
             Button {
