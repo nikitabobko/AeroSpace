@@ -13,3 +13,6 @@
 # XCode User settings
 xcuserdata/
 xcshareddata/
+
+# macOS
+.DS_Store

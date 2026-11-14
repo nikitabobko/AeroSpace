@@ -113,7 +113,24 @@ extension MonitorInfo {
 }
 
 @MainActor func gcMonitors() {
-    if pointToMonitor.count != globalUnsortedMonitorInfos.count {
+    let freshInfos = globalUnsortedMonitorInfos
+    // Comparing only the count is not enough: when a monitor is replaced (or its resolution changes) while the number
+    // of monitors stays the same, the cached MonitorInfo keeps the geometry of the old display, and all the layouts
+    // are computed for a screen that no longer exists (windows end up outside the visible area)
+    if pointToMonitor.count != freshInfos.count || freshInfos.contains(where: { !isCachedMonitorInfoUpToDate($0) }) {
         rearrangeMonitors()
     }
+}
+
+@MainActor private func isCachedMonitorInfoUpToDate(_ fresh: MonitorInfo) -> Bool {
+    guard let cached = pointToMonitor[fresh.rect.topLeftCorner]?.info else { return false }
+    return cached.name == fresh.name &&
+        cached.rect.topLeftX == fresh.rect.topLeftX &&
+        cached.rect.topLeftY == fresh.rect.topLeftY &&
+        cached.rect.width == fresh.rect.width &&
+        cached.rect.height == fresh.rect.height &&
+        cached.visibleRect.topLeftX == fresh.visibleRect.topLeftX &&
+        cached.visibleRect.topLeftY == fresh.visibleRect.topLeftY &&
+        cached.visibleRect.width == fresh.visibleRect.width &&
+        cached.visibleRect.height == fresh.visibleRect.height
 }

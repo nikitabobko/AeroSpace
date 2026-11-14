@@ -414,6 +414,78 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 
 Unless you're hardcore i3 user who knows what they are doing, it's recommended to keep the normalizations enabled.
 
+[#declarative-workspace-layout]
+=== Declarative workspace layout
+
+A workspace can be reshaped into an explicitly declared structure. The declaration is a *skeleton*: a hierarchical
+description of containers with placeholders instead of windows. AeroSpace assigns windows to placeholders and applies
+the result on every layout pass, so the workspace keeps the declared shape no matter how windows are opened or closed.
+
+[source,toml]
+----
+[workspace-layout]
+'1' = '''
+h_tiles
+  1 @0.6
+  v_tiles
+    others
+'''
+----
+
+- `h_tiles[...]` and `v_tiles[...]` are containers with a horizontal or vertical orientation
+- `1`, `2`, ... are named placeholder slots for windows. Windows fill the slots in the order the slots appear in the
+  skeleton (left to right, top to bottom). The numbers just name the slots: slot `1` is the master
+- `others` swallows all the windows that aren't assigned to placeholder slots. It must appear exactly once, so no window
+  is lost after normalization
+- `@0.6` is an optional relative weight of a container, a placeholder slot or `others`
+
+Unfilled placeholders are collapsed. Containers with a single child are flattened, the same way as with
+<<normalization,`enable-normalization-flatten-containers`>>. A workspace with a declared layout is not affected by
+`enable-normalization-opposite-orientation-for-nested-containers` — the skeleton is the explicit source of truth.
+Accordion workspaces are left untouched.
+
+Examples:
+
+[source,toml]
+----
+[workspace-layout]
+# dwm-like master-stack: 1 master window on the left (55% of the width), the rest stacked on the right
+'1' = '''
+h_tiles
+  1 @0.55
+  v_tiles
+    others
+'''
+
+# two master windows on the left, the rest stacked on the right
+'2' = '''
+h_tiles
+  v_tiles @0.6
+    1
+    2
+  v_tiles
+    others
+'''
+
+# the master placeholder is on the right
+'3' = '''
+h_tiles
+  v_tiles
+    others
+  1
+'''
+----
+
+For one-line layouts there is a shorthand with brackets. The two declarations below are equivalent:
+
+[source,toml]
+----
+[workspace-layout]
+'1' = 'h_tiles[1@0.55, v_tiles[others]]'
+'2' = 'h_tiles[others]' # i3-like columns: all windows side by side
+----
+
+
 [#floating-windows]
 === Floating windows
 

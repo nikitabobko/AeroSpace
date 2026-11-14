@@ -42,6 +42,13 @@ final class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider 
 extension TilingContainer {
     var isRootContainer: Bool { parent is Workspace }
 
+    /// Set orientation without flipping the parents. Used by the declarative layout skeletons, where the whole
+    /// structure is rebuilt explicitly
+    @MainActor
+    func forceOrientation(_ orientation: Orientation) {
+        _orientation = orientation
+    }
+
     @MainActor
     func changeOrientation(_ targetOrientation: Orientation) {
         if orientation == targetOrientation {
