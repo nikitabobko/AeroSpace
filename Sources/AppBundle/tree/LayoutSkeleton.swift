@@ -16,12 +16,17 @@ import Common
 /// ```
 ///
 /// - `h_tiles`/`v_tiles` — tiling containers with the corresponding orientation
-/// - `1`, `2`, ... — placeholders for windows. Windows are assigned to placeholders in ascending order of the numbers
-/// - `others` — swallows the windows that aren't assigned to placeholders. Must appear exactly once
-/// - `@0.6` — optional weight of a container, a placeholder or `others`
+/// - `1`, `2`, ... — named placeholder slots for windows. Windows fill the slots in the order the slots appear in
+///   the tree (left to right, top to bottom); `others` swallows the remaining windows in order. The numbers just
+///   name the slots: slot `1` is the master
+/// - `others` — swallows the windows that aren't assigned to placeholder slots. Must appear exactly once
+/// - `@0.6` — optional weight of a container, a placeholder slot or `others`
 ///
 /// The skeleton is a *normalization*: AeroSpace reshapes the workspace on every layout pass and collapses unfilled
 /// placeholders. Users never change the skeleton at runtime, they only change the set of windows.
+///
+/// Windows fill the slots in the tree order, so the resolved tree preserves the visual order of the windows:
+/// the assignment is a fixed point and repeated layout passes don't fight each other.
 struct LayoutSkeleton: Equatable, Sendable {
     let root: Container
 
@@ -33,8 +38,14 @@ struct LayoutSkeleton: Equatable, Sendable {
 
     struct Container: Equatable, Sendable {
         let orientation: Orientation
-        var children: [Node] = []
-        var weight: Double? = nil
+        let children: [Node]
+        let weight: Double?
+
+        init(orientation: Orientation, children: [Node] = [], weight: Double? = nil) {
+            self.orientation = orientation
+            self.children = children
+            self.weight = weight
+        }
     }
 }
 
@@ -61,12 +72,13 @@ extension LayoutSkeleton {
 }
 
 extension LayoutSkeleton.Container {
-    var placeholdersSorted: [Int] {
-        var result: [Int] = []
+    /// The number of placeholder slots in the skeleton
+    var placeholderCount: Int {
+        var result = 0
         func walk(_ container: LayoutSkeleton.Container) {
             for child in container.children {
                 switch child {
-                    case .placeholder(let number, _): result.append(number)
+                    case .placeholder: result += 1
                     case .container(let container): walk(container)
                     case .others: break
                 }

@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-/// Skeleton with real windows substituted for placeholders
+/// Skeleton with real windows substituted for the placeholder slots
 struct ResolvedLayoutSkeleton {
     let orientation: Orientation
     let children: [ResolvedLayoutNode]
@@ -22,41 +22,83 @@ struct ResolvedLayoutNode {
     }
 }
 
+private let skeletonReferenceRectKey = TreeNodeUserDataKey<ResolvedLayoutRect>(key: "skeletonReferenceRectKey")
+
 extension LayoutSkeleton {
-    /// Substitute windows for placeholders. Returns nil if the skeleton resolves to nothing
+    /// Substitute windows for the placeholder slots. Returns nil if the skeleton resolves to nothing.
+    ///
+    /// Windows fill the slots in the order the slots appear in the skeleton (the tree order), so the resolved tree
+    /// preserves the visual order of the windows. The assignment is therefore a fixed point: it doesn't depend on
+    /// the tree it produces, and repeated passes don't fight each other. `others` swallows the remaining windows.
     @MainActor func resolve(windows: [Window]) -> ResolvedLayoutSkeleton? {
-        let placeholders = root.placeholdersSorted
         var placeholderToWindow: [Int: Window] = [:]
-        for (index, number) in placeholders.enumerated() where index < windows.count {
-            placeholderToWindow[number] = windows[index]
-        }
-        let others = Array(windows.dropFirst(min(placeholders.count, windows.count)))
-        guard let node = Self.resolveContainer(root, placeholderToWindow, others),
-              case .container(let orientation, let children) = node.kind else { return nil }
+        var index = 0
+        var passedPlaceholders = 0
+        guard let node = Self.resolveContainer(
+            root,
+            windows: windows,
+            index: &index,
+            passedPlaceholders: &passedPlaceholders,
+            totalPlaceholders: root.placeholderCount,
+            placeholderToWindow: &placeholderToWindow,
+        ), case .container(let orientation, let children) = node.kind else { return nil }
         return ResolvedLayoutSkeleton(orientation: orientation, children: children)
+    }
+
+    /// The window that the given placeholder slot receives for the given visual order of windows.
+    /// Used by `promote` to find the current master (the window in slot `1`).
+    @MainActor func windowInPlaceholder(_ number: Int, windows: [Window]) -> Window? {
+        var placeholderToWindow: [Int: Window] = [:]
+        var index = 0
+        var passedPlaceholders = 0
+        _ = Self.resolveContainer(
+            root,
+            windows: windows,
+            index: &index,
+            passedPlaceholders: &passedPlaceholders,
+            totalPlaceholders: root.placeholderCount,
+            placeholderToWindow: &placeholderToWindow,
+        )
+        return placeholderToWindow[number]
     }
 
     @MainActor private static func resolveContainer(
         _ container: Container,
-        _ placeholders: [Int: Window],
-        _ others: [Window],
+        windows: [Window],
+        index: inout Int,
+        passedPlaceholders: inout Int,
+        totalPlaceholders: Int,
+        placeholderToWindow: inout [Int: Window],
     ) -> ResolvedLayoutNode? {
         var kinds: [ResolvedLayoutNode.Kind] = []
         var weights: [CGFloat?] = []
         for child in container.children {
             switch child {
                 case .placeholder(let number, let weight):
-                    if let window = placeholders[number] {
-                        kinds.append(.window(window))
+                    if index < windows.count {
+                        kinds.append(.window(windows[index]))
                         weights.append(weight.map { CGFloat($0) })
+                        placeholderToWindow[number] = windows[index]
                     }
+                    index += 1
+                    passedPlaceholders += 1
                 case .others(let weight):
-                    for window in others {
-                        kinds.append(.window(window))
+                    // The windows that remain after every placeholder slot takes one window each
+                    let count = max(0, windows.count - (totalPlaceholders - passedPlaceholders) - index)
+                    for i in 0 ..< count {
+                        kinds.append(.window(windows[index + i]))
                         weights.append(weight.map { CGFloat($0) })
                     }
+                    index += count
                 case .container(let container):
-                    if let node = resolveContainer(container, placeholders, others) {
+                    if let node = Self.resolveContainer(
+                        container,
+                        windows: windows,
+                        index: &index,
+                        passedPlaceholders: &passedPlaceholders,
+                        totalPlaceholders: totalPlaceholders,
+                        placeholderToWindow: &placeholderToWindow,
+                    ) {
                         kinds.append(node.kind)
                         weights.append(node.weight)
                     }
@@ -64,7 +106,9 @@ extension LayoutSkeleton {
         }
         return switch kinds.count {
             case 0: nil
-            case 1: ResolvedLayoutNode(kind: kinds[0], weight: weights[0]) // Collapse containers with a single child
+            // Collapse containers with a single child. The child takes the container's weight: the child's own
+            // weight refers to the collapsed axis and is dropped
+            case 1: ResolvedLayoutNode(kind: kinds[0], weight: container.weight.map { CGFloat($0) })
             default: ResolvedLayoutNode(
                     kind: .container(container.orientation, children: zip(kinds, shareWeights(weights))
                         .map { ResolvedLayoutNode(kind: $0.0, weight: $0.1) }),
@@ -82,12 +126,10 @@ extension LayoutSkeleton {
             default: break
         }
         guard weights.contains(where: { $0 == nil }) else {
-            return weights.map { $0 ?? 1 } // Every sibling has an explicit weight. Weights are relative
+            // Every sibling has an explicit weight. Weights are relative, layoutTiles normalizes the sum
+            return weights.compactMap { $0 }
         }
         let unspecifiedCount = weights.count(where: { $0 == nil })
-        if unspecifiedCount == 0 {
-            return weights.map { $0 ?? 1 } // All the siblings have an explicit weight. Weights are relative
-        }
         let specifiedSum = weights.compactMap { $0 }.reduce(0, +)
         let share = (1 - specifiedSum) / CGFloat(unspecifiedCount)
         return weights.map { $0 ?? share }
@@ -96,7 +138,8 @@ extension LayoutSkeleton {
 
 extension TilingContainer {
     /// Reshape the workspace into the requested skeleton. Idempotent: the tree is rebuilt only when the current shape
-    /// doesn't match the skeleton. That way manual window resizing isn't reset on every refresh
+    /// doesn't match the skeleton, or when the monitor geometry changed since the last rebuild. That way manual
+    /// window resizing isn't reset on every refresh.
     @MainActor func normalizeLayoutSkeleton(_ skeleton: LayoutSkeleton) {
         guard isRootContainer, layout == .tiles else { return }
         let windows = tilingWindowsInVisualOrder()
@@ -105,12 +148,13 @@ extension TilingContainer {
         let rect = nodeWorkspace.orDie().workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         // Weights are pixels of the parent's axis (see bindResolved). When the monitor geometry changes, the weights
         // still belong to the old monitor, and the additive normalization of layoutTiles would distort the shares.
-        // So the tree must also be rebuilt when the weights don't sum up to the current monitor's axis.
-        // The tolerance absorbs the `height - 1` quirk of layoutWorkspace and the floating point noise of layoutTiles
-        let axisLength = orientation == .h ? rect.width : rect.height
-        let weightsMatchMonitor = abs(children.sumOfDouble { $0.getWeight(orientation) } - axisLength) < 2
-        guard !matchesResolved(resolved.children) || !weightsMatchMonitor else { return }
+        // Comparing the stored reference rect instead of the sum of the weights keeps manual resizing intact:
+        // a resize changes the weights but neither the shape nor the monitor, so the tree isn't rebuilt.
+        let reference = getUserData(key: skeletonReferenceRectKey.self)
+        if matchesResolved(resolved.children),
+           let reference, reference.width == rect.width, reference.height == rect.height { return }
         rebuildResolved(resolved.children, in: ResolvedLayoutRect(width: rect.width, height: rect.height))
+        putUserData(key: skeletonReferenceRectKey.self, data: ResolvedLayoutRect(width: rect.width, height: rect.height))
     }
 
     @MainActor private func tilingWindowsInVisualOrder() -> [Window] {

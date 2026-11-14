@@ -76,7 +76,7 @@ struct LayoutSkeletonTest {
             ]
             """)
         assertEquals(skeleton.root.orientation, .h)
-        assertEquals(skeleton.root.placeholdersSorted, [1])
+        assertEquals(skeleton.root.placeholderCount, 1)
     }
 
     @Test func testParse_errors() {
@@ -125,7 +125,7 @@ struct LayoutSkeletonTest {
             '''
             """)
         assertEquals(result.errors, [])
-        assertEquals(result.config.workspaceLayout["1"]?.root.placeholdersSorted, [1])
+        assertEquals(result.config.workspaceLayout["1"]?.root.placeholderCount, 1)
     }
 
     @Test func testConfig_errorIsReported() {
@@ -196,7 +196,9 @@ struct LayoutSkeletonTest {
         )
     }
 
-    @Test func testNormalize_othersPrimary() {
+    @Test func testNormalize_masterOnTheRight() {
+        // Windows fill the slots in the order the slots appear in the skeleton, so the resolved tree preserves the
+        // visual order of the windows and the pass is a fixed point: the second pass must not change anything
         config.workspaceLayout = [name: skeleton("h_tiles[v_tiles[others], 1]")]
         let workspace = Workspace.get(byName: name)
         for id in uids(3) {
@@ -205,8 +207,62 @@ struct LayoutSkeletonTest {
         workspace.normalizeContainers()
         assertEquals(
             workspace.rootTilingContainer.layoutDescription,
-            .h_tiles([.v_tiles([.window(1), .window(2)]), .window(0)]),
+            .h_tiles([.v_tiles([.window(0), .window(1)]), .window(2)]),
         )
+        workspace.normalizeContainers()
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_tiles([.v_tiles([.window(0), .window(1)]), .window(2)]),
+        )
+    }
+
+    @Test func testNormalize_slotsFilledInSkeletonOrder() {
+        // The numbers don't order the slots: window 0 goes to the first slot of the skeleton, which is slot '2' here
+        config.workspaceLayout = [name: skeleton("h_tiles[2, 1, others]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(2) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        assertEquals(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_tiles([.window(0), .window(1)]),
+        )
+    }
+
+    @Test func testNormalize_containerWeightSurvivesCollapse() {
+        // 'v_tiles' collapses to a single window, but its weight must survive: the stack takes 0.4 of the width
+        config.workspaceLayout = [name: skeleton("h_tiles[1, v_tiles[others]@0.4]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(2) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([.window(0), .window(1)]),
+        )
+        assertShare(root.children[0], of: root.children, 0.6)
+        assertShare(root.children[1], of: root.children, 0.4)
+    }
+
+    @Test func testNormalize_rebuildsWhenMonitorGeometryChanges() {
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.6, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        let widthBefore = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps.width
+        assertApproximatelyEqual(root.children[0].getWeight(.h), 0.6 * widthBefore)
+
+        config.gaps.outer.left = .constant(100) // Shrinks the visible area like a display change would
+        workspace.normalizeContainers()
+        let widthAfter = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps.width
+        assertApproximatelyEqual(widthAfter, widthBefore - 100)
+        assertApproximatelyEqual(root.children[0].getWeight(.h), 0.6 * widthAfter)
     }
 
     @Test func testNormalize_columns() {
@@ -263,13 +319,16 @@ struct LayoutSkeletonTest {
         let root = workspace.rootTilingContainer
         let stack = root.children[1]
         stack.setWeight(.h, 0.3)
+        root.children[0].setWeight(.h, 0.2)
 
         workspace.normalizeContainers()
         assertEquals(
             root.layoutDescription,
             .h_tiles([.window(0), .v_tiles([.window(1), .window(2)])]),
         )
+        // The shape still matches the skeleton and the monitor didn't change, so the tree isn't rebuilt
         assertEquals(stack.getWeight(.h), 0.3)
+        assertEquals(root.children[0].getWeight(.h), 0.2)
     }
 
     @Test func testNormalize_doesntAffectOtherWorkspaces() {

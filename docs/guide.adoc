@@ -433,10 +433,11 @@ h_tiles
 ----
 
 - `h_tiles[...]` and `v_tiles[...]` are containers with a horizontal or vertical orientation
-- `1`, `2`, ... are placeholders. Windows are assigned to placeholders in ascending order of the numbers
-- `others` swallows all the windows that aren't assigned to placeholders. It must appear exactly once, so no window
+- `1`, `2`, ... are named placeholder slots for windows. Windows fill the slots in the order the slots appear in the
+  skeleton (left to right, top to bottom). The numbers just name the slots: slot `1` is the master
+- `others` swallows all the windows that aren't assigned to placeholder slots. It must appear exactly once, so no window
   is lost after normalization
-- `@0.6` is an optional relative weight of the container
+- `@0.6` is an optional relative weight of a container, a placeholder slot or `others`
 
 Unfilled placeholders are collapsed. Containers with a single child are flattened, the same way as with
 <<normalization,`enable-normalization-flatten-containers`>>. A workspace with a declared layout is not affected by
