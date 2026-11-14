@@ -10,14 +10,18 @@ var swiftSettings: [SwiftSetting] = [
 ]
 
 let env = ProcessInfo.processInfo.environment
-if env["SWIFTPM_WARNINGS_AS_ERRORS"] != nil {
-    swiftSettings.append(.treatAllWarnings(as: .error))
-}
 if let ms = env["SWIFTPM_WARN_LONG_FUNCTION_BODIES_MS"] {
     swiftSettings.append(.unsafeFlags(["-Xfrontend", "-warn-long-function-bodies=\(ms)"]))
 }
 if let ms = env["SWIFTPM_WARN_LONG_EXPRESSION_TYPE_CHECKING_MS"] {
     swiftSettings.append(.unsafeFlags(["-Xfrontend", "-warn-long-expression-type-checking=\(ms)"]))
+}
+
+var strictSwiftSettings = swiftSettings
+strictSwiftSettings.append(.treatAllWarnings(as: .error))
+
+if env["SWIFTPM_WARNINGS_AS_ERRORS"] != nil {
+    swiftSettings.append(.treatAllWarnings(as: .error))
 }
 
 let targetMacosVersion: Int = env["SWIFTPM_MACOS_MIN_DEPLOYMENT_TARGET"].flatMap(Int.init)
@@ -50,11 +54,11 @@ let package = Package(
             name: "PrivateApi",
             path: "Sources/PrivateApi",
             publicHeadersPath: "include",
-            swiftSettings: swiftSettings,
+            swiftSettings: strictSwiftSettings,
         ),
         .macro(
             name: "Macros",
-            swiftSettings: swiftSettings,
+            swiftSettings: strictSwiftSettings,
         ),
         .target(
             name: "Common",
