@@ -53,6 +53,17 @@ struct LayoutSkeletonTest {
         assertEquals(skeleton.root.children.count, 2)
     }
 
+    @Test func testParse_indentedSyntax_handlesCrlf() {
+        let skeleton = parse("h_tiles\r\n  1\r\n  others")
+        assertEquals(skeleton.root.orientation, .h)
+        assertEquals(skeleton.root.children.count, 2)
+    }
+
+    @Test func testParse_rejectsInfiniteWeights() {
+        assertParseError("h_tiles\n  1 @inf\n  others", "Weight must be a positive number")
+        assertParseError("h_tiles\n  1 @1e400\n  others", "Weight must be a positive number")
+    }
+
     @Test func testParse_indentedSyntax_errors() {
         assertParseError("h_tiles\n  1\n    2\n  others", "Inconsistent indentation")
         assertParseError("h_tiles\n\t1\n\tothers", "Tabs aren't allowed")
@@ -280,6 +291,63 @@ struct LayoutSkeletonTest {
         config.workspaceLayout = [name: skeleton("h_tiles[1@0.8, v_tiles[others]]")]
         workspace.normalizeContainers()
         assertShare(root.children[0], of: root.children, 0.8)
+    }
+
+    @Test func testNormalize_relativeWeightsWhenAllSiblingsHaveExplicitWeights() {
+        // Explicit weights of all the siblings are relative: '@2' and '@1' produce the 2:1 ratio, not 2 and 1 axes
+        config.workspaceLayout = [name: skeleton("h_tiles[v_tiles[1@2, 2@1], others]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(2) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        assertEquals(
+            root.layoutDescription,
+            .v_tiles([.window(0), .window(1)]),
+        )
+        assertShare(root.children[0], of: root.children, 2.0 / 3.0, orientation: .v)
+        assertShare(root.children[1], of: root.children, 1.0 / 3.0, orientation: .v)
+    }
+
+    @Test func testNormalize_preservesInvisibleWindows() {
+        // Invisible windows (e.g. windows of background macOS Spaces) are not part of the skeleton resolution,
+        // but they must stay bound to the workspace: they flip back to alive in place
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.6, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        TestWindow.new(id: 0, parent: workspace.rootTilingContainer)
+        TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
+        let invisible = TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
+        invisible.lifeStatus = .invisible
+
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        assertEquals(invisible.isBound, true)
+        assertEquals(invisible.parent === root, true)
+
+        workspace.normalizeContainers() // Idempotent: the pass must not detach the invisible window
+        assertEquals(invisible.isBound, true)
+        assertEquals(invisible.parent === root, true)
+
+        invisible.lifeStatus = .alive
+        workspace.normalizeContainers()
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([.window(0), .v_tiles([.window(1), .window(2)])]),
+        )
+    }
+
+    @Test func testNormalize_isStableUnderFlattenNormalization() {
+        config.workspaceLayout = [name: skeleton("h_tiles[v_tiles[1, 2], others]")]
+        config.enableNormalizationFlattenContainers = true
+        let workspace = Workspace.get(byName: name)
+        for id in uids(2) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let first = workspace.rootTilingContainer.layoutDescription
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, first)
     }
 
     @Test func testNormalize_columns() {

@@ -158,7 +158,7 @@ private struct InlineSkeletonParser {
     private var currentChar: Character? { isAtEnd ? nil : chars[index] }
 
     private mutating func skipWhitespace() {
-        while let char = currentChar, char.isWhitespace {
+        while let char = currentChar, char.isWhitespace || char == "\r" || char == "\n" || char == "\r\n" {
             index += 1
         }
     }
@@ -245,7 +245,7 @@ private struct InlineSkeletonParser {
             index += 1
         }
         let raw = String(chars[start ..< index])
-        guard let weight = Double(raw), weight > 0 else {
+        guard let weight = Double(raw), weight.isFinite, weight > 0 else {
             throw error("Weight must be a positive number. Got: \(raw.singleQuoted)")
         }
         return weight
@@ -275,9 +275,14 @@ private struct IndentedSkeletonParser {
 
     init(source: String) throws {
         var lines: [Line] = []
-        for (index, rawLine) in source.split(separator: "\n", omittingEmptySubsequences: false).enumerated() {
+        // Swift treats CRLF as a single Character (grapheme cluster), so splitting by "\n" would not split CRLF
+        // lines. TOML decoders also normalize newlines, but let's not rely on that
+        for (index, rawLine) in source.split(
+            omittingEmptySubsequences: false,
+            whereSeparator: { $0 == "\r" || $0 == "\n" || $0 == "\r\n" },
+        ).enumerated() {
             let rawLine = String(rawLine)
-            let text = rawLine.trimmingCharacters(in: .whitespaces)
+            let text = rawLine.trimmingCharacters(in: .whitespacesAndNewlines)
             if text.isEmpty {
                 continue
             }
@@ -348,7 +353,7 @@ private struct IndentedSkeletonParser {
         let token = line.text[..<atIndex].trimmingCharacters(in: .whitespaces)
         let rawWeight = line.text[line.text.index(after: atIndex)...].trimmingCharacters(in: .whitespaces)
         guard !token.isEmpty else { throw error("Expected a token before '@'", line: line) }
-        guard let weight = Double(rawWeight), weight > 0 else {
+        guard let weight = Double(rawWeight), weight.isFinite, weight > 0 else {
             throw error("Weight must be a positive number. Got: \(rawWeight.singleQuoted)", line: line)
         }
         return (token, weight)

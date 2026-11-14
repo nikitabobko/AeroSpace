@@ -126,8 +126,11 @@ extension LayoutSkeleton {
             default: break
         }
         guard weights.contains(where: { $0 == nil }) else {
-            // Every sibling has an explicit weight. Weights are relative, layoutTiles normalizes the sum
-            return weights.compactMap { $0 }
+            // Every sibling has an explicit weight. Weights are relative, so normalize them to sum to 1:
+            // layoutTiles adjusts the weights additively (equal delta per child), which would squash unequal
+            // relative weights otherwise
+            let sum = weights.compactMap { $0 }.reduce(0, +)
+            return weights.map { ($0 ?? 1) / sum }
         }
         let unspecifiedCount = weights.count(where: { $0 == nil })
         let specifiedSum = weights.compactMap { $0 }.reduce(0, +)
@@ -175,8 +178,10 @@ extension TilingContainer {
     }
 
     @MainActor private func matchesResolved(_ nodes: [ResolvedLayoutNode]) -> Bool {
-        guard children.count == nodes.count else { return false }
-        for (child, node) in zip(children, nodes) {
+        // The root may have trailing preserved windows that are not part of the skeleton (invisible windows stay
+        // bound and flip back to alive in place). They are ignored by the comparison
+        guard children.count >= nodes.count else { return false }
+        for (child, node) in zip(children.prefix(nodes.count), nodes) {
             switch node.kind {
                 case .window(let window):
                     if child !== window { return false }
@@ -192,11 +197,18 @@ extension TilingContainer {
 
     @MainActor private func rebuildResolved(_ nodes: [ResolvedLayoutNode], in rect: ResolvedLayoutRect) {
         let mostRecentWindow = mostRecentWindowRecursive
+        // Invisible windows (e.g. windows of background macOS Spaces) are not part of the skeleton resolution,
+        // but they must stay bound: they flip back to alive in place. Dead windows are unbound by the refresh
+        // garbage collection, so detaching them here would make that crash
+        let preservedWindows = allLeafWindowsRecursive.filter { !$0.lifeStatus.isInhabited }
         let oldChildren = children
         for child in oldChildren {
             child.unbindFromParent()
         }
         bindResolved(nodes, in: rect)
+        for window in preservedWindows {
+            window.bind(to: self, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+        }
         mostRecentWindow?.markAsMostRecentChild()
     }
 
