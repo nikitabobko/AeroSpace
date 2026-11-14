@@ -102,8 +102,14 @@ extension TilingContainer {
         let windows = tilingWindowsInVisualOrder()
         guard !windows.isEmpty, let resolved = skeleton.resolve(windows: windows) else { return }
         forceOrientation(resolved.orientation)
-        guard !matchesResolved(resolved.children) else { return }
         let rect = nodeWorkspace.orDie().workspaceMonitorInfo.visibleRectPaddedByOuterGaps
+        // Weights are pixels of the parent's axis (see bindResolved). When the monitor geometry changes, the weights
+        // still belong to the old monitor, and the additive normalization of layoutTiles would distort the shares.
+        // So the tree must also be rebuilt when the weights don't sum up to the current monitor's axis.
+        // The tolerance absorbs the `height - 1` quirk of layoutWorkspace and the floating point noise of layoutTiles
+        let axisLength = orientation == .h ? rect.width : rect.height
+        let weightsMatchMonitor = abs(children.sumOfDouble { $0.getWeight(orientation) } - axisLength) < 2
+        guard !matchesResolved(resolved.children) || !weightsMatchMonitor else { return }
         rebuildResolved(resolved.children, in: ResolvedLayoutRect(width: rect.width, height: rect.height))
     }
 
