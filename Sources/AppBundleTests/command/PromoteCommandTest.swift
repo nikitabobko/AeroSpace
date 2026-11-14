@@ -47,7 +47,32 @@ struct PromoteCommandTest {
         }
 
         let result = await parseCommand("promote").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.exitCode, .fail)
+    }
+
+    @Test func testPromoteFailsForFloatingWindowWithoutTilingWindows() async {
+        Workspace.get(byName: name).apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0.floatingWindowsContainer).focusWindow(), true)
+        }
+
+        let result = await parseCommand("promote").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode, .fail)
+    }
+
+    @Test func testPromoteOnAccordionWorkspace() async {
+        let workspace = Workspace.get(byName: name).apply {
+            $0.rootTilingContainer.apply {
+                $0.layout = .accordion
+                TestWindow.new(id: 1, parent: $0)
+                assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+            }
+        }
+
+        await parseCommand("promote").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        // The master is the first window in the visual order
+        assertEquals(workspace.layoutDescription, .workspace([
+            .h_accordion([.window(2), .window(1)]),
+        ]))
     }
 
     @Test func testPromoteSwapsWithSkeletonMasterOnTheRight() async {

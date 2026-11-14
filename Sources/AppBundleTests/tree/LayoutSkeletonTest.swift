@@ -265,6 +265,23 @@ struct LayoutSkeletonTest {
         assertApproximatelyEqual(root.children[0].getWeight(.h), 0.6 * widthAfter)
     }
 
+    @Test func testNormalize_rebuildsWhenSkeletonChanges() {
+        // A config reload may replace the skeleton with a different one of the same shape (here: new weights).
+        // The tree must be rebuilt even though the shape still matches and the monitor didn't change
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.6, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        assertShare(root.children[0], of: root.children, 0.6)
+
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.8, v_tiles[others]]")]
+        workspace.normalizeContainers()
+        assertShare(root.children[0], of: root.children, 0.8)
+    }
+
     @Test func testNormalize_columns() {
         config.workspaceLayout = [name: skeleton("h_tiles[others]")]
         let workspace = Workspace.get(byName: name)
