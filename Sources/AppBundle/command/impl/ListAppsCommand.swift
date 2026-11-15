@@ -8,7 +8,7 @@ struct ListAppsCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         var result = Array(MacApp.allAppsMap.values)
         if let hidden = args.macosHidden {
-            result = result.filter { $0.nsApp.isHidden == hidden }
+            result = result.filter { $0.isUserHidden == hidden }
         }
 
         lazy var list = result.map(AeroObj.app)
