@@ -35,6 +35,12 @@ private struct NativeFocusTransaction {
     )
 }
 
+@MainActor func cancelNativeFocusTransaction() {
+    nativeFocusReassertionTask?.cancel()
+    nativeFocusReassertionTask = nil
+    nativeFocusTransaction = nil
+}
+
 @MainActor
 private func scheduleNativeFocusReassertion(for transaction: NativeFocusTransaction) {
     guard transaction.correctionAttempts == 0, nativeFocusReassertionTask == nil else { return }

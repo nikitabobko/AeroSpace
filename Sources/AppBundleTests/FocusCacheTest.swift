@@ -9,6 +9,7 @@ struct FocusCacheTest {
     }
 
     @Test func ignoresStaleFocusFromAppUntilFocusTransactionSettles() {
+        defer { cancelNativeFocusTransaction() }
         let expectedWorkspace = Workspace.get(byName: "expected")
         let staleWorkspace = Workspace.get(byName: "stale")
         let expectedWindow = TestWindow.new(id: 1, parent: expectedWorkspace.rootTilingContainer)
