@@ -12,6 +12,20 @@ struct ExecAndForgetCommand: Command {
         process.environment = config.execConfig.envVariables + env.asMap
         process.executableURL = URL(filePath: "/bin/bash")
         process.arguments = ["-c", args.bashScript]
-        return .from(bool: Result { try process.run() }.isSuccess)
+        switch Result(catching: { try process.run() }) {
+            case .success: return .succ
+            case .failure(let e):
+                // Don't die on transient spawn failures. Report the failure to the user instead
+                // https://github.com/nikitabobko/AeroSpace/issues/1153
+                let msg = """
+                    Failed to run 'exec-and-forget' command:
+                        \(args.bashScript)
+
+                    Error: \(e.localizedDescription)
+                    """
+                _ = io.err(msg)
+                reportCallbackError(msg)
+                return .fail
+        }
     }
 }
