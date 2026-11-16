@@ -100,6 +100,8 @@ gaps.outer.right =      0
     # - Arrows.         left, down, up, right
 
     # All possible modifiers: cmd, alt, ctrl, shift
+    # You can also use side-aware modifiers: left-cmd, right-cmd, left-alt, right-alt,
+    # left-ctrl, right-ctrl, left-shift, right-shift
 
     # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
