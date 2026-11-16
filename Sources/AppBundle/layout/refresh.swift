@@ -80,8 +80,9 @@ func runLightSession<T>(
         updateTrayText()
         SecureInputPanel.shared.refresh()
         if !event.isFocusFollowsMouse { try await layoutWorkspaces() }
-        if focusBefore != focusAfter {
-            focusAfter?.nativeFocus() // syncFocusToMacOs
+        if let focusAfter, focusBefore != focusAfter || nativeFocused != focusAfter {
+            expectNativeFocus(focusAfter)
+            focusAfter.nativeFocus() // syncFocusToMacOs
         }
         if !event.isFocusFollowsMouse { scheduleCancellableCompleteRefreshSession(event) }
         return result
