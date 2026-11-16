@@ -44,7 +44,7 @@ private struct NativeFocusTransaction {
 @MainActor
 private func scheduleNativeFocusReassertion(for transaction: NativeFocusTransaction) {
     guard transaction.correctionAttempts == 0, nativeFocusReassertionTask == nil else { return }
-    nativeFocusReassertionTask = Task { @MainActor in
+    nativeFocusReassertionTask = Task.startUnstructured { @MainActor in
         do {
             try await Task.sleep(for: nativeFocusReassertionDelay)
         } catch {
