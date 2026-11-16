@@ -416,6 +416,43 @@ struct LayoutSkeletonTest {
         assertEquals(root.children[0].getWeight(.h), 0.2)
     }
 
+    /// Adding or removing a window in `others` changes the contents of the stack, not the shape of the tree, so the
+    /// manually resized master/stack split is preserved instead of snapping back to the configured weight
+    @Test func testNormalize_preservesManualResizeWhenStackChanges() {
+        config.workspaceLayout = [name: skeleton("h_tiles[1@0.55, v_tiles[others]]")]
+        let workspace = Workspace.get(byName: name)
+        for id in uids(3) {
+            TestWindow.new(id: id, parent: workspace.rootTilingContainer)
+        }
+        workspace.normalizeContainers()
+        let root = workspace.rootTilingContainer
+        let master = root.children[0]
+        let stack = root.children[1]
+        let stackContainer = stack as! TilingContainer
+        let width = workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps.width
+        assertApproximatelyEqual(master.getWeight(.h), 0.55 * width)
+        master.setWeight(.h, 0.7 * width) // Manual resize: master 55% -> 70%
+
+        // Open another window in the stack
+        TestWindow.new(id: 3, parent: stackContainer)
+        workspace.normalizeContainers()
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([.window(0), .v_tiles([.window(1), .window(2), .window(3)])]),
+        )
+        // The shape still matches the skeleton, so no rebuild happens and the manual split survives
+        assertApproximatelyEqual(master.getWeight(.h), 0.7 * width)
+
+        // Close a window in the stack
+        _ = stack.children.last?.unbindFromParent()
+        workspace.normalizeContainers()
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([.window(0), .v_tiles([.window(1), .window(2)])]),
+        )
+        assertApproximatelyEqual(master.getWeight(.h), 0.7 * width)
+    }
+
     @Test func testNormalize_doesntAffectOtherWorkspaces() {
         config.workspaceLayout = [name: skeleton("h_tiles[1@0.6, v_tiles[others]]")]
         let workspace = Workspace.get(byName: name)
