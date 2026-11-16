@@ -19,7 +19,7 @@ private struct NativeFocusTransaction {
 
 /// Keep AeroSpace focus authoritative while an explicit macOS focus request settles.
 ///
-/// Chrome can first acknowledge the requested window, then publish its previous
+/// An app can first acknowledge the requested window, then publish its previous
 /// window as focused a few milliseconds later. A rapid workspace switch can
 /// also let an older native-focus request surface after the newest request.
 /// The transaction remains active through those late events. A newer focus
