@@ -2,19 +2,16 @@ import AppKit
 import Common
 import Network
 
-func startUnixSocketServer() {
-    try? FileManager.default.removeItem(atPath: socketPath)
-    let params = NWParameters.tcp
-    params.requiredLocalEndpoint = .unix(path: socketPath)
-    let listener = Result { try NWListener(using: params) }.getOrDie()
-    listener.newConnectionHandler = { connection in
-        Task.startUnstructured {
-            defer { connection.cancel() }
-            connection.start(queue: .global())
-            await newConnection(connection)
-        }
+@MainActor private let unixSocketServer = RecoveringUnixSocketServer(path: socketPath) { connection in
+    Task.startUnstructured {
+        defer { connection.cancel() }
+        connection.start(queue: .global())
+        await newConnection(connection)
     }
-    listener.start(queue: .global())
+}
+
+@MainActor func startUnixSocketServer() {
+    Result { try unixSocketServer.start() }.getOrDie()
 }
 
 func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
