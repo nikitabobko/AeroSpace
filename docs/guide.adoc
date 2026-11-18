@@ -441,8 +441,8 @@ auto-hide-dock = ['1', 'B']   # Only for the listed workspaces
 
 * When the focused workspace has `auto-hide-dock` enabled and contains at least one tiling window,
 AeroSpace turns on Dock auto-hide and tiling windows of that workspace take the space that the Dock used to occupy.
-* When the focused workspace is empty, contains only floating windows, or doesn't have `auto-hide-dock` enabled,
-AeroSpace shows the Dock.
+* Floating windows keep their size and position. They hide the Dock only when they overlap it.
+* Otherwise (e.g. the focused workspace is empty), AeroSpace shows the Dock.
 * The Dock is also shown when AeroSpace quits.
 * When the config is loaded, AeroSpace turns off the macOS "Automatically hide and show the Dock" setting
 (AeroSpace manages it from now on), and sets the Dock `autohide-time-modifier` preference to `0` to make the Dock hide and show instantly.

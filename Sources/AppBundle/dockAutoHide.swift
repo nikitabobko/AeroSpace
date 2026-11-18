@@ -3,8 +3,9 @@ import Common
 
 // 'auto-hide-dock' config option.
 //
-// Mental model: when the focused workspace has 'auto-hide-dock' enabled and contains at least one tiling window, AeroSpace
-// turns on macOS Dock auto-hide and lets the tiling windows take the space that the Dock used to occupy.
+// Mental model: when the focused workspace has 'auto-hide-dock' enabled and contains at least one tiling window
+// or a floating window that overlaps the Dock, AeroSpace turns on macOS Dock auto-hide
+// and lets the tiling windows take the space that the Dock used to occupy.
 // Otherwise, the Dock is visible.
 //
 // The Dock is controlled via System Events (Automation permission is required). No private APIs are involved.
@@ -20,6 +21,8 @@ import Common
 /// Set when AeroSpace isn't allowed to control the Dock (Automation permission is denied). Reset on config reload
 @MainActor private var isDockAutomationBroken: Bool = false
 @MainActor private var lastDockAutoHideFailure: ContinuousClock.Instant? = nil
+/// The area that the Dock occupies when it's visible. It's cached, because it can't be measured while the Dock is hidden
+@MainActor private var visibleDockRect: Rect? = nil
 
 private let dockBundleId = "com.apple.dock"
 /// For how long layouts wait for the Dock change. Normally, the change takes a fraction of a second.
@@ -51,11 +54,52 @@ extension Workspace {
     }
 }
 
+/// Tiling windows always take the space of the Dock. Floating windows hide the Dock only if they overlap it
 @MainActor
-private var shouldAutoHideDock: Bool {
+private func shouldAutoHideDock() async -> Bool {
     guard TrayMenuModel.shared.isEnabled, !isDockAutomationBroken else { return false }
     let workspace = globalFocus.workspace
-    return config.autoHideDock.isEnabled(forWorkspace: workspace.name) && !workspace.rootTilingContainer.isEffectivelyEmpty
+    guard config.autoHideDock.isEnabled(forWorkspace: workspace.name) else { return false }
+    if !workspace.rootTilingContainer.isEffectivelyEmpty { return true }
+    guard let visibleDockRect else { return false }
+    for window in workspace.floatingWindows {
+        if let rect = try? await window.getAxRect(.cancellable), rect.ignoringEdges.intersects(visibleDockRect) {
+            return true
+        }
+    }
+    return false
+}
+
+@MainActor
+private func updateVisibleDockRect() {
+    guard appliedDockAutoHide == false else { return } // The Dock can be measured only while it's visible
+    // The Dock can be placed only at the left, right, or bottom edge. The top edge is occupied by the menu bar
+    let candidates: [Rect] = globalUnsortedMonitorInfos.flatMap { (monitor: MonitorInfo) -> [Rect] in
+        let rect = monitor.rect
+        let visibleRect = monitor.visibleRect
+        return [
+            Rect(topLeftX: rect.minX, topLeftY: visibleRect.maxY, width: rect.width, height: rect.maxY - visibleRect.maxY), // bottom
+            Rect(topLeftX: rect.minX, topLeftY: visibleRect.minY, width: visibleRect.minX - rect.minX, height: visibleRect.height), // left
+            Rect(topLeftX: visibleRect.maxX, topLeftY: visibleRect.minY, width: rect.maxX - visibleRect.maxX, height: visibleRect.height), // right
+        ]
+    }
+    // The visible Dock is never thinner than that. Thinner insets are e.g. the reserved area of the hidden Dock.
+    // The Dock doesn't necessarily occupy the whole screen edge, but there is no public API to get the Dock size.
+    // (The Dock window itself covers the whole screen)
+    visibleDockRect = candidates.filter { min($0.width, $0.height) >= 16 }.maxBy { min($0.width, $0.height) }
+}
+
+extension Rect {
+    fileprivate func intersects(_ other: Rect) -> Bool {
+        minX < other.maxX && other.minX < maxX && minY < other.maxY && other.minY < maxY
+    }
+
+    /// A window that only touches the Dock with its edge (e.g. the shadow area) shouldn't hide the Dock
+    fileprivate var ignoringEdges: Rect {
+        let insetX = min(6, width / 20)
+        let insetY = min(6, height / 20)
+        return Rect(topLeftX: topLeftX + insetX, topLeftY: topLeftY + insetY, width: width - 2 * insetX, height: height - 2 * insetY)
+    }
 }
 
 /// Based on the actual Dock state, not on the desired one. Windows must not be laid out over the visible Dock
@@ -75,12 +119,15 @@ func syncDockAutoHide() async {
     guard await waitForDockAutoHideTask() else { return }
     if isDockAutomationBroken { return }
     if let lastDockAutoHideFailure, ContinuousClock.now - lastDockAutoHideFailure < retryAfterFailureTimeout { return }
-    let target = shouldAutoHideDock
     if config.autoHideDock == .disabled && appliedDockAutoHide != true {
         return // Don't fight with the user if AeroSpace hasn't hidden the Dock
     }
     let current = appliedDockAutoHide ?? readDockPreference("autohide") as? Bool ?? false
     appliedDockAutoHide = current
+    updateVisibleDockRect()
+    let target = await shouldAutoHideDock()
+    // shouldAutoHideDock has a suspension point. Don't act on stale data
+    if Task.isCancelled || dockAutoHideTask != nil || appliedDockAutoHide != current { return }
     if target == current { return }
 
     pendingDockAutoHide = target

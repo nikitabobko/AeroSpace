@@ -54,8 +54,8 @@ persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B",
                          "C", "D", "E", "F", "G", "I", "M", "N", "O", "P", "Q",
                          "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
-# Automatically hide the macOS Dock when the focused workspace has tiling windows,
-# and let the tiling windows take the space of the Dock.
+# Automatically hide the macOS Dock when the focused workspace has tiling windows
+# (they take the space of the Dock) or floating windows that overlap the Dock.
 # Possible values: true|false or a list of workspace names (e.g. ['1', 'B'])
 # See https://nikitabobko.github.io/AeroSpace/guide#auto-hide-dock
 # Fallback value (if you omit the key): auto-hide-dock = false
