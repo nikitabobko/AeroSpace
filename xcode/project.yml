@@ -55,3 +55,5 @@ targets:
       properties:
         # Accessibility API doesn't work in sandboxed apps
         com.apple.security.app-sandbox: false
+        # 'auto-hide-dock' sends Apple Events to System Events. Required by the hardened runtime
+        com.apple.security.automation.apple-events: true

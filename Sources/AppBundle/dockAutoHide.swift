@@ -236,8 +236,62 @@ private enum SetDockAutoHideResult {
     case success, notAuthorized, failure
 }
 
-/// osascript is used instead of NSAppleScript because NSAppleScript blocks the main thread
 private func setDockAutoHide(_ value: Bool) async -> SetDockAutoHideResult {
+    switch await sendSetDockAutoHideAppleEvent(value) {
+        case .success: return .success
+        case .notAuthorized: return .notAuthorized
+        case .failure: return await setDockAutoHideViaOsascript(value) // E.g. System Events isn't running. osascript launches it
+    }
+}
+
+private let dockAppleEventQueue = DispatchQueue(label: "bobko.aerospace.dock-auto-hide")
+
+/// `tell application "System Events" to set autohide of dock preferences to <value>`, but the Apple Event is sent directly.
+/// It takes a few milliseconds, while osascript takes ~100ms (the process launch and the script compilation),
+/// and the Dock change delays the layout, so it's noticeable on every workspace switch.
+/// The event is sent on a separate queue, because the call blocks until System Events replies
+private func sendSetDockAutoHideAppleEvent(_ value: Bool) async -> SetDockAutoHideResult {
+    await withCheckedContinuation { (continuation: CheckedContinuation<SetDockAutoHideResult, Never>) in
+        dockAppleEventQueue.async {
+            let event = NSAppleEventDescriptor.appleEvent(
+                withEventClass: fourCharCode("core"), // kAECoreSuite
+                eventID: fourCharCode("setd"), // kAESetData
+                targetDescriptor: NSAppleEventDescriptor(bundleIdentifier: "com.apple.systemevents"),
+                returnID: -1, // kAutoGenerateReturnID
+                transactionID: 0, // kAnyTransactionID
+            )
+            // 'dpas' is 'dock preferences' property of the application. 'dahd' is its 'autohide' property
+            let autohide = propertySpecifier(fourCharCode("dahd"), of: propertySpecifier(fourCharCode("dpas"), of: .null()))
+            event.setParam(autohide, forKeyword: fourCharCode("----")) // keyDirectObject
+            event.setParam(NSAppleEventDescriptor(boolean: value), forKeyword: fourCharCode("data")) // keyAEData
+            let result: SetDockAutoHideResult
+            do {
+                _ = try event.sendEvent(options: [.waitForReply], timeout: 5)
+                result = .success
+            } catch {
+                // -1743: errAEEventNotPermitted (Automation permission is denied)
+                result = (error as NSError).code == -1743 ? .notAuthorized : .failure
+            }
+            continuation.resume(returning: result)
+        }
+    }
+}
+
+private func propertySpecifier(_ property: FourCharCode, of container: NSAppleEventDescriptor) -> NSAppleEventDescriptor {
+    let specifier = NSAppleEventDescriptor.record()
+    specifier.setDescriptor(NSAppleEventDescriptor(typeCode: fourCharCode("prop")), forKeyword: fourCharCode("want")) // keyAEDesiredClass: cProperty
+    specifier.setDescriptor(NSAppleEventDescriptor(enumCode: fourCharCode("prop")), forKeyword: fourCharCode("form")) // keyAEKeyForm: formPropertyID
+    specifier.setDescriptor(NSAppleEventDescriptor(typeCode: property), forKeyword: fourCharCode("seld")) // keyAEKeyData
+    specifier.setDescriptor(container, forKeyword: fourCharCode("from")) // keyAEContainer
+    return specifier.coerce(toDescriptorType: fourCharCode("obj ")) ?? specifier // typeObjectSpecifier
+}
+
+private func fourCharCode(_ code: String) -> FourCharCode {
+    code.utf8.reduce(0) { ($0 << 8) | FourCharCode($1) }
+}
+
+/// osascript is used instead of NSAppleScript because NSAppleScript blocks the main thread
+private func setDockAutoHideViaOsascript(_ value: Bool) async -> SetDockAutoHideResult {
     let process = newSetDockAutoHideProcess(value)
     let stderr = Pipe()
     process.standardError = stderr
