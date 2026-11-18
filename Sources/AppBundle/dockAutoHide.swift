@@ -230,22 +230,55 @@ private func startDockAutoHideTask(_ body: @escaping @MainActor () async -> Void
 @MainActor
 private func waitForDockAutoHideTask() async -> Bool {
     let deadline = ContinuousClock.now + layoutDockWaitTimeout
-    // Polling, because Task.value can't be awaited with a timeout
-    while dockAutoHideTask != nil {
-        if ContinuousClock.now >= deadline || Task.isCancelled {
+    while let task = dockAutoHideTask {
+        guard !Task.isCancelled, await wait(for: task, until: deadline) else {
             isRelayoutNeededAfterDockAutoHideTask = true
             return false
         }
-        try? await Task.sleep(for: .milliseconds(10))
+        if dockAutoHideTask == task { dockAutoHideTask = nil }
     }
     return true
 }
 
+/// Task.value can't be awaited with a timeout or cancellation
+/// - Returns: true if the task is finished
+@MainActor
+private func wait(for task: Task<Void, Never>, until deadline: ContinuousClock.Instant) async -> Bool {
+    let result = OneShotResult()
+    return await withTaskCancellationHandler {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
+            result.continuation = continuation
+            let timeout = Task.startUnstructured { @MainActor in
+                try? await Task.sleep(until: deadline)
+                result.resume(false)
+            }
+            Task.startUnstructured { @MainActor in
+                await task.value
+                timeout.cancel()
+                result.resume(true)
+            }
+        }
+    } onCancel: {
+        Task.startUnstructured { @MainActor in result.resume(false) }
+    }
+}
+
+@MainActor
+private final class OneShotResult {
+    var continuation: CheckedContinuation<Bool, Never>? = nil
+
+    func resume(_ value: Bool) {
+        continuation?.resume(returning: value)
+        continuation = nil
+    }
+}
+
+/// The Dock updates the visible frame within a few milliseconds. Every millisecond delays the layout, so the polling is frequent
 @MainActor
 private func waitForVisibleFramesChange(from visibleFramesBefore: [CGRect]) async {
     let deadline = ContinuousClock.now + .milliseconds(500)
     while ContinuousClock.now < deadline && NSScreen.screens.map(\.visibleFrame) == visibleFramesBefore {
-        try? await Task.sleep(for: .milliseconds(10))
+        try? await Task.sleep(for: .milliseconds(1))
     }
 }
 
