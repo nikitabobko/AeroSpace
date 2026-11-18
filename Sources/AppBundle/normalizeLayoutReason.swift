@@ -9,11 +9,19 @@
 
 @MainActor private func validateStillPopups() async throws {
     for node in macosPopupWindowsContainer.children {
-        let popup = (node as! MacWindow)
-        let windowLevel = try await popup.getWindowLevel(.cancellable)
-        if try await popup.isWindowHeuristic(windowLevel, .cancellable) {
-            try await popup.relayoutWindow(on: globalFocus.workspace, .cancellable)
-            await runOnWindowDetected(ifConventional: popup)
+        try await (node as! MacWindow).relayoutIfNoLongerPopup()
+    }
+}
+
+extension MacWindow {
+    /// Some windows are mistakenly detected as popups right after they are created
+    /// (their AX attributes aren't fully initialized yet). Re-check and relayout them as regular windows
+    @MainActor func relayoutIfNoLongerPopup() async throws {
+        guard parent is MacosPopupWindowsContainer else { return }
+        let windowLevel = try await getWindowLevel(.cancellable)
+        if try await isWindowHeuristic(windowLevel, .cancellable) {
+            try await relayoutWindow(on: globalFocus.workspace, .cancellable)
+            await runOnWindowDetected(ifConventional: self)
         }
     }
 }

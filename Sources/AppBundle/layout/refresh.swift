@@ -32,9 +32,7 @@ func runHeavyCompleteRefreshSession(
     if !TrayMenuModel.shared.isEnabled { return }
     let res = await Result {
         try await $refreshSessionEvent.withValue(event) {
-            let nativeFocused = try await getNativeFocusedWindow(.cancellable)
-            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
-            updateFocusCache(nativeFocused)
+            try await syncFocusFromMacOs(recheckPopup: true)
 
             if shouldLayoutWorkspaces && optimisticallyPreLayoutWorkspaces { try await layoutWorkspaces() }
 
@@ -66,9 +64,7 @@ func runLightSession<T>(
     activeRefreshTask?.cancel() // Give priority to runSession
     activeRefreshTask = nil
     return try await $refreshSessionEvent.withValue(event) {
-        let nativeFocused = try await getNativeFocusedWindow(.cancellable)
-        if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
-        updateFocusCache(nativeFocused)
+        try await syncFocusFromMacOs(recheckPopup: event.isCommand)
         let focusBefore = globalFocus.windowOrNil
 
         await refreshModel_nonCancellable()
@@ -85,6 +81,27 @@ func runLightSession<T>(
         }
         if !event.isFocusFollowsMouse { scheduleCancellableCompleteRefreshSession(event) }
         return result
+    }
+}
+
+@MainActor
+private func syncFocusFromMacOs(recheckPopup: Bool) async throws {
+    let nativeFocused = try await getNativeFocusedWindow(.cancellable)
+    if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
+    // updateFocusCache ignores popups, but new windows are sometimes mistakenly detected as popups.
+    // Re-check, otherwise commands (e.g. move-node-to-workspace) are applied to the previously focused window
+    if recheckPopup { try await (nativeFocused as? MacWindow)?.relayoutIfNoLongerPopup() }
+    updateFocusCache(nativeFocused)
+}
+
+extension RefreshSessionEvent {
+    /// Light sessions that run user commands. It's not safe to relayout windows in other light sessions:
+    /// focus-follows-mouse sessions don't layout workspaces, and mouse drag sessions shouldn't reclassify the dragged window
+    fileprivate var isCommand: Bool {
+        switch self {
+            case .hotkeyBinding, .socketServer, .menuBarButton: true
+            default: false
+        }
     }
 }
 
