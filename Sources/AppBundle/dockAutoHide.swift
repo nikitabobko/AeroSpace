@@ -145,6 +145,10 @@ func syncDockAutoHide() async {
             case .failure: // E.g. the Dock or System Events are restarting
                 lastDockAutoHideFailure = .now
                 appliedDockAutoHide = nil
+                Task.startUnstructured { @MainActor in
+                    try? await Task.sleep(for: retryAfterFailureTimeout)
+                    scheduleCancellableCompleteRefreshSession(.dockAutoHide)
+                }
         }
         pendingDockAutoHide = nil
     }
