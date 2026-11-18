@@ -84,6 +84,27 @@ struct ConfigTest {
         assertEquals(errors, ["[ERROR] persistent-workspaces: Contains duplicated workspace names"])
     }
 
+    @Test func testAutoHideDock() {
+        assertEquals(parseConfig("").config.autoHideDock, .disabled)
+        assertEquals(parseConfig("auto-hide-dock = false").config.autoHideDock, .disabled)
+        assertEquals(parseConfig("auto-hide-dock = true").config.autoHideDock, .allWorkspaces)
+        assertEquals(parseConfig("auto-hide-dock = []").config.autoHideDock, .disabled)
+
+        let config = parseConfig("auto-hide-dock = ['1', 'B']").config
+        assertEquals(config.autoHideDock, .workspaces(["1", "B"]))
+        assertTrue(config.autoHideDock.isEnabled(forWorkspace: "B"))
+        assertFalse(config.autoHideDock.isEnabled(forWorkspace: "2"))
+
+        assertEquals(
+            parseConfig("auto-hide-dock = 'yes'").strErrors,
+            ["[ERROR] auto-hide-dock: Expected types are 'bool' or 'array'. But actual type is 'string'"],
+        )
+        assertEquals(
+            parseConfig("auto-hide-dock = ['a', 'a']").strErrors,
+            ["[ERROR] auto-hide-dock: Contains duplicated workspace names"],
+        )
+    }
+
     @Test func testPersistentWorkspacesAreAvailableOnlySinceVersion2() {
         let errors = parseConfig(
             """

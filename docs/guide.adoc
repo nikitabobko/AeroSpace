@@ -425,6 +425,42 @@ The floating window parent container is determined as the smallest tiling contai
 
 This technique eliminates the need for an additional binding for focusing floating windows.
 
+[#auto-hide-dock]
+=== Auto-hide Dock
+
+By default, AeroSpace lays out tiling windows inside the area that is not occupied by the Dock.
+Since tiling windows never overlap the Dock, the native macOS "Automatically hide and show the Dock" setting can't help to reclaim that space.
+
+`auto-hide-dock` config option makes AeroSpace manage the Dock automatically:
+
+[source,toml]
+----
+auto-hide-dock = true         # For all workspaces
+auto-hide-dock = ['1', 'B']   # Only for the listed workspaces
+----
+
+* When the focused workspace has `auto-hide-dock` enabled and contains at least one tiling window,
+AeroSpace turns on Dock auto-hide and tiling windows of that workspace take the space that the Dock used to occupy.
+* When the focused workspace is empty, contains only floating windows, or doesn't have `auto-hide-dock` enabled,
+AeroSpace shows the Dock.
+* The Dock is also shown when AeroSpace quits.
+* When the config is loaded, AeroSpace turns off the macOS "Automatically hide and show the Dock" setting
+(AeroSpace manages it from now on), and sets the Dock `autohide-time-modifier` preference to `0` to make the Dock hide and show instantly.
+The Dock is restarted if any of these preferences had a different value.
+`autohide-time-modifier` is not restored when AeroSpace quits. You can restore the macOS default with:
++
+[source,bash]
+----
+defaults delete com.apple.dock autohide-time-modifier
+killall Dock
+----
+
+AeroSpace controls the Dock via `System Events`.
+macOS will ask you to grant AeroSpace the Automation permission (`System Settings -> Privacy & Security -> Automation`) the first time the Dock is changed.
+If the permission is denied, the option has no effect until the config is reloaded.
+
+The Dock is shared among all monitors, so AeroSpace decides whether to hide it based on the focused workspace only.
+
 [#emulation-of-virtual-workspaces]
 == Emulation of virtual workspaces
 

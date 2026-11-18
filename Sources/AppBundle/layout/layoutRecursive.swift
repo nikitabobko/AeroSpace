@@ -5,7 +5,7 @@ extension Workspace {
     @MainActor
     func layoutWorkspace() async throws { // todo revisit API
         if isEffectivelyEmpty { return }
-        let rect = workspaceMonitorInfo.visibleRectPaddedByOuterGaps
+        let rect = layoutVisibleRectPaddedByOuterGaps
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in monitors horizontal configuration. ¯\_(ツ)_/¯
@@ -105,8 +105,8 @@ extension Window {
     @MainActor
     fileprivate func layoutFullscreen(_ context: LayoutContext) {
         let monitorRect = noOuterGapsInFullscreen
-            ? context.workspace.workspaceMonitorInfo.visibleRect
-            : context.workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
+            ? context.workspace.layoutVisibleRect
+            : context.workspace.layoutVisibleRectPaddedByOuterGaps
         setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
     }
 }

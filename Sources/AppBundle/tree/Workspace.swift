@@ -34,7 +34,7 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     }
 
     override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        workspaceMonitorInfo.visibleRectPaddedByOuterGaps.getDimension(targetOrientation)
+        layoutVisibleRectPaddedByOuterGaps.getDimension(targetOrientation)
     }
 
     override func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {

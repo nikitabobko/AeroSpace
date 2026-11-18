@@ -147,6 +147,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     persistentWorkspacesKey: Parser(\.persistentWorkspaces, parsePersistentWorkspaces),
+    "auto-hide-dock": Parser(\.autoHideDock, parseAutoHideDock),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
     "exec": Parser(\.execConfig, parseExecConfig),
 
@@ -401,6 +402,24 @@ private func parsePersistentWorkspaces(_ raw: OrderedJson, _ backtrace: ConfigBa
             let set = arr.toOrderedSet()
             return set.count == arr.count ? .success(set) : .failure(.init(backtrace, "Contains duplicated workspace names"))
         }
+}
+
+private func parseAutoHideDock(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<AutoHideDock> {
+    if let bool = raw.asBoolOrNil {
+        return .success(bool ? .allWorkspaces : .disabled)
+    }
+    if raw.asArrayOrNil != nil {
+        return parseArrayOfStrings(raw, backtrace)
+            .flatMap { arr in
+                let set = arr.toOrderedSet()
+                return switch true {
+                    case set.count != arr.count: .failure(.init(backtrace, "Contains duplicated workspace names"))
+                    case set.isEmpty: .success(.disabled)
+                    default: .success(.workspaces(set))
+                }
+            }
+    }
+    return .failure(expectedActualTypeDiagnostic(expected: [.bool, .array], actual: raw.tomlType, backtrace))
 }
 
 private func parseArrayOfStrings(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<[String]> {

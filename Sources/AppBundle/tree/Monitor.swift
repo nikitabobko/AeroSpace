@@ -112,6 +112,11 @@ extension MonitorInfo {
     }
 }
 
+/// Monitor infos are cached. Call it when NSScreen.visibleFrame changes (e.g. when the Dock is shown or hidden)
+@MainActor func refreshMonitorInfos() {
+    rearrangeMonitors()
+}
+
 @MainActor func gcMonitors() {
     if pointToMonitor.count != globalUnsortedMonitorInfos.count {
         rearrangeMonitors()
