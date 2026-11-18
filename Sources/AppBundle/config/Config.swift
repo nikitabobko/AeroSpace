@@ -47,6 +47,7 @@ struct Config: Withable {
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var persistentWorkspaces: OrderedSet<String> = []
+    var autoHideDock: AutoHideDock = .disabled
     var execOnWorkspaceChange: [String] = [] // todo deprecate
     var keyMapping = KeyMapping()
     var execConfig: ExecConfig = ExecConfig()
@@ -65,6 +66,20 @@ struct Config: Withable {
 
 struct FocusFollowsMouse: Withable {
     var enabled: Bool = false
+}
+
+enum AutoHideDock: Equatable, Sendable {
+    case disabled
+    case allWorkspaces
+    case workspaces(OrderedSet<String>)
+
+    func isEnabled(forWorkspace name: String) -> Bool {
+        switch self {
+            case .disabled: false
+            case .allWorkspaces: true
+            case .workspaces(let names): names.contains(name)
+        }
+    }
 }
 
 enum ConfigVersion: Int, Comparable, CaseIterable, Sendable, CustomStringConvertible {

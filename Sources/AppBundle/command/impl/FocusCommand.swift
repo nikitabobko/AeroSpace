@@ -134,7 +134,7 @@ struct FocusCommand: Command {
 
         let tilingParent: TilingContainer
         let index: Int
-        if let target = center.coerce(in: workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps)?
+        if let target = center.coerce(in: workspace.layoutVisibleRectPaddedByOuterGaps)?
             .findWindowRecursively(in: workspace.rootTilingContainer, virtual: true, fullscreenCoversAll: false)
         {
             guard let targetCenter = try? await target.getCenter(.nonCancellable) else { continue }
