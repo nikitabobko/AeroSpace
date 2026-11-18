@@ -190,6 +190,13 @@ final class MacWindow: Window {
         self.prevUnhiddenProportionalPositionInsideWorkspaceRect = nil
     }
 
+    /// Where ``unhideFromCorner`` is going to place the floating window. nil if the window isn't hidden in the corner
+    @MainActor
+    var unhiddenFloatingRect: Rect? {
+        guard let topLeft = unhiddenFloatingTopLeftCorner, let lastFloatingSize else { return nil }
+        return Rect(topLeftX: topLeft.x, topLeftY: topLeft.y, width: lastFloatingSize.width, height: lastFloatingSize.height)
+    }
+
     @MainActor
     private var unhiddenFloatingTopLeftCorner: Point? {
         guard let prevUnhiddenProportionalPositionInsideWorkspaceRect else { return nil }

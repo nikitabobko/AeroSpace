@@ -63,7 +63,14 @@ private func shouldAutoHideDock() async -> Bool {
     if !workspace.rootTilingContainer.isEffectivelyEmpty { return true }
     guard let visibleDockRect else { return false }
     for window in workspace.floatingWindows {
-        if let rect = try? await window.getAxRect(.cancellable), rect.ignoringEdges.intersects(visibleDockRect) {
+        // Windows of the workspace that has just become visible are still hidden in the corner.
+        // Use the rect where they are going to be placed
+        let rect: Rect? = if let unhiddenRect = (window as? MacWindow)?.unhiddenFloatingRect {
+            unhiddenRect
+        } else {
+            try? await window.getAxRect(.cancellable)
+        }
+        if let rect, rect.ignoringEdges.intersects(visibleDockRect) {
             return true
         }
     }
@@ -112,8 +119,12 @@ private func isDockAutoHiddenByAeroSpace(for workspace: Workspace) -> Bool {
 ///
 /// It waits until the Dock state is applied. Apps don't allow windows to be taller than NSScreen.visibleFrame,
 /// so if windows were laid out while the Dock is still visible, apps would shrink them.
+///
+/// - Parameter hideInvisibleWorkspaces: called before the Dock is shown. When the Dock is shown, apps shrink their windows
+///   to the new visible frame. Windows of the workspace that has just become invisible must be hidden in the corner
+///   (which records their size) before that, so that they get their size back when the workspace becomes visible again
 @MainActor
-func syncDockAutoHide() async {
+func syncDockAutoHide(hideInvisibleWorkspaces: @MainActor () async -> Void) async {
     if isUnitTest { return }
     // If the previous change is still in progress, the layout will be redone once it's done
     guard await waitForDockAutoHideTask() else { return }
@@ -130,6 +141,11 @@ func syncDockAutoHide() async {
     if Task.isCancelled || dockAutoHideTask != nil || appliedDockAutoHide != current { return }
     if target == current { return }
 
+    if !target {
+        await hideInvisibleWorkspaces()
+        // hideInvisibleWorkspaces has a suspension point. Don't act on stale data
+        if Task.isCancelled || dockAutoHideTask != nil || appliedDockAutoHide != current { return }
+    }
     pendingDockAutoHide = target
     startDockAutoHideTask { @MainActor in
         let visibleFramesBefore = NSScreen.screens.map(\.visibleFrame)

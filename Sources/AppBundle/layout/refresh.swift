@@ -169,8 +169,8 @@ enum OptimalHideCorner {
 
 @MainActor
 private func layoutWorkspaces() async throws {
-    await syncDockAutoHide()
     if !TrayMenuModel.shared.isEnabled {
+        await syncDockAutoHide(hideInvisibleWorkspaces: {})
         for workspace in Workspace.all {
             workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
             try await workspace.layoutWorkspace() // Unhide tiling windows from corner
@@ -203,21 +203,26 @@ private func layoutWorkspaces() async throws {
         monitorToOptimalHideCorner[monitor.rect.topLeftCorner] = corner
     }
 
+    func hideInvisibleWorkspaces() async throws {
+        for workspace in Workspace.all where !workspace.isVisible {
+            // The workspace might have been garbage collected by a concurrent refresh session while this function was
+            // suspended in hideInCorner
+            guard let monitor = workspace.nodeMonitorInfo else { continue }
+            let corner = monitorToOptimalHideCorner[monitor.rect.topLeftCorner] ?? .bottomRightCorner
+            for window in workspace.allLeafWindowsRecursive {
+                try await (window as! MacWindow).hideInCorner(corner) // todo as!
+            }
+        }
+    }
+
+    await syncDockAutoHide(hideInvisibleWorkspaces: { try? await hideInvisibleWorkspaces() })
     // to reduce flicker, first unhide visible workspaces, then hide invisible ones
     for monitor in monitors {
         let workspace = monitor.visibleWorkspace
         workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
         try await workspace.layoutWorkspace()
     }
-    for workspace in Workspace.all where !workspace.isVisible {
-        // The workspace might have been garbage collected by a concurrent refresh session while this function was
-        // suspended in hideInCorner
-        guard let monitor = workspace.nodeMonitorInfo else { continue }
-        let corner = monitorToOptimalHideCorner[monitor.rect.topLeftCorner] ?? .bottomRightCorner
-        for window in workspace.allLeafWindowsRecursive {
-            try await (window as! MacWindow).hideInCorner(corner) // todo as!
-        }
-    }
+    try await hideInvisibleWorkspaces()
 }
 
 @MainActor
