@@ -152,6 +152,12 @@ func syncDockAutoHide() async {
         }
         pendingDockAutoHide = nil
     }
+    // When the Dock is about to be shown, only tiling windows depend on the new visible frame (they must not overlap the Dock).
+    // If no visible workspace has them (e.g. the user switched to an empty workspace), there is nothing to wait for
+    if !target && Workspace.all.allSatisfy({ !$0.isVisible || $0.rootTilingContainer.isEffectivelyEmpty }) {
+        isRelayoutNeededAfterDockAutoHideTask = true // Lay out against the new visible frame once the Dock is shown
+        return
+    }
     _ = await waitForDockAutoHideTask()
 }
 
