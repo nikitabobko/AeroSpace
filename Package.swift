@@ -51,6 +51,11 @@ let package = Package(
             path: "Sources/PrivateApi",
             publicHeadersPath: "include",
             swiftSettings: swiftSettings,
+            linkerSettings: [
+                // _SLPSSetFrontProcessWithOptions / SLPSPostEventRecordTo (aeroMakeKeyWindow,
+                // https://github.com/nikitabobko/AeroSpace/issues/101) live in the private SkyLight framework.
+                .unsafeFlags(["-F/System/Library/PrivateFrameworks", "-framework", "SkyLight"]),
+            ],
         ),
         .macro(
             name: "Macros",

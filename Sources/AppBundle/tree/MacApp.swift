@@ -1,5 +1,11 @@
 import AppKit
 import Common
+import PrivateApi
+
+// UserDefaults keys for the private-focus-API crash guard (checkFocusPrivateApiCrashGuard).
+// https://github.com/nikitabobko/AeroSpace/issues/101
+let privateFocusApiInUseKey = "private-focus-api-in-use"
+let privateFocusApiDisabledKey = "private-focus-api-disabled-after-crash"
 
 // Potential alternative implementation
 // https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md
@@ -144,6 +150,23 @@ final class MacApp: AbstractApp {
     @MainActor func nativeFocus(_ windowId: OpaqueWindowId) {
         if serverArgs.isReadOnly { return }
         MacApp.focusJob?.cancel()
+        // #101: nsApp.activate() is app-level. macOS then keys whichever window of that app it
+        // considers current, which is often a different window on the other monitor. That happens
+        // with "Displays have separate Spaces" off too (the fast path below assumes it does not).
+        // Name the exact window via SkyLight, the same sequence yabai uses. The call is bracketed
+        // by a crash flag so a death inside it disables this path on the next launch.
+        if globalUnsortedMonitorInfos.count > 1,
+           !UserDefaults.standard.bool(forKey: privateFocusApiDisabledKey),
+           let nativeWindowId = nativeWindowId(of: windowId)
+        {
+            MacApp.focusJob = withWindowAsync(windowId, .cancellable) { [pid] window, _ in
+                UserDefaults.standard.set(true, forKey: privateFocusApiInUseKey)
+                aeroMakeKeyWindow(pid, nativeWindowId)
+                UserDefaults.standard.set(false, forKey: privateFocusApiInUseKey)
+                AXUIElementPerformAction(window, kAXRaiseAction as CFString)
+            }
+            return
+        }
         // Performance optimization. If possible avoid doing AX requests
         // (important for apps which are slow at responding even such basic AX requests. E.g. Godot)
         // Beware of the macOS bug: https://github.com/nikitabobko/AeroSpace/issues/101
