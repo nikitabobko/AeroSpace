@@ -95,6 +95,7 @@ EOF
 check-rpaths .release/aerospace "$expected_cli_rpaths"
 
 expected_app_dylibs=$(cat <<EOF
+	/System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight
 	/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation
 	/usr/lib/libobjc.A.dylib
 	/usr/lib/libSystem.B.dylib
