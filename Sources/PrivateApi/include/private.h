@@ -25,4 +25,8 @@
 // func _AXUIElementGetWindow(_ axUiElement: AXUIElement, _ id: inout CGWindowID) -> AXError
 AXError _AXUIElementGetWindow(AXUIElementRef element, uint32_t *identifier);
 
+// Keys window `wid` of process `pid`. The public accessibility API focuses the wrong window of
+// the same app across monitors (https://github.com/nikitabobko/AeroSpace/issues/101).
+void aeroMakeKeyWindow(pid_t pid, uint32_t wid);
+
 #endif
