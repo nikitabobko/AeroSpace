@@ -155,15 +155,27 @@ final class MacApp: AbstractApp {
         // with "Displays have separate Spaces" off too (the fast path below assumes it does not).
         // Name the exact window via SkyLight, the same sequence yabai uses. The call is bracketed
         // by a crash flag so a death inside it disables this path on the next launch.
+        // Some apps ignore a bare key event when they are already frontmost and
+        // snap back to their previous window. Hand that window off first, and do not AXRaise: the
+        // raise is what makes them snap back. yabai does the same in focus_window_without_raise,
+        // and only raises when activating a different app.
+        let previousWid: UInt32 = {
+            guard nsApp.isActive,
+                  let previous = lastFocusedNativeWindowOpaqueId,
+                  previous != windowId else { return 0 }
+            return nativeWindowId(of: previous) ?? 0
+        }()
         if globalUnsortedMonitorInfos.count > 1,
            !UserDefaults.standard.bool(forKey: privateFocusApiDisabledKey),
-           let nativeWindowId = nativeWindowId(of: windowId)
+           let targetNativeId = nativeWindowId(of: windowId)
         {
             MacApp.focusJob = withWindowAsync(windowId, .cancellable) { [pid] window, _ in
                 UserDefaults.standard.set(true, forKey: privateFocusApiInUseKey)
-                aeroMakeKeyWindow(pid, nativeWindowId)
+                aeroMakeKeyWindow(pid, targetNativeId, previousWid)
                 UserDefaults.standard.set(false, forKey: privateFocusApiInUseKey)
-                AXUIElementPerformAction(window, kAXRaiseAction as CFString)
+                if previousWid == 0 {
+                    AXUIElementPerformAction(window, kAXRaiseAction as CFString)
+                }
             }
             return
         }
