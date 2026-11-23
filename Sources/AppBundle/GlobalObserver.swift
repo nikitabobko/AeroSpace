@@ -45,6 +45,12 @@ enum GlobalObserver {
 
     @MainActor
     static func initObserver() {
+        NotificationCenter.default.addObserver(
+            forName: NSApplication.didChangeScreenParametersNotification,
+            object: nil,
+            queue: .main,
+            using: onNotif,
+        )
         let nc = NSWorkspace.shared.notificationCenter
         nc.addObserver(forName: NSWorkspace.didLaunchApplicationNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main, using: onNotif)
@@ -71,7 +77,9 @@ enum GlobalObserver {
                     // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable
                     //  And trigger new window detection that could be delayed due to mouseDown event
                     default:
-                        scheduleCancellableCompleteRefreshSession(.globalObserverLeftMouseUp)
+                        if !TabHeaderInteractionState.shared.consumePendingGlobalMouseRefreshSuppression() {
+                            scheduleCancellableCompleteRefreshSession(.globalObserverLeftMouseUp)
+                        }
                 }
             }
         }
