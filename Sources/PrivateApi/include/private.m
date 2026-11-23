@@ -30,8 +30,8 @@ void aeroMakeKeyWindow(pid_t pid, uint32_t wid, uint32_t previousWid) {
 #pragma clang diagnostic pop
 
     // Same app is already frontmost. Release its current key window, wait, then name the new one.
-    // yabai's focus_window_without_raise: some apps snap back to the previous window if
-    // these two events arrive together, and AXRaise afterwards does the same.
+    // yabai's focus_window_without_raise: the app snaps back to the previous window if these two
+    // events arrive together. The caller raises the window before this when a handoff is needed.
     if (previousWid != 0 && previousWid != wid) {
         uint8_t bytes[0xf8] = {0};
         bytes[0x04] = 0xf8;
