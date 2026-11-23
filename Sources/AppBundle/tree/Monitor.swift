@@ -94,6 +94,8 @@ extension MonitorInfo {
 
     @MainActor func toMonitorOrRearrangeMonitors() -> Monitor {
         if let existing = pointToMonitor[rect.topLeftCorner] {
+            // A replacement display or resolution change can keep the same origin.
+            existing._info = self
             return existing
         }
         rearrangeMonitors() // If monitor configuration changed
