@@ -25,4 +25,11 @@
 // func _AXUIElementGetWindow(_ axUiElement: AXUIElement, _ id: inout CGWindowID) -> AXError
 AXError _AXUIElementGetWindow(AXUIElementRef element, uint32_t *identifier);
 
+// Keys window `wid` of process `pid`. The public accessibility API focuses the wrong window of
+// the same app across monitors (https://github.com/nikitabobko/AeroSpace/issues/101).
+// `previousWid` is that app's current key window when the app is already frontmost, otherwise 0.
+// A non-zero value runs yabai's same-app handoff before the key events; the app snaps back to its
+// previous window without it.
+void aeroMakeKeyWindow(pid_t pid, uint32_t wid, uint32_t previousWid);
+
 #endif
