@@ -155,6 +155,8 @@ struct FocusCommand: Command {
             tilingParent = workspace.rootTilingContainer
         }
 
+        // The tree could have changed while we were awaiting AX (e.g. a concurrent focus command already took the window)
+        guard window.parent === workspace.floatingWindowsContainer else { continue }
         let data = window.unbindFromParent()
         let floatingWindowData = FloatingWindowData(
             window: window,
