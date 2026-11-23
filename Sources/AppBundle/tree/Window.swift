@@ -9,7 +9,7 @@ open class Window: TreeNode, Hashable {
     var noOuterGapsInFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard
     var lifeStatus: WindowLifeStatus = .alive
-    private var prevUnhiddenProportionalPositionInsideWorkspaceRect: CGPoint?
+    private var prevUnhiddenProportionalPositionInsideWorkspaceRect: Point?
 
     @MainActor
     init(id: OpaqueWindowId, _ app: any AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {

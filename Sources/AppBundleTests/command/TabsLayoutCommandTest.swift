@@ -43,7 +43,7 @@ struct TabsLayoutCommandTest {
         let activeRect = (root.mostRecentChild as! TestWindow).lastAppliedLayoutPhysicalRect.orDie()
         let expectedHeaderHeight = TabHeaderMetrics.height
 
-        assertEquals(activeRect.topLeftCorner, workspaceRect.topLeftCorner + CGPoint(x: 0, y: expectedHeaderHeight))
+        assertEquals(activeRect.topLeftCorner, workspaceRect.topLeftCorner + Point(x: 0, y: expectedHeaderHeight))
         assertEquals(activeRect.width, workspaceRect.width)
         assertEquals(activeRect.height, workspaceRect.height - 1 - expectedHeaderHeight)
         assertNil((root.children[0] as! TestWindow).lastAppliedLayoutPhysicalRect)
@@ -86,7 +86,7 @@ struct TabsLayoutCommandTest {
                 let rect = try await window.getAxRect(.nonCancellable).orDie()
                 expectedFrames.append(rect)
                 // Simulate an app or a workspace transition moving the actual window.
-                window.setAxFrame(rect.topLeftCorner + CGPoint(x: 100, y: 100), rect.size)
+                window.setAxFrame(rect.topLeftCorner + Point(x: 100, y: 100), rect.size)
             }
 
             _ = try await workspace.layoutWorkspace()

@@ -25,16 +25,16 @@ extension MonitorInfo {
         let xOff = width * 0.1
         let yOff = height * 0.1
         // brc = bottomRightCorner
-        let brc1 = rect.bottomRightCorner + CGPoint(x: 2, y: -yOff)
-        let brc2 = rect.bottomRightCorner + CGPoint(x: -xOff, y: 2)
-        let brc3 = rect.bottomRightCorner + CGPoint(x: 2, y: 2)
+        let brc1 = rect.bottomRightCorner + Point(x: 2, y: -yOff)
+        let brc2 = rect.bottomRightCorner + Point(x: -xOff, y: 2)
+        let brc3 = rect.bottomRightCorner + Point(x: 2, y: 2)
 
         // blc = bottomLeftCorner
-        let blc1 = rect.bottomLeftCorner + CGPoint(x: -2, y: -yOff)
-        let blc2 = rect.bottomLeftCorner + CGPoint(x: xOff, y: 2)
-        let blc3 = rect.bottomLeftCorner + CGPoint(x: -2, y: 2)
+        let blc1 = rect.bottomLeftCorner + Point(x: -2, y: -yOff)
+        let blc2 = rect.bottomLeftCorner + Point(x: xOff, y: 2)
+        let blc3 = rect.bottomLeftCorner + Point(x: -2, y: 2)
 
-        func contains(_ monitor: MonitorInfo, _ point: CGPoint) -> Int { monitor.rect.contains(point) ? 1 : 0 }
+        func contains(_ monitor: MonitorInfo, _ point: Point) -> Int { monitor.rect.contains(point) ? 1 : 0 }
         let important = 10
 
         return monitors.sumOfInt { contains($0, blc1) + contains($0, blc2) + important * contains($0, blc3) } <

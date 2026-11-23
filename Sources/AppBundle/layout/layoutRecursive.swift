@@ -189,7 +189,7 @@ extension TilingContainer {
     }
 
     @MainActor
-    fileprivate func layoutScrolling(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
+    fileprivate func layoutScrolling(_ point: Point, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
         clampScrollingIndex()
         let children = inhabitedChildren
         switch children.count {
@@ -213,7 +213,7 @@ extension TilingContainer {
                     let lPadding = index == scrollingIndex ? 0 : rawGap / 2
                     let rPadding = index == lastVisibleIndex ? 0 : rawGap / 2
                     try await child.layoutRecursive(
-                        CGPoint(x: physicalX + lPadding, y: point.y),
+                        Point(x: physicalX + lPadding, y: point.y),
                         width: pageWidth - lPadding - rPadding,
                         height: height,
                         virtual: Rect(topLeftX: virtualX, topLeftY: virtual.topLeftY, width: pageWidth, height: height),
@@ -239,7 +239,7 @@ extension TilingContainer {
     }
 
     @MainActor
-    fileprivate func layoutTabs(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
+    fileprivate func layoutTabs(_ point: Point, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
         let children = inhabitedChildren
         guard let activeChild = mostRecentInhabitedChild else { return }
         let headerHeight = TabHeaderMetrics.height
@@ -309,7 +309,7 @@ extension TilingContainer {
         for child in children where child != activeChild {
             try await child.hideSubtree(in: context.hideCorner)
         }
-        let contentPoint = hasVisibleHeader ? point + CGPoint(x: 0, y: headerHeight) : point
+        let contentPoint = hasVisibleHeader ? point + Point(x: 0, y: headerHeight) : point
         let contentHeight = hasVisibleHeader ? height - headerHeight : height
         let contentVirtual = hasVisibleHeader
             ? Rect(topLeftX: virtual.topLeftX, topLeftY: virtual.topLeftY + headerHeight, width: virtual.width, height: virtual.height - headerHeight)

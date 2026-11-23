@@ -84,11 +84,11 @@ struct WindowVisibilityTest {
         let monitorRect = workspace.workspaceMonitorInfo.visibleRect
         let size = CGSize(width: 600, height: 400)
         let origins = [
-            CGPoint(x: monitorRect.minX - size.width + 20, y: monitorRect.minY),
-            CGPoint(x: monitorRect.maxX - 20, y: monitorRect.minY),
-            CGPoint(x: monitorRect.minX, y: monitorRect.minY - size.height + 20),
-            CGPoint(x: monitorRect.minX, y: monitorRect.maxY - 20),
-            CGPoint(x: -20000, y: -20000),
+            Point(x: monitorRect.minX - size.width + 20, y: monitorRect.minY),
+            Point(x: monitorRect.maxX - 20, y: monitorRect.minY),
+            Point(x: monitorRect.minX, y: monitorRect.minY - size.height + 20),
+            Point(x: monitorRect.minX, y: monitorRect.maxY - 20),
+            Point(x: -20000, y: -20000),
         ]
         for (index, origin) in origins.enumerated() {
             let dialog = TestWindow.new(
@@ -319,7 +319,7 @@ struct WindowVisibilityTest {
 
         try await window.hideInCorner(.bottomLeftCorner)
         let hidden = try await window.getAxRect(.nonCancellable).orDie()
-        assertEquals(hidden.topLeftCorner, CGPoint(x: monitorRect.minX - original.width + 1, y: monitorRect.maxY - 1))
+        assertEquals(hidden.topLeftCorner, Point(x: monitorRect.minX - original.width + 1, y: monitorRect.maxY - 1))
         assertEquals(hidden.size, original.size)
 
         try await window.hideInCorner(.bottomRightCorner)
