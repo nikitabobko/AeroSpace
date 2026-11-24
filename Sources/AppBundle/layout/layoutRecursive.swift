@@ -159,11 +159,11 @@ extension TilingContainer {
             let padding = CGFloat(config.accordionPadding)
             let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {
                 case 0 where inhabitedChildren.count == 1: (0, 0)
-                case 0:                                (0, padding)
-                case inhabitedChildren.indices.last:   (padding, 0)
-                case mruIndex - 1:                     (0, 2 * padding)
-                case mruIndex + 1:                     (2 * padding, 0)
-                default:                               (padding, padding)
+                case 0:                                    (0, padding)
+                case inhabitedChildren.indices.last:       (padding, 0)
+                case mruIndex - 1:                         (0, 2 * padding)
+                case mruIndex + 1:                         (2 * padding, 0)
+                default:                                   (padding, padding)
             }
             switch orientation {
                 case .h:
