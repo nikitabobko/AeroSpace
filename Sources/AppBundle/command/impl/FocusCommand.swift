@@ -127,45 +127,51 @@ struct FocusCommand: Command {
     defer {
         mruBefore?.markAsMostRecentChild()
     }
-    var _floatingWindows: [FloatingWindowData] = []
-    for window in workspace.floatingWindows {
-        // todo bug: we shouldn't access ax api here. What if the window was moved but it wasn't committed to ax yet?
-        guard let center = try? await window.getCenter(.nonCancellable) else { continue }
-
-        let tilingParent: TilingContainer
-        let index: Int
-        if let target = center.coerce(in: workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps)?
-            .findWindowRecursively(in: workspace.rootTilingContainer, virtual: true, fullscreenCoversAll: false)
-        {
-            guard let targetCenter = target.lastAppliedLayoutVirtualRect?.center else { continue }
-            guard let _tilingParent = target.parent as? TilingContainer else { continue }
-            tilingParent = _tilingParent
-            index = switch tilingParent.layout {
-                case .tiles:
-                    center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)
-                        ? target.ownIndex(in: .all).orDie() + 1
-                        : target.ownIndex(in: .all).orDie()
-                case .accordion:
-                    center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)
-                        ? tilingParent.children.count
-                        : 0
-            }
-        } else {
-            index = 0
-            tilingParent = workspace.rootTilingContainer
+    let floatingWindowsWithTheirCenters = try? await workspace.floatingWindows
+        .mapConcurrentlyOnMain(.nonCancellable) { @MainActor @Sendable window in
+            // todo bug: we shouldn't access ax api here. What if the window was moved but it wasn't committed to ax yet?
+            (try? await window.getCenter(.nonCancellable)).map { (window, $0) }
         }
+        .filterNotNil()
+    guard let floatingWindowsWithTheirCenters else { return [] }
 
-        let data = window.unbindFromParent()
-        let floatingWindowData = FloatingWindowData(
-            window: window,
-            center: center,
-            tilingParent: tilingParent,
-            adaptiveWeight: data.adaptiveWeight,
-            index: index,
-        )
-        _floatingWindows.append(floatingWindowData)
-    }
-    let floatingWindows: [FloatingWindowData] = _floatingWindows.sortedBy { $0.center.getProjection($0.tilingParent.orientation) }.reversed()
+    let floatingWindows: [FloatingWindowData] = floatingWindowsWithTheirCenters
+        .filter { $0.0.parent === workspace.floatingWindowsContainer }
+        .compactMap { (window, center) -> FloatingWindowData? in
+            let tilingParent: TilingContainer
+            let index: Int
+            if let target = center.coerce(in: workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps)?
+                .findWindowRecursively(in: workspace.rootTilingContainer, virtual: true, fullscreenCoversAll: false)
+            {
+                guard let targetCenter = target.lastAppliedLayoutVirtualRect?.center else { return nil }
+                guard let _tilingParent = target.parent as? TilingContainer else { return nil }
+                tilingParent = _tilingParent
+                index = switch tilingParent.layout {
+                    case .tiles:
+                        center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)
+                            ? target.ownIndex(in: .all).orDie() + 1
+                            : target.ownIndex(in: .all).orDie()
+                    case .accordion:
+                        center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)
+                            ? tilingParent.children.count
+                            : 0
+                }
+            } else {
+                index = 0
+                tilingParent = workspace.rootTilingContainer
+            }
+
+            let data = window.unbindFromParent()
+            return FloatingWindowData(
+                window: window,
+                center: center,
+                tilingParent: tilingParent,
+                adaptiveWeight: data.adaptiveWeight,
+                index: index,
+            )
+        }
+        .sortedBy { $0.center.getProjection($0.tilingParent.orientation) }
+        .reversed()
 
     for floating in floatingWindows { // Make floating windows be seen as tiling
         floating.window.bind(to: floating.tilingParent, adaptiveWeight: 1, index: floating.index)
