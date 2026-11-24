@@ -191,6 +191,29 @@ extension Workspace {
                 environment[AEROSPACE_WINDOW_ID] = w.windowId.description
         }
         process.environment = environment
-        _ = Result { try process.run() }
+        if case .failure(let e) = Result(catching: { try process.run() }) {
+            // Don't die on transient spawn failures (e.g. fork(2) "Resource temporarily unavailable").
+            // Report the failure to the user instead https://github.com/nikitabobko/AeroSpace/issues/463
+            reportCallbackError(
+                """
+                Failed to run 'exec-on-workspace-change' callback:
+                    \(config.execOnWorkspaceChange.joined(separator: " "))
+
+                Error: \(e.localizedDescription)
+                """,
+            )
+        }
+    }
+}
+
+func reportCallbackError(_ message: String) {
+    if isUnitTest {
+        eprint(message)
+    } else {
+        showMessageInGui(
+            filenameIfConsoleApp: "aerospace-callback-error.txt",
+            title: "AeroSpace Callback Error",
+            message: message + "\n\n" + bugPrompt().trimmingCharacters(in: .whitespacesAndNewlines),
+        )
     }
 }
