@@ -21,7 +21,10 @@ struct FocusCommand: Command {
                 restoreFloatingWindows(floatingWindows: floatingWindows, workspace: target.workspace)
             }
         }
+        return _run(target, io)
+    }
 
+    @MainActor private func _run(_ target: LiveFocus, _ io: CmdIo) -> BinaryExitCode {
         switch args.target {
             case .direction(let direction):
                 let window = target.windowOrNil
