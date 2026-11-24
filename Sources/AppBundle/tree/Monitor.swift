@@ -23,7 +23,7 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
     @MainActor static var all: [Monitor] { Array(pointToMonitor.values) }
 }
 
-@MainActor private func rearrangeMonitors(_ monitorInfos: [MonitorInfo] = globalUnsortedMonitorInfos) {
+@MainActor func gcMonitors(_ monitorInfos: [MonitorInfo] = globalUnsortedMonitorInfos) {
     var newMonitorPoints = monitorInfos.grouped(by: { $0.rect.topLeftCorner }).mapValues { $0.singleOrNil().orDie() }
 
     var oldPointToMonitor = pointToMonitor
@@ -48,10 +48,10 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
     }
 
     var monitors = oldPointToMonitor.values.sortedBy { $0.info.rect.topLeftCorner.vectorLength } // [Monitor]
-    let monitorInfos = newMonitorPoints.values.sortedBy { $0.rect.topLeftCorner.vectorLength } // [MonitorInfo]
+    let unmatchedInfos = newMonitorPoints.values.sortedBy { $0.rect.topLeftCorner.vectorLength }
 
     let mainMonitor = pointToMonitor[Point(x: 0, y: 0)] ?? pointToMonitor.first?.value
-    while monitors.count > monitorInfos.count, let mainMonitor {
+    while monitors.count > unmatchedInfos.count, let mainMonitor {
         let monitor = monitors.removeLast()
         for child in monitor.children {
             switch child.nodeCases {
@@ -73,12 +73,12 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
     }
 
     for j in monitors.indices {
-        monitors[j]._info = monitorInfos.getOrNil(atIndex: j).orDie()
+        monitors[j]._info = unmatchedInfos.getOrNil(atIndex: j).orDie()
         pointToMonitor[monitors[j].info.rect.topLeftCorner] = monitors[j]
     }
 
     var i = monitors.count
-    while let monitorInfo = monitorInfos.getOrNil(atIndex: i) {
+    while let monitorInfo = unmatchedInfos.getOrNil(atIndex: i) {
         let monitor = Monitor(monitorInfo)
         monitors.append(monitor)
         pointToMonitor[monitor.info.rect.topLeftCorner] = monitor
@@ -96,7 +96,7 @@ extension MonitorInfo {
         if let existing = pointToMonitor[rect.topLeftCorner] {
             return existing
         }
-        rearrangeMonitors() // If monitor configuration changed
+        gcMonitors() // If monitor configuration changed
         // Normally, recursion should happen only once more because we must take the value from the cache
         // (Unless, monitor configuration data race happens)
         return self.toMonitorOrRearrangeMonitors()
@@ -109,16 +109,5 @@ extension MonitorInfo {
 
     @MainActor func bindWorkspace(_ workspace: Workspace) -> Bool {
         return toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate().bindWorkspace(workspace)
-    }
-}
-
-@MainActor func gcMonitors(_ monitorInfos: [MonitorInfo] = globalUnsortedMonitorInfos) {
-    if pointToMonitor.count != monitorInfos.count || monitorInfos.contains(where: { pointToMonitor[$0.rect.topLeftCorner] == nil }) {
-        rearrangeMonitors(monitorInfos)
-    } else {
-        // Resolution and usable screen area can change without a topology change.
-        for info in monitorInfos {
-            pointToMonitor[info.rect.topLeftCorner].orDie()._info = info
-        }
     }
 }
