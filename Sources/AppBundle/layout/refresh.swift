@@ -157,6 +157,7 @@ private func layoutWorkspaces() async throws {
             workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
             try await workspace.layoutWorkspace() // Unhide tiling windows from corner
         }
+        FocusedWindowBorderPanel.shared.hide()
         return
     }
     let monitors = globalUnsortedMonitorInfos
@@ -197,6 +198,8 @@ private func layoutWorkspaces() async throws {
             try await (window as! MacWindow).hideInCorner(corner) // todo as!
         }
     }
+
+    await refreshFocusedWindowBorder()
 }
 
 @MainActor
