@@ -31,7 +31,7 @@ extension TreeNode {
                 let windows = container.children.filterIsInstance(of: Window.self)
                 // todo make it parallel among different workspaces. Get rid of 'try await'
                 let cm = CancellationMode.cancellable
-                let rects = try await windows.mapConcurrently(cm) { try await $0.getAxRect(cm) } // Probably not idempotent
+                let rects = try await windows.mapConcurrentlyOnMain(cm) { try await $0.getAxRect(cm) } // Probably not idempotent
                 for (window, windowRect) in zip(windows, rects) {
                     window.lastAppliedLayoutPhysicalRect = nil
                     window.lastAppliedLayoutVirtualRect = nil

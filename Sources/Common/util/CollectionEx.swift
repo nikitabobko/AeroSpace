@@ -7,18 +7,18 @@ extension Collection {
         indices.contains(index) ? self[index] : nil
     }
 
-    @MainActor public func mapConcurrently<R: Sendable>(
+    @MainActor public func mapConcurrentlyOnMain<R>(
         _ cm: CancellationMode,
         _ transform: @escaping @Sendable @MainActor (Element) async throws -> R,
     ) async throws -> [R] {
-        try await withThrowingTaskGroup(of: (Int, R).self) { group in
+        try await withThrowingTaskGroup(of: (Int, MainActorRef<R>).self) { group in
             for (index, item) in enumerated() {
                 try checkCancellation(cm)
-                group.addTask { @Sendable @MainActor in (index, try await transform(item)) }
+                group.addTask { @Sendable @MainActor in (index, MainActorRef(try await transform(item))) }
             }
             var result: [R?] = Array(repeating: nil, count: self.count)
             for try await (index, value) in group {
-                result[index] = value
+                result[index] = value.value
             }
             try checkCancellation(cm)
             return result.map { $0.orDie() }

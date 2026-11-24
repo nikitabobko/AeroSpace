@@ -507,8 +507,3 @@ private func disableAnimations<T>(app: AXUIElement, _ job: RunLoopJob, _ body: (
     try job.checkCancellation()
     return try body()
 }
-
-final class MainActorRef<T>: Sendable {
-    @MainActor var value: T
-    @MainActor public init(_ value: T) { self.value = value }
-}

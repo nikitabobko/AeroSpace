@@ -22,7 +22,7 @@ import Common
 
 @MainActor private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) async throws {
     let cm = CancellationMode.cancellable
-    let states = try await windows.mapConcurrently(cm) { try await $0.getMacosWindowNativeState(cm) }
+    let states = try await windows.mapConcurrentlyOnMain(cm) { try await $0.getMacosWindowNativeState(cm) }
     for (window, state) in zip(windows, states) {
         let isMacosFullscreen = state == .nativeFullscreen
         let isMacosMinimized = state == .nativeMinimized
