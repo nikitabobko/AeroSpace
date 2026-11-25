@@ -70,10 +70,13 @@ final class MacApp: AbstractApp {
                 let handlers: HandlerToNotifKeyMapping = unsafe [
                     (refreshObs, [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification, kAXMainWindowChangedNotification]),
                 ]
+                // Merging windows into native tabs only fires kAXTitleChangedNotification on tab buttons
+                let optionalHandlers: HandlerToNotifKeyMapping = unsafe [(nativeTabButtonObs, [kAXTitleChangedNotification])]
                 let job = RunLoopJob(.cancellable)
                 let subscriptions = (try? unsafe AxSubscription.bulkSubscribe(nsApp, axApp, job, handlers)) ?? []
                 let isGood = !subscriptions.isEmpty
-                let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
+                let optionalSubscriptions = isGood ? (try? unsafe AxSubscription.bulkSubscribe(nsApp, axApp, job, optionalHandlers)) ?? [] : []
+                let app = isGood ? MacApp(nsApp, axApp, subscriptions + optionalSubscriptions, Thread.current) : nil
 
                 let appAxSubscriptionsThreadGuarded = app?.appAxSubscriptions
                 let windowsThreadGuarded = app?.windows
