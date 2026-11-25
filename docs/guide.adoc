@@ -254,6 +254,30 @@ after-startup-command = [
 ]
 ----
 
+[#overview]
+=== Overview
+
+AeroSpace <<emulation-of-virtual-workspaces,emulates virtual workspaces>>, which means macOS Mission Control
+can't show you what is on the workspaces you don't currently see.
+The overview is a read-only panel that lists every window and the workspace it belongs to.
+
+Bindings are always `modifier + key`, so the overview isn't a binding.
+It appears while you hold the configured modifier, and it goes away as soon as you release it.
+
+[source,toml]
+----
+overview.hold-modifier = 'alt'   # 'none' by default, which disables the overview
+overview.hold-delay-ms = 500     # How long the modifier must be held. 500 by default
+----
+
+`overview.hold-modifier` accepts the same modifiers as bindings (`alt`, `cmd`, `ctrl`, `shift`, and combinations
+such as `alt-shift`), or `none` to disable the feature.
+
+The modifiers must match exactly. `overview.hold-modifier = 'alt'` doesn't show the overview when you hold `cmd-alt`,
+so that the panel doesn't pop up in the middle of unrelated app shortcuts.
+Triggering a binding also hides the overview, and the delay starts over, so that holding `alt` after `alt-2`
+shows you the state you've just moved to.
+
 [#exec-env-vars]
 === exec-* Environment Variables
 
