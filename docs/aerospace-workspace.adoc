@@ -22,6 +22,9 @@ aerospace workspace [-h|--help] [--wrap-around] [--stdin|--no-stdin] (next|prev)
 
 {manpurpose}
 
+If the workspace doesn't exist, it's created.
+See xref:guide.adoc#workspace-lifecycle[the guide] for the description of the workspace lifecycle.
+
 *2. (next|prev) syntax*
 
 Focuses next or previous workspace in *the list*.
