@@ -9,21 +9,23 @@ func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableR
     let notif = notif as String
     let pid = ax.pid
     Task.startUnstructured { @MainActor in
-        guard let token: RunSessionGuard = .isServerEnabled else { return }
-        guard let nativeWindowId,
-              let pid,
-              let window = Window.get(byNativeId: nativeWindowId, pid: pid),
-              try await isManipulatedWithMouse(window)
-        else {
-            scheduleCancellableCompleteRefreshSession(.ax(notif))
-            return
-        }
-        moveWithMouseTask?.cancel()
-        moveWithMouseTask = Task.startUnstructured {
-            try checkCancellation(.cancellable)
-            try await runLightSession(.ax(notif), token) {
-                try await moveWithMouse(window)
-            }
+        let window = nativeWindowId.flatMap { nativeWindowId in pid.flatMap { Window.get(byNativeId: nativeWindowId, pid: $0) } }
+        try await onWindowMoved(window, notif)
+    }
+}
+
+@MainActor
+func onWindowMoved(_ window: Window?, _ notif: String) async throws {
+    guard let token: RunSessionGuard = .isServerEnabled else { return }
+    guard let window, try await isManipulatedWithMouse(window) else {
+        scheduleCancellableCompleteRefreshSession(.ax(notif))
+        return
+    }
+    moveWithMouseTask?.cancel()
+    moveWithMouseTask = Task.startUnstructured {
+        try checkCancellation(.cancellable)
+        try await runLightSession(.ax(notif), token) {
+            try await moveWithMouse(window)
         }
     }
 }
