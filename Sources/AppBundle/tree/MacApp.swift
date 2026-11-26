@@ -202,15 +202,15 @@ final class MacApp: AbstractApp {
     }
 
     func getAxRect(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> Rect? {
-        try await withWindow(windowId, cm) { window, job in
-            try AppBundle::getAxRect(window: window, job: job)
+        try await withWindow(windowId, cm) { window, _ in
+            AppBundle::getAxRect(window: window)
         }
     }
 
     func getAxRectForTermination(_ windowId: OpaqueWindowId) -> Rect? {
         let future = CompletableFuture<Rect?>()
-        let job = withWindowAsync(windowId, .nonCancellable) { window, job in
-            future.complete(try AppBundle::getAxRect(window: window, job: job))
+        let job = withWindowAsync(windowId, .nonCancellable) { window, _ in
+            future.complete(AppBundle::getAxRect(window: window))
         }
         return switch job.isCancelled {
             case true: nil
@@ -282,9 +282,9 @@ final class MacApp: AbstractApp {
 
     func getMacosWindowNativeState(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> MacosWindowNativeState? {
         try await withWindow(windowId, cm) { window, job in
-            if window.get(Ax.isFullscreenAttr) == true { return .nativeFullscreen }
-            try job.checkCancellation()
-            if window.get(Ax.minimizedAttr) == true { return .nativeMinimized }
+            let (isFullscreen, isMinimized) = window.getMultiple(Ax.isFullscreenAttr, Ax.minimizedAttr)
+            if isFullscreen == true { return .nativeFullscreen }
+            if isMinimized == true { return .nativeMinimized }
             return .normal
         }
     }
@@ -474,10 +474,9 @@ extension [UInt32: AxWindow] {
     }
 }
 
-private func getAxRect(window: AXUIElement, job: RunLoopJob) throws -> Rect? {
-    guard let topLeftCorner = window.get(Ax.topLeftCornerAttr) else { return nil }
-    try job.checkCancellation()
-    guard let size = window.get(Ax.sizeAttr) else { return nil }
+private func getAxRect(window: AXUIElement) -> Rect? {
+    let (topLeftCorner, size) = window.getMultiple(Ax.topLeftCornerAttr, Ax.sizeAttr)
+    guard let topLeftCorner, let size else { return nil }
     return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
 }
 

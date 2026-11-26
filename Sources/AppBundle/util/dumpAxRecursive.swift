@@ -61,9 +61,10 @@ private func prettyValue(_ value: Any?, recursionDepth: Int) -> Json {
             return .dict(dumpAxRecursive(ax, .button, recursionDepth: recursionDepth))
         }
         if let windowId = ax.containingNativeWindowId() {
-            let title = ax.get(Ax.titleAttr)?.doubleQuoted ?? "nil"
-            let role = ax.get(Ax.roleAttr)?.doubleQuoted ?? "nil"
-            let subrole = ax.get(Ax.subroleAttr)?.doubleQuoted ?? "nil"
+            let (_title, _role, _subrole) = ax.getMultiple(Ax.titleAttr, Ax.roleAttr, Ax.subroleAttr)
+            let title = _title?.doubleQuoted ?? "nil"
+            let role = _role?.doubleQuoted ?? "nil"
+            let subrole = _subrole?.doubleQuoted ?? "nil"
             return .string("AXUIElement(windowId_native=\(windowId), title=\(title), role=\(role), subrole=\(subrole))")
         }
         return .string(String(describing: value))

@@ -351,6 +351,30 @@ extension AXUIElement: AxUiElementMock {
             : nil
     }
 
+    func getMultiple<each Attr: ReadableAttr>(_ attr: repeat each Attr) -> (repeat (each Attr).T?) {
+        var keys: [CFString] = []
+        for attr in repeat each attr { keys.append(attr.key as CFString) }
+        let state = signposter.beginInterval(#function, "attrs: \(keys) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer { signposter.endInterval(#function, state) }
+        var raw: CFArray?
+        let values: [AnyObject] = unsafe AXUIElementCopyMultipleAttributeValues(self, keys as CFArray, [], &raw) == .success
+            ? raw as [AnyObject]? ?? []
+            : []
+        let axValueTypeId = AXValueGetTypeID()
+        let nullType = CFNullGetTypeID()
+        var index = 0
+        func value<A: ReadableAttr>(_ attr: A) -> A.T? {
+            defer { index += 1 }
+            guard let value = values.getOrNil(atIndex: index) else { return nil }
+            let type = CFGetTypeID(value)
+            if type == nullType || // For confidence
+                // See AXUIElementCopyMultipleAttributeValues docs
+                type == axValueTypeId && AXValueGetType(value as! AXValue).rawValue == kAXValueAXErrorType { return nil }
+            return attr.getter(value)
+        }
+        return (repeat value(each attr))
+    }
+
     @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
         if serverArgs.isReadOnly { return false }
         let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
