@@ -30,11 +30,15 @@ struct FrozenWorkspace: Sendable {
     @MainActor init(_ workspace: Workspace) {
         name = workspace.name
         rootTilingNode = FrozenContainer(workspace.rootTilingContainer)
-        floatingWindows = workspace.floatingWindows.map(FrozenWindow.init)
+        floatingWindows = windows(of: workspace, in: FloatingWindowsContainer.self)
         macosUnconventionalWindows =
-            workspace.macOsNativeHiddenAppsWindowsContainer.children.map { FrozenWindow($0 as! Window) } +
-            workspace.macOsNativeFullscreenWindowsContainer.children.map { FrozenWindow($0 as! Window) }
+            windows(of: workspace, in: MacosHiddenAppsWindowsContainer.self) +
+            windows(of: workspace, in: MacosFullscreenWindowsContainer.self)
     }
+}
+
+@MainActor private func windows<T: TreeNode>(of workspace: Workspace, in _: T.Type) -> [FrozenWindow] {
+    workspace.children.filterIsInstance(of: T.self).flatMap { $0.children.filterIsInstance(of: Window.self) }.map(FrozenWindow.init)
 }
 
 @MainActor func cacheClosedWindowIfNeeded() {
