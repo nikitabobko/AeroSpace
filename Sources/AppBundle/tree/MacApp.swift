@@ -141,6 +141,11 @@ final class MacApp: AbstractApp {
                 .windowId
         }
         guard let nativeWindowId else { return nil }
+        // macOS can focus a newly-frontmost native tab before a refresh pairs it with its tab group
+        if opaqueWindowId(of: nativeWindowId).flatMap({ MacWindow.allWindowsMap[$0] }) == nil {
+            let lifeStatuses = try await refreshAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier, cm)
+            guard let windowId = opaqueWindowId(of: nativeWindowId), lifeStatuses[windowId] != nil else { return nil }
+        }
         return try await MacWindow.getOrRegister(windowId: getOrRegisterOpaqueWindowId(nativeWindowId), macApp: self)
     }
 
@@ -312,7 +317,7 @@ final class MacApp: AbstractApp {
         ) { group in
             @MainActor func refreshTheApp(_ app: MacApp) {
                 group.addTask { @Sendable @MainActor in
-                    return (MainActorRef.init(app), try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
+                    return (MainActorRef.init(app), try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId, .cancellable))
                 }
             }
             // Register new apps
@@ -339,14 +344,17 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [OpaqueWindowId: WindowLifeStatus] {
+    @MainActor private func refreshAndGetAliveWindowIds(
+        frontmostAppBundleId: String?,
+        _ cm: CancellationMode,
+    ) async throws -> [OpaqueWindowId: WindowLifeStatus] {
         if nsApp.isTerminated {
             await destroy()
             return [:]
         }
         guard let thread else { return [:] }
         func observeWindows(orderedInWindowIds: Set<UInt32>??) async throws -> ([UInt32: WindowLifeStatus], [(from: UInt32, to: UInt32)])? {
-            try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] job in
+            try await thread.runInLoop(cm) { [nsApp, windows, axApp] job in
                 var aliveOrInvisible: [UInt32: AxWindow] = windows.threadGuarded
                 let previousNativeTabs = aliveOrInvisible.compactMapValues(\.nativeTab)
                 var listedWindowIds: Set<UInt32> = []
