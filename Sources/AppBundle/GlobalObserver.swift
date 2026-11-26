@@ -62,9 +62,16 @@ enum GlobalObserver {
                 try await resetManipulatedWithMouseIfPossible()
                 let mouseLocation = mouseLocation
                 let clickedMonitor = mouseLocation.monitorApproximation
+                let isOtherMonitorClick =
+                    clickedMonitor.visibleRect.contains(mouseLocation) && clickedMonitor.visibleWorkspace != globalFocus.workspace
+                // A click on a window is left to macOS: the default branch picks the clicked window up from the native focus.
+                //  Focusing the workspace instead would focus its MRU window, not the clicked one. The native focus can't be
+                //  used to tell the desktop from a window here, because the clicked app is often not frontmost yet at mouse up.
+                //  nil (the hit test failed) keeps the workspace switch.
+                let isWindowClick = isOtherMonitorClick ? await isAxWindowUnderMouse(mouseLocation) : nil
                 switch true {
                     // Detect clicks on desktop of different monitors
-                    case clickedMonitor.visibleRect.contains(mouseLocation) && clickedMonitor.visibleWorkspace != globalFocus.workspace:
+                    case isOtherMonitorClick && isWindowClick != true:
                         _ = try await runLightSession(.globalObserverLeftMouseUp, token) {
                             clickedMonitor.visibleWorkspace.focusWorkspace()
                         }
