@@ -213,6 +213,10 @@ final class MacWindow: Window {
     override func getAxRect(_ cm: CancellationMode) async throws -> Rect? {
         try await macApp.getAxRect(windowId, cm)
     }
+
+    override func isQuickLookPanel(_ cm: CancellationMode) async throws -> Bool {
+        try await macApp.isQuickLookPanel(windowId, cm)
+    }
 }
 
 extension Window {
@@ -282,6 +286,9 @@ func onWindowDetected(_ env: CmdEnv, _ io: CmdIo, _ window: Window) async -> Int
         appBundleId: window.app.rawAppBundleId,
         appName: window.app.name,
     ))
+    // Quick Look panel (hit space in Finder) belongs to the workspace it was opened from.
+    // App-wide rules like `if.app-id = 'com.apple.finder'` must not move it away
+    if (try? await window.isQuickLookPanel(.nonCancellable)) == true { return .succ }
     var lastExitCode = Int32ExitCode.succ
     for callback in config.onWindowDetected where await callback.matches(window) {
         lastExitCode = await callback.run.run(env.withWindowId(window.windowId), io)

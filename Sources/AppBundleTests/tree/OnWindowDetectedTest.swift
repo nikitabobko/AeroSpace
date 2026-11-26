@@ -42,4 +42,26 @@ struct OnWindowDetectedTest {
         assertEquals((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 2)
         assertEquals((workspaceA.rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
+
+    // Finder on workspace b, a rule sends the app to workspace a, space in Finder opens Quick Look.
+    // The preview must stay on b, the workspace of the Finder it was opened from.
+    @Test func testQuickLookPanelStaysOnWorkspaceWhereItWasOpened() async {
+        let workspaceB = Workspace.get(byName: "b")
+        let finder = TestWindow.new(id: 1, parent: workspaceB.rootTilingContainer)
+        assertEquals(finder.focusWindow(), true)
+        let quickLook = TestWindow.new(id: 2, parent: workspaceB.floatingWindowsContainer)
+        quickLook.isQuickLookPanelForTest = true
+
+        config.onWindowDetected = [
+            WindowDetectedCallback(
+                matcher: .command(.empty), // true
+                rawRun: parseCommand("move-node-to-workspace a").cmdOrDie,
+            ),
+        ]
+
+        await runOnWindowDetected(ifConventional: quickLook)
+
+        assertEquals(quickLook.nodeWorkspace?.name, "b")
+        assertEquals(Workspace.get(byName: "a").isEffectivelyEmpty, true)
+    }
 }

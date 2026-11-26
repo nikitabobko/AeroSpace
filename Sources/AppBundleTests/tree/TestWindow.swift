@@ -34,6 +34,9 @@ final class TestWindow: Window, CustomStringConvertible {
 
     override func getTitle(_ cm: CancellationMode) async throws -> String { description }
 
+    var isQuickLookPanelForTest = false
+    override func isQuickLookPanel(_ cm: CancellationMode) async throws -> Bool { isQuickLookPanelForTest }
+
     @MainActor override func getAxRect(_ cm: CancellationMode) async throws -> Rect? { // todo change to not Optional
         _rect
     }

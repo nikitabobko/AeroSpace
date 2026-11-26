@@ -40,6 +40,7 @@ open class Window: TreeNode, Hashable {
 
     func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { false }
     func isMacosMinimized(_ cm: CancellationMode) async throws -> Bool { false }
+    func isQuickLookPanel(_ cm: CancellationMode) async throws -> Bool { false }
     func getMacosWindowNativeState(_ cm: CancellationMode) async throws -> MacosWindowNativeState {
         if try await isMacosFullscreen(cm) { return .nativeFullscreen }
         if try await isMacosMinimized(cm) { return .nativeMinimized }

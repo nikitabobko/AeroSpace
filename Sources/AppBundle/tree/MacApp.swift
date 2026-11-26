@@ -236,6 +236,12 @@ final class MacApp: AbstractApp {
         } == true
     }
 
+    func isQuickLookPanel(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> Bool {
+        try await withWindow(windowId, cm) { window, job in
+            window.get(Ax.subroleAttr) == "Quick Look"
+        } == true
+    }
+
     func setNativeFullscreen(_ windowId: OpaqueWindowId, _ value: Bool) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { window, job in
