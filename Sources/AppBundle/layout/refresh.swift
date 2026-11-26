@@ -10,7 +10,9 @@ func scheduleCancellableCompleteRefreshSession(
     optimisticallyPreLayoutWorkspaces: Bool = false,
 ) {
     activeRefreshTask?.cancel()
+    let prev = activeRefreshTask
     activeRefreshTask = Task.startUnstructured { @MainActor in
+        _ = await prev?.result
         try checkCancellation(.cancellable)
         await runHeavyCompleteRefreshSession(
             event,
@@ -64,7 +66,6 @@ func runLightSession<T>(
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
     defer { signposter.endInterval(#function, state) }
     activeRefreshTask?.cancel() // Give priority to runSession
-    activeRefreshTask = nil
     return try await $refreshSessionEvent.withValue(event) {
         let nativeFocused = try await getNativeFocusedWindow(.cancellable)
         if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
