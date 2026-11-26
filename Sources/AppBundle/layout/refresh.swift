@@ -191,7 +191,12 @@ private func layoutWorkspaces() async throws {
         workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
         try await workspace.layoutWorkspace()
     }
-    for workspace in Workspace.all where !workspace.isVisible {
+    try await hideInvisibleWorkspaces(Workspace.all, monitorToOptimalHideCorner)
+}
+
+@MainActor
+func hideInvisibleWorkspaces(_ workspaces: [Workspace], _ monitorToOptimalHideCorner: [Point: OptimalHideCorner]) async throws {
+    for workspace in workspaces where !workspace.isVisible {
         let corner = monitorToOptimalHideCorner[workspace.workspaceMonitorInfo.rect.topLeftCorner] ?? .bottomRightCorner
         for window in workspace.allLeafWindowsRecursive {
             try await (window as! MacWindow).hideInCorner(corner) // todo as!
