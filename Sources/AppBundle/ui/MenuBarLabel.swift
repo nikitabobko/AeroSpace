@@ -25,8 +25,7 @@ struct MenuBarLabel: View {
 
     var body: some View {
         if #available(macOS 14, *) { // https://github.com/nikitabobko/AeroSpace/issues/1122
-            let renderer = ImageRenderer(content: menuBarContent)
-            switch renderer.cgImage {
+            switch renderToCgImage(menuBarContent) {
                 // Using scale: 1 results in a blurry image for unknown reasons
                 case let cgImage?: Image(cgImage, scale: 2, label: Text(viewModel.trayText))
 
@@ -175,6 +174,28 @@ struct MenuBarLabel: View {
             }
         }
     }
+}
+
+/// ImageRenderer.cgImage rasterizes on GPU. A single render of the menu bar label transiently takes more than 100 MB of
+/// graphics memory. Drawing into a bitmap context produces the same image without it
+@MainActor
+private func renderToCgImage(_ content: some View) -> CGImage? {
+    var result: CGImage? = nil
+    ImageRenderer(content: content).render { size, draw in
+        let context = unsafe CGContext(
+            data: nil,
+            width: Int(size.width.rounded(.up)),
+            height: Int(size.height.rounded(.up)),
+            bitsPerComponent: 8,
+            bytesPerRow: 0,
+            space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue,
+        )
+        guard let context else { return }
+        draw(context)
+        result = context.makeImage()
+    }
+    return result
 }
 
 extension String {
