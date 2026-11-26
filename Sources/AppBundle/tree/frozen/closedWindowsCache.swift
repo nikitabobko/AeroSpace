@@ -53,6 +53,10 @@ struct FrozenWorkspace: Sendable {
     if !closedWindowsCache.windowIds.contains(newlyDetectedWindow.windowId) {
         return false
     }
+    // Finder reuses the same Quick Look panel (same window id) for every preview. Its reappearance is not a screen unlock
+    if try await newlyDetectedWindow.isQuickLookPanel(.cancellable) {
+        return false
+    }
     let monitors = globalUnsortedMonitorInfos
     let topLeftCornerToMonitorInfo = monitors.grouped { $0.rect.topLeftCorner }
 
