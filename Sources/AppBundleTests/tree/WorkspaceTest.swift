@@ -1,4 +1,5 @@
 @testable import AppBundle
+import Combine
 import Testing
 
 @MainActor
@@ -29,5 +30,22 @@ struct WorkspaceTest {
         #expect(Workspace.get(byName: "a").focusWorkspace())
         updateTrayText()
         #expect(mainMonitorInfo.visibleWorkspace === globalFocus.workspace)
+    }
+
+    // updateTrayText runs on every refresh session. Each @Published notification re-renders the menu bar
+    @Test func testUpdateTrayTextDoesNotPublishUnchangedValues() {
+        #expect(Workspace.get(byName: "a").focusWorkspace())
+        updateTrayText()
+        var notifications = 0
+        let subscription = TrayMenuModel.shared.objectWillChange.sink { notifications += 1 }
+        defer { subscription.cancel() }
+
+        updateTrayText()
+        #expect(notifications == 0)
+
+        #expect(Workspace.get(byName: "b").focusWorkspace())
+        notifications = 0
+        updateTrayText()
+        #expect(notifications > 0)
     }
 }
