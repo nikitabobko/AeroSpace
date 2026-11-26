@@ -18,6 +18,9 @@ func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableR
 func onWindowMoved(_ window: Window?, _ notif: String) async throws {
     guard let token: RunSessionGuard = .isServerEnabled else { return }
     guard let window, try await isManipulatedWithMouse(window) else {
+        // Windows hidden in the corner are moved only by AeroSpace itself. Some apps (e.g. wxWidgets-based ones) report
+        // AXMoved on every position write, so refreshing here would make hideInCorner re-trigger itself forever
+        if window?.isHiddenInCorner == true { return }
         scheduleCancellableCompleteRefreshSession(.ax(notif))
         return
     }
