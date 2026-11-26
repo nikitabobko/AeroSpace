@@ -3,7 +3,10 @@ extension Workspace {
         let root = rootTilingContainer
         root.unbindEmptyAndFlattenContainersRecursive()
         // rootTilingContainer.deriveAxLifeStatusRecursive()
-        if config.enableNormalizationOppositeOrientationForNestedContainers {
+        if let skeleton = config.workspaceLayout[name] {
+            // The skeleton is an explicit structure. Don't let the generic normalizations fight with it
+            root.normalizeLayoutSkeleton(skeleton)
+        } else if config.enableNormalizationOppositeOrientationForNestedContainers {
             root.normalizeOppositeOrientationForNestedContainersRecursive(parentOrientation: nil)
         }
     }
