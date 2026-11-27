@@ -119,6 +119,19 @@ extension AxUiElementMock {
             return false
         }
 
+        // Finder file operation progress window ("Copy", "Emptying the Trash").
+        // Finder shows all running operations in the same window
+        if id == .finder && getIndividual(Ax.identifierAttr) == "Progress" {
+            return false
+        }
+
+        // Finder modal alerts ("Are you sure you want to permanently erase the items in the Trash?").
+        // Finder creates the alert window offscreen with the normal window level and raises it only
+        // when it shows the alert, so the window level check above may see the normal level
+        if id == .finder && getIndividual(Ax.subroleAttr) == kAXDialogSubrole && getIndividual(Ax.modalAttr) == true {
+            return false
+        }
+
         lazy var fullscreenButton = getIndividual(Ax.fullscreenButtonAttr)
 
         if id == .xcode && getIndividual(Ax.identifierAttr) == "open_quickly" {

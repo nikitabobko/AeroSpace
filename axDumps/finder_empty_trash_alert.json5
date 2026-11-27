@@ -1,0 +1,100 @@
+// Finder -> Empty Trash (cmd+shift+delete) -> "Are you sure you want to permanently erase the items in the Trash?"
+{
+  "AXActivationPoint" : "<AXValue 0x7893699320> {value = x:908.000000 y:293.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : {
+    "AXEnabled" : 1,
+    "AXIdentifier" : "action-button--999",
+    "AXLayoutDirection" : 0,
+    "AXParent" : "AXUIElement(windowId_native=18425, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXRole" : "AXButton",
+    "AXTitle" : "Cancel",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=18425, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXWindow" : "AXUIElement(windowId_native=18425, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXCloseButton" : null,
+  "AXDefaultButton" : {
+    "AXEnabled" : 1,
+    "AXIdentifier" : "action-button--998",
+    "AXLayoutDirection" : 0,
+    "AXParent" : "AXUIElement(windowId_native=18425, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXRole" : "AXButton",
+    "AXTitle" : "Empty Trash",
+    "AXTopLevelUIElement" : "AXUIElement(windowId_native=18425, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXWindow" : "AXUIElement(windowId_native=18425, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXDescription" : "alert",
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x78936afec0> {value = x:898.000000 y:277.000000 w:260.000000 h:234.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXIdentifier" : "_NS:87",
+  "AXMain" : 0,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 1,
+  "AXParent" : "<AXUIElement Application 0x78936998f0> {pid=10600}",
+  "AXPosition" : "<AXValue 0x78936981b0> {value = x:898.000000 y:277.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x78936981b0> {pid=10600}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x78936998f0> {value = w:260.000000 h:234.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXDialog",
+  "AXTitle" : "",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(windowId_native=18425, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedWindow" : "AXUIElement(windowId_native=18425, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFrame" : "<AXValue 0x78936af600> {value = x:0.000000 y:1329.000000 w:0.000000 h:0.000000 type = kAXValueCGRectType}",
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(windowId_native=18122, title=\"AeroProbeRAM\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x78936993b0> {pid=10600}",
+    "AXPosition" : "<AXValue 0x7893699320> {value = x:0.000000 y:1329.000000 type = kAXValueCGPointType}",
+    "AXRole" : "AXApplication",
+    "AXSize" : "<AXValue 0x7893699320> {value = w:0.000000 h:0.000000 type = kAXValueCGSizeType}",
+    "AXTitle" : "Finder",
+    "AXValue" : null,
+    "AXWindows" : [
+      "AXUIElement(windowId_native=18425, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(windowId_native=18122, title=\"AeroProbeRAM\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements(failure), get.AXValue(noValue), isWritable.AXValue(failure), isWritable.AXFrame(failure), get.AXExtrasMenuBar(noValue), isWritable.AXExtrasMenuBar(failure), isWritable.AXSize(attributeUnsupported), isWritable.AXPosition(attributeUnsupported)",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
+  },
+  "Aero.App.appBundleId" : "com.apple.finder",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.appBundlePath" : "file:///System/Library/CoreServices/Finder.app/",
+  "Aero.App.nsApp.execPath" : "file:///System/Library/CoreServices/Finder.app/Contents/MacOS/Finder",
+  "Aero.App.pid" : 10600,
+  "Aero.App.version" : "1865.1.20",
+  "Aero.App.versionShort" : "27.2",
+  "Aero.AxFailed" : "isWritable.AXFrame(failure), get.AXGrowArea(failure), get.AXMinimizeButton(noValue), get.AXDocument(noValue), get.AXCloseButton(noValue), isWritable.AXActivationPoint(failure), get.AXFullScreenButton(noValue), get.AXProxy(noValue), get.AXTitleUIElement(noValue), isWritable.AXDescription(failure), get.AXZoomButton(noValue), get.AXToolbarButton(noValue)",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxWritable" : "AXPosition, AXSections",
+  "Aero.macOS.version" : "Version 27.2.1 (Build 26B131)",
+  "Aero.on-window-detected" : [
+    {
+      "commands" : "move-node-to-workspace 1",
+      "matcher" : "appId=\"com.apple.finder\""
+    }
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.FloatingWindowsContainer)",
+  "Aero.windowId_native" : 18425,
+  "Aero.windowId_opaque" : "21",
+  "Aero.windowLevel" : "normalWindow",
+  "Aero.workspace" : "1"
+}
