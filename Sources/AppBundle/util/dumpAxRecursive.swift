@@ -57,7 +57,7 @@ private func prettyValue(_ value: Any?, recursionDepth: Int) -> Json {
     }
     if let value {
         let ax = value as! AXUIElement
-        if ax.get(Ax.roleAttr) == kAXButtonRole {
+        if ax.getIndividual(Ax.roleAttr) == kAXButtonRole {
             return .dict(dumpAxRecursive(ax, .button, recursionDepth: recursionDepth))
         }
         if let windowId = ax.containingNativeWindowId() {

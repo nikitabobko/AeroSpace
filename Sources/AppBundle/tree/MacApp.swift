@@ -117,7 +117,7 @@ final class MacApp: AbstractApp {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         guard let nativeWindowId = windowIdMapping.forward[windowId] else { return }
         _ = withWindowAsync(windowId, .cancellable) { [windows] window, job in
-            guard let closeButton = window.get(Ax.closeButtonAttr) else { return }
+            guard let closeButton = window.getIndividual(Ax.closeButtonAttr) else { return }
             if AXUIElementPerformAction(closeButton.cast, kAXPressAction as CFString) == .success {
                 windows.threadGuarded.removeValue(forKey: nativeWindowId)
             }
@@ -126,14 +126,14 @@ final class MacApp: AbstractApp {
 
     func getAxSize(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> CGSize? {
         try await withWindow(windowId, cm) { window, job in
-            window.get(Ax.sizeAttr)
+            window.getIndividual(Ax.sizeAttr)
         }
     }
 
     // todo merge together with detectNewWindows
     func getFocusedWindow(_ cm: CancellationMode) async throws -> Window? {
         let nativeWindowId = try await thread?.runInLoop(cm) { [nsApp, axApp, windows] job in
-            try axApp.threadGuarded.get(Ax.focusedWindowAttr)
+            try axApp.threadGuarded.getIndividual(Ax.focusedWindowAttr)
                 .flatMap { try windows.threadGuarded.getOrRegisterAxWindow(windowId: $0.windowId, $0.ax.cast, nsApp, job) }?
                 .windowId
         }
@@ -197,7 +197,7 @@ final class MacApp: AbstractApp {
 
     func getAxWindowsCount(_ cm: CancellationMode) async throws -> Int? {
         try await thread?.runInLoop(cm) { [axApp] job in
-            axApp.threadGuarded.get(Ax.windowsAttr)?.count
+            axApp.threadGuarded.getIndividual(Ax.windowsAttr)?.count
         }
     }
 
@@ -264,19 +264,19 @@ final class MacApp: AbstractApp {
 
     func getAxTitle(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> String? {
         try await withWindow(windowId, cm) { window, job in
-            window.get(Ax.titleAttr)
+            window.getIndividual(Ax.titleAttr)
         }
     }
 
     func isMacosNativeFullscreen(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> Bool? {
         try await withWindow(windowId, cm) { window, job in
-            window.get(Ax.isFullscreenAttr)
+            window.getIndividual(Ax.isFullscreenAttr)
         }
     }
 
     func isMacosNativeMinimized(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> Bool? {
         try await withWindow(windowId, cm) { window, job in
-            window.get(Ax.minimizedAttr)
+            window.getIndividual(Ax.minimizedAttr)
         }
     }
 
@@ -355,7 +355,7 @@ final class MacApp: AbstractApp {
                     }
                 }
 
-                for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
+                for (id, window) in axApp.threadGuarded.getIndividual(Ax.windowsAttr) ?? [] {
                     try job.checkCancellation()
                     try aliveOrInvisible.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
                     aliveWindowIds.insert(id)
@@ -494,7 +494,7 @@ private func setFrame(_ window: AXUIElement, _ topLeft: Point?, _ size: CGSize?,
 // References: https://github.com/koekeishiya/yabai/commit/3fe4c77b001e1a4f613c26f01ea68c0f09327f3a
 //             https://github.com/rxhanson/Rectangle/pull/285
 private func disableAnimations<T>(app: AXUIElement, _ job: RunLoopJob, _ body: () throws -> T) throws -> T {
-    let wasEnabled = app.get(Ax.enhancedUserInterfaceAttr) == true
+    let wasEnabled = app.getIndividual(Ax.enhancedUserInterfaceAttr) == true
     if wasEnabled {
         app.set(Ax.enhancedUserInterfaceAttr, false)
     }

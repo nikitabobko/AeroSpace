@@ -40,20 +40,20 @@ extension AxUiElementMock {
         // - macOS native file picker (IntelliJ -> "Open...") (kAXDialogSubrole value)
         //
         // Minimized windows or windows of a hidden app have subrole "AXDialog"
-        if get(Ax.subroleAttr) != kAXStandardWindowSubrole &&
+        if getIndividual(Ax.subroleAttr) != kAXStandardWindowSubrole &&
             id != .qutebrowser // qutebrowser regular window has AXDialog subrole when decorations are disabled
         {
             return true
         }
         // Firefox: Picture in Picture window doesn't have minimize button.
         // todo. bug: when firefox shows non-native fullscreen, minimize button is disabled for all other non-fullscreen windows
-        if id?.isFirefox == true && get(Ax.minimizeButtonAttr)?.get(Ax.enabledAttr) != true {
+        if id?.isFirefox == true && getIndividual(Ax.minimizeButtonAttr)?.getIndividual(Ax.enabledAttr) != true {
             return true
         }
         if id == .photoBooth { return true }
         if id == .ghostty {
-            return get(Ax.fullscreenButtonAttr)?.get(Ax.enabledAttr) != true &&
-                get(Ax.closeButtonAttr)?.get(Ax.enabledAttr) == true
+            return getIndividual(Ax.fullscreenButtonAttr)?.getIndividual(Ax.enabledAttr) != true &&
+                getIndividual(Ax.closeButtonAttr)?.getIndividual(Ax.enabledAttr) == true
         }
         // Heuristic: float windows without fullscreen button (such windows are not designed to be big)
         // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
@@ -67,7 +67,7 @@ extension AxUiElementMock {
         // - Kap screen recorder https://github.com/wulkano/Kap
         // - flameshot? https://github.com/nikitabobko/AeroSpace/issues/112
         // - Drata Agent https://github.com/nikitabobko/AeroSpace/issues/134
-        if get(Ax.fullscreenButtonAttr)?.get(Ax.enabledAttr) != true &&
+        if getIndividual(Ax.fullscreenButtonAttr)?.getIndividual(Ax.enabledAttr) != true &&
             id != .gimp && // Gimp doesn't show fullscreen button
 
             // "Drag out" a tab out of Chrome window. Technically, it shouldn't be necessary, but
@@ -115,13 +115,13 @@ extension AxUiElementMock {
         // Its position and size are managed by the Ghostty itself
         // https://github.com/nikitabobko/AeroSpace/issues/103
         // https://github.com/ghostty-org/ghostty/discussions/3512
-        if id == .ghostty && get(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
+        if id == .ghostty && getIndividual(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
             return false
         }
 
-        lazy var fullscreenButton = get(Ax.fullscreenButtonAttr)
+        lazy var fullscreenButton = getIndividual(Ax.fullscreenButtonAttr)
 
-        if id == .xcode && get(Ax.identifierAttr) == "open_quickly" {
+        if id == .xcode && getIndividual(Ax.identifierAttr) == "open_quickly" {
             return false
         }
 
@@ -129,14 +129,14 @@ extension AxUiElementMock {
             return false
         }
 
-        if activationPolicy == .accessory && get(Ax.closeButtonAttr) == nil && id != .steam {
+        if activationPolicy == .accessory && getIndividual(Ax.closeButtonAttr) == nil && id != .steam {
             return false
         }
 
         // Emacs child frames (posframes, corfu completion popups, etc.)
         // These are transient UI elements that should not be managed as windows.
         // https://github.com/nikitabobko/AeroSpace/issues/776
-        if id == .emacs && get(Ax.subroleAttr) == kAXFloatingWindowSubrole {
+        if id == .emacs && getIndividual(Ax.subroleAttr) == kAXFloatingWindowSubrole {
             return false
         }
 
@@ -157,35 +157,35 @@ extension AxUiElementMock {
         // - telegram image viewer (subrole == kAXFloatingWindowSubrole)
         // - Finder preview (hit space) (subrole == "Quick Look")
         // - Firefox non-native video fullscreen (about:config -> full-screen-api.macos-native-full-screen -> false, subrole == AXUnknown)
-        return get(Ax.closeButtonAttr) != nil ||
+        return getIndividual(Ax.closeButtonAttr) != nil ||
             fullscreenButton != nil ||
-            get(Ax.zoomButtonAttr) != nil ||
-            get(Ax.minimizeButtonAttr) != nil ||
+            getIndividual(Ax.zoomButtonAttr) != nil ||
+            getIndividual(Ax.minimizeButtonAttr) != nil ||
 
-            get(Ax.isFocused) == true ||  // 3 different ways to detect if the window is focused
-            get(Ax.isMainAttr) == true ||
-            axApp.get(Ax.focusedWindowAttr)?.windowId == self.containingNativeWindowId() ||
+            getIndividual(Ax.isFocused) == true ||  // 3 different ways to detect if the window is focused
+            getIndividual(Ax.isMainAttr) == true ||
+            axApp.getIndividual(Ax.focusedWindowAttr)?.windowId == self.containingNativeWindowId() ||
 
-            get(Ax.subroleAttr) == kAXStandardWindowSubrole
+            getIndividual(Ax.subroleAttr) == kAXStandardWindowSubrole
     }
 
     private func isWindowHeuristicOld(axApp: AxUiElementMock, _ id: KnownBundleId?) -> Bool { // 0.18.3 hotfix
-        lazy var subrole = get(Ax.subroleAttr)
-        lazy var title = get(Ax.titleAttr) ?? ""
+        lazy var subrole = getIndividual(Ax.subroleAttr)
+        lazy var title = getIndividual(Ax.titleAttr) ?? ""
 
         // Try to filter out incredibly weird popup like AXWindows without any buttons.
         // E.g.
         // - Sonoma (macOS 14) keyboard layout switch
         // - IntelliJ context menu (right mouse click)
         // - Telegram context menu (right mouse click)
-        if get(Ax.closeButtonAttr) == nil &&
-            get(Ax.fullscreenButtonAttr) == nil &&
-            get(Ax.zoomButtonAttr) == nil &&
-            get(Ax.minimizeButtonAttr) == nil &&
+        if getIndividual(Ax.closeButtonAttr) == nil &&
+            getIndividual(Ax.fullscreenButtonAttr) == nil &&
+            getIndividual(Ax.zoomButtonAttr) == nil &&
+            getIndividual(Ax.minimizeButtonAttr) == nil &&
 
-            get(Ax.isFocused) == false &&  // Three different ways to detect if the window is not focused
-            get(Ax.isMainAttr) == false &&
-            axApp.get(Ax.focusedWindowAttr)?.windowId != containingNativeWindowId() &&
+            getIndividual(Ax.isFocused) == false &&  // Three different ways to detect if the window is not focused
+            getIndividual(Ax.isMainAttr) == false &&
+            axApp.getIndividual(Ax.focusedWindowAttr)?.windowId != containingNativeWindowId() &&
 
             subrole != kAXStandardWindowSubrole &&
             // Share window purple "pill" indicator has "Window" title https://github.com/nikitabobko/AeroSpace/issues/1101

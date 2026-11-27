@@ -39,7 +39,7 @@ func checkAxDumpsRecursive(_ dir: URL) throws {
 }
 
 extension [String: Json]: AxUiElementMock {
-    public func get<Attr>(_ attr: Attr) -> Attr.T? where Attr: ReadableAttr {
+    public func getIndividual<Attr>(_ attr: Attr) -> Attr.T? where Attr: ReadableAttr {
         guard let value = self[attr.key] else {
             return isSynthetic ? dieT("\(self) doesn't contain \(attr.key)") : nil
         }

@@ -61,5 +61,5 @@ private nonisolated func isAxWindowUnderMouse(_ location: Point) async -> Bool? 
         return nil
     }
     guard let element else { return nil }
-    return element.get(Ax.parentWindowRecursive) != nil || element.get(Ax.roleAttr) == kAXWindowRole
+    return element.getIndividual(Ax.parentWindowRecursive) != nil || element.getIndividual(Ax.roleAttr) == kAXWindowRole
 }

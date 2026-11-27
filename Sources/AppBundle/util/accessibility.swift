@@ -342,7 +342,7 @@ private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElementMock? {
 }
 
 extension AXUIElement: AxUiElementMock {
-    func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
+    func getIndividual<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }
         var raw: AnyObject?
