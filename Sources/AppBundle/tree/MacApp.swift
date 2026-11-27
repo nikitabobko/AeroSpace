@@ -342,8 +342,8 @@ final class MacApp: AbstractApp {
             return [:]
         }
         guard let thread else { return [:] }
-        var aliveOrInvisible = try await thread
-            .runInLoop(.cancellable) { [nsApp, windows, axApp, bgTabsScheduledForPrune] (job) -> [UInt32: WindowLifeStatus] in
+        var (aliveOrInvisible, fingerprints) = try await thread
+            .runInLoop(.cancellable) { [nsApp, windows, axApp, bgTabsScheduledForPrune] (job) -> ([UInt32: WindowLifeStatus], [UInt32: AxNativeTabGroupFingerprint]) in
                 var aliveOrInvisible: [UInt32: AxWindow] = windows.threadGuarded.filter { !bgTabsScheduledForPrune.contains($0.key) }
                 var aliveWindowIds: Set<UInt32> = []
                 // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
@@ -362,12 +362,15 @@ final class MacApp: AbstractApp {
                 }
 
                 windows.threadGuarded = aliveOrInvisible
-                return aliveOrInvisible.keys.associate(with: { it in aliveWindowIds.contains(it) ? .alive : .invisible })
+                return (
+                    aliveOrInvisible.keys.associate(with: { it in aliveWindowIds.contains(it) ? .alive : .invisible }),
+                    aliveOrInvisible.mapValues(\.fingerprint),
+                )
             }
         bgTabsScheduledForPrune = []
         windowsCount = aliveOrInvisible.count
 
-        nonidempotentNativeTabSwapHeuristic(&aliveOrInvisible)
+        nonidempotentNativeTabSwapHeuristic(&aliveOrInvisible, fingerprints)
 
         var aliveOrInvisibleMap: [OpaqueWindowId: WindowLifeStatus] = [:]
         for (id, lifeStatus) in aliveOrInvisible {
@@ -383,18 +386,26 @@ final class MacApp: AbstractApp {
 
     private var bgTabsScheduledForPrune: Set<UInt32> = []
     private var lifeStatusesOfLastRefresh: [UInt32: WindowLifeStatus] = [:]
-    @MainActor private func nonidempotentNativeTabSwapHeuristic(_ aliveOrInvisible: inout [UInt32: WindowLifeStatus]) {
+    private var fingerprintsOfLastRefresh: [UInt32: AxNativeTabGroupFingerprint] = [:]
+    @MainActor private func nonidempotentNativeTabSwapHeuristic(
+        _ aliveOrInvisible: inout [UInt32: WindowLifeStatus],
+        _ fingerprints: [UInt32: AxNativeTabGroupFingerprint],
+    ) {
         let noLongerAlive = lifeStatusesOfLastRefresh.filter { (id, lifeStatus) in lifeStatus == .alive && aliveOrInvisible[id] != .alive }
         let becameAlive = aliveOrInvisible.filter { (id, lifeStatus) in lifeStatus == .alive && lifeStatusesOfLastRefresh[id] != .alive }
-        lifeStatusesOfLastRefresh = aliveOrInvisible
         if let backgroundTabId = noLongerAlive.singleOrNil()?.key,
-           let frontmostTabId = becameAlive.singleOrNil()?.key
+           let frontmostTabId = becameAlive.singleOrNil()?.key,
+           let backgroundTabFingerprint = fingerprintsOfLastRefresh[backgroundTabId],
+           backgroundTabFingerprint == fingerprints[frontmostTabId]
         {
             let tabGroupWindowId = getOrRegisterOpaqueWindowId(backgroundTabId)
             windowIdMapping.put(tabGroupWindowId, frontmostTabId)
             aliveOrInvisible[backgroundTabId] = nil
             bgTabsScheduledForPrune.insert(backgroundTabId)
         }
+
+        lifeStatusesOfLastRefresh = aliveOrInvisible
+        fingerprintsOfLastRefresh = fingerprints
     }
 
     private func destroy() async {
@@ -428,15 +439,25 @@ final class MacApp: AbstractApp {
     }
 }
 
+// periphery:ignore - Equatable
+private struct AxNativeTabGroupFingerprint: Equatable, Sendable {
+    var axSubrole: String
+    var hasCloseButton: Bool
+    var hasFullscreenButton: Bool
+    var hasMinimizeButton: Bool
+}
+
 private final class AxWindow {
     let windowId: UInt32
     let ax: AXUIElement
+    let fingerprint: AxNativeTabGroupFingerprint
     // periphery:ignore
     private let axSubscriptions: [AxSubscription] // keep subscriptions in memory
 
-    private init(windowId: UInt32, _ ax: AXUIElement, _ axSubscriptions: [AxSubscription]) {
+    private init(windowId: UInt32, _ ax: AXUIElement, _ fingerprint: AxNativeTabGroupFingerprint, _ axSubscriptions: [AxSubscription]) {
         self.windowId = windowId
         self.ax = ax
+        self.fingerprint = fingerprint
         assert(!axSubscriptions.isEmpty)
         self.axSubscriptions = axSubscriptions
     }
@@ -448,7 +469,20 @@ private final class AxWindow {
             (resizedObs, [kAXResizedNotification]),
         ]
         let subscriptions = try unsafe AxSubscription.bulkSubscribe(nsApp, ax, job, handlers)
-        return !subscriptions.isEmpty ? AxWindow(windowId: windowId, ax, subscriptions) : nil
+        if subscriptions.isEmpty { return nil }
+        let (subrole, closeButton, fullscreenButton, minimizeButton) = ax.getMultiple(
+            Ax.subroleAttr,
+            Ax.closeButtonAttr,
+            Ax.fullscreenButtonAttr,
+            Ax.minimizeButtonAttr,
+        )
+        let fingerprint = AxNativeTabGroupFingerprint(
+            axSubrole: subrole ?? "",
+            hasCloseButton: closeButton != nil,
+            hasFullscreenButton: fullscreenButton != nil,
+            hasMinimizeButton: minimizeButton != nil,
+        )
+        return AxWindow(windowId: windowId, ax, fingerprint, subscriptions)
     }
 }
 
