@@ -119,6 +119,12 @@ extension AxUiElementMock {
             return false
         }
 
+        // Finder file operation progress window ("Copy", "Emptying the Trash").
+        // Finder shows all running operations in the same window
+        if id == .finder && getIndividual(Ax.identifierAttr) == "Progress" {
+            return false
+        }
+
         lazy var fullscreenButton = getIndividual(Ax.fullscreenButtonAttr)
 
         if id == .xcode && getIndividual(Ax.identifierAttr) == "open_quickly" {
