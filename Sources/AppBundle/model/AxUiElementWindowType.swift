@@ -125,6 +125,13 @@ extension AxUiElementMock {
             return false
         }
 
+        // Finder modal alerts ("Are you sure you want to permanently erase the items in the Trash?").
+        // Finder creates the alert window offscreen with the normal window level and raises it only
+        // when it shows the alert, so the window level check above may see the normal level
+        if id == .finder && getIndividual(Ax.subroleAttr) == kAXDialogSubrole && getIndividual(Ax.modalAttr) == true {
+            return false
+        }
+
         lazy var fullscreenButton = getIndividual(Ax.fullscreenButtonAttr)
 
         if id == .xcode && getIndividual(Ax.identifierAttr) == "open_quickly" {
