@@ -2,7 +2,7 @@ import AppKit
 import Common
 
 @MainActor
-private var activeRefreshTask: Task<(), any Error>? = nil
+private(set) var activeRefreshTask: Task<(), any Error>? = nil
 
 @MainActor
 func scheduleCancellableCompleteRefreshSession(

@@ -5,6 +5,7 @@ import Common
 final class TestWindow: Window, CustomStringConvertible {
     private var _rect: Rect?
     var isMacosFullscreenForTest = false
+    var isHiddenInCornerForTest = false
 
     @MainActor
     private init(_ id: OpaqueWindowId, _ parent: NonLeafTreeNodeObject, _ adaptiveWeight: CGFloat, _ rect: Rect?) {
@@ -43,6 +44,8 @@ final class TestWindow: Window, CustomStringConvertible {
     }
 
     override func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { isMacosFullscreenForTest }
+
+    override var isHiddenInCorner: Bool { isHiddenInCornerForTest }
 }
 
 extension OpaqueWindowId: ExpressibleByIntegerLiteral {
