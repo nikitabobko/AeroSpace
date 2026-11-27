@@ -242,6 +242,17 @@ final class MacApp: AbstractApp {
         } == true
     }
 
+    // Popups that belong to the window they were opened from:
+    // - modal alerts (Finder "Empty Trash" confirmation). Minimized windows and windows of hidden apps
+    //   also report AXDialog, but they are not modal
+    // - Finder file operation progress ("Copy", "Emptying the Trash"): a standard, non-modal window
+    func isPopupOfOpener(_ windowId: OpaqueWindowId, _ cm: CancellationMode) async throws -> Bool {
+        try await withWindow(windowId, cm) { [appId] window, job in
+            window.get(Ax.subroleAttr) == kAXDialogSubrole && window.get(Ax.modalAttr) == true ||
+                appId == .finder && window.get(Ax.identifierAttr) == "Progress"
+        } == true
+    }
+
     func setNativeFullscreen(_ windowId: OpaqueWindowId, _ value: Bool) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { window, job in

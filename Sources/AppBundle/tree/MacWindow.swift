@@ -217,6 +217,10 @@ final class MacWindow: Window {
     override func isQuickLookPanel(_ cm: CancellationMode) async throws -> Bool {
         try await macApp.isQuickLookPanel(windowId, cm)
     }
+
+    override func isPopupOfOpener(_ cm: CancellationMode) async throws -> Bool {
+        try await macApp.isPopupOfOpener(windowId, cm)
+    }
 }
 
 extension Window {
@@ -289,6 +293,8 @@ func onWindowDetected(_ env: CmdEnv, _ io: CmdIo, _ window: Window) async -> Int
     // Quick Look panel (hit space in Finder) belongs to the workspace it was opened from.
     // App-wide rules like `if.app-id = 'com.apple.finder'` must not move it away
     if (try? await window.isQuickLookPanel(.nonCancellable)) == true { return .succ }
+    // Same for popups of the window they were opened from (Finder "Empty Trash" confirmation, copy progress)
+    if (try? await window.isPopupOfOpener(.nonCancellable)) == true { return .succ }
     var lastExitCode = Int32ExitCode.succ
     for callback in config.onWindowDetected where await callback.matches(window) {
         lastExitCode = await callback.run.run(env.withWindowId(window.windowId), io)

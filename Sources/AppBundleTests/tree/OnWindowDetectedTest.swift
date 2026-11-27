@@ -65,6 +65,30 @@ struct OnWindowDetectedTest {
         assertEquals(Workspace.get(byName: "a").isEffectivelyEmpty, true)
     }
 
+    // Finder on workspace b, a rule sends the app to workspace a. Finder opens a popup:
+    // - "Empty Trash": the modal "Are you sure you want to permanently erase the items in the Trash?" alert
+    // - confirming it, or copying files: the "Emptying the Trash" / "Copy" progress window
+    // The popup must stay on b, next to the Finder window it was opened from.
+    @Test func testPopupOfOpenerStaysOnWorkspaceWhereItWasOpened() async {
+        let workspaceB = Workspace.get(byName: "b")
+        let finder = TestWindow.new(id: 1, parent: workspaceB.rootTilingContainer)
+        assertEquals(finder.focusWindow(), true)
+        let popup = TestWindow.new(id: 2, parent: workspaceB.floatingWindowsContainer)
+        popup.isPopupOfOpenerForTest = true
+
+        config.onWindowDetected = [
+            WindowDetectedCallback(
+                matcher: .command(.empty), // true
+                rawRun: parseCommand("move-node-to-workspace a").cmdOrDie,
+            ),
+        ]
+
+        await runOnWindowDetected(ifConventional: popup)
+
+        assertEquals(popup.nodeWorkspace?.name, "b")
+        assertEquals(Workspace.get(byName: "a").isEffectivelyEmpty, true)
+    }
+
     // Finder reuses one Quick Look panel (same window id) for every preview.
     // 1. Preview opened and closed on workspace a. Closing it caches the whole world (lock screen defence)
     // 2. User switches to workspace b and hits space in Finder again
