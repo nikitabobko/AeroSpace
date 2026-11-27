@@ -26,7 +26,7 @@ enum AxPermissionStatus: Equatable {
 @MainActor func updateTrayText() {
     let sortedMonitors = globalSortedMonitorInfos
     let focus = globalFocus
-    TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
+    let trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
         sortedMonitors
         .lazy
         .map {
@@ -35,7 +35,7 @@ enum AxPermissionStatus: Equatable {
             return ($0.visibleWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + visibleWorkspaceName
         }
         .joined(separator: " │ ")
-    TrayMenuModel.shared.workspaces = Workspace.all.map {
+    let workspaces = Workspace.all.map {
         let apps = $0.allLeafWindowsRecursive.map { $0.app.name?.takeIf { !$0.isEmpty } }.filterNotNil().toSet()
         let dash = " - "
         let suffix = switch true {
@@ -68,7 +68,12 @@ enum AxPermissionStatus: Equatable {
     if let mode {
         items.insert(mode, at: 0)
     }
-    TrayMenuModel.shared.trayItems = items
+    // @Published notifies its observers on every assignment, even of an equal value. Assign only what changed, so that
+    // refresh sessions that change nothing don't re-render the menu bar
+    let model = TrayMenuModel.shared
+    if model.trayText != trayText { model.trayText = trayText }
+    if model.workspaces != workspaces { model.workspaces = workspaces }
+    if model.trayItems != items { model.trayItems = items }
 }
 
 struct WorkspaceViewModel: Hashable {
