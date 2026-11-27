@@ -488,6 +488,46 @@ private func setFrame(_ window: AXUIElement, _ topLeft: Point?, _ size: CGSize?,
     if let topLeft { window.set(Ax.topLeftCornerAttr, topLeft) } else { return }
     try job.checkCancellation()
     if let size { window.set(Ax.sizeAttr, size) }
+    try job.checkCancellation()
+    // macOS ignores shrinking a window that already spans onto another display.
+    // Slide it back so it no longer spans, resize it, then move it into place.
+    if let size, let topLeft, let actual = window.get(Ax.sizeAttr),
+       actual.width > size.width + 1 || actual.height > size.height + 1,
+       spansMultipleDisplays(topLeft, actual),
+       spanFixCooldown.tryAcquire(window)
+    {
+        let dx = max(0, actual.width - size.width)
+        let dy = max(0, actual.height - size.height)
+        window.set(Ax.topLeftCornerAttr, Point(x: topLeft.x - dx, y: topLeft.y - dy))
+        try job.checkCancellation()
+        window.set(Ax.sizeAttr, size)
+        try job.checkCancellation()
+        window.set(Ax.topLeftCornerAttr, topLeft)
+    }
+}
+
+// If the app refuses the size anyway (e.g. its minimum size), don't keep moving the window back and forth
+private let spanFixCooldown = SpanFixCooldown()
+private final class SpanFixCooldown: @unchecked Sendable {
+    private let lock = NSLock()
+    private var lastAttempt: [CFHashCode: Date] = [:]
+
+    func tryAcquire(_ window: AXUIElement) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        let key = CFHash(window)
+        let now = Date()
+        if let last = lastAttempt[key], now.timeIntervalSince(last) < 5 { return false }
+        lastAttempt = lastAttempt.filter { now.timeIntervalSince($0.value) < 5 }
+        lastAttempt[key] = now
+        return true
+    }
+}
+
+private func spansMultipleDisplays(_ topLeft: Point, _ size: CGSize) -> Bool {
+    let rect = CGRect(x: topLeft.x, y: topLeft.y, width: size.width, height: size.height).insetBy(dx: 1, dy: 1)
+    var count: UInt32 = 0
+    return unsafe CGGetDisplaysWithRect(rect, 0, nil, &count) == .success && count > 1
 }
 
 // Some undocumented magic
