@@ -101,10 +101,12 @@ final class MacWindow: Window {
                 case .tilingContainer, .floatingWindowsContainer, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
                     let deadWindowFocus = deadWindowWorkspace.toLiveFocus()
                     _ = setFocus(to: deadWindowFocus)
-                    // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
-                    if focus.windowOrNil?.app.pid != app.pid {
-                        // Force focus to fix macOS annoyance with focused apps without windows.
-                        //   https://github.com/nikitabobko/AeroSpace/issues/65
+                    if mustNativeFocusAfterWindowDestruction(
+                        focusedAppPid: focus.windowOrNil?.app.pid,
+                        focusedWorkspace: focus.workspace,
+                        deadWindowAppPid: app.pid,
+                        deadWindowWorkspace: deadWindowWorkspace,
+                    ) {
                         deadWindowFocus.windowOrNil?.nativeFocus()
                     }
                 case .macosPopupWindowsContainer, // Don't switch back on popup destruction
@@ -317,4 +319,22 @@ extension WindowDetectedCallback {
                 return await command.run(.defaultEnv.withWindowId(window.windowId), .emptyStdin).exitCode.rawValue == 0
         }
     }
+}
+
+/// Decides whether the garbage collection of a destroyed window must natively focus the window that AeroSpace
+/// restores on the dead window's workspace. `focused*` describe the focus right before the restoration.
+@MainActor
+func mustNativeFocusAfterWindowDestruction(
+    focusedAppPid: pid_t?,
+    focusedWorkspace: Workspace,
+    deadWindowAppPid: pid_t,
+    deadWindowWorkspace: Workspace,
+) -> Bool {
+    // Force focus to fix macOS annoyance with focused apps without windows.
+    //   https://github.com/nikitabobko/AeroSpace/issues/65
+    // Don't force focus while the same app stays focused on the dead window's workspace, it would close
+    //   the app's own transient windows. "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
+    // But do force it when macOS handed the focus to a window of the same app on another workspace,
+    //   otherwise AeroSpace switches back to the dead window's workspace while macOS keeps the focus elsewhere.
+    focusedAppPid != deadWindowAppPid || focusedWorkspace != deadWindowWorkspace
 }
