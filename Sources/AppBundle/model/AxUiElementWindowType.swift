@@ -106,7 +106,7 @@ extension AxUiElementMock {
     ) -> Bool {
         if windowLevel != .normalWindow &&
             // todo: Slowly roll out windowLevel for applications for which we have the appropriate dumps
-            (id == .slack || id == .chrome || id?.isFirefox == true || id == .braveBrowser || id == .screenstudio || id == .cleanshotx || id == .iterm2 || id == .outlook || id == .codex || id == .wisprFlow)
+            (id == .slack || id == .chrome || id?.isFirefox == true || id == .braveBrowser || id == .screenstudio || id == .cleanshotx || id == .iterm2 || id == .outlook || id == .codex || id == .wisprFlow || id == .finder)
         {
             return false
         }
@@ -141,7 +141,7 @@ extension AxUiElementMock {
         }
 
         if id?.isFirefox != true {
-            return isWindowHeuristicOld(axApp: axApp, id)
+            return isWindowHeuristicOld(axApp: axApp)
         }
 
         // Try to filter out incredibly weird popup like AXWindows without any buttons.
@@ -169,7 +169,7 @@ extension AxUiElementMock {
             getIndividual(Ax.subroleAttr) == kAXStandardWindowSubrole
     }
 
-    private func isWindowHeuristicOld(axApp: AxUiElementMock, _ id: KnownBundleId?) -> Bool { // 0.18.3 hotfix
+    private func isWindowHeuristicOld(axApp: AxUiElementMock) -> Bool { // 0.18.3 hotfix
         lazy var subrole = getIndividual(Ax.subroleAttr)
         lazy var title = getIndividual(Ax.titleAttr) ?? ""
 
@@ -195,8 +195,7 @@ extension AxUiElementMock {
         }
         return subrole == kAXStandardWindowSubrole ||
             subrole == kAXDialogSubrole || // macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
-            subrole == kAXFloatingWindowSubrole || // telegram image viewer
-            id == .finder && subrole == "Quick Look" // Finder preview (hit space) is a floating window
+            subrole == kAXFloatingWindowSubrole // telegram image viewer
     }
 
     func getWindowType(
