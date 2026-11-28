@@ -9,17 +9,27 @@ func scheduleCancellableCompleteRefreshSession(
     _ event: RefreshSessionEvent,
     optimisticallyPreLayoutWorkspaces: Bool = false,
 ) {
-    activeRefreshTask?.cancel()
-    let prev = activeRefreshTask
-    activeRefreshTask = Task.startUnstructured { @MainActor in
-        _ = await prev?.result
-        try checkCancellation(.cancellable)
+    scheduleCancellableRefreshSession {
         await runHeavyCompleteRefreshSession(
             event,
             assumeCancellable: true,
             optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces,
         )
     }
+}
+
+@MainActor
+@discardableResult
+func scheduleCancellableRefreshSession(_ session: @escaping @MainActor () async -> ()) -> Task<(), any Error> {
+    activeRefreshTask?.cancel()
+    let prev = activeRefreshTask
+    let task = Task.startUnstructured { @MainActor in
+        _ = await prev?.result
+        try checkCancellation(.cancellable)
+        await session()
+    }
+    activeRefreshTask = task
+    return task
 }
 
 @MainActor
@@ -144,6 +154,49 @@ func refreshObs(_: AXObserver, _: AXUIElement, notif: CFString, _: UnsafeMutable
     Task.startUnstructured { @MainActor in
         if !TrayMenuModel.shared.isEnabled { return }
         scheduleCancellableCompleteRefreshSession(.ax(notif))
+    }
+}
+
+@MainActor private let tabButtonRefreshThrottle = TabButtonRefreshThrottle()
+
+func nativeTabButtonObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
+    if ax.getIndividual(Ax.subroleAttr) != NSAccessibility.Subrole.tabButtonSubrole.rawValue { return }
+    let notif = notif as String
+    Task.startUnstructured { @MainActor in
+        if !TrayMenuModel.shared.isEnabled { return }
+        await tabButtonRefreshThrottle.schedule { scheduleCancellableCompleteRefreshSession(.ax(notif)) }
+    }
+}
+
+@MainActor
+final class TabButtonRefreshThrottle {
+    private var lastRefresh: ContinuousClock.Instant? = nil
+    private(set) var isRefreshScheduled = false
+    private let now: @MainActor () -> ContinuousClock.Instant
+    private let sleep: @MainActor (ContinuousClock.Instant) async -> ()
+
+    init(
+        now: @escaping @MainActor () -> ContinuousClock.Instant = { .now },
+        sleep: @escaping @MainActor (ContinuousClock.Instant) async -> () = { try? await Task.sleep(until: $0, clock: .continuous) },
+    ) {
+        self.now = now
+        self.sleep = sleep
+    }
+
+    func schedule(_ scheduleRefreshSession: () -> ()) async {
+        if isRefreshScheduled { return }
+        isRefreshScheduled = true
+        if let lastRefresh {
+            await sleep(lastRefresh.advanced(by: .milliseconds(500)))
+        }
+        // An app can take longer than 500 ms to answer AX. Cancelling its refresh on every title change would starve it
+        while let task = activeRefreshTask {
+            _ = await task.result
+            if task == activeRefreshTask { break }
+        }
+        isRefreshScheduled = false
+        lastRefresh = now()
+        scheduleRefreshSession()
     }
 }
 

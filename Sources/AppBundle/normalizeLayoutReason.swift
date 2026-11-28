@@ -44,7 +44,7 @@ import Common
                     default: break
                 }
             case .macos(let prevParentKind):
-                if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {
+                if window.lifeStatus.isInhabited && !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {
                     try await exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace, .cancellable)
                 }
         }

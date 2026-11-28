@@ -205,6 +205,14 @@ enum Ax {
         getter: { $0 as? String },
         setter: { $0 as CFTypeRef },
     )
+    static let childrenAttr = ReadableAttrImpl<[AXUIElement]>(
+        key: kAXChildrenAttribute,
+        getter: { ($0 as? [AXUIElement]) ?? [] },
+    )
+    static let tabsAttr = ReadableAttrImpl<[AXUIElement]>(
+        key: kAXTabsAttribute,
+        getter: { ($0 as? [AXUIElement]) ?? [] },
+    )
     static let identifierAttr = ReadableAttrImpl<String>(
         key: kAXIdentifierAttribute,
         getter: { $0 as? String },
@@ -390,6 +398,18 @@ extension AXUIElement: AxUiElementMock {
         return unsafe _AXUIElementGetWindow(self, &cgWindowId) == .success && cgWindowId != kCGNullWindowID
             ? cgWindowId
             : nil
+    }
+
+    // A closed window answers kAXErrorIllegalArgument. kAXErrorCannotComplete only means the app is busy, such as Xcode creating a tab
+    func isClosedWindow() -> Bool {
+        let state = signposter.beginInterval(#function, "axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer { signposter.endInterval(#function, state) }
+        var cgWindowId = CGWindowID()
+        return switch unsafe _AXUIElementGetWindow(self, &cgWindowId) {
+            case .success: cgWindowId == kCGNullWindowID
+            case .cannotComplete: false
+            default: true
+        }
     }
 
     var pid: pid_t? {

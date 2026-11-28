@@ -70,10 +70,13 @@ final class MacApp: AbstractApp {
                 let handlers: HandlerToNotifKeyMapping = unsafe [
                     (refreshObs, [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification, kAXMainWindowChangedNotification]),
                 ]
+                // Merging windows into native tabs only fires kAXTitleChangedNotification on tab buttons
+                let optionalHandlers: HandlerToNotifKeyMapping = unsafe [(nativeTabButtonObs, [kAXTitleChangedNotification])]
                 let job = RunLoopJob(.cancellable)
                 let subscriptions = (try? unsafe AxSubscription.bulkSubscribe(nsApp, axApp, job, handlers)) ?? []
                 let isGood = !subscriptions.isEmpty
-                let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
+                let optionalSubscriptions = isGood ? (try? unsafe AxSubscription.bulkSubscribe(nsApp, axApp, job, optionalHandlers)) ?? [] : []
+                let app = isGood ? MacApp(nsApp, axApp, subscriptions + optionalSubscriptions, Thread.current) : nil
 
                 let appAxSubscriptionsThreadGuarded = app?.appAxSubscriptions
                 let windowsThreadGuarded = app?.windows
@@ -138,6 +141,11 @@ final class MacApp: AbstractApp {
                 .windowId
         }
         guard let nativeWindowId else { return nil }
+        // macOS can focus a newly-frontmost native tab before a refresh pairs it with its tab group
+        if opaqueWindowId(of: nativeWindowId).flatMap({ MacWindow.allWindowsMap[$0] }) == nil {
+            let lifeStatuses = try await refreshAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier, cm)
+            guard let windowId = opaqueWindowId(of: nativeWindowId), lifeStatuses[windowId] != nil else { return nil }
+        }
         return try await MacWindow.getOrRegister(windowId: getOrRegisterOpaqueWindowId(nativeWindowId), macApp: self)
     }
 
@@ -309,7 +317,7 @@ final class MacApp: AbstractApp {
         ) { group in
             @MainActor func refreshTheApp(_ app: MacApp) {
                 group.addTask { @Sendable @MainActor in
-                    return (MainActorRef.init(app), try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
+                    return (MainActorRef.init(app), try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId, .cancellable))
                 }
             }
             // Register new apps
@@ -336,41 +344,73 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [OpaqueWindowId: WindowLifeStatus] {
+    @MainActor private func refreshAndGetAliveWindowIds(
+        frontmostAppBundleId: String?,
+        _ cm: CancellationMode,
+    ) async throws -> [OpaqueWindowId: WindowLifeStatus] {
         if nsApp.isTerminated {
             await destroy()
             return [:]
         }
         guard let thread else { return [:] }
-        var aliveOrInvisible = try await thread
-            .runInLoop(.cancellable) { [nsApp, windows, axApp, bgTabsScheduledForPrune] (job) -> [UInt32: WindowLifeStatus] in
-                var aliveOrInvisible: [UInt32: AxWindow] = windows.threadGuarded.filter { !bgTabsScheduledForPrune.contains($0.key) }
-                var aliveWindowIds: Set<UInt32> = []
+        func observeWindows(orderedInWindowIds: Set<UInt32>??) async throws -> ([UInt32: WindowLifeStatus], [(from: UInt32, to: UInt32)])? {
+            try await thread.runInLoop(cm) { [nsApp, windows, axApp] job in
+                var aliveOrInvisible: [UInt32: AxWindow] = windows.threadGuarded
+                let previousNativeTabs = aliveOrInvisible.compactMapValues(\.nativeTab)
+                var listedWindowIds: Set<UInt32> = []
                 // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
                 // Second and third lines of defence are technically needed only to avoid potential flickering
-                if frontmostAppBundleId != lockScreenAppBundleId {
+                let isScreenLocked = frontmostAppBundleId == lockScreenAppBundleId
+                if !isScreenLocked {
                     aliveOrInvisible = try aliveOrInvisible.filter {
                         try job.checkCancellation()
-                        return $0.value.ax.containingNativeWindowId() != nil
+                        return !$0.value.ax.isClosedWindow()
                     }
                 }
 
-                for (id, window) in axApp.threadGuarded.getIndividual(Ax.windowsAttr) ?? [] {
+                let listedWindows = axApp.threadGuarded.getIndividual(Ax.windowsAttr)
+                for (id, window) in listedWindows ?? [] {
                     try job.checkCancellation()
-                    try aliveOrInvisible.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
-                    aliveWindowIds.insert(id)
+                    if try aliveOrInvisible.getOrRegisterAxWindow(windowId: id, window, nsApp, job) != nil {
+                        listedWindowIds.insert(id)
+                    }
                 }
 
-                windows.threadGuarded = aliveOrInvisible
-                return aliveOrInvisible.keys.associate(with: { it in aliveWindowIds.contains(it) ? .alive : .invisible })
-            }
-        bgTabsScheduledForPrune = []
-        windowsCount = aliveOrInvisible.count
+                let nativeTabs: NativeTabsObservation<AXUIElement>?
+                do {
+                    nativeTabs = isScreenLocked ? nil : try observeNativeTabs(
+                        previous: previousNativeTabs,
+                        aliveWindowIds: aliveOrInvisible.keys.toSet(),
+                        listedWindowIds: listedWindows == nil ? nil : listedWindowIds,
+                        AxNativeTabs(windows: aliveOrInvisible, job: job, givenOrderedInWindowIds: orderedInWindowIds),
+                    )
+                } catch is OrderedInWindowIdsAreNeeded {
+                    return nil
+                }
 
-        nonidempotentNativeTabSwapHeuristic(&aliveOrInvisible)
+                let lifeStatuses = nativeTabs?.commit(to: &aliveOrInvisible, \.nativeTab)
+                    ?? aliveOrInvisible.keys.associate { listedWindowIds.contains($0) ? .alive : .invisible }
+                windows.threadGuarded = aliveOrInvisible
+                return (lifeStatuses, nativeTabs?.takeovers ?? [])
+            }
+        }
+        var observation = try await observeWindows(orderedInWindowIds: .none)
+        if observation == nil {
+            let orderedInWindowIds = NSWindow.windowNumbers(options: [.allApplications, .allSpaces])?.map(\.uint32Value).toSet()
+            observation = try await observeWindows(orderedInWindowIds: orderedInWindowIds)
+        }
+        let (lifeStatuses, takeovers) = observation.orDie()
+        windowsCount = lifeStatuses.count
+
+        if !takeovers.isEmpty {
+            let tabGroupNodes = takeovers.map { (tabGroupNode: getOrRegisterOpaqueWindowId($0.from), frontmostTabId: $0.to) }
+            if let node = takeOverTabGroupNodes(tabGroupNodes, &windowIdMapping, focusedNode: globalFocus.windowOrNil?.windowId) {
+                _ = Window.get(byId: node)?.focusWindow()
+            }
+        }
 
         var aliveOrInvisibleMap: [OpaqueWindowId: WindowLifeStatus] = [:]
-        for (id, lifeStatus) in aliveOrInvisible {
+        for (id, lifeStatus) in lifeStatuses {
             aliveOrInvisibleMap[getOrRegisterOpaqueWindowId(id)] = lifeStatus
         }
         for windowId in setFrameJobs.keys {
@@ -379,22 +419,6 @@ final class MacApp: AbstractApp {
             }
         }
         return aliveOrInvisibleMap
-    }
-
-    private var bgTabsScheduledForPrune: Set<UInt32> = []
-    private var lifeStatusesOfLastRefresh: [UInt32: WindowLifeStatus] = [:]
-    @MainActor private func nonidempotentNativeTabSwapHeuristic(_ aliveOrInvisible: inout [UInt32: WindowLifeStatus]) {
-        let noLongerAlive = lifeStatusesOfLastRefresh.filter { (id, lifeStatus) in lifeStatus == .alive && aliveOrInvisible[id] != .alive }
-        let becameAlive = aliveOrInvisible.filter { (id, lifeStatus) in lifeStatus == .alive && lifeStatusesOfLastRefresh[id] != .alive }
-        lifeStatusesOfLastRefresh = aliveOrInvisible
-        if let backgroundTabId = noLongerAlive.singleOrNil()?.key,
-           let frontmostTabId = becameAlive.singleOrNil()?.key
-        {
-            let tabGroupWindowId = getOrRegisterOpaqueWindowId(backgroundTabId)
-            windowIdMapping.put(tabGroupWindowId, frontmostTabId)
-            aliveOrInvisible[backgroundTabId] = nil
-            bgTabsScheduledForPrune.insert(backgroundTabId)
-        }
     }
 
     private func destroy() async {
@@ -431,6 +455,7 @@ final class MacApp: AbstractApp {
 private final class AxWindow {
     let windowId: UInt32
     let ax: AXUIElement
+    var nativeTab: NativeTab<AXUIElement>? = nil
     // periphery:ignore
     private let axSubscriptions: [AxSubscription] // keep subscriptions in memory
 
@@ -473,6 +498,50 @@ extension [UInt32: AxWindow] {
         }
     }
 }
+
+private struct AxNativeTabs: NativeTabsAx {
+    let windows: [UInt32: AxWindow]
+    let job: RunLoopJob
+    let givenOrderedInWindowIds: Set<UInt32>??
+
+    func isStandardWindow(_ windowId: UInt32) throws -> Bool {
+        try job.checkCancellation()
+        return windows[windowId]?.ax.getIndividual(Ax.subroleAttr) == kAXStandardWindowSubrole
+    }
+
+    func tabBar(ofWindow windowId: UInt32) throws -> AXUIElement? {
+        guard let window = windows[windowId]?.ax else { return nil }
+        try job.checkCancellation()
+        for child in window.getIndividual(Ax.childrenAttr) ?? [] {
+            try job.checkCancellation()
+            if child.getIndividual(Ax.roleAttr) != kAXTabGroupRole { continue }
+            if try tabCount(of: child) >= 2 { return child }
+        }
+        return nil
+    }
+
+    func host(of tabBar: AXUIElement) throws -> UInt32? {
+        try job.checkCancellation()
+        return tabBar.containingNativeWindowId()
+    }
+
+    func tabCount(of tabBar: AXUIElement) throws -> Int {
+        try job.checkCancellation()
+        return tabBar.getIndividual(Ax.tabsAttr)?.count ?? 0
+    }
+
+    func isAlive(_ windowId: UInt32) throws -> Bool {
+        try job.checkCancellation()
+        return windows[windowId].map { !$0.ax.isClosedWindow() } ?? false
+    }
+
+    func orderedInWindowIds() throws -> Set<UInt32>? {
+        guard let givenOrderedInWindowIds else { throw OrderedInWindowIdsAreNeeded() }
+        return givenOrderedInWindowIds
+    }
+}
+
+private struct OrderedInWindowIdsAreNeeded: Error {}
 
 private func getAxRect(window: AXUIElement) -> Rect? {
     let (topLeftCorner, size) = window.getMultiple(Ax.topLeftCornerAttr, Ax.sizeAttr)
