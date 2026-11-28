@@ -46,6 +46,10 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
+# Show the tray icon with the name of the active workspace in the menu bar
+# Useful to turn off if you display workspaces in another bar (e.g. SketchyBar)
+show-menu-bar-icon = true
+
 # List of workspaces that should stay alive even when they contain no windows,
 # even when they are invisible.
 # This config option is only available since 'config-version = 2'
