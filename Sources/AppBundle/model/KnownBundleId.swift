@@ -9,6 +9,7 @@ enum KnownBundleId: String, Equatable {
     case codex = "com.openai.codex"
     case emacs = "org.gnu.Emacs"
     case finder = "com.apple.finder"
+    case flStudio = "com.image-line.flstudio"
     case ghostty = "com.mitchellh.ghostty"
     case gimp = "org.gimp.gimp-2.10"
     case iphonesimulator = "com.apple.iphonesimulator"

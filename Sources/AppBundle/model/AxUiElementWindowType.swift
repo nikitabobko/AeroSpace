@@ -111,6 +111,18 @@ extension AxUiElementMock {
             return false
         }
 
+        // FL Studio draws its own title bars. Its windows don't have AX title bar buttons, and their subrole is AXUnknown,
+        // so the heuristics below treat all of them as popups. https://github.com/nikitabobko/AeroSpace/discussions/1234
+        // - Main window, "Welcome to FL Studio" window: normal level (the welcome window is modal panel level while FL Studio is active)
+        // - Mixer, settings: floating level
+        // - "Save changes?" dialog: modal panel level
+        // - FL Studio's own menus (File menu, right click menus): pop up menu level. These are the only popups
+        if id == .flStudio {
+            return windowLevel == .normalWindow ||
+                windowLevel == .alwaysOnTopWindow ||
+                windowLevel == .unknown(windowLevel: Int(CGWindowLevelForKey(.modalPanelWindow)))
+        }
+
         // Just don't do anything with "Ghostty Quick Terminal" windows.
         // Its position and size are managed by the Ghostty itself
         // https://github.com/nikitabobko/AeroSpace/issues/103
